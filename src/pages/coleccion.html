@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Colección — Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Veinte composiciones artesanales en decant y frasco completo. Creaciones de Autor o Inspiraciones elevadas elaboradas por Anthonny Villegas — Vency Atelier, Heredia, Costa Rica.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=19">
+  <link rel="stylesheet" href="../styles/coleccion.css?v=19">
+  <link rel="stylesheet" href="../styles/catalog.css?v=19">
+</head>
+<body class="page-coleccion">
+
+  <a class="skip-nav" href="#coleccion-content">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link nav__link--active" aria-current="page">Colección</a></li>
+      <li><a href="catalogo.html" class="nav__link">Catálogo</a></li>
+      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <main id="coleccion-content" tabindex="-1">
+
+    <!-- PAGE HEADER -->
+    <header class="col-header">
+      <div class="col-header__inner">
+        <span class="label sage-label animate-in">LA COLECCIÓN · VENCY ATELIER</span>
+        <h1 class="col-header__title animate-in" style="--delay:80ms">
+          Veinte composiciones.<br>Tres formatos.
+        </h1>
+        <p class="col-header__body animate-in" style="--delay:160ms">
+          Composiciones originales e inspiraciones elevadas elaboradas por Anthonny Villegas.
+          Disponibles en decant, 30 ml o 100 ml en el catálogo.
+        </p>
+      </div>
+    </header>
+
+    <!-- CATALOG GRID — rendered by coleccion.js -->
+    <div class="catalog-grid" id="catalog-grid" aria-label="Fragancias">
+    </div>
+
+    <div class="col-sentinel" aria-hidden="true"></div>
+
+    <!-- EMPTY STATE -->
+    <div class="catalog-empty" hidden>
+      <p class="catalog-empty__message">No hay fragancias disponibles.</p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="index.html#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script src="../scripts/fragrance-data.js?v=19"></script>
+  <script src="../scripts/nav.js?v=19"></script>
+  <script src="../scripts/scroll.js?v=19"></script>
+  <script src="../scripts/coleccion.js?v=19"></script>
+</body>
+</html>

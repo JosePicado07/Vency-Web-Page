@@ -1,0 +1,292 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vency Atelier — Perfumería Artesanal · Heredia, Costa Rica</title>
+  <meta name="description" content="Casa de fragancias artesanales en Heredia, Costa Rica. Pequeños lotes, materias primas selectas, creaciones propias e inspiraciones elevadas por Anthonny Villegas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body>
+
+  <a class="skip-nav" href="#coleccion">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="/" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
+      <li><a href="catalogo.html" class="nav__link">Catálogo</a></li>
+      <li><a href="#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Presentación de Vency Atelier">
+    <div class="hero__inner">
+      <div class="hero__text">
+        <h1 class="hero__headline">
+          <span class="hero__headline-line animate-in" style="--delay:0ms">Historias</span>
+          <span class="hero__headline-line animate-in" style="--delay:70ms">olfativas.</span>
+          <span class="hero__headline-line animate-in" style="--delay:140ms">Hechas a mano.</span>
+        </h1>
+        <p class="hero__body animate-in" style="--delay:260ms">
+          Perfumería artesanal en pequeños lotes desde Heredia, Costa Rica.
+          Creaciones propias, inspiraciones elevadas, materias primas selectas.
+        </p>
+        <div class="hero__actions animate-in" style="--delay:360ms">
+          <a href="coleccion.html" class="btn btn--primary">Explorar la colección</a>
+          <span class="hero__sessions-teaser" aria-label="Sesiones de atelier próximamente">
+            Sesiones de Atelier · Próximamente
+          </span>
+        </div>
+        <p class="hero__provenance animate-in" style="--delay:460ms">
+          ELABORADO EN PEQUEÑOS LOTES · HEREDIA, COSTA RICA
+        </p>
+      </div>
+
+      <div class="hero__media animate-in" style="--delay:190ms">
+        <img
+          src="../assets/images/hero-botanica.png"
+          alt="Frasco de Vency Atelier junto a flores de jazmín blanco sobre madera natural"
+          class="hero__image"
+          loading="eager"
+          width="900"
+          height="900"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- LAS COLECCIONES -->
+  <section class="colls-intro" id="coleccion" aria-label="Las colecciones de Vency Atelier">
+    <header class="colls-intro__hdr">
+      <span class="label sage-label animate-in">LAS COLECCIONES · VENCY ATELIER</span>
+      <h2 class="colls-intro__title animate-in" style="--delay:80ms">La colección.</h2>
+    </header>
+
+    <div class="colls-intro__grid">
+
+      <!-- ORIGINAL BLEND -->
+      <a class="coll-block coll-block--ob" href="coleccion.html" aria-label="Ver colección Original Blend">
+        <div class="coll-block__img-wrap">
+          <img src="../assets/images/originals/citrus-enigma.png" alt="Citrus Enigma — Original Blend de Vency Atelier" loading="lazy" width="900" height="675">
+        </div>
+        <div class="coll-block__content">
+          <span class="label coll-block__tag">ORIGINAL BLEND</span>
+          <h3 class="coll-block__name">Composiciones<br>originales.</h3>
+          <p class="coll-block__desc">Fragancias que nacen en Heredia sin referencia a ningún ícono. El perfumista como autor.</p>
+          <span class="coll-block__cta" aria-hidden="true">Ver colección →</span>
+        </div>
+      </a>
+
+      <!-- ICON SERIES -->
+      <a class="coll-block coll-block--is" href="coleccion.html#apple-whisper" aria-label="Ver colección Icon Series">
+        <div class="coll-block__img-wrap">
+          <img src="../assets/images/inspirations/apple-whisper.png" alt="Apple Brandy on the Rocks · Kilian — Icon Series de Vency Atelier" loading="lazy" width="900" height="1200">
+        </div>
+        <div class="coll-block__content">
+          <span class="label coll-block__tag">ICON SERIES</span>
+          <h3 class="coll-block__name">Íconos del<br>nicho.</h3>
+          <p class="coll-block__desc">Interpretaciones fieles de los grandes perfumes de nicho y ultra nicho. El mismo ADN olfativo, hecho en Costa Rica.</p>
+          <span class="coll-block__cta" aria-hidden="true">Ver colección →</span>
+        </div>
+      </a>
+
+      <!-- HYBRID -->
+      <div class="coll-block coll-block--hybrid">
+        <div class="coll-block__content">
+          <span class="label coll-block__tag">HYBRID</span>
+          <h3 class="coll-block__name">Fusiones.</h3>
+          <p class="coll-block__desc">Composiciones que fusionan el ADN de múltiples íconos en algo que no existía antes. En desarrollo.</p>
+          <a class="coll-block__cta coll-block__cta--wa" href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Quiero%20saber%20cuando%20lancen%20la%20colecci%C3%B3n%20Hybrid." target="_blank" rel="noopener noreferrer" aria-label="Anotarse por WhatsApp para el lanzamiento de Hybrid">Anotarse para el lanzamiento →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- EL PERFUMISTA -->
+  <section class="perfumista" id="perfumista" aria-label="El perfumista">
+    <div class="perfumista__inner">
+      <div class="perfumista__text">
+        <span class="label label--faint animate-in">EL PERFUMISTA · HEREDIA, COSTA RICA</span>
+        <h2 class="perfumista__name animate-in" style="--delay:80ms">
+          Anthonny<br>Villegas
+        </h2>
+        <p class="perfumista__body animate-in" style="--delay:160ms">
+          Estudió Ingeniería Química y perfumería en España para volver a Costa Rica
+          y crear algo que huele al lugar. Trabaja con materias primas de
+          proveedores independientes, con inspiraciones nicho y ultra nicho
+          elevadas, con fragancias mainstream reinterpretadas, y con la
+          perfumería botánica como investigación personal.
+        </p>
+        <p class="perfumista__body animate-in" style="--delay:230ms">
+          Cada frasco de Vency Atelier lleva la trazabilidad de sus
+          decisiones: qué se eligió, por qué se eligió, y qué historia
+          cuenta en la piel.
+        </p>
+      </div>
+      <div class="perfumista__media animate-in" style="--delay:120ms">
+        <img
+          src="../assets/images/perfumista-taller.png"
+          alt="Anthonny Villegas, perfumista maestro y fundador de Vency Atelier, trabajando en su taller de Heredia"
+          loading="lazy"
+          width="700"
+          height="933"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- SESIONES DE ATELIER -->
+  <section class="sessions" id="sesiones" aria-label="Sesiones de atelier">
+    <div class="sessions__inner">
+      <span class="label animate-in">SESIONES DE ATELIER</span>
+      <h2 class="sessions__headline animate-in" style="--delay:80ms">
+        Una hora<br>con Anthonny.
+      </h2>
+      <p class="sessions__body animate-in" style="--delay:160ms">
+        Un espacio íntimo donde Anthonny le guía a través del universo
+        de las fragancias. Conozca las materias primas, comprenda las
+        familias olfativas, y salga con una composición que es suya.
+      </p>
+      <p class="sessions__body animate-in" style="--delay:220ms">
+        Las sesiones están abiertas a curiosos sin experiencia previa
+        y a aficionados que quieran profundizar. Disponibles en el atelier
+        de Heredia.
+      </p>
+      <div class="sessions__cta animate-in" style="--delay:300ms">
+        <a
+          href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Quiero%20anotarme%20para%20las%20Sesiones%20de%20Atelier."
+          class="btn btn--inv"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Contactar por WhatsApp para anotarse a las Sesiones de Atelier"
+        >
+          Anotarse para la próxima sesión
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO SE HACE -->
+  <section class="process" id="proceso" aria-label="El proceso de elaboración">
+    <header class="process__header">
+      <h2 class="process__title animate-in">Cómo se hace.</h2>
+    </header>
+
+    <ol class="process__list" role="list">
+
+      <li class="process__step animate-in">
+        <div class="process__step-inner">
+          <div class="process__step-text">
+            <span class="process__step-num" aria-hidden="true">01</span>
+            <span class="label ochre-label">OBTENCIÓN</span>
+            <h3 class="process__step-name">Los materiales tienen origen.</h3>
+            <p class="process__step-body">
+              Las materias primas provienen de proveedores independientes
+              seleccionados por Anthonny. Aceites esenciales, absolutos y
+              materiales botánicos con trazabilidad de origen. Nada en este
+              proceso es anónimo.
+            </p>
+          </div>
+          <div class="process__step-media">
+            <img
+              src="../assets/images/proceso-ingredientes.png"
+              alt="Materias primas naturales: vainilla, canela, resinas y aceites esenciales sobre piedra"
+              loading="lazy"
+              width="700"
+              height="525"
+            >
+          </div>
+        </div>
+      </li>
+
+      <li class="process__step process__step--dark animate-in" style="--delay:80ms">
+        <div class="process__step-inner">
+          <div class="process__step-text">
+            <span class="process__step-num" aria-hidden="true">02</span>
+            <span class="label ochre-label">MEZCLA</span>
+            <h3 class="process__step-name">La paciencia es parte de la fórmula.</h3>
+            <p class="process__step-body">
+              Cada composición se mezcla a mano en pequeños lotes.
+              Algunos procesos toman semanas antes de que una fórmula
+              esté lista: la química del perfume no admite prisa.
+            </p>
+          </div>
+          <div class="process__step-media">
+            <img
+              src="../assets/images/proceso-mezcla.png"
+              alt="Beaker de laboratorio durante el proceso de mezcla en el atelier de Vency Atelier"
+              loading="lazy"
+              width="700"
+              height="525"
+            >
+          </div>
+        </div>
+      </li>
+
+      <li class="process__step animate-in" style="--delay:160ms">
+        <div class="process__step-inner">
+          <div class="process__step-text">
+            <span class="process__step-num" aria-hidden="true">03</span>
+            <span class="label ochre-label">EMBOTELLADO</span>
+            <h3 class="process__step-name">Cada frasco es una edición.</h3>
+            <p class="process__step-body">
+              Los frascos se llenan y etiquetan a mano, en lotes numerados.
+              El decant existe como punto de entrada: una forma de conocer
+              la composición antes de comprometerse con el frasco completo.
+            </p>
+          </div>
+          <div class="process__step-media">
+            <img
+              src="../assets/images/proceso-embotellado.png"
+              alt="Frascos de Vency Atelier alineados para embotellado, elaborados a mano en Heredia"
+              loading="lazy"
+              width="700"
+              height="525"
+            >
+          </div>
+        </div>
+      </li>
+
+    </ol>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="#perfumista" class="footer__link">El Perfumista</a>
+        <a href="#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../scripts/nav.js"></script>
+  <script src="../scripts/scroll.js"></script>
+</body>
+</html>
+

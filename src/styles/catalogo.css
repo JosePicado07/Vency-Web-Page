@@ -1,0 +1,887 @@
+/* ============================================================
+   CATÁLOGO PAGE — Vency Atelier
+   Full fragrance index: designer · nicho · ultra nicho
+   Layout: brand-grouped rows, not cards. Like a ledger.
+   ============================================================ */
+
+/* === PAGE HEADER (sticky — title + filter in one band) === */
+.cat-header {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 40;
+  background: var(--botanical-parchment);
+  margin-top: var(--nav-h);
+  padding: var(--space-md) var(--space-md) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-header__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.cat-header__title-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding-bottom: var(--space-sm);
+}
+
+.cat-header__title {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 0.93;
+  letter-spacing: -0.01em;
+  margin: 0.5rem 0 0;
+}
+
+.cat-header__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  padding-bottom: 0.25rem;
+}
+
+.cat-header__count {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+}
+
+/* === FILTER ROW (inside header) === */
+.cat-header__filter {
+  border-top: 1px solid var(--border);
+  margin: 0 calc(-1 * var(--space-md));
+  padding: 0 var(--space-md);
+}
+
+.cat-filters__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 0.5rem 0;
+}
+
+.cat-filters__search {
+  flex: 1;
+  min-width: 0;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.7rem;
+  transition: border-color 0.15s;
+}
+
+.cat-filters__search:focus {
+  outline: none;
+  border-bottom-color: var(--warm-ochre);
+}
+
+.cat-filters__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.55rem 0.85rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+  min-height: 44px;
+}
+
+.cat-filters__toggle:hover,
+.cat-filters__toggle[aria-expanded="true"] {
+  border-color: var(--warm-ochre);
+  color: var(--warm-ochre);
+}
+
+.cat-filters__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  background: var(--warm-ochre);
+  color: var(--botanical-parchment);
+  border-radius: 50%;
+}
+
+.cat-filters__clear {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  background: none;
+  border: none;
+  padding: 0.55rem 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  min-height: 44px;
+  transition: color 0.15s;
+}
+
+.cat-filters__clear:hover {
+  color: var(--volcanic-ink);
+}
+
+.cat-filter-panel {
+  border-top: 1px solid var(--border);
+  background: var(--botanical-parchment);
+}
+
+.cat-filter-panel[hidden] {
+  display: none;
+}
+
+.cat-filter-panel__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-sm) 0 var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cat-filter-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cat-filter-group__label {
+  flex-shrink: 0;
+  min-width: 88px;
+  color: var(--ink-muted);
+}
+
+.cat-filter-group__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+/* Set builder states on external entries — subtle tint, no heavy inset box */
+.cat-entry.dblock--selected {
+  box-shadow: none;
+  background: color-mix(in oklch, var(--warm-ochre) 8%, transparent);
+}
+
+.cat-section--ultra-nicho .cat-entry.dblock--selected {
+  background: color-mix(in oklch, var(--warm-ochre) 16%, transparent);
+}
+
+.cat-pill {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  cursor: pointer;
+  border-radius: 999px;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.cat-pill:hover {
+  color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.cat-pill.is-active {
+  color: var(--botanical-parchment);
+  background: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.cat-pill:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+/* === CATALOG SECTIONS === */
+.cat-section {
+  border-bottom: 1px solid var(--border);
+}
+
+#cat-section-vency {
+  scroll-margin-top: calc(var(--nav-h, 56px) + 90px);
+}
+
+/* Diseñador section: parchment */
+.cat-section--disenador {
+  background: var(--botanical-parchment);
+}
+
+/* Nicho section: slightly deeper warm stone surface */
+.cat-section--nicho {
+  background: oklch(91% 0.007 85);
+}
+
+/* Ultra Nicho: volcanic ink — prestige, full dark */
+.cat-section--ultra-nicho {
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+}
+
+/* Section header — tight label, not a page-break headline */
+.cat-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  max-width: 1440px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-section--ultra-nicho .cat-section__header {
+  border-bottom-color: var(--border-dark);
+}
+
+.cat-section__title {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  line-height: 1;
+}
+
+.cat-section--ultra-nicho .cat-section__title {
+  color: var(--ink-deep);
+}
+
+
+/* === BRAND GROUPS === */
+.cat-brand {
+  max-width: 1440px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-section--ultra-nicho .cat-brand {
+  border-bottom-color: var(--border-dark);
+}
+
+.cat-brand--hidden {
+  display: none;
+}
+
+.cat-brand__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  padding: 0.9rem var(--space-md) 0;
+  text-transform: uppercase;
+}
+
+.cat-section--ultra-nicho .cat-brand__name {
+  color: var(--ink-deep);
+}
+
+.cat-brand__list {
+  list-style: none;
+}
+
+/* === FRAGRANCE ROWS === */
+.cat-entry {
+  border-top: 1px solid var(--border);
+  transition: background 0.18s;
+  cursor: default;
+}
+
+.cat-section--nicho .cat-entry {
+  border-top-color: oklch(84% 0.006 85);
+}
+
+.cat-section--ultra-nicho .cat-entry {
+  border-top-color: var(--border-dark);
+}
+
+.cat-entry--hidden {
+  display: none;
+}
+
+.cat-entry:hover {
+  background: oklch(92% 0.007 80);
+}
+
+.cat-section--nicho .cat-entry:hover {
+  background: oklch(88% 0.007 80);
+}
+
+.cat-section--ultra-nicho .cat-entry:hover {
+  background: var(--volcanic-ink);
+}
+
+/* Unified entry anatomy — name in Bitter, notes below, rail always */
+.cat-entry__name {
+  display: block;
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.8vw, 1.15rem);
+  color: var(--volcanic-ink);
+  line-height: 1.3;
+}
+
+.cat-section--ultra-nicho .cat-entry__name {
+  color: var(--botanical-parchment);
+}
+
+.cat-entry__gender-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
+
+.cat-entry[data-gender="mujer"] .cat-entry__gender-dot  { background: oklch(62% 0.10 350); }
+.cat-entry[data-gender="hombre"] .cat-entry__gender-dot { background: oklch(48% 0.10 230); }
+.cat-entry[data-gender="unisex"] .cat-entry__gender-dot { background: var(--warm-ochre); }
+
+/* Small badge marking Vency originals / Icon series (replaces the gender dot) */
+.cat-badge {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.16rem 0.42rem;
+  border-radius: 2px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+  line-height: 1;
+}
+
+.cat-badge--original { background: var(--warm-ochre-dark); color: var(--botanical-parchment); }
+.cat-badge--icon     { background: var(--volcanic-ink); color: var(--botanical-parchment); }
+
+.cat-badge--sold-out {
+  background: transparent;
+  border: 1px solid var(--ink-muted);
+  color: var(--ink-muted);
+  opacity: 0.7;
+  margin-left: 0.3rem;
+}
+
+/* Info wrapper — consistent padding above name */
+.cat-entry__info {
+  padding: 0.75rem var(--space-md) 0.5rem;
+}
+
+/* Notes line */
+.cat-entry__notes {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+  margin-top: 0.25rem;
+}
+
+.cat-section--ultra-nicho .cat-entry__notes {
+  color: var(--ink-deep);
+}
+
+/* === EMPTY STATE === */
+.cat-empty {
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  display: none;
+}
+
+.cat-empty.is-visible {
+  display: block;
+}
+
+.cat-empty__msg {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--ink-muted);
+  margin-bottom: 0.75rem;
+}
+
+.cat-empty__hint {
+  font-size: 0.9rem;
+  color: var(--ink-muted);
+}
+
+/* === VENCY COLLECTIONS — collapsible disclosure === */
+.vency-collections {
+  border-top: 1px solid var(--border);
+  border-bottom: 3px solid var(--volcanic-ink);
+}
+
+/* Reset browser details/summary chrome */
+.vency-collections summary {
+  list-style: none;
+}
+.vency-collections summary::-webkit-details-marker {
+  display: none;
+}
+
+.vency-collections__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0.75rem var(--space-md);
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s;
+}
+
+.vency-collections__toggle:hover {
+  background: oklch(92% 0.007 80);
+}
+
+.vency-collections__toggle:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: -2px;
+}
+
+.vency-collections__chevron {
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-block;
+}
+
+.vency-collections[open] .vency-collections__chevron {
+  transform: rotate(180deg);
+}
+
+.vency-collections__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 var(--space-md) var(--space-sm);
+  border-top: 1px solid var(--border);
+}
+
+.vency-collections__panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.vency-coll-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--space-sm) var(--space-md) var(--space-sm) 0;
+  text-decoration: none;
+  border-right: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.vency-coll-panel + .vency-coll-panel {
+  padding-left: var(--space-md);
+}
+
+.vency-coll-panel:last-child {
+  border-right: none;
+}
+
+.vency-coll-panel__tag {
+  color: var(--warm-ochre);
+}
+
+.vency-coll-panel__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+.vency-coll-panel__arrow {
+  font-size: 0.75rem;
+  color: var(--volcanic-ink);
+  opacity: 0;
+  transition: opacity 0.15s;
+  margin-top: auto;
+}
+
+a.vency-coll-panel:hover .vency-coll-panel__arrow {
+  opacity: 1;
+}
+
+.vency-coll-panel--soon {
+  opacity: 0.55;
+}
+
+.vency-coll-panel__coming {
+  color: var(--ink-muted);
+}
+
+@media (max-width: 600px) {
+  .vency-collections__panels {
+    grid-template-columns: 1fr;
+  }
+
+  .vency-coll-panel {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: var(--space-sm) 0;
+  }
+
+  .vency-coll-panel + .vency-coll-panel {
+    padding-left: 0;
+  }
+
+  .vency-coll-panel:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Interpretation link — inline after notes, same style as vency-compact__story */
+.cat-section--ultra-nicho .cat-entry__notes .vency-compact__story {
+  color: var(--warm-ochre-light);
+}
+
+/* Panel breaks out of cat-entry padding — rail stays contained inline */
+.cat-entry .fmt-panel {
+  margin-left: calc(-1 * var(--space-md));
+  margin-right: calc(-1 * var(--space-md));
+}
+
+/* === SEARCH INPUT === */
+.cat-filters__search {
+  width: 100%;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.cat-search-input {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--volcanic-ink);
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 0;
+  appearance: none;
+}
+
+.cat-search-input::placeholder {
+  color: var(--ink-muted);
+}
+
+
+/* === MULTIPLE SETS NOTE === */
+.order-panel__multi {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+}
+
+.order-panel__multi a {
+  color: var(--warm-ochre);
+  text-decoration: none;
+}
+
+.order-panel__multi a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.cat-search-input::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+/* === DECANT SET INTRO BANNER === */
+.dc-set-banner {
+  background: oklch(93% 0.018 75);
+  border-bottom: 1px solid oklch(86% 0.03 70);
+  padding: var(--space-sm) var(--space-md);
+}
+
+.dc-set-banner__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.dc-set-banner__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dc-set-banner__body {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--volcanic-ink);
+  opacity: 0.7;
+  max-width: 52ch;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.dc-set-banner__body strong {
+  font-weight: 700;
+  opacity: 1;
+  letter-spacing: 0.06em;
+}
+
+.dc-set-banner__slots {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.dc-set-banner__slot {
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1.5px dashed oklch(62% 0.055 68);
+  border-radius: 2px;
+  transition: background 0.18s, border-color 0.18s;
+}
+
+.dc-set-banner__slot--filled {
+  background: oklch(58% 0.09 68);
+  border-color: oklch(52% 0.1 68);
+  border-style: solid;
+}
+
+@media (max-width: 520px) {
+  .dc-set-banner__slots { display: none; }
+  .dc-set-banner__body { max-width: 100%; }
+}
+
+/* === SECTION DESCRIPTOR (desktop only) === */
+.cat-section__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+  line-height: 1.4;
+  margin: 0;
+  display: none;
+}
+
+.cat-section--ultra-nicho .cat-section__desc {
+  color: oklch(50% 0.015 180);
+}
+
+/* === CATALOG LISTING BODY === */
+
+.col-catalog-body {
+  border-top: 1px solid var(--border);
+}
+
+/* === MOBILE === */
+@media (max-width: 600px) {
+  .cat-header {
+    padding: var(--space-sm) var(--space-sm) 0;
+    margin-top: var(--nav-h);
+  }
+
+  .cat-header__title {
+    font-size: clamp(1.5rem, 7vw, 2.25rem);
+  }
+
+  .cat-header__filter {
+    margin: 0 calc(-1 * var(--space-sm));
+    padding: 0 var(--space-sm);
+  }
+
+  .cat-filters__inner {
+    gap: 0.5rem;
+  }
+
+  .cat-brand__name {
+    padding: 0.75rem var(--space-sm) 0;
+  }
+
+  .cat-entry__info {
+    padding: 0.6rem var(--space-sm) 0.2rem;
+  }
+
+  .cat-entry .fmt-rail,
+  .cat-entry .fmt-panel {
+    margin-left: calc(-1 * var(--space-sm));
+    margin-right: calc(-1 * var(--space-sm));
+  }
+
+  .cat-section__header {
+    padding: var(--space-sm) var(--space-sm);
+  }
+}
+
+
+/* === DESKTOP — HORIZONTAL COMPACT ENTRY LAYOUT (≥900px) ===
+   Compact rows flip to: [info text · left] [chip rail · right]
+   fmt-panel always expands full-width across both columns.
+   =========================================================== */
+@media (min-width: 900px) {
+
+  /* Catalog entries — Vency, Diseñador, Nicho, Ultra Nicho (one template) */
+  .cat-entry {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+
+  .cat-entry .cat-entry__info {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .cat-entry .fmt-rail {
+    grid-column: 2;
+    grid-row: 1;
+    border-top: none !important;
+    border-left: 1px solid var(--border);
+    padding: 0.55rem 1.5rem;
+    flex-wrap: nowrap;
+    align-items: center;
+    align-self: stretch;
+  }
+
+  .cat-entry .fmt-panel {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* Ultra Nicho: dark left border on chip rail */
+  .cat-section--ultra-nicho .cat-entry .fmt-rail {
+    border-left-color: var(--border-dark);
+  }
+
+  /* Typography — entries hold the wide column */
+  .cat-entry__name {
+    font-size: clamp(1.2rem, 1.8vw, 1.7rem);
+  }
+
+  .cat-entry__notes {
+    font-size: 0.78rem;
+  }
+
+  /* Brand names become chapter headings */
+  .cat-brand__name {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    color: var(--volcanic-ink);
+    letter-spacing: -0.01em;
+    line-height: 1;
+    padding: 1.25rem var(--space-md) 0.5rem;
+  }
+
+  .cat-section--ultra-nicho .cat-brand__name {
+    color: var(--botanical-parchment);
+  }
+
+  /* Section headers: column layout with descriptor line */
+  .cat-section__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+    padding: 1.25rem var(--space-md);
+  }
+
+  .cat-section__title {
+    font-size: 0.72rem;
+  }
+
+  .cat-section__desc {
+    display: block;
+  }
+}
+
+/* === LEGEND (gender dots) === */
+.cat-legend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.cat-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.cat-legend__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cat-legend__dot--mujer  { background: oklch(62% 0.10 350); }
+.cat-legend__dot--hombre { background: oklch(48% 0.10 230); }
+.cat-legend__dot--unisex { background: var(--warm-ochre); }
+
+/* === ENTRANCE — catalog rows reveal in waves (DESIGN.md: like a fragrance drying down) ===
+   Pre-state held only when motion is welcome; .is-in is added by the row observer
+   in catalogo.js as each row enters the viewport. */
+@media (prefers-reduced-motion: no-preference) {
+  .cat-entry {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .cat-entry.is-in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s var(--ease-expo), transform 0.6s var(--ease-expo);
+  }
+}
+

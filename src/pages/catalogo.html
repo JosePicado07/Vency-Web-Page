@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo — Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Catálogo completo de Vency Atelier: seis creaciones propias en decant, más perfumes de diseñador, nicho y ultra nicho disponibles en Heredia, Costa Rica.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=19">
+  <link rel="stylesheet" href="../styles/catalogo.css?v=19">
+  <link rel="stylesheet" href="../styles/catalog.css?v=19">
+  <link rel="stylesheet" href="../styles/format-rail.css?v=19">
+  <link rel="stylesheet" href="../styles/decants.css?v=19">
+</head>
+<body class="page-catalogo">
+
+  <a class="skip-nav" href="#cat-listing">Ir al catálogo completo</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
+      <li><a href="catalogo.html" class="nav__link nav__link--active" aria-current="page">Catálogo</a></li>
+      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <!-- ══════════════════════════════════════
+         PAGE HEADER — sets the whole context
+         ══════════════════════════════════════ -->
+    <header class="cat-header">
+      <div class="cat-header__inner">
+        <span class="label ochre-label animate-in">CATÁLOGO · VENCY ATELIER</span>
+        <div class="cat-header__title-row animate-in" style="--delay:80ms">
+          <h1 class="cat-header__title">Todo<br>el catálogo.</h1>
+          <div class="cat-header__meta">
+            <span class="cat-header__count js-cat-count label label--faint"></span>
+            <div class="cat-legend" aria-label="Leyenda de género">
+              <span class="cat-legend__item">
+                <span class="cat-legend__dot cat-legend__dot--hombre" aria-hidden="true"></span>Hombre
+              </span>
+              <span class="cat-legend__item">
+                <span class="cat-legend__dot cat-legend__dot--mujer" aria-hidden="true"></span>Mujer
+              </span>
+              <span class="cat-legend__item">
+                <span class="cat-legend__dot cat-legend__dot--unisex" aria-hidden="true"></span>Unisex
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER ROW — lives inside the header band -->
+        <div class="cat-header__filter animate-in" style="--delay:200ms" aria-label="Filtrar catálogo">
+          <div class="cat-filters__inner">
+            <button class="cat-filters__toggle js-filter-toggle" aria-expanded="false" aria-controls="cat-filter-panel">
+              Filtrar
+              <span class="cat-filters__badge js-filter-badge" hidden></span>
+            </button>
+            <label class="sr-only" for="cat-search">Buscar fragancia o marca</label>
+            <input class="cat-search-input cat-filters__search" type="search" id="cat-search"
+              placeholder="Buscar fragancia o marca…" autocomplete="off" spellcheck="false">
+            <button class="cat-filters__clear js-filter-clear" hidden aria-label="Quitar todos los filtros">Limpiar</button>
+          </div>
+
+          <div class="cat-filter-panel" id="cat-filter-panel" hidden>
+            <div class="cat-filter-panel__inner">
+              <div class="cat-filter-group" role="group" aria-label="Categoría">
+                <span class="label cat-filter-group__label">CATEGORÍA</span>
+                <div class="cat-filter-group__pills">
+                  <button class="cat-pill is-active"  aria-pressed="true"  data-filter="cat" data-value="todos">Todos</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="vency">Vency</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="disenador">Diseñador</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="nicho">Nicho</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="ultra-nicho">Ultra Nicho</button>
+                </div>
+              </div>
+              <div class="cat-filter-group" role="group" aria-label="Género">
+                <span class="label cat-filter-group__label">GÉNERO</span>
+                <div class="cat-filter-group__pills">
+                  <button class="cat-pill is-active" aria-pressed="true"  data-filter="gender" data-value="todos">Todos</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="hombre">Hombre</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="mujer">Mujer</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="unisex">Unisex</button>
+                </div>
+              </div>
+              <div class="cat-filter-group" role="group" aria-label="Ocasión">
+                <span class="label cat-filter-group__label">OCASIÓN</span>
+                <div class="cat-filter-group__pills">
+                  <button class="cat-pill is-active" aria-pressed="true"  data-filter="ocasion" data-value="todos">Todas</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="diario">Diario</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="noche">Noche</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="formal">Formal</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="fin-de-semana">Fin de semana</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="verano">Verano</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="ocasion" data-value="lluvioso">Lluvioso</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════
+         VENCY COLLECTIONS — collapsed by default
+         ══════════════════════════════════════════ -->
+    <details class="vency-collections">
+      <summary class="vency-collections__toggle">
+        <span class="label">NUESTRAS COLECCIONES</span>
+        <span class="vency-collections__chevron" aria-hidden="true">↓</span>
+      </summary>
+      <div class="vency-collections__inner">
+        <div class="vency-collections__panels">
+
+          <a class="vency-coll-panel" href="#cat-section-vency">
+            <span class="label vency-coll-panel__tag">ORIGINAL BLEND</span>
+            <p class="vency-coll-panel__desc">Composiciones originales. Fragancias que nacen en Heredia, sin referencia.</p>
+            <span class="vency-coll-panel__arrow" aria-hidden="true">→</span>
+          </a>
+
+          <a class="vency-coll-panel" href="#apple-whisper">
+            <span class="label vency-coll-panel__tag">ICON SERIES</span>
+            <p class="vency-coll-panel__desc">Interpretaciones fieles de íconos del nicho y ultra nicho.</p>
+            <span class="vency-coll-panel__arrow" aria-hidden="true">→</span>
+          </a>
+
+          <div class="vency-coll-panel vency-coll-panel--soon">
+            <span class="label vency-coll-panel__tag">HYBRID</span>
+            <p class="vency-coll-panel__desc">Fusiones que combinan múltiples referencias en una composición única.</p>
+            <span class="label vency-coll-panel__coming">PRÓXIMAMENTE</span>
+          </div>
+
+        </div>
+      </div>
+    </details>
+
+    <!-- ═══════════════════════════════════════════
+         VENCY ORIGINALS — editorial entries, buy inline
+         ═══════════════════════════════════════════ -->
+    <section class="cat-section cat-section--vency" id="cat-section-vency" data-cat="vency" aria-label="Creaciones Vency">
+      <div class="cat-section__header">
+        <h2 class="cat-section__title">Vency</h2>
+      </div>
+
+      <!-- Set builder intro: explains the mechanic before any chip interaction -->
+      <div class="dc-set-banner" role="note" aria-label="Información sobre el Set de Decants">
+        <div class="dc-set-banner__inner">
+          <div class="dc-set-banner__copy">
+            <span class="label ochre-label">SET DE DECANTS · ₡12.000</span>
+            <p class="dc-set-banner__body">Elige 3 fragancias a ₡5.000 c/u, 10 ml cada una. Toca <strong>Añadir al set</strong> en cualquier fragancia del catálogo para comenzar.</p>
+          </div>
+          <div class="dc-set-banner__slots" aria-hidden="true">
+            <span class="dc-set-banner__slot"></span>
+            <span class="dc-set-banner__slot"></span>
+            <span class="dc-set-banner__slot"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-brand">
+        <h3 class="cat-brand__name">Vency Atelier</h3>
+        <!-- Filled by catalogo.js buildVencySection() from VENCY_CATALOG -->
+        <div id="vency-compact-entries"></div>
+      </div>
+
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         CATÁLOGO COMPLETO — designer · nicho · ultra
+         ═══════════════════════════════════════════ -->
+    <div class="col-catalog-body" id="cat-listing" tabindex="-1">
+
+      <!-- Filter now lives inside .cat-header above -->
+
+      <!-- CATALOG — rendered by catalogo.js -->
+      <div id="cat-content" aria-live="polite"></div>
+
+      <!-- EMPTY STATE -->
+      <div class="cat-empty" aria-live="polite" aria-hidden="true">
+        <p class="cat-empty__msg">Sin resultados.</p>
+        <p class="cat-empty__hint">Prueba otro filtro.</p>
+      </div>
+
+      <div id="cat-sentinel" class="cat-sentinel" aria-hidden="true"></div>
+
+    </div><!-- /col-catalog-body -->
+
+    <!-- ORDER PANEL — expands when set is complete and "Ordenar" is tapped -->
+    <div class="dc-order" id="dc-order-panel" aria-live="polite">
+      <div class="dc-order__wrap">
+      <div class="dc-order__inner">
+
+        <div class="dc-order__summary">
+          <span class="label ochre-label">SU PEDIDO</span>
+          <div class="dc-order__lines js-dc-order-summary"></div>
+          <p class="dc-order__price js-dc-order-price">₡12.000</p>
+          <p class="dc-order__ref js-dc-order-ref" hidden></p>
+        </div>
+
+        <div class="delivery-group" role="group" aria-label="Método de entrega">
+          <span class="label">ENTREGA</span>
+          <div class="delivery-opts">
+            <label class="delivery-opt">
+              <input class="delivery-opt__radio js-delivery-radio" type="radio" name="delivery-decants" value="sinpe" checked>
+              <span class="delivery-opt__indicator"></span>
+              <span class="delivery-opt__text">
+                <span class="delivery-opt__name">SINPE Móvil</span>
+                <span class="delivery-opt__desc">Pago en línea · +506 7277-3156</span>
+              </span>
+            </label>
+            <label class="delivery-opt">
+              <input class="delivery-opt__radio js-delivery-radio" type="radio" name="delivery-decants" value="local">
+              <span class="delivery-opt__indicator"></span>
+              <span class="delivery-opt__text">
+                <span class="delivery-opt__name">Recoger en local</span>
+                <span class="delivery-opt__desc">Heredia · pago en sitio</span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="order-panel__pickup js-pickup-note" aria-hidden="true">
+          <p class="payment-method__note">Pasá a recoger al atelier en Heredia. El pago se realiza en sitio.</p>
+        </div>
+
+        <div class="order-panel__methods">
+          <div class="payment-method">
+            <span class="label">SINPE MÓVIL</span>
+            <p class="payment-method__number">+506 7277-3156</p>
+            <p class="payment-method__note js-dc-sinpe-note">Incluir en el mensaje: las tres fragancias elegidas</p>
+          </div>
+          <div class="payment-method">
+            <span class="label">DEPÓSITO BANCARIO</span>
+            <p class="payment-method__number">Banco Nacional</p>
+            <p class="payment-method__note">Cuenta: 000-000000-0 · Vency Atelier</p>
+          </div>
+        </div>
+
+        <div class="dc-order__actions">
+          <p class="order-panel__confirm">
+            Su pedido se confirma una vez recibido el comprobante de pago.
+            Envíelo por WhatsApp junto con su nombre.
+          </p>
+          <p class="order-panel__multi">¿Una orden grande o especial? <a href="https://wa.me/50672773156" target="_blank" rel="noopener">Escríbenos directamente.</a></p>
+          <a
+            href="#"
+            class="btn btn--primary js-dc-wa-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Enviar comprobante de pago por WhatsApp"
+          >
+            Enviar comprobante por WhatsApp
+          </a>
+        </div>
+
+      </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FIXED SELECTION TRAY -->
+  <div class="dc-tray" id="dc-tray" role="region" aria-label="Set en composición" aria-live="polite">
+    <div class="dc-tray__inner">
+      <div class="dc-tray__slots" aria-hidden="true">
+        <div class="dc-tray__slot" data-slot="0"><span class="dc-tray__slot-name">—</span></div>
+        <div class="dc-tray__slot" data-slot="1"><span class="dc-tray__slot-name">—</span></div>
+        <div class="dc-tray__slot" data-slot="2"><span class="dc-tray__slot-name">—</span></div>
+      </div>
+      <span class="dc-tray__bottles js-tray-bottles" hidden></span>
+      <p class="dc-tray__hint js-tray-hint" hidden></p>
+      <div class="dc-tray__action">
+        <span class="dc-tray__price js-dc-tray-price" aria-hidden="true"></span>
+        <button
+          class="btn btn--primary dc-tray__cta js-dc-order-btn"
+          disabled
+          aria-disabled="true"
+          aria-controls="dc-order-panel"
+          aria-expanded="false"
+        >
+          Ordenar set
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="index.html#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script src="../scripts/fragrance-data.js?v=19"></script>
+  <script src="../scripts/nav.js?v=19"></script>
+  <script src="../scripts/scroll.js?v=19"></script>
+  <script src="../scripts/catalogo-data.js?v=19"></script>
+  <script src="../scripts/catalogo.js?v=19"></script>
+  <script src="../scripts/decants.js?v=21"></script>
+</body>
+</html>

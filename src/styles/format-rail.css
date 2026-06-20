@@ -1,0 +1,473 @@
+/* ============================================================
+   FORMAT RAIL — Vency Atelier
+   Inline format selector: Set · 30ml · 100ml
+   Shared by coleccion, decants, and catalogo originals
+   ============================================================ */
+
+/* === RAIL CONTAINER === */
+.fmt-rail {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  background: inherit;
+}
+
+.fmt-rail--dbl {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* === OPTION BUTTONS / LINKS === */
+.fmt-rail__btn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fmt-rail__btn:last-child {
+  border-right: none;
+}
+
+.fmt-rail__btn:hover {
+  background: oklch(92% 0.006 80 / 0.5);
+}
+
+.fmt-rail__btn[aria-expanded="true"] {
+  background: var(--warm-ochre);
+}
+
+.fmt-rail__btn:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: -2px;
+}
+
+/* === OPTION TEXT === */
+.fmt-rail__label {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  line-height: 1.2;
+}
+
+.fmt-rail__price {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  color: var(--volcanic-ink);
+  line-height: 1;
+}
+
+.fmt-rail__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  line-height: 1.3;
+}
+
+/* Active state: text inverts over ochre */
+.fmt-rail__btn[aria-expanded="true"] .fmt-rail__label,
+.fmt-rail__btn[aria-expanded="true"] .fmt-rail__price,
+.fmt-rail__btn[aria-expanded="true"] .fmt-rail__desc {
+  color: var(--botanical-parchment);
+}
+
+/* === DARK BLOCK VARIANT === */
+.fmt-rail--inv {
+  border-top-color: var(--border-dark);
+}
+
+.fmt-rail--inv .fmt-rail__btn {
+  border-right-color: var(--border-dark);
+}
+
+.fmt-rail--inv .fmt-rail__btn:hover {
+  background: var(--volcanic-ink);
+}
+
+.fmt-rail--inv .fmt-rail__label,
+.fmt-rail--inv .fmt-rail__price {
+  color: var(--botanical-parchment);
+}
+
+.fmt-rail--inv .fmt-rail__desc {
+  color: var(--ink-deep);
+}
+
+.fmt-rail--inv .fmt-rail__btn[aria-expanded="true"] {
+  background: var(--warm-ochre-light);
+}
+
+/* AL SET button: pressed = ochre (same treatment as open panel buttons) */
+.fmt-rail__btn[aria-pressed="true"] {
+  background: var(--warm-ochre);
+}
+
+/* === SOLD OUT state === */
+.fmt-rail--sold-out {
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.fmt-rail__sold-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ink-muted);
+  opacity: 0.6;
+}
+
+.fmt-rail__btn[aria-pressed="true"] .fmt-rail__label,
+.fmt-rail__btn[aria-pressed="true"] .fmt-rail__price,
+.fmt-rail__btn[aria-pressed="true"] .fmt-rail__desc {
+  color: var(--botanical-parchment);
+}
+
+.fmt-rail--inv .fmt-rail__btn[aria-pressed="true"] {
+  background: var(--warm-ochre-light);
+}
+
+/* Fix: trigger inside rail is inline, not a full-card overlay */
+.fmt-rail .dblock__trigger {
+  position: static;
+  inset: auto;
+  width: auto;
+  height: auto;
+}
+
+/* === MOBILE === */
+@media (max-width: 600px) {
+  .fmt-rail {
+    grid-template-columns: 1fr;
+  }
+
+  .fmt-rail--dbl {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fmt-rail__btn {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: 0.7rem var(--space-sm);
+  }
+
+  .fmt-rail__btn:last-child {
+    border-bottom: none;
+  }
+
+  .fmt-rail--inv .fmt-rail__btn {
+    border-bottom-color: var(--border-dark);
+  }
+
+  .fmt-rail__price {
+    font-size: 1.1rem;
+  }
+}
+
+/* === CATALOG RAIL — TWO ZONES (all catalog rows: Vency compact + cat-entry) ===
+   Zone 1: "Añadir al set" toggle (primary, ochre).
+   Zone 2: "o frasco" buy strip (secondary, muted).
+   The two actions live in separate visual zones so they never compete. */
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.6rem;
+  padding: 0.7rem var(--space-md) 0.85rem;
+  background: oklch(93% 0.006 80);
+  border-top: 1px solid var(--border);
+  grid-template-columns: unset;
+  overflow: visible;
+}
+
+/* --- Zone 1: SET TOGGLE --- */
+.fmt-rail__set {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.9rem;
+  border: 1.5px solid oklch(76% 0.055 65);
+  border-radius: 3px;
+  background: oklch(92% 0.018 75);
+  cursor: pointer;
+  text-align: left;
+  flex: 0 1 auto;
+  min-height: 44px;
+  box-sizing: border-box;
+  transition: background 0.15s, border-color 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.fmt-rail__set:hover {
+  background: oklch(88% 0.025 72);
+  border-color: var(--warm-ochre);
+}
+
+.fmt-rail__set:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+.fmt-rail__set-mark {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border: 1.5px solid oklch(60% 0.06 65);
+  border-radius: 50%;
+  position: relative;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fmt-rail__set-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.fmt-rail__set-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  line-height: 1.2;
+}
+
+.fmt-rail__set-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  line-height: 1.2;
+}
+
+.fmt-rail__hint {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  line-height: 1.2;
+}
+
+/* Selected: soft ochre tint (not a heavy solid block), filled check, dark text */
+.fmt-rail__set[aria-pressed="true"] {
+  background: color-mix(in oklch, var(--warm-ochre) 18%, var(--botanical-parchment));
+  border-color: var(--warm-ochre);
+}
+
+.fmt-rail__set[aria-pressed="true"] .fmt-rail__set-mark {
+  background: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.fmt-rail__set[aria-pressed="true"] .fmt-rail__set-mark::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid var(--botanical-parchment);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fmt-rail__set[aria-pressed="true"] .fmt-rail__set-mark::after {
+    animation: set-check-in 0.34s var(--ease-expo);
+  }
+}
+
+@keyframes set-check-in {
+  from { opacity: 0; transform: rotate(45deg) scale(0.3); }
+  to   { opacity: 1; transform: rotate(45deg) scale(1); }
+}
+
+.fmt-rail__set[aria-pressed="true"] .fmt-rail__set-title {
+  color: var(--volcanic-ink);
+}
+
+.fmt-rail__set[aria-pressed="true"] .fmt-rail__hint {
+  color: oklch(48% 0.09 65);
+}
+
+/* Selected: meta line hides, hint takes over ("Toca para quitar") */
+.fmt-rail__set[aria-pressed="true"] .fmt-rail__set-meta {
+  display: none;
+}
+
+/* --- Zone 2: BUY STRIP --- */
+.fmt-rail__buy {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 1 auto;
+}
+
+.fmt-rail__buy-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-right: 0.1rem;
+  white-space: nowrap;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  min-height: 44px;
+  justify-content: center;
+  background: var(--botanical-parchment);
+  box-sizing: border-box;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:hover {
+  background: oklch(90% 0.010 75);
+  border-color: oklch(70% 0.05 65);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] {
+  background: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__label {
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__price {
+  font-size: 0.95rem;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] .fmt-rail__label,
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] .fmt-rail__price {
+  color: var(--botanical-parchment);
+}
+
+/* --- Ultra Nicho: dark entry context --- */
+.cat-section--ultra-nicho .cat-entry .fmt-rail {
+  background: var(--ink-surface-deep);
+  border-top-color: var(--border-dark);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set {
+  background: transparent;
+  border-color: var(--warm-ochre);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set:hover {
+  background: oklch(26% 0.018 65 / 0.5);
+  border-color: var(--warm-ochre-light);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set-title {
+  color: var(--botanical-parchment);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set-meta,
+.cat-section--ultra-nicho .cat-entry .fmt-rail__hint {
+  color: oklch(72% 0.03 70);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set-mark {
+  border-color: oklch(72% 0.05 65);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__buy-label {
+  color: oklch(62% 0.012 80);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] {
+  background: var(--warm-ochre-light);
+  border-color: var(--warm-ochre-light);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] .fmt-rail__set-title,
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] .fmt-rail__set-meta,
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] .fmt-rail__hint {
+  color: var(--volcanic-ink);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] .fmt-rail__set-mark {
+  background: var(--volcanic-ink);
+  border-color: var(--volcanic-ink);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__set[aria-pressed="true"] .fmt-rail__set-mark::after {
+  border-color: var(--warm-ochre-light);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__buy-btn {
+  background: var(--ink-surface);
+  border-color: var(--border-dark);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__buy-btn:hover {
+  background: oklch(30% 0.015 65);
+  border-color: var(--warm-ochre);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__label {
+  color: oklch(72% 0.01 80);
+}
+
+.cat-section--ultra-nicho .cat-entry .fmt-rail__price {
+  color: var(--botanical-parchment);
+}
+
+/* --- Mobile: set toggle full width, buy strip below --- */
+@media (max-width: 600px) {
+  :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .fmt-rail__set {
+    flex: 1 1 auto;
+  }
+
+  .fmt-rail__buy {
+    justify-content: flex-start;
+  }
+
+  :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn {
+    flex: 1 1 0;
+  }
+}
+
+/* === REDUCED MOTION === */
+@media (prefers-reduced-motion: reduce) {
+  .fmt-panel {
+    transition: none;
+  }
+}

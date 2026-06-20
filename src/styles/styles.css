@@ -1,0 +1,1644 @@
+/* ============================================================
+   VENCY ATELIER — Design System
+   Creative North Star: "The Volcanic Garden"
+   ============================================================ */
+
+/* === TOKENS === */
+:root {
+  /* Material palette */
+  --volcanic-ink:        oklch(18% 0.04 180);
+  --botanical-parchment: oklch(95% 0.007 90);
+  --warm-ochre:          oklch(55% 0.10 55);
+  --sage-mineral:        oklch(48% 0.10 145);
+  --atelier-stone:       oklch(75% 0.005 80);
+
+  /* Hover state: volcanic ink lightened */
+  --volcanic-ink-hover:  oklch(26% 0.035 180);
+
+  /* Muted ink tones for secondary text — pass WCAG AA on parchment bg */
+  --ink-muted:           oklch(40% 0.022 180); /* ~5.5:1 on parchment, all text sizes */
+  --ink-subdued:         oklch(44% 0.018 180); /* ~4.7:1 on parchment, all text sizes */
+
+  /* Per-fragrance accent — Tabaco y Miel warm tobacco brown */
+  --tobacco-ink:         oklch(24% 0.055 48);
+
+  /* Per-fragrance identities */
+  --rouge-ink:           oklch(20% 0.055 5);    /* Vency Rouge deep burgundy */
+  --carmesi-blush:       oklch(91% 0.016 355);  /* Infusión Carmesí rose parchment */
+  --ventisca-mist:       oklch(93% 0.005 210);  /* Ventisca icy blue-grey */
+  --resina-dark:         oklch(14% 0.028 50);   /* Resina Dorada near-black amber */
+
+  /* Warm-ochre tonal variants */
+  --warm-ochre-light:    oklch(70% 0.09 55);    /* light inverse / text on dark bg */
+  --warm-ochre-dark:     oklch(48% 0.085 55);   /* hover / pressed state */
+
+  /* Muted ink tones for dark-section contexts */
+  --ink-on-dark:         oklch(95% 0.007 90);   /* parchment alias for dark-bg clarity */
+  --ink-deep:            oklch(64% 0.018 180);  /* muted text on dark sections (~4.8:1, AA) */
+
+  /* Ultra-nicho dark surfaces (volcanic ink family) */
+  --ink-surface-deep:    oklch(18% 0.008 180);  /* dark rail ground */
+  --ink-surface:         oklch(22% 0.008 180);  /* dark chip ground */
+
+  /* Fluid type scale */
+  --text-narrative:      clamp(1rem, 1.8vw, 1.15rem); /* running prose, all frag narratives */
+
+  /* Surfaces */
+  --bg:      var(--botanical-parchment);
+  --fg:      var(--volcanic-ink);
+  --border:  var(--atelier-stone);
+  --border-dark: oklch(28% 0.03 180);
+
+  /* Easing */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Fluid spacing */
+  --space-xs:  clamp(0.5rem, 1vw, 0.75rem);
+  --space-sm:  clamp(1rem, 2vw, 1.5rem);
+  --space-md:  clamp(1.75rem, 4vw, 3rem);
+  --space-lg:  clamp(3.5rem, 7vw, 6rem);
+  --space-xl:  clamp(5.5rem, 11vw, 10rem);
+
+  /* Nav */
+  --nav-h: 4.5rem;
+}
+
+/* === RESET === */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--botanical-parchment);
+  color: var(--volcanic-ink);
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* === SKIP NAV === */
+.skip-nav {
+  position: absolute;
+  top: -200%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1.25rem;
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+.skip-nav:focus {
+  top: 1rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* === TYPOGRAPHY UTILITIES === */
+.label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.675rem;
+  font-weight: 500;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  color: var(--volcanic-ink);
+}
+.label--faint {
+  color: var(--ink-muted);
+}
+
+/* Palette-named label variants */
+.sage-label  { color: var(--sage-mineral); }
+.ochre-label { color: var(--warm-ochre); }
+
+/* === SCROLL ANIMATION === */
+.animate-in {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity  0.85s var(--ease-expo),
+    transform 0.85s var(--ease-expo);
+  transition-delay: var(--delay, 0ms);
+}
+.animate-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-in {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Nav stagger: skip animation, show links immediately on open */
+  .nav.is-open .nav__links .nav__link {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: color 0.2s !important;
+  }
+}
+
+/* === BUTTONS === */
+.btn {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 2.25rem;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    background-color 0.3s var(--ease-expo),
+    color            0.3s var(--ease-expo);
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+  transition-duration: 80ms;
+}
+
+.btn--primary {
+  background-color: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+}
+.btn--primary:hover,
+.btn--primary:focus-visible {
+  background-color: var(--volcanic-ink-hover);
+  outline: none;
+}
+.btn--primary:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 3px;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 1.25rem var(--space-md);
+  background-color: oklch(95% 0.007 90 / 0.97);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav__logo {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  transition: color 0.2s;
+}
+.nav__logo:hover {
+  color: var(--ink-subdued);
+}
+.nav__logo:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 3px;
+}
+
+.nav__links {
+  display: flex;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.nav__link {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.675rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-subdued);
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+}
+.nav__link:hover,
+.nav__link:focus-visible {
+  color: var(--volcanic-ink);
+  outline: none;
+}
+.nav__link:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   NAV — HAMBURGER (mobile)
+   ============================================================ */
+.nav__toggle {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .nav__toggle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 2.75rem;
+    height: 2.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--volcanic-ink);
+    padding: 0;
+    flex-shrink: 0;
+  }
+
+  .nav__toggle:focus-visible {
+    outline: 2px solid var(--warm-ochre);
+    outline-offset: 3px;
+  }
+
+  .nav__toggle-bar {
+    display: block;
+    width: 1.2rem;
+    height: 1.5px;
+    background-color: currentColor;
+    transform-origin: center;
+    transition:
+      transform  0.35s var(--ease-expo),
+      opacity    0.2s;
+  }
+
+  /* X state when open */
+  .nav__toggle[aria-expanded="true"] .nav__toggle-bar:first-child {
+    transform: translateY(3.25px) rotate(45deg);
+  }
+  .nav__toggle[aria-expanded="true"] .nav__toggle-bar:last-child {
+    transform: translateY(-3.25px) rotate(-45deg);
+  }
+
+  /* Links panel: hidden by default, full-width stacked column */
+  .nav__links {
+    flex-basis: 100%;
+    flex-direction: column;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.45s var(--ease-expo);
+  }
+
+  .nav.is-open .nav__links {
+    max-height: 18rem;
+  }
+
+  .nav__links .nav__link {
+    display: flex;
+    align-items: center;
+    min-block-size: 3rem;
+    padding-block: 0;
+    border-bottom: 1px solid var(--border);
+    /* Stagger entrance: start invisible and shifted */
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  .nav__links li:last-child .nav__link {
+    border-bottom: none;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Staggered slide-in when menu opens */
+  .nav.is-open .nav__links li:nth-child(1) .nav__link {
+    opacity: 1;
+    transform: translateX(0);
+    transition: color 0.2s, opacity 0.32s var(--ease-expo) 80ms, transform 0.32s var(--ease-expo) 80ms;
+  }
+  .nav.is-open .nav__links li:nth-child(2) .nav__link {
+    opacity: 1;
+    transform: translateX(0);
+    transition: color 0.2s, opacity 0.32s var(--ease-expo) 145ms, transform 0.32s var(--ease-expo) 145ms;
+  }
+  .nav.is-open .nav__links li:nth-child(3) .nav__link {
+    opacity: 1;
+    transform: translateX(0);
+    transition: color 0.2s, opacity 0.32s var(--ease-expo) 210ms, transform 0.32s var(--ease-expo) 210ms;
+  }
+  .nav.is-open .nav__links li:nth-child(4) .nav__link {
+    opacity: 1;
+    transform: translateX(0);
+    transition: color 0.2s, opacity 0.32s var(--ease-expo) 275ms, transform 0.32s var(--ease-expo) 275ms;
+  }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  min-height: 100svh;
+  padding-top: calc(var(--nav-h) + var(--space-lg));
+  padding-bottom: var(--space-lg);
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+}
+
+.hero__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+  min-height: calc(100svh - var(--nav-h) - var(--space-lg) * 2);
+}
+
+@media (min-width: 768px) {
+  .hero__inner {
+    grid-template-columns: 56% 44%;
+    gap: var(--space-md);
+  }
+}
+
+.hero__headline {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(3.5rem, 9vw, 7.5rem);
+  line-height: 0.92;
+  color: var(--volcanic-ink);
+  margin-bottom: var(--space-md);
+  letter-spacing: -0.01em;
+}
+
+.hero__headline-line {
+  display: block;
+}
+
+.hero__body {
+  max-width: 50ch;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--ink-subdued);
+  margin-bottom: var(--space-md);
+}
+
+.hero__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: var(--space-sm);
+}
+
+.hero__sessions-teaser {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.hero__provenance {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-top: var(--space-sm);
+}
+
+.hero__media {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--atelier-stone);
+  max-height: 82svh;
+}
+
+.hero__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ============================================================
+   LA COLECCIÓN
+   ============================================================ */
+/* === COLLECTIONS INTRO — homepage 3-panel === */
+.colls-intro {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  scroll-margin-top: var(--nav-h);
+}
+
+.colls-intro__hdr {
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  max-width: 1440px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.colls-intro__title {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.0;
+  margin-top: 0.85rem;
+}
+
+.colls-intro__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  min-height: 65svh;
+}
+
+.coll-block {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.coll-block:last-child {
+  border-right: none;
+}
+
+.coll-block__img-wrap {
+  flex: 1;
+  overflow: hidden;
+  background: var(--atelier-stone);
+  min-height: 0;
+}
+
+.coll-block__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.1s var(--ease-expo);
+}
+
+a.coll-block:hover .coll-block__img-wrap img {
+  transform: scale(1.03);
+}
+
+.coll-block__content {
+  padding: var(--space-md);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--botanical-parchment);
+}
+
+.coll-block__tag {
+  color: var(--warm-ochre);
+}
+
+.coll-block__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  line-height: 1.05;
+  color: var(--volcanic-ink);
+  margin-top: 0.1rem;
+}
+
+.coll-block__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--ink-muted);
+}
+
+.coll-block__cta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm-ochre);
+  text-decoration: none;
+  margin-top: 0.35rem;
+  display: block;
+  transition: color 0.15s;
+}
+
+a.coll-block:hover .coll-block__cta {
+  color: var(--warm-ochre-dark);
+}
+
+/* HYBRID — dark, no image */
+.coll-block--hybrid {
+  background: var(--volcanic-ink);
+  position: relative;
+  overflow: hidden;
+}
+
+.coll-block--hybrid::before {
+  content: '∞';
+  position: absolute;
+  bottom: -0.1em;
+  right: var(--space-md);
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: 18vw;
+  line-height: 1;
+  color: var(--botanical-parchment);
+  opacity: 0.06;
+  pointer-events: none;
+  user-select: none;
+}
+
+.coll-block--hybrid .coll-block__content {
+  flex: 1;
+  background: var(--volcanic-ink);
+  border-top: none;
+  justify-content: flex-end;
+}
+
+.coll-block--hybrid .coll-block__tag {
+  color: var(--warm-ochre-light);
+}
+
+.coll-block--hybrid .coll-block__name {
+  color: var(--botanical-parchment);
+}
+
+.coll-block--hybrid .coll-block__desc {
+  color: oklch(58% 0.015 180);
+}
+
+.coll-block__cta--wa {
+  color: var(--warm-ochre-light);
+}
+
+.coll-block__cta--wa:hover {
+  color: oklch(80% 0.09 55);
+}
+
+@media (max-width: 899px) {
+  .colls-intro__grid {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .coll-block {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .coll-block:last-child {
+    border-bottom: none;
+  }
+
+  .coll-block__img-wrap {
+    height: 260px;
+    flex: none;
+  }
+
+  .coll-block--hybrid {
+    min-height: 200px;
+  }
+
+  .coll-block--hybrid .coll-block__content {
+    justify-content: flex-start;
+  }
+}
+
+/* Base fragrance styles */
+.fragrance {
+  padding: var(--space-lg) var(--space-md);
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  border-top: 1px solid var(--border);
+}
+
+.fragrance__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  line-height: 1.0;
+  margin: 0.6rem 0 1.1rem;
+}
+
+.fragrance__name--display {
+  font-size: clamp(2.5rem, 6vw, 4.75rem);
+  line-height: 0.95;
+  font-weight: 900;
+}
+
+.fragrance__narrative {
+  font-size: var(--text-narrative);
+  line-height: 1.7;
+  max-width: 52ch;
+  opacity: 0.82;
+  margin-bottom: 1.75rem;
+}
+
+.fragrance__formats {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.fragrance__dot {
+  color: var(--border);
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Fragrance split: image left, text right */
+.fragrance--split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .fragrance--split {
+    grid-template-columns: 58% 42%;
+    gap: var(--space-md);
+  }
+}
+
+.fragrance--split .fragrance__media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--atelier-stone);
+}
+
+.fragrance--split .fragrance__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-expo);
+}
+
+.fragrance--split:hover .fragrance__media img {
+  transform: scale(1.03);
+}
+
+/* Fragrance text-only: indented block */
+.fragrance--text {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+.fragrance__text-block {
+  margin-left: 0;
+}
+
+@media (min-width: 768px) {
+  .fragrance__text-block {
+    margin-left: 36%;
+    max-width: 55ch;
+  }
+}
+
+/* Fragrance dominant: wide image, caption below */
+.fragrance--dominant {}
+
+.fragrance__media--wide {
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  background-color: var(--atelier-stone);
+  margin-bottom: var(--space-md);
+}
+
+.fragrance__media--wide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-expo);
+}
+
+.fragrance--dominant:hover .fragrance__media--wide img {
+  transform: scale(1.02);
+}
+
+.fragrance__caption {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 768px) {
+  .fragrance__caption {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* ============================================================
+   EL PERFUMISTA
+   ============================================================ */
+.perfumista {
+  background-color: var(--volcanic-ink);
+  padding: 0 var(--space-md) var(--space-xl);
+  border-top: 1px solid oklch(22% 0.04 180);
+  overflow: hidden;
+  scroll-margin-top: var(--nav-h);
+}
+
+.perfumista__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .perfumista__inner {
+    grid-template-columns: 56% 44%;
+    gap: var(--space-lg);
+  }
+}
+
+.perfumista__name {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 0.90;
+  color: var(--botanical-parchment);
+  margin: 1rem 0 var(--space-md);
+  letter-spacing: -0.01em;
+}
+
+.perfumista__body {
+  max-width: 55ch;
+  font-size: var(--text-narrative);
+  line-height: 1.7;
+  color: var(--botanical-parchment);
+  opacity: 0.8;
+  margin-bottom: 1.25rem;
+}
+
+.perfumista__media {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: oklch(24% 0.03 180);
+  max-height: 75svh;
+}
+
+.perfumista__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* Labels inside dark section */
+.perfumista .label--faint {
+  color: var(--botanical-parchment);
+  opacity: 0.45;
+}
+
+/* ============================================================
+   SESIONES DE ATELIER
+   ============================================================ */
+.sessions {
+  padding: var(--space-lg) var(--space-md) var(--space-xl);
+  background-color: var(--volcanic-ink);
+  scroll-margin-top: var(--nav-h);
+}
+
+.sessions__inner {
+  max-width: 600px;
+}
+
+.sessions__headline {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 7.5vw, 5.5rem);
+  line-height: 0.92;
+  color: var(--botanical-parchment);
+  margin: 0.85rem 0 var(--space-md);
+}
+
+.sessions__body {
+  font-size: var(--text-narrative);
+  line-height: 1.7;
+  max-width: 52ch;
+  margin: 0 0 var(--space-sm);
+  color: var(--botanical-parchment);
+  opacity: 0.8;
+}
+
+.sessions__cta {
+  margin-top: var(--space-md);
+}
+
+/* ============================================================
+   CÓMO SE HACE
+   ============================================================ */
+.process {
+  padding: var(--space-xl) var(--space-md);
+  background-color: var(--botanical-parchment);
+  scroll-margin-top: var(--nav-h);
+}
+
+.process__header {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+}
+
+.process__title {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  line-height: 1.0;
+}
+
+.process__list {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.process__step {
+  border-top: 1px solid var(--border);
+  padding: var(--space-lg) 0;
+}
+
+.process__step-inner {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+  align-items: center;
+}
+
+@media (min-width: 768px) {
+  .process__step-inner {
+    grid-template-columns: 1fr 38%;
+    gap: var(--space-lg);
+  }
+}
+
+.process__step-num {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(4rem, 8vw, 7rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--warm-ochre);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.process__step--dark {
+  background: var(--volcanic-ink);
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  margin-left: calc(-1 * var(--space-md));
+  margin-right: calc(-1 * var(--space-md));
+}
+
+.process__step--dark .process__step-name,
+.process__step--dark .process__step-body {
+  color: var(--botanical-parchment);
+}
+
+.process__step--dark .process__step-body {
+  opacity: 0.7;
+}
+
+.process__step-name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  line-height: 1.05;
+  margin: 0.6rem 0 1rem;
+}
+
+.process__step-body {
+  max-width: 58ch;
+  font-size: clamp(0.95rem, 1.8vw, 1.1rem);
+  line-height: 1.7;
+  opacity: 0.78;
+}
+
+.process__step-media {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--atelier-stone);
+}
+
+.process__step-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s var(--ease-expo);
+}
+
+.process__step:hover .process__step-media img {
+  transform: scale(1.04);
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  background-color: var(--volcanic-ink);
+  padding: var(--space-lg) var(--space-md);
+}
+
+.footer__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  text-align: center;
+}
+
+.footer__wordmark {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--botanical-parchment);
+}
+
+.footer__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.footer__link {
+  display: inline-block;
+  padding: 0.35rem 0;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.675rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--botanical-parchment);
+  opacity: 0.55;
+  transition: opacity 0.2s;
+}
+
+.footer__link:hover,
+.footer__link:focus-visible {
+  opacity: 1;
+  outline: none;
+}
+.footer__link:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+/* Footer label override for dark bg */
+.footer .label--faint {
+  color: var(--botanical-parchment);
+  opacity: 0.38;
+}
+
+/* ============================================================
+   INLINE ORDERING — Format toggle, price, panel
+   Shared between homepage and collection page
+   ============================================================ */
+
+.format-group {
+  margin-bottom: var(--space-md);
+}
+
+.format-group__label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--ink-muted);
+}
+
+.format-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  width: fit-content;
+  margin-bottom: var(--space-sm);
+}
+
+.format-toggle__opt {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+}
+
+.format-toggle__radio {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.format-toggle__face {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  padding: 0.75rem 1.25rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.format-toggle__opt + .format-toggle__opt .format-toggle__face {
+  border-left: 1px solid var(--border);
+}
+
+/* Hover on unselected option */
+.format-toggle__opt:hover .format-toggle__radio:not(:checked) + .format-toggle__face {
+  background-color: oklch(91% 0.006 90);
+}
+
+.format-toggle__radio:checked + .format-toggle__face {
+  background-color: var(--warm-ochre);
+  color: var(--botanical-parchment);
+  /* Absorb the divider border so no gap appears between options */
+  border-left-color: var(--warm-ochre);
+}
+
+.format-toggle__radio:focus-visible + .format-toggle__face {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: -2px;
+}
+
+@media (max-width: 600px) {
+  .format-toggle {
+    width: 100%;
+    max-width: 100%;
+  }
+  .format-toggle__opt {
+    flex: 1;
+  }
+  .format-toggle__face {
+    text-align: center;
+    justify-content: center;
+    padding: 0.65rem 0.3rem;
+    font-size: 0.62rem;
+    white-space: normal;
+    line-height: 1.4;
+  }
+  /* WA button: long text, prevent overflow */
+  .order-panel .js-wa-btn {
+    display: block;
+    text-align: center;
+    white-space: normal;
+  }
+}
+
+/* Inverted toggle (dark sections) */
+.format-toggle--inv {
+  border-color: oklch(32% 0.03 180);
+}
+
+.format-toggle--inv .format-toggle__opt + .format-toggle__opt .format-toggle__face {
+  border-left-color: oklch(32% 0.03 180);
+}
+
+.format-toggle--inv .format-toggle__face {
+  /* Explicit alpha color so the transition animates smoothly (no opacity jump) */
+  color: color-mix(in oklch, var(--botanical-parchment) 60%, transparent);
+}
+
+.format-toggle--inv .format-toggle__opt:hover .format-toggle__radio:not(:checked) + .format-toggle__face {
+  background-color: oklch(28% 0.04 180);
+  color: var(--botanical-parchment);
+}
+
+.format-toggle--inv .format-toggle__radio:checked + .format-toggle__face {
+  background-color: var(--botanical-parchment);
+  color: var(--volcanic-ink);
+  border-left-color: var(--botanical-parchment);
+}
+
+/* Warm toggle (tobacco sections) */
+.format-toggle--warm {
+  border-color: oklch(38% 0.07 48);
+}
+
+.format-toggle--warm .format-toggle__opt + .format-toggle__opt .format-toggle__face {
+  border-left-color: oklch(38% 0.07 48);
+}
+
+.format-toggle--warm .format-toggle__face {
+  color: color-mix(in oklch, var(--botanical-parchment) 60%, transparent);
+}
+
+.format-toggle--warm .format-toggle__opt:hover .format-toggle__radio:not(:checked) + .format-toggle__face {
+  background-color: oklch(30% 0.065 48);
+  color: var(--botanical-parchment);
+}
+
+.format-toggle--warm .format-toggle__radio:checked + .format-toggle__face {
+  background-color: var(--botanical-parchment);
+  color: var(--tobacco-ink);
+  border-left-color: var(--botanical-parchment);
+  opacity: 1;
+}
+
+.format-toggle--warm .format-toggle__radio:focus-visible + .format-toggle__face {
+  outline: 2px solid var(--botanical-parchment);
+  outline-offset: -2px;
+}
+
+/* === DELIVERY OPTION BLOCKS === */
+.delivery-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-sm);
+}
+
+.delivery-opt {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--border);
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+
+.delivery-opt__radio {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.delivery-opt__indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  transition: border-color 0.15s, background 0.15s;
+  pointer-events: none;
+}
+
+.delivery-opt__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  pointer-events: none;
+}
+
+.delivery-opt__name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--volcanic-ink);
+}
+
+.delivery-opt__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 400;
+  color: var(--ink-muted);
+}
+
+.delivery-opt:hover {
+  border-color: oklch(72% 0.09 75 / 0.5);
+}
+
+.delivery-opt:has(.delivery-opt__radio:checked) {
+  border-color: var(--warm-ochre);
+  border-left-width: 3px;
+  padding-left: calc(1rem - 2px);
+  background: oklch(97% 0.012 75);
+}
+
+.delivery-opt__radio:checked + .delivery-opt__indicator {
+  background: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.delivery-opt:has(.delivery-opt__radio:checked) .delivery-opt__name {
+  font-weight: 600;
+}
+
+.delivery-opt__radio:focus-visible + .delivery-opt__indicator {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+/* Format price display */
+.format-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.format-price__amount {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1;
+  color: var(--volcanic-ink);
+  transition: opacity 0.2s;
+}
+
+.format-price--light .format-price__amount {
+  color: var(--botanical-parchment);
+}
+
+/* Inverted button (dark sections) */
+.btn--inv {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 2.25rem;
+  border: 1px solid oklch(40% 0.03 180);
+  border-radius: 0;
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--botanical-parchment);
+  transition: background-color 0.3s var(--ease-expo), color 0.3s var(--ease-expo);
+  text-decoration: none;
+}
+
+.btn--inv:hover,
+.btn--inv:focus-visible {
+  background-color: var(--botanical-parchment);
+  color: var(--volcanic-ink);
+  border-color: var(--botanical-parchment);
+  outline: none;
+}
+
+.btn--inv:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 3px;
+}
+
+/* Order panel — expanding disclosure */
+.order-panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.6s var(--ease-expo),
+    opacity    0.5s var(--ease-expo);
+}
+
+.order-panel.is-open {
+  max-height: 1400px;
+  opacity: 1;
+}
+
+.order-panel__inner {
+  padding: var(--space-md) 0;
+  border-top: 2px solid var(--warm-ochre);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.order-panel--dark .order-panel__inner {
+  border-top-color: var(--warm-ochre);
+}
+
+/* Wide panel variant (panoramic layout) */
+.order-panel--wide {
+  padding: 0 var(--space-md);
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.order-panel__inner--wide {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-md);
+}
+
+@media (min-width: 900px) {
+  .order-panel__inner--wide {
+    grid-template-columns: auto 1fr auto;
+    align-items: start;
+    gap: var(--space-lg);
+  }
+}
+
+.order-panel__summary {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.order-panel__item {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+  line-height: 1.1;
+  color: var(--volcanic-ink);
+}
+
+.order-panel__item--light {
+  color: var(--botanical-parchment);
+}
+
+.order-panel__methods {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+@media (min-width: 640px) {
+  .order-panel__methods {
+    flex-direction: row;
+    gap: var(--space-lg);
+  }
+}
+
+.payment-method {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.payment-method__number {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  line-height: 1.2;
+  color: var(--volcanic-ink);
+}
+
+.payment-method__number--light {
+  color: var(--botanical-parchment);
+}
+
+.payment-method__note {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--ink-subdued);
+}
+
+.payment-method__note--light {
+  color: var(--botanical-parchment);
+}
+
+.order-panel__confirm {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  max-width: 52ch;
+  color: var(--ink-subdued);
+}
+
+.order-panel__confirm--light {
+  color: var(--botanical-parchment);
+}
+
+.order-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .order-panel {
+    transition: opacity 0.2s;
+  }
+  .order-panel.is-open {
+    max-height: none;
+  }
+}
+
+
+/* ============================================================
+   MOBILE POLISH — Shared layout refinements (index.html)
+   ============================================================ */
+@media (max-width: 767px) {
+  /* Hero: nav wraps to 2 rows on mobile (~90px tall), needs extra clearance */
+  .hero {
+    padding-top: calc(var(--nav-h) + var(--space-lg));
+    padding-bottom: var(--space-md);
+  }
+
+  .hero__inner {
+    gap: var(--space-md);
+    min-height: unset;
+  }
+
+  /* Cap the portrait image so it doesn't eat the entire viewport */
+  .hero__media {
+    max-height: 58svh;
+  }
+
+}
+
+/* ============================================================
+   QUICK-NAV (shared: coleccion + legal)
+   Slim horizontal anchor bar, scrollable on mobile
+   ============================================================ */
+.frag-nav {
+  position: relative;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.frag-nav::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fade hint — signals there's more to scroll */
+.frag-nav::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 3.5rem;
+  background: linear-gradient(to right, transparent, var(--botanical-parchment));
+  pointer-events: none;
+  z-index: 1;
+}
+
+.frag-nav__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  gap: 0.5rem 1.5rem;
+  align-items: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.frag-nav__link {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  transition: color 0.2s;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 2.75rem;
+}
+
+.frag-nav__link:hover,
+.frag-nav__link:focus-visible {
+  color: var(--volcanic-ink);
+  outline: none;
+}
+
+.frag-nav__link:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+.frag-nav__link--active {
+  color: var(--volcanic-ink);
+  font-weight: 600;
+}
+
+.frag-nav__sep {
+  color: var(--border);
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+@media (max-width: 768px) {
+  .frag-nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--botanical-parchment);
+  }
+}
+
+/* === BACK TO TOP (shared: catálogo + colección) === */
+.to-top {
+  position: fixed;
+  right: var(--space-md);
+  bottom: var(--space-md);
+  z-index: 250;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--warm-ochre);
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease, bottom 0.32s var(--ease-expo), background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Lift above the decant tray when it's open (--tray-h set by decants.js, catálogo only) */
+.has-tray .to-top {
+  bottom: calc(var(--tray-h, 120px) + var(--space-sm));
+}
+
+@media (hover: hover) {
+  .to-top:hover {
+    background: var(--warm-ochre);
+    color: var(--volcanic-ink);
+  }
+}
+
+.to-top:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 3px;
+}
+

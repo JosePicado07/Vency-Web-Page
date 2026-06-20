@@ -1,0 +1,862 @@
+/* ============================================================
+   CATALOG — Vency Atelier
+   Scalable fragrance index: filter bar + entry grid
+   Used by coleccion.html and (filter bar) decants.html
+   ============================================================ */
+
+/* === FILTER BAR === */
+.catalog-filters {
+  border-bottom: 1px solid var(--border);
+  padding: 0 var(--space-md);
+}
+
+.catalog-filters__inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+/* === ACCORDION ROWS === */
+.filter-row {
+  border-top: 1px solid var(--border);
+}
+
+.filter-row--inspiration {
+  display: none;
+}
+.filter-row--inspiration.has-options {
+  display: block;
+}
+
+.filter-row__header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.85rem 0;
+  cursor: pointer;
+  text-align: left;
+  gap: 0.75rem;
+}
+
+.filter-row__header:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+.filter-row__label {
+  color: var(--ink-muted);
+  transition: color 0.2s;
+  flex-shrink: 0;
+}
+
+.filter-row__header:hover .filter-row__label,
+.filter-row.is-open .filter-row__label {
+  color: var(--volcanic-ink);
+}
+
+/* Count badge: visible on collapsed rows with active filters */
+.filter-row__count {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--warm-ochre);
+  flex-shrink: 0;
+}
+
+/* Ruling line filling the gap */
+.filter-row__rule {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  transition: background 0.25s;
+}
+
+.filter-row__header:hover .filter-row__rule,
+.filter-row.is-open .filter-row__rule {
+  background: var(--warm-ochre);
+}
+
+/* + mark, rotates 45° to form × when open */
+.filter-row__indicator {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s;
+  user-select: none;
+}
+
+.filter-row.is-open .filter-row__indicator {
+  transform: rotate(45deg);
+  color: var(--volcanic-ink);
+}
+
+/* Collapsible pill body */
+.filter-row__body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.filter-row.is-open .filter-row__body {
+  max-height: 28rem;
+}
+
+.filter-row__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-bottom: var(--space-sm);
+}
+
+.filter-pill {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.75rem 1rem;
+  min-height: 44px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.filter-pill:hover {
+  color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.filter-pill.is-active {
+  background: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+  color: var(--botanical-parchment);
+}
+
+.filter-pill:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+/* Filter footer */
+.catalog-filters__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+  gap: 1rem;
+}
+
+.catalog-filters__count {
+  color: var(--ink-muted);
+}
+
+.catalog-filters__clear {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s;
+  padding: 0;
+}
+
+.catalog-filters__clear:hover {
+  text-decoration-color: var(--warm-ochre);
+}
+
+/* === CATALOG GRID === */
+.catalog-grid {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+/* === INFINITE SCROLL SENTINELS === */
+.col-sentinel,
+.cat-sentinel {
+  height: 1px;
+  pointer-events: none;
+}
+
+@media (min-width: 680px) {
+  .catalog-grid {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* === CATALOG ENTRY === */
+.catalog-entry {
+  border-top: 1px solid var(--border);
+  transition: border-top-color 0.25s;
+  position: relative;
+  background: color-mix(in oklch, var(--entry-accent, transparent) 4%, var(--botanical-parchment));
+  scroll-margin-top: var(--nav-h);
+}
+
+@media (min-width: 680px) {
+  .catalog-entry:nth-child(even) {
+    border-left: 1px solid var(--border);
+  }
+
+  .catalog-entry--featured {
+    grid-column: 1 / -1;
+    border-left: none;
+  }
+}
+
+.catalog-entry:hover {
+  border-top-color: var(--warm-ochre);
+}
+
+.catalog-entry--hidden {
+  display: none;
+}
+
+/* === VENCY ORIGINALS (catalog section) === */
+.cat-section--vency {
+  border-bottom: 3px solid var(--volcanic-ink);
+}
+
+.catalog-entry--vency {
+  display: flex;
+  flex-direction: column;
+  background: var(--entry-bg, var(--botanical-parchment));
+  border-top: 1px solid var(--border);
+  border-left: none;
+  grid-column: unset;
+}
+
+.catalog-entry--vency:hover {
+  border-top-color: inherit;
+}
+
+/* Image: always visible (override default display:none) */
+.catalog-entry--vency .catalog-entry__image {
+  display: block;
+  height: 56vw;
+  max-height: 480px;
+  flex-shrink: 0;
+}
+
+/* Body column: content + rail stacked */
+.catalog-entry--vency .catalog-entry__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.catalog-entry--vency .catalog-entry__content {
+  flex: 1;
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* Desktop: side-by-side, alternating image position */
+@media (min-width: 768px) {
+  .catalog-entry--vency {
+    flex-direction: row;
+    min-height: 400px;
+  }
+  .catalog-entry--vency:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+  .catalog-entry--vency:nth-child(even) {
+    border-left: none;
+  }
+  .catalog-entry--vency .catalog-entry__image {
+    flex: 0 0 42%;
+    height: auto;
+    max-height: none;
+  }
+}
+
+/* Dark variant — inverted text */
+.catalog-entry--vency-inv .catalog-entry__name,
+.catalog-entry--vency-inv .catalog-entry__narrative,
+.catalog-entry--vency-inv .catalog-entry__tag-list,
+.catalog-entry--vency-inv .catalog-entry__meta-label {
+  color: var(--botanical-parchment);
+}
+
+.catalog-entry--vency-inv .catalog-entry__category {
+  color: var(--warm-ochre-light);
+}
+
+.catalog-entry--vency-inv {
+  border-top-color: oklch(24% 0.03 180);
+}
+
+/* Set builder states */
+.catalog-entry--vency.dblock--selected {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: -2px;
+}
+
+.catalog-entry--vency.dblock--dimmed {
+  opacity: 0.45;
+}
+
+/* Image: hidden below 900px, shown via desktop block below */
+.catalog-entry__image {
+  display: none;
+  overflow: hidden;
+}
+
+.catalog-entry__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.88) contrast(1.05);
+}
+
+.catalog-entry__content {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.catalog-entry__head {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.catalog-entry__dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--entry-accent, var(--border));
+  flex-shrink: 0;
+}
+
+.catalog-entry__category {
+  color: var(--warm-ochre);
+}
+
+.catalog-entry__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.0;
+  color: var(--volcanic-ink);
+  letter-spacing: -0.01em;
+  margin-top: 0.1rem;
+}
+
+.catalog-entry--featured .catalog-entry__name {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.catalog-entry__narrative {
+  font-size: var(--text-narrative);
+  line-height: 1.6;
+  color: var(--ink-muted);
+  max-width: 40ch;
+  flex-grow: 1;
+}
+
+/* Meta block: notes, ocasion, inspiration */
+.catalog-entry__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.catalog-entry__meta-label {
+  display: block;
+  color: var(--ink-muted);
+  margin-bottom: 0.2rem;
+}
+
+.catalog-entry__tag-list {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--volcanic-ink);
+  line-height: 1.6;
+}
+
+/* Inspiration row */
+.catalog-entry__inspo-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--volcanic-ink);
+  letter-spacing: 0.02em;
+}
+
+.catalog-entry__inspo-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.catalog-entry__inspo-link:hover {
+  color: var(--warm-ochre);
+  text-decoration-color: var(--warm-ochre);
+}
+
+/* Entry footer: formats + order button */
+.catalog-entry__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+  flex-wrap: wrap;
+}
+
+.catalog-entry__format-list {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.catalog-format-tag {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 0.2rem 0.5rem;
+}
+
+/* Order panel within entry */
+.catalog-order-panel {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s var(--ease-expo);
+  border-top: 0 solid transparent;
+  transition: max-height 0.5s var(--ease-expo), border-top-width 0.1s;
+}
+
+.catalog-order-panel.is-open {
+  max-height: 60rem;
+  border-top: 2px solid var(--warm-ochre);
+}
+
+.catalog-order-panel .order-panel__inner {
+  padding: var(--space-md);
+}
+
+/* === DESKTOP EDITORIAL LAYOUT ≥ 900px ===
+   Overrides the 2-col grid. Each entry becomes a full-width
+   image-left/right split. Proportions vary per fragrance via
+   attribute selectors (stable when filter hides entries).
+   ====================================================== */
+@media (min-width: 900px) {
+  /* Single column: each entry spans full width */
+  .catalog-grid {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  /* Remove tablet's border-left hack */
+  .catalog-entry:nth-child(even) {
+    border-left: none;
+  }
+
+  /* Entry: flex column so fmt-rail sticks to bottom */
+  .catalog-entry {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Inner: 2-col grid — image | content */
+  .catalog-entry__inner {
+    display: grid;
+    grid-template-columns: 52% 48%;
+    min-height: 52svh;
+    flex: 1;
+  }
+
+  /* Show images */
+  .catalog-entry__image {
+    display: block;
+  }
+
+  .catalog-entry__image img {
+    transition: transform 1.1s var(--ease-expo);
+  }
+
+  .catalog-entry:hover .catalog-entry__image img {
+    transform: scale(1.03);
+  }
+
+  /* Content column: vertically centered, generous padding */
+  .catalog-entry__content {
+    padding: var(--space-xl) var(--space-lg);
+    justify-content: center;
+  }
+
+  /* Larger names on wide viewports */
+  .catalog-entry__name {
+    font-size: clamp(2.25rem, 3.75vw, 4rem);
+    margin-top: 0.5rem;
+  }
+
+  /* Featured: taller, larger name */
+  .catalog-entry--featured .catalog-entry__inner {
+    min-height: 68svh;
+    grid-template-columns: 54% 46%;
+  }
+
+  .catalog-entry--featured .catalog-entry__name {
+    font-size: clamp(3rem, 5vw, 5.5rem);
+  }
+
+  /* === Per-fragrance proportions (image side alternates) === */
+
+  /* Vency Rouge: image right, wider content */
+  .catalog-entry[data-fragrance-id="vency-rouge"] .catalog-entry__inner {
+    grid-template-columns: 44% 56%;
+  }
+  .catalog-entry[data-fragrance-id="vency-rouge"] .catalog-entry__image {
+    order: 2;
+  }
+
+  /* Infusión Carmesí: image right, slight height bump */
+  .catalog-entry[data-fragrance-id="infusion-carmesi"] .catalog-entry__inner {
+    grid-template-columns: 42% 58%;
+    min-height: 58svh;
+  }
+  .catalog-entry[data-fragrance-id="infusion-carmesi"] .catalog-entry__image {
+    order: 2;
+  }
+
+  /* Tabaco y Miel: even split, taller — commands attention */
+  .catalog-entry[data-fragrance-id="tabaco-miel"] .catalog-entry__inner {
+    grid-template-columns: 50% 50%;
+    min-height: 62svh;
+  }
+
+  /* Ventisca: image dominant left */
+  .catalog-entry[data-fragrance-id="ventisca"] .catalog-entry__inner {
+    grid-template-columns: 56% 44%;
+    min-height: 58svh;
+  }
+
+  /* Resina Dorada: image right, wider content — dark closing entry */
+  .catalog-entry[data-fragrance-id="resina-dorada"] .catalog-entry__inner {
+    grid-template-columns: 44% 56%;
+    min-height: 60svh;
+  }
+  .catalog-entry[data-fragrance-id="resina-dorada"] .catalog-entry__image {
+    order: 2;
+  }
+}
+
+/* === EMPTY STATE === */
+.catalog-empty {
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.catalog-empty__message {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.25rem, 3vw, 2rem);
+  color: var(--volcanic-ink);
+  margin-bottom: var(--space-sm);
+  line-height: 1.2;
+}
+
+.catalog-empty__hint {
+  font-size: var(--text-narrative);
+  color: var(--ink-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* === ICON SERIES: SPLIT IMAGE (Vency bottle + inspiration reference) === */
+.catalog-entry__image--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.catalog-entry__image-half {
+  position: relative;
+  overflow: hidden;
+}
+
+.catalog-entry__image-half img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.catalog-entry__image-half--ref {
+  opacity: 0.88;
+}
+
+.catalog-entry__image-half--ref::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: oklch(18% 0.04 180 / 0.12);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.catalog-entry__image-label {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 0.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--botanical-parchment);
+  background: color-mix(in oklch, var(--volcanic-ink) 60%, transparent);
+  padding: 0.2rem 0.4rem;
+  z-index: 2;
+  backdrop-filter: blur(2px);
+}
+
+/* === BADGES (coleccion + catalogo Vency entries) === */
+.catalog-entry__badge {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 0.2rem 0.6rem;
+  color: var(--warm-ochre);
+  border: 1px solid var(--warm-ochre);
+}
+
+.catalog-entry__badge--original {
+  background: var(--warm-ochre-dark);
+  color: var(--botanical-parchment);
+  border-color: var(--warm-ochre-dark);
+}
+
+.catalog-entry__badge--icon {
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+  border-color: var(--volcanic-ink);
+}
+
+.catalog-entry__badge--sold-out {
+  background: none;
+  color: var(--ink-muted);
+  border-color: currentColor;
+  opacity: 0.6;
+}
+
+.catalog-entry--sold-out {
+  opacity: 0.65;
+}
+
+.catalog-entry--sold-out .catalog-entry__catalog-link {
+  display: none;
+}
+
+/* === INSPIRATION SUBTITLE (icon series) === */
+.catalog-entry__inspo {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+  margin-top: -0.2rem;
+}
+
+/* === CATALOG LINK (coleccion → catalogo) === */
+.catalog-entry__catalog-link {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--volcanic-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  transition: color 0.15s, text-decoration-color 0.15s;
+  margin-top: auto;
+  padding-top: var(--space-sm);
+}
+
+.catalog-entry__catalog-link:hover {
+  color: var(--warm-ochre);
+  text-decoration-color: var(--warm-ochre);
+}
+
+/* === COLECCION SECTION WRAPPERS === */
+.coleccion-section {
+  grid-column: 1 / -1;
+}
+
+.coleccion-section__header {
+  padding: var(--space-sm) var(--space-md);
+  border-top: 2px solid var(--volcanic-ink);
+  border-bottom: 1px solid var(--border);
+}
+
+.coleccion-section__label {
+  color: var(--ink-muted);
+  letter-spacing: 0.14em;
+}
+
+/* === COMPACT VENCY ROW (catalog page, two-row, no thumb) === */
+.catalog-entry--vency-compact {
+  background: color-mix(in oklch, var(--entry-accent, transparent) 4%, var(--botanical-parchment));
+  border-top: 1px solid var(--border);
+  border-left: none !important;
+  display: block;
+  scroll-margin-top: calc(var(--nav-h, 56px) + 90px);
+  transition: border-top-color 0.2s;
+}
+
+.catalog-entry--vency-compact:hover {
+  border-top-color: var(--warm-ochre);
+}
+
+/* Row 1: badge + name + notes — full width */
+.vency-compact__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0.9rem var(--space-md) 0.75rem;
+  align-items: flex-start;
+}
+
+.vency-compact__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--volcanic-ink);
+  line-height: 1.1;
+}
+
+.vency-compact__notes {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  line-height: 1.5;
+}
+
+/* Inline history link within notes text */
+.vency-compact__story {
+  font-family: 'Manrope', sans-serif;
+  font-size: inherit;
+  font-weight: 500;
+  color: var(--warm-ochre-dark);
+  text-decoration: none;
+  margin-left: 0.15em;
+}
+
+.vency-compact__story:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Inspiration reference inline in icon series notes */
+.vency-compact__ref {
+  font-size: 0.68rem;
+  color: var(--ink-muted);
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* Row 2: fmt-rail already handles border-top via its own rules */
+
+.catalog-entry--vency-compact.dblock--selected {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: -2px;
+}
+
+.catalog-entry--vency-compact.dblock--dimmed {
+  opacity: 0.45;
+}
+
+/* === ICON SERIES — dark colección entry === */
+.catalog-entry--icon-series {
+  background: oklch(22% 0.04 48);
+}
+
+.catalog-entry--icon-series .catalog-entry__name {
+  color: var(--botanical-parchment);
+}
+
+.catalog-entry--icon-series .catalog-entry__narrative,
+.catalog-entry--icon-series .catalog-entry__tag-list,
+.catalog-entry--icon-series .catalog-entry__meta-label {
+  color: oklch(78% 0.015 80);
+}
+
+.catalog-entry--icon-series .catalog-entry__badge {
+  color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
+.catalog-entry--icon-series .catalog-entry__inspo {
+  color: oklch(65% 0.025 80);
+}
+
+.catalog-entry--icon-series .catalog-entry__catalog-link {
+  color: oklch(78% 0.015 80);
+}
+
+.catalog-entry--icon-series .catalog-entry__catalog-link:hover {
+  color: var(--warm-ochre);
+}
+
+.catalog-entry--icon-series {
+  border-top-color: oklch(30% 0.04 48);
+}
+
+/* === MOBILE === */
+@media (max-width: 679px) {
+  .catalog-entry__content {
+    padding: var(--space-sm);
+  }
+
+  /* Show a compact product image on mobile */
+  .catalog-entry__image {
+    display: block;
+    height: 220px;
+  }
+
+  .catalog-entry__image img {
+    height: 220px;
+  }
+}
