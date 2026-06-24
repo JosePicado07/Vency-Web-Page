@@ -565,7 +565,7 @@
   wireClearBtn();
   wireSearch();
   wireFragPanel();
-  applyFilters();
+  render();
 
   if (location.hash) {
     setTimeout(function () {
