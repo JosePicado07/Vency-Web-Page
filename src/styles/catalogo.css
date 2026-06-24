@@ -1212,25 +1212,6 @@ body.fp-open { overflow: hidden; }
 .fp__order-btn:hover { opacity: 0.85; }
 
 /* Separator */
-.fp__sep {
-  text-align: center;
-  font-family: 'Manrope', sans-serif;
-  font-size: 0.62rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-  position: relative;
-}
-.fp__sep::before, .fp__sep::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  height: 1px;
-  background: var(--border);
-  width: calc(50% - 1.25rem);
-}
-.fp__sep::before { left: 0; }
-.fp__sep::after  { right: 0; }
 
 /* Bottles — compact rows with qty stepper */
 .fp__bottles { display: flex; flex-direction: column; gap: 0.4rem; }
