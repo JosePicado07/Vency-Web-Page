@@ -33,8 +33,13 @@
     : null;
 
   function observeRow(el) {
-    if (rowObserver) rowObserver.observe(el);
-    else el.classList.add('is-in');
+    if (!rowObserver) { el.classList.add('is-in'); return; }
+    // Already in viewport — show immediately, no animation (avoids loading flash)
+    if (el.getBoundingClientRect().top < window.innerHeight - 40) {
+      el.classList.add('is-in');
+    } else {
+      rowObserver.observe(el);
+    }
   }
 
   /* Format rail: set toggle (left) + buy-bottle zone (right).
