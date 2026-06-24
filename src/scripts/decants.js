@@ -214,6 +214,15 @@
       slot.classList.toggle('dc-set-banner__slot--filled', i < dCount);
     });
 
+    /* set-complete signature moment */
+    var banner = document.querySelector('.dc-set-banner');
+    if (banner) {
+      if (dCount === 3 && !banner.classList.contains('dc-set-banner--complete')) {
+        banner.classList.add('dc-set-banner--complete');
+        setTimeout(function () { banner.classList.remove('dc-set-banner--complete'); }, 900);
+      }
+    }
+
     /* decant slots — only shown while building / holding a set */
     if (traySlotsWrap) traySlotsWrap.hidden = dCount === 0;
     traySlots.forEach(function (slot, i) {

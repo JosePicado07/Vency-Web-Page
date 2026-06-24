@@ -121,7 +121,10 @@
     html += '</ul>';
 
     container.innerHTML = html;
-    container.querySelectorAll('.cat-entry').forEach(observeRow);
+    container.querySelectorAll('.cat-entry').forEach(function (el, idx) {
+      el.style.setProperty('--entry-delay', (idx * 45) + 'ms');
+      observeRow(el);
+    });
   }
 
   /* ── Build DOM ───────────────────────────────────────── */
@@ -172,7 +175,7 @@
         var list = document.createElement('ul');
         list.className = 'cat-brand__list';
 
-        brands[brand].forEach(function (item) {
+        brands[brand].forEach(function (item, itemIdx) {
           var li = document.createElement('li');
           li.className = 'cat-entry';
           li.dataset.cat    = item.cat;
@@ -224,6 +227,7 @@
             '</div>' +
             railHtml;
 
+          li.style.setProperty('--entry-delay', (itemIdx * 45) + 'ms');
           list.appendChild(li);
         });
 

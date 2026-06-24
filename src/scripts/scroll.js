@@ -25,6 +25,16 @@
     });
   }
 
+  /* Nav scroll state — backdrop appears when past hero */
+  var navEl = document.querySelector('.nav');
+  if (navEl) {
+    function onNavScroll() {
+      navEl.classList.toggle('nav--scrolled', window.scrollY > 60);
+    }
+    window.addEventListener('scroll', onNavScroll, { passive: true });
+    onNavScroll();
+  }
+
   /* Back-to-top */
   var btn = document.querySelector('.js-to-top');
   if (btn) {

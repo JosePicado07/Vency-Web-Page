@@ -135,12 +135,16 @@
   .catalog-entry.is-in .catalog-entry__image {
     opacity: 1;
     transform: none;
-    transition: opacity 0.7s var(--ease-expo), transform 0.7s var(--ease-expo);
+    transition:
+      opacity   0.7s var(--ease-expo) var(--entry-delay, 0ms),
+      transform 0.7s var(--ease-expo) var(--entry-delay, 0ms);
   }
 
   .catalog-entry.is-in .catalog-entry__content {
     opacity: 1;
     transform: none;
-    transition: opacity 0.7s var(--ease-expo) 0.12s, transform 0.7s var(--ease-expo) 0.12s;
+    transition:
+      opacity   0.7s var(--ease-expo) calc(var(--entry-delay, 0ms) + 0.12s),
+      transform 0.7s var(--ease-expo) calc(var(--entry-delay, 0ms) + 0.12s);
   }
 }

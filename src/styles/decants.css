@@ -624,6 +624,29 @@
   100% { transform: scale(1); }
 }
 
+/* === SET COMPLETE — signature moment when all 3 decants are chosen === */
+@keyframes set-complete-glow {
+  0%   { background-color: var(--volcanic-ink-section, oklch(16% 0.035 60)); }
+  35%  { background-color: oklch(21% 0.055 58); }
+  100% { background-color: var(--volcanic-ink-section, oklch(16% 0.035 60)); }
+}
+
+@keyframes slot-line-pulse {
+  0%   { opacity: 1; }
+  40%  { opacity: 1; filter: brightness(1.5); }
+  100% { opacity: 1; }
+}
+
+.dc-set-banner--complete {
+  animation: set-complete-glow 0.8s var(--ease-expo) forwards;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dc-set-banner--complete .dc-set-banner__slot--filled:nth-child(1)::after { animation: slot-line-pulse 0.4s var(--ease-expo) 0ms   both; }
+  .dc-set-banner--complete .dc-set-banner__slot--filled:nth-child(2)::after { animation: slot-line-pulse 0.4s var(--ease-expo) 80ms  both; }
+  .dc-set-banner--complete .dc-set-banner__slot--filled:nth-child(3)::after { animation: slot-line-pulse 0.4s var(--ease-expo) 160ms both; }
+}
+
 .dc-tray__cta {
   white-space: nowrap;
   padding: 0.95rem 2rem;

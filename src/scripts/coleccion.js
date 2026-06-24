@@ -107,9 +107,11 @@
     var gridEl = document.getElementById('catalog-grid');
     if (!gridEl) return;
     var next = ordered.slice(rendered, rendered + BATCH);
-    next.forEach(function (frag) {
+    next.forEach(function (frag, batchIdx) {
       gridEl.insertAdjacentHTML('beforeend', renderEntry(frag));
-      observeEntry(gridEl.lastElementChild);
+      var el = gridEl.lastElementChild;
+      el.style.setProperty('--entry-delay', (batchIdx * 55) + 'ms');
+      observeEntry(el);
     });
     rendered += next.length;
     if (sentinel) sentinel.hidden = (rendered >= ordered.length);

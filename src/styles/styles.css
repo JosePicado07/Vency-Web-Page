@@ -176,6 +176,39 @@ a {
   transform: translateY(0);
 }
 
+/* Hero headline: masked line reveal — text rises from behind overflow clip */
+.hero__headline-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  line-height: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__headline-word.animate-in {
+    opacity: 1;
+    transform: translateY(108%);
+    transition: transform 1.15s var(--ease-expo);
+    transition-delay: var(--delay, 0ms);
+  }
+  .hero__headline-word.animate-in.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Hero bottle: very subtle breathing — like something placed on a table */
+@keyframes hero-breathe {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero__image {
+    animation: hero-breathe 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -265,6 +298,16 @@ a {
   padding: 1.25rem var(--space-md);
   background-color: oklch(95% 0.007 90 / 0.97);
   border-bottom: 1px solid var(--border);
+  transition: background-color 0.4s var(--ease-expo), box-shadow 0.4s var(--ease-expo), border-color 0.4s var(--ease-expo);
+}
+
+/* Scroll state: subtle glass tint when past hero */
+.nav--scrolled {
+  background-color: oklch(95.5% 0.006 88 / 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 oklch(72% 0.005 80 / 0.25);
+  border-color: oklch(80% 0.004 80 / 0.4);
 }
 
 .nav__logo {
@@ -1689,7 +1732,7 @@ a.coll-block:hover .coll-block__cta {
   opacity: 0;
   pointer-events: none;
   transform: translateY(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease, bottom 0.32s var(--ease-expo), background 0.15s;
+  transition: opacity 0.35s var(--ease-expo), transform 0.35s var(--ease-expo), bottom 0.32s var(--ease-expo), background 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
