@@ -87,12 +87,32 @@
       featured: false
     },
     {
+      id: 'after-effect',
+      name: 'After Effect',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['ron', 'tabaco', 'canela', 'vainilla'],
+      noteLabels: ['Ron', 'Tabaco', 'Canela', 'Vainilla'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'El rastro que queda cuando alguien que valía la pena se va.',
+      image: '../assets/images/inspirations/after-effect.png',
+      characterColor: 'oklch(42% 0.08 45)',
+      inspiration: { name: 'Side Effect', brand: 'Initio', image: null },
+      featured: false
+    },
+    {
       id: 'apple-whisper',
       name: 'Apple Whisper',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['brandy-manzana', 'canela', 'madera-haya', 'almizcle'],
-      noteLabels: ['Brandy de manzana', 'Canela', 'Madera de haya', 'Almizcle'],
+      notes: ['manzana', 'vainilla', 'cardamomo', 'maderas'],
+      noteLabels: ['Manzana', 'Vainilla', 'Cardamomo', 'Maderas'],
       ocasion: ['diario', 'fin-de-semana'],
       ocasionLabels: ['Diario', 'Fin de semana'],
       formats: [
@@ -102,17 +122,17 @@
       ],
       narrative: 'Una mañana de domingo que no quisiste que terminara.',
       image: '../assets/images/inspirations/apple-whisper.png',
-      characterColor: 'oklch(80% 0.04 65)',
-      inspiration: { name: 'Apple Brandy on the Rocks', brand: 'By Kilian', image: null },
+      characterColor: 'oklch(72% 0.08 55)',
+      inspiration: { name: 'Layton', brand: 'Parfums de Marly', image: null },
       featured: false
     },
     {
-      id: 'dark-sinner',
-      name: 'Dark Sinner',
+      id: 'aurum-mirage',
+      name: 'Aurum Mirage',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['ron', 'cafe', 'chocolate-negro', 'caramelo'],
-      noteLabels: ['Ron', 'Café', 'Chocolate negro', 'Caramelo'],
+      notes: ['pina', 'rosa', 'vainilla', 'almizcle'],
+      noteLabels: ['Piña', 'Rosa', 'Vainilla', 'Almizcle'],
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       formats: [
@@ -120,19 +140,19 @@
         { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
         { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
       ],
-      narrative: 'Dulce como una confesión que nunca harás.',
-      image: '../assets/images/inspirations/dark-sinner.png',
-      characterColor: 'oklch(22% 0.03 15)',
-      inspiration: { name: 'Black Phantom', brand: 'By Kilian', image: null },
+      narrative: 'Lujo tropical. El tipo de oro que no pesa.',
+      image: '../assets/images/inspirations/aurum-mirage.png',
+      characterColor: 'oklch(68% 0.10 75)',
+      inspiration: { name: 'Lamar', brand: 'Kajal', image: null },
       featured: false
     },
     {
-      id: 'dream-trap',
-      name: 'Dream Trap',
+      id: 'cherry-desire',
+      name: 'Cherry Desire',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['cognac', 'canela', 'vainilla', 'haba-tonka'],
-      noteLabels: ['Coñac', 'Canela', 'Vainilla', 'Haba tonka'],
+      notes: ['cereza-negra', 'rosa', 'azafran', 'ambar'],
+      noteLabels: ['Cereza negra', 'Rosa', 'Azafrán', 'Ámbar'],
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       formats: [
@@ -140,19 +160,19 @@
         { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
         { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
       ],
-      narrative: 'El atardecer cuando el tiempo se suspende entre copa y copa.',
-      image: '../assets/images/inspirations/dream-trap.png',
-      characterColor: 'oklch(50% 0.07 50)',
-      inspiration: { name: "Angels' Share", brand: 'By Kilian', image: null },
+      narrative: 'La cereza madura que no necesita que la pidan.',
+      image: '../assets/images/inspirations/cherry-desire.png',
+      characterColor: 'oklch(38% 0.12 15)',
+      inspiration: { name: 'Carmina', brand: 'Creed', image: null },
       featured: false
     },
     {
-      id: 'exotic-contraste',
-      name: 'Exotic Contraste',
+      id: 'citrus-melody',
+      name: 'Citrus Melody',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['naranja', 'limon', 'frutas-tropicales', 'almizcle-blanco'],
-      noteLabels: ['Naranja siciliana', 'Limón', 'Frutas tropicales', 'Almizcle blanco'],
+      notes: ['citricos', 'jengibre', 'almizcle', 'maderas'],
+      noteLabels: ['Cítricos brillantes', 'Jengibre', 'Almizcle', 'Maderas'],
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       formats: [
@@ -160,10 +180,130 @@
         { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
         { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
       ],
-      narrative: 'Fruta tropical chocando contra una tarde de seda.',
-      image: '../assets/images/inspirations/exotic-contraste.png',
-      characterColor: 'oklch(72% 0.13 55)',
-      inspiration: { name: 'Erba Pura', brand: 'Xerjoff', image: null },
+      narrative: 'Cítrico de lujo. La nota que no para de resonar.',
+      image: '../assets/images/inspirations/citrus-melody.png',
+      characterColor: 'oklch(75% 0.12 85)',
+      inspiration: { name: 'Symphony', brand: 'Louis Vuitton', image: null },
+      featured: false
+    },
+    {
+      id: 'citrus-nirvana',
+      name: 'Citrus Nirvana',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['toronja', 'limon', 'vetiver', 'ambar-gris'],
+      noteLabels: ['Toronja', 'Limón', 'Vetiver', 'Ámbar gris'],
+      ocasion: ['diario', 'verano'],
+      ocasionLabels: ['Diario', 'Verano'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Cítrico puro elevado a categoría de lujo.',
+      image: '../assets/images/inspirations/citrus-nirvana.png',
+      characterColor: 'oklch(72% 0.10 95)',
+      inspiration: { name: 'Elysium', brand: 'Roja', image: null },
+      featured: false
+    },
+    {
+      id: 'crush-effect',
+      name: 'Crush Effect',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['azafran', 'vainilla', 'ambar', 'jazmin'],
+      noteLabels: ['Azafrán', 'Vainilla', 'Ámbar', 'Jazmín'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Lo que pasa cuando el azafrán y la vainilla deciden ser uno.',
+      image: '../assets/images/inspirations/crush-effect.png',
+      characterColor: 'oklch(60% 0.10 58)',
+      inspiration: { name: 'Instant Crush', brand: 'Mancera', image: null },
+      featured: false
+    },
+    {
+      id: 'dark-sinner',
+      name: 'Dark Sinner',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['cuero', 'incienso', 'vetiver', 'ambar'],
+      noteLabels: ['Cuero', 'Incienso', 'Vetiver', 'Ámbar'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Oscuro, sofisticado. El tipo de pecado que nadie lamenta.',
+      image: '../assets/images/inspirations/dark-sinner.png',
+      characterColor: 'oklch(26% 0.04 30)',
+      inspiration: { name: 'Fetish', brand: 'Roja', image: null },
+      featured: false
+    },
+    {
+      id: 'dream-trap',
+      name: 'Dream Trap',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['lichi', 'rosa', 'cacao', 'pachuli'],
+      noteLabels: ['Lichi', 'Rosa', 'Cacao', 'Pachulí'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Floral y afrutado. El sueño del que no querés despertar.',
+      image: '../assets/images/inspirations/dream-trap.png',
+      characterColor: 'oklch(58% 0.10 330)',
+      inspiration: { name: 'Attrape-Rêves', brand: 'Louis Vuitton', image: null },
+      featured: false
+    },
+    {
+      id: 'endless-horizon',
+      name: 'Endless Horizon',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['jengibre', 'toronja', 'ambar-gris', 'maderas'],
+      noteLabels: ['Jengibre', 'Toronja', 'Ámbar gris', 'Maderas'],
+      ocasion: ['diario', 'formal'],
+      ocasionLabels: ['Diario', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'La distancia que se siente, pero no se teme.',
+      image: '../assets/images/inspirations/endless-horizon.png',
+      characterColor: 'oklch(62% 0.08 230)',
+      inspiration: { name: "L'Immensité", brand: 'Louis Vuitton', image: null },
+      featured: false
+    },
+    {
+      id: 'exotic-contrast',
+      name: 'Exotic Contrast',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['maracuya', 'oud', 'rosa', 'cuero'],
+      noteLabels: ['Maracuyá', 'Oud', 'Rosa', 'Cuero'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Fruta exótica chocando contra oud. Una tensión adictiva.',
+      image: '../assets/images/inspirations/exotic-contrast.png',
+      characterColor: 'oklch(48% 0.10 42)',
+      inspiration: { name: 'Oud Maracujá', brand: 'Maison Crivelli', image: null },
       featured: false
     },
     {
@@ -191,8 +331,8 @@
       name: 'Fresh Coast',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['citricos', 'notas-marinas', 'jazmin', 'cedro'],
-      noteLabels: ['Cítricos', 'Notas marinas', 'Jazmín', 'Cedro'],
+      notes: ['limon', 'menta', 'frutas', 'almizcle'],
+      noteLabels: ['Limón', 'Menta', 'Frutas', 'Almizcle'],
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       formats: [
@@ -203,7 +343,7 @@
       narrative: 'El mar desde lejos, limpio como el principio de algo.',
       image: '../assets/images/inspirations/fresh-coast.png',
       characterColor: 'oklch(65% 0.08 215)',
-      inspiration: { name: 'Acqua di Giò', brand: 'Armani', image: null },
+      inspiration: { name: 'Pacific Chill', brand: 'Louis Vuitton', image: null },
       featured: false
     },
     {
@@ -227,6 +367,46 @@
       featured: false
     },
     {
+      id: 'golden-citrine',
+      name: 'Golden Citrine',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['mango', 'jengibre', 'limon', 'maderas'],
+      noteLabels: ['Mango', 'Jengibre', 'Limón', 'Maderas'],
+      ocasion: ['diario', 'verano'],
+      ocasionLabels: ['Diario', 'Verano'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Mango tropical que explota y no pide disculpas.',
+      image: '../assets/images/inspirations/golden-citrine.png',
+      characterColor: 'oklch(72% 0.12 75)',
+      inspiration: { name: 'God of Fire', brand: 'Stéphane Humbert Lucas 777', image: null },
+      featured: false
+    },
+    {
+      id: 'golden-heritage',
+      name: 'Golden Heritage',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['miel', 'tabaco', 'lavanda', 'vainilla'],
+      noteLabels: ['Miel', 'Tabaco', 'Lavanda', 'Vainilla'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Tabaco y miel. Un lujo que se hereda, no se compra.',
+      image: '../assets/images/inspirations/golden-heritage.png',
+      characterColor: 'oklch(65% 0.10 68)',
+      inspiration: { name: 'Naxos', brand: 'Xerjoff', image: null },
+      featured: false
+    },
+    {
       id: 'green-profile',
       name: 'Green Profile',
       category: 'icon-series',
@@ -247,12 +427,32 @@
       featured: false
     },
     {
+      id: 'inner-wild',
+      name: 'Inner Wild',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['tabaco', 'especias', 'maderas', 'resinas'],
+      noteLabels: ['Tabaco', 'Especias', 'Maderas', 'Resinas'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Potencia pura. Lo salvaje que lleva traje.',
+      image: '../assets/images/inspirations/inner-wild.png',
+      characterColor: 'oklch(38% 0.06 45)',
+      inspiration: { name: 'Centaurus', brand: 'Creed', image: null },
+      featured: false
+    },
+    {
       id: 'jagger-index',
       name: 'Jagger Index',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['ron', 'tabaco', 'vainilla', 'cuero'],
-      noteLabels: ['Ron', 'Tabaco', 'Vainilla', 'Cuero'],
+      notes: ['tabaco', 'manzana', 'vainilla', 'canela'],
+      noteLabels: ['Tabaco', 'Manzana', 'Vainilla', 'Canela'],
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       formats: [
@@ -263,7 +463,7 @@
       narrative: 'El escenario vacío que todavía huele a actuación.',
       image: '../assets/images/inspirations/jagger-index.png',
       characterColor: 'oklch(28% 0.04 25)',
-      inspiration: { name: 'Jazz Club', brand: 'Maison Margiela', image: null },
+      inspiration: { name: 'Smoking Hot', brand: 'By Kilian', image: null },
       featured: false
     },
     {
@@ -291,19 +491,39 @@
       name: 'Luminous Dream',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['lichi', 'rosa', 'cacao', 'pachuli'],
-      noteLabels: ['Lichi', 'Rosa', 'Cacao', 'Pachulí'],
-      ocasion: ['diario', 'fin-de-semana'],
-      ocasionLabels: ['Diario', 'Fin de semana'],
+      notes: ['te-negro', 'citricos', 'jengibre', 'ambrox'],
+      noteLabels: ['Té negro', 'Cítricos', 'Jengibre', 'Ambrox'],
+      ocasion: ['diario', 'formal'],
+      ocasionLabels: ['Diario', 'Formal'],
       formats: [
         { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
         { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
         { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
       ],
-      narrative: 'Una flor que aparece en el sueño y huele igual al despertar.',
+      narrative: 'Limpio, brillante y adictivo. La luminosidad como estado permanente.',
       image: '../assets/images/inspirations/luminous-dream.png',
-      characterColor: 'oklch(72% 0.08 330)',
-      inspiration: { name: 'Attrape-Rêves', brand: 'Louis Vuitton', image: null },
+      characterColor: 'oklch(72% 0.06 210)',
+      inspiration: { name: 'Imagination', brand: 'Louis Vuitton', image: null },
+      featured: false
+    },
+    {
+      id: 'midnight-coffee',
+      name: 'Midnight Coffee',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['cafe', 'vainilla', 'rosa', 'sandalo'],
+      noteLabels: ['Café', 'Vainilla', 'Rosa', 'Sándalo'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Café cremoso. La seducción que no necesita horario.',
+      image: '../assets/images/inspirations/midnight-coffee.png',
+      characterColor: 'oklch(28% 0.04 35)',
+      inspiration: { name: 'Amore Café', brand: 'Mancera', image: null },
       featured: false
     },
     {
@@ -311,8 +531,8 @@
       name: 'Neutral State',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['ambreta', 'violeta', 'sandalo', 'almizcle'],
-      noteLabels: ['Ambreta', 'Violeta', 'Sándalo', 'Almizcle'],
+      notes: ['lavanda', 'vetiver', 'sandalo', 'almizcle'],
+      noteLabels: ['Lavanda', 'Vetiver', 'Sándalo', 'Almizcle'],
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       formats: [
@@ -323,7 +543,27 @@
       narrative: 'Lo que queda en el aire después de que alguien notable se ha ido.',
       image: '../assets/images/inspirations/neutral-state.png',
       characterColor: 'oklch(80% 0.004 80)',
-      inspiration: { name: 'Mojave Ghost', brand: 'Byredo', image: null },
+      inspiration: { name: 'Rehab', brand: 'Initio', image: null },
+      featured: false
+    },
+    {
+      id: 'night-light',
+      name: 'Night Light',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['ron', 'tabaco', 'vainilla', 'cuero'],
+      noteLabels: ['Ron', 'Tabaco', 'Vainilla', 'Cuero'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'El bar a la medianoche cuando la música es lo único real.',
+      image: '../assets/images/inspirations/night-light.png',
+      characterColor: 'oklch(30% 0.04 40)',
+      inspiration: { name: 'Replica: Jazz Club', brand: 'Maison Margiela', image: null },
       featured: false
     },
     {
@@ -347,6 +587,26 @@
       featured: false
     },
     {
+      id: 'phantom-ratio',
+      name: 'Phantom Ratio',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['ron', 'cafe', 'chocolate-negro', 'caramelo'],
+      noteLabels: ['Ron', 'Café', 'Chocolate negro', 'Caramelo'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Gourmand oscuro. La proporción exacta entre placer y peligro.',
+      image: '../assets/images/inspirations/phantom-ratio.png',
+      characterColor: 'oklch(22% 0.03 15)',
+      inspiration: { name: 'Black Phantom', brand: 'By Kilian', image: null },
+      featured: false
+    },
+    {
       id: 'prime-authority',
       name: 'Prime Authority',
       category: 'icon-series',
@@ -364,6 +624,26 @@
       image: '../assets/images/inspirations/prime-authority.png',
       characterColor: 'oklch(35% 0.06 48)',
       inspiration: { name: 'Aventus', brand: 'Creed', image: null },
+      featured: false
+    },
+    {
+      id: 'private-reserve',
+      name: 'Private Reserve',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['ruibarbo', 'cardamomo', 'iris', 'cedro'],
+      noteLabels: ['Ruibarbo', 'Cardamomo', 'Iris', 'Cedro'],
+      ocasion: ['formal', 'diario'],
+      ocasionLabels: ['Formal', 'Diario'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Especiado y elegante. La reserva que no está en el menú.',
+      image: '../assets/images/inspirations/private-reserve.png',
+      characterColor: 'oklch(38% 0.08 155)',
+      inspiration: { name: 'X for Men', brand: 'Clive Christian', image: null },
       featured: false
     },
     {
@@ -407,6 +687,66 @@
       featured: false
     },
     {
+      id: 'rouge-elixir',
+      name: 'Rouge Elixir',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['azafran', 'jazmin', 'ambar-gris', 'cedro'],
+      noteLabels: ['Azafrán', 'Jazmín', 'Ámbar gris', 'Cedro'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Dulce, mineral y etéreo. El elixir que todo el mundo reconoce.',
+      image: '../assets/images/inspirations/rouge-elixir.png',
+      characterColor: 'oklch(52% 0.10 22)',
+      inspiration: { name: 'Baccarat Rouge 540', brand: 'Maison Francis Kurkdjian', image: null },
+      featured: false
+    },
+    {
+      id: 'sacred-oud',
+      name: 'Sacred Oud',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['oud', 'azafran', 'lavanda', 'almizcle'],
+      noteLabels: ['Oud', 'Azafrán', 'Lavanda', 'Almizcle'],
+      ocasion: ['noche', 'formal'],
+      ocasionLabels: ['Noche', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Oud de lujo moderno. La tradición reescrita.',
+      image: '../assets/images/inspirations/sacred-oud.png',
+      characterColor: 'oklch(28% 0.06 40)',
+      inspiration: { name: 'Oud for Greatness', brand: 'Initio', image: null },
+      featured: false
+    },
+    {
+      id: 'santal-code',
+      name: 'Santal Code',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['sandalo', 'cedro', 'cardamomo', 'cuero'],
+      noteLabels: ['Sándalo', 'Cedro', 'Cardamomo', 'Cuero'],
+      ocasion: ['diario', 'formal'],
+      ocasionLabels: ['Diario', 'Formal'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Sándalo seco y ahumado. El código que todos reconocen.',
+      image: '../assets/images/inspirations/santal-code.png',
+      characterColor: 'oklch(62% 0.07 62)',
+      inspiration: { name: 'Santal 33', brand: 'Le Labo', image: null },
+      featured: false
+    },
+    {
       id: 'santal-embrace',
       name: 'Santal Embrace',
       category: 'icon-series',
@@ -431,8 +771,8 @@
       name: 'Shadow Leather',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['cuero', 'almendra', 'vainilla', 'haba-tonka'],
-      noteLabels: ['Cuero', 'Almendra amarga', 'Vainilla', 'Haba tonka'],
+      notes: ['cuero', 'cardamomo', 'palo-rosa', 'pachuli'],
+      noteLabels: ['Cuero', 'Cardamomo', 'Palo rosa', 'Pachulí'],
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       formats: [
@@ -443,7 +783,7 @@
       narrative: 'El cuero que no pide disculpas.',
       image: '../assets/images/inspirations/shadow-leather.png',
       characterColor: 'oklch(28% 0.04 30)',
-      inspiration: { name: 'Fucking Fabulous', brand: 'Tom Ford', image: null },
+      inspiration: { name: 'Ombre Leather', brand: 'Tom Ford', image: null },
       featured: false
     },
     {
@@ -451,20 +791,68 @@
       name: 'Silver Veil',
       category: 'icon-series',
       categoryLabel: 'ICON SERIES',
-      notes: ['te-verde', 'grosella-negra', 'almizcle', 'cedro'],
-      noteLabels: ['Té verde', 'Grosella negra', 'Almizcle', 'Cedro'],
-      ocasion: ['diario', 'verano'],
-      ocasionLabels: ['Diario', 'Verano'],
+      notes: ['almendra', 'vainilla', 'heliotropo', 'sandalo'],
+      noteLabels: ['Almendra amarga', 'Vainilla', 'Heliotropo', 'Sándalo'],
+      ocasion: ['diario', 'formal'],
+      ocasionLabels: ['Diario', 'Formal'],
       formats: [
         { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
         { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
         { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
       ],
-      narrative: 'El alba cuando el aire todavía no sabe qué temperatura tiene.',
+      narrative: 'Cremoso y elegante. El velo que todo lo suaviza.',
       image: '../assets/images/inspirations/silver-veil.png',
-      characterColor: 'oklch(75% 0.02 218)',
-      inspiration: { name: 'Silver Mountain Water', brand: 'Creed', image: null },
+      characterColor: 'oklch(78% 0.04 72)',
+      inspiration: { name: 'Pegasus', brand: 'Parfums de Marly', image: null },
+      featured: false
+    },
+    {
+      id: 'smoky-mandarin',
+      name: 'Smoky Mandarin',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['mandarina', 'tabaco', 'cuero', 'maderas'],
+      noteLabels: ['Mandarina', 'Tabaco', 'Cuero', 'Maderas'],
+      ocasion: ['noche', 'fin-de-semana'],
+      ocasionLabels: ['Noche', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Cítrico y tabaco. La combinación que no debería funcionar y no para.',
+      image: '../assets/images/inspirations/smoky-mandarin.png',
+      characterColor: 'oklch(55% 0.12 48)',
+      inspiration: { name: 'Tobacco Mandarin', brand: 'Byredo', image: null },
+      featured: false
+    },
+    {
+      id: 'vanille-skin',
+      name: 'Vanille Skin',
+      category: 'icon-series',
+      categoryLabel: 'ICON SERIES',
+      notes: ['vainilla', 'coco', 'almizcle-blanco', 'iris'],
+      noteLabels: ['Vainilla', 'Coco', 'Almizcle blanco', 'Iris'],
+      ocasion: ['diario', 'fin-de-semana'],
+      ocasionLabels: ['Diario', 'Fin de semana'],
+      formats: [
+        { value: 'Pack 3 Decants 10ml', label: '3 DECANTS · 10ML', key: 'decant', price: 12000 },
+        { value: 'Frasco 30ml',          label: 'FRASCO · 30ML',   key: '30ml',   price: 12000 },
+        { value: 'Frasco 100ml',         label: 'FRASCO · 100ML',  key: '100ml',  price: 20000 }
+      ],
+      narrative: 'Vainilla seca y sofisticada. La piel como segundo perfume.',
+      image: '../assets/images/inspirations/vanille-skin.png',
+      characterColor: 'oklch(78% 0.06 72)',
+      inspiration: { name: 'Vanilla Powder', brand: 'Matière Première', image: null },
       featured: false
     },
   ];
+
+  root.escHtml = function (s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  };
 })(window);

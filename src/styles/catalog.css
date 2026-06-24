@@ -844,6 +844,65 @@
   border-top-color: oklch(30% 0.04 48);
 }
 
+/* === BUY ROW (coleccion → catalogo CTA) === */
+.catalog-entry__buy-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: auto;
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border);
+}
+
+.catalog-entry__fmt-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.catalog-entry__fmt-pill {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  padding: 0.25rem 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.catalog-entry__order-btn {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--botanical-parchment);
+  background: var(--volcanic-ink);
+  padding: 0.7rem 1.25rem;
+  border-radius: 3px;
+  text-decoration: none;
+  align-self: flex-start;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.catalog-entry__order-btn:hover {
+  background: oklch(27% 0.036 180);
+}
+
+.catalog-entry--icon-series .catalog-entry__buy-row {
+  border-top-color: oklch(30% 0.04 48);
+}
+
+.catalog-entry--icon-series .catalog-entry__fmt-pill {
+  border-color: oklch(30% 0.04 48);
+  color: oklch(65% 0.025 80);
+}
+
 /* === MOBILE === */
 @media (max-width: 679px) {
   .catalog-entry__content {

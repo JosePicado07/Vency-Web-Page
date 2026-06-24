@@ -18,13 +18,7 @@
     return str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
   }
 
-  function escHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  var escHtml = window.escHtml;
 
   /* Entrance: rows reveal in waves as they enter the viewport.
      CSS holds the pre-state (only under prefers-reduced-motion: no-preference). */
@@ -56,13 +50,13 @@
           '</span>' +
         '</button>' +
         '<div class="fmt-rail__buy">' +
-          '<span class="fmt-rail__buy-label">o frasco</span>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" aria-pressed="false">' +
-            '<span class="fmt-rail__label">30 ML</span>' +
+          '<span class="fmt-rail__buy-label">o frasco completo</span>' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" aria-pressed="false" aria-label="Comprar frasco 30 ml de ' + ariaName + ' por ₡12.000">' +
+            '<span class="fmt-rail__label">Frasco · 30 ML</span>' +
             '<span class="fmt-rail__price">₡12.000</span>' +
           '</button>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" aria-pressed="false">' +
-            '<span class="fmt-rail__label">100 ML</span>' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" aria-pressed="false" aria-label="Comprar frasco 100 ml de ' + ariaName + ' por ₡20.000">' +
+            '<span class="fmt-rail__label">Frasco · 100 ML</span>' +
             '<span class="fmt-rail__price">₡20.000</span>' +
           '</button>' +
         '</div>' +
@@ -102,18 +96,24 @@
           ' id="' + frag.id + '"' +
           ' data-fragrance-id="' + frag.id + '"' +
           ' data-fragrance-name="' + fname + '"' +
+          ' data-fragrance-cat="vency"' +
+          ' data-fragrance-notes="' + escHtml(notes) + '"' +
+          ' data-fragrance-img="' + escHtml(frag.image || '../assets/images/default-bottle.jpg') + '"' +
           ' data-search="' + escHtml(searchStr) + '"' +
           ' data-ocasion="' + ocasion + '"' +
           (soldOut ? ' data-sold-out="true"' : '') + '>' +
           '<div class="cat-entry__info">' +
-            '<p class="cat-entry__name">' +
-              '<span class="cat-badge ' + badgeClass + '">' + badgeText + '</span>' +
-              (soldOut ? '<span class="cat-badge cat-badge--sold-out">AGOTADO</span>' : '') +
-              fname +
-            '</p>' +
-            '<p class="cat-entry__notes">' + escHtml(notes) + ' ' + inspoLine +
-              '<a class="vency-compact__story" href="coleccion.html#' + frag.id + '">— historia</a>' +
-            '</p>' +
+            '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
+            '<p class="cat-entry__name">' + fname + (soldOut ? '<span class="cat-badge cat-badge--sold-out">AGOTADO</span>' : '') + '</p>' +
+            '<p class="cat-entry__notes">' + escHtml(notes) + '</p>' +
+            (isIcon && frag.inspiration
+              ? '<p class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</p>'
+              : '') +
+            (soldOut ? '' :
+              '<div class="cat-entry__foot">' +
+                '<a class="cat-entry__historia" href="coleccion.html#' + frag.id + '">historia →</a>' +
+                '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+              '</div>') +
           '</div>' +
           railHtmlVency +
         '</li>';
@@ -187,16 +187,22 @@
 
           li.dataset.fragranceId   = interp ? interp.id : slug(item.brand + '-' + item.name);
           li.dataset.fragranceName = interp ? interp.name : item.brand + ' · ' + item.name;
+          li.dataset.fragranceCat  = sec.cat;
+          li.dataset.fragranceNotes = item.notes || '';
+          li.dataset.fragranceImg  = interp
+            ? '../assets/images/inspirations/' + interp.id + '.png'
+            : '../assets/images/default-bottle.jpg';
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
           if (item.soldOut) li.dataset.soldOut = 'true';
 
-          var inspoPart = interp
-            ? ' <span class="vency-compact__ref">· ' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</span>' +
-              ' <a class="vency-compact__story" href="coleccion.html#' + interp.id + '">— historia</a>'
+          var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
+
+          var notesHtml = item.notes
+            ? '<p class="cat-entry__notes"><span class="sr-only">' + escHtml(genderLabel) + ' — </span>' + escHtml(item.notes) + '</p>'
             : '';
 
-          var notesHtml = (item.notes || interp)
-            ? '<p class="cat-entry__notes">' + (item.notes ? escHtml(item.notes) : '') + inspoPart + '</p>'
+          var inspoHtml = interp
+            ? '<p class="cat-entry__inspo">' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</p>'
             : '';
 
           var itemSoldOut = !!item.soldOut;
@@ -206,12 +212,15 @@
 
           li.innerHTML =
             '<div class="cat-entry__info">' +
-              '<p class="cat-entry__name">' +
-                '<span class="cat-entry__gender-dot" aria-hidden="true"></span>' +
-                '<span class="sr-only">' + escHtml(genderLabel) + '</span>' +
-                escHtml(displayName) +
-              '</p>' +
+              '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
+              '<p class="cat-entry__name">' + escHtml(displayName) + (itemSoldOut ? '<span class="cat-badge cat-badge--sold-out">AGOTADO</span>' : '') + '</p>' +
               notesHtml +
+              inspoHtml +
+              (itemSoldOut ? '' :
+                '<div class="cat-entry__foot">' +
+                  (historiaHref ? '<a class="cat-entry__historia" href="' + historiaHref + '">historia →</a>' : '') +
+                  '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+                '</div>') +
             '</div>' +
             railHtml;
 
@@ -302,9 +311,6 @@
     }
   }
 
-  function applyFilters() {
-    render();
-  }
 
   /* ── Filter panel toggle ─────────────────────────────── */
   function wireFilterToggle() {
@@ -339,7 +345,7 @@
       p.setAttribute('aria-pressed', String(active));
     });
     updateFilterBadge();
-    applyFilters();
+    render();
   }
 
   function wireClearBtn() {
@@ -363,7 +369,7 @@
           p.setAttribute('aria-pressed', String(active));
         });
         updateFilterBadge();
-        applyFilters();
+        render();
       });
     });
   }
@@ -374,7 +380,176 @@
     if (!input) return;
     input.addEventListener('input', function () {
       filters.q = input.value.trim().toLowerCase();
-      applyFilters();
+      render();
+    });
+  }
+
+  /* ── Fragrance detail panel ─────────────────────────── */
+  function wireFragPanel() {
+    var fpEl      = document.getElementById('js-fp');
+    if (!fpEl) return;
+    var fpSheet   = fpEl.querySelector('.fp__sheet');
+    var fpClose   = document.getElementById('js-fp-close');
+    var fpBackdrop = document.getElementById('js-fp-backdrop');
+    var fpBadge   = document.getElementById('js-fp-badge');
+    var fpName    = document.getElementById('js-fp-name');
+    var fpNotes   = document.getElementById('js-fp-notes');
+    var fpBottles = document.getElementById('js-fp-bottles');
+    var fpNudge   = document.getElementById('js-fp-nudge');
+    var fpOrder   = document.getElementById('js-fp-order');
+
+    var activeId = null;
+    var preOpenSnap = null;
+
+    function syncCtrl(fmt, qty) {
+      var ctrl = document.getElementById('js-fp-ctrl-' + fmt);
+      if (!ctrl) return;
+      ctrl.classList.toggle('is-zero', qty === 0);
+      var qtyEl = ctrl.querySelector('.fp__step-qty');
+      if (qtyEl) qtyEl.textContent = qty;
+      ctrl.querySelector('.fp__stepper').setAttribute('aria-hidden', String(qty === 0));
+    }
+
+    function syncPanelState() {
+      if (!activeId) return;
+      var vc = window.vencyCart;
+
+      var dQty = vc ? vc.getDecantQty(activeId) : 0;
+      syncCtrl('decant', dQty);
+      if (fpNudge) {
+        fpNudge.hidden = dQty === 0;
+        if (dQty > 0 && dQty < 3) {
+          fpNudge.innerHTML = 'Añadí ' + (3 - dQty) + ' más y armá el set por <strong>₡12.000</strong>';
+        } else if (dQty === 3) {
+          fpNudge.innerHTML = '¡Set completo! Ahorrás <strong>₡3.000</strong>';
+        } else {
+          fpNudge.innerHTML = 'Set de 3 decants: <strong>₡12.000</strong> — ahorrás ₡3.000';
+        }
+      }
+
+      ['30ml', '100ml'].forEach(function (fmt) {
+        syncCtrl(fmt, vc ? vc.getBottleQty(activeId, fmt) : 0);
+      });
+    }
+
+    var fpImg    = document.getElementById('js-fp-img');
+    var fpRings  = document.getElementById('js-fp-rings');
+    var fpVisual = fpEl.querySelector('.fp__visual');
+
+    function openPanel(cardEl) {
+      activeId = cardEl.dataset.fragranceId;
+      var vc0 = window.vencyCart;
+      preOpenSnap = {
+        name:    cardEl.dataset.fragranceName || '',
+        decant:  vc0 ? vc0.getDecantQty(activeId) : 0,
+        '30ml':  vc0 ? vc0.getBottleQty(activeId, '30ml') : 0,
+        '100ml': vc0 ? vc0.getBottleQty(activeId, '100ml') : 0
+      };
+      var cat = (cardEl.dataset.fragranceCat || '').replace(/-/g, ' ').toUpperCase();
+      fpBadge.textContent = cat;
+      fpName.textContent  = cardEl.dataset.fragranceName || '';
+      fpNotes.textContent = cardEl.dataset.fragranceNotes || '';
+      fpBottles.hidden    = !cardEl.querySelector('.fmt-rail__buy-btn');
+
+      var imgSrc = cardEl.dataset.fragranceImg || '';
+      if (imgSrc && fpImg) {
+        fpImg.src    = imgSrc;
+        fpImg.alt    = cardEl.dataset.fragranceName || '';
+        fpImg.onerror = function() { fpImg.src = '../assets/images/default-bottle.jpg'; fpImg.onerror = null; };
+        fpImg.hidden = false;
+        if (fpRings)  fpRings.hidden = true;
+        if (fpVisual) fpVisual.classList.add('has-img');
+      } else {
+        if (fpImg)    fpImg.hidden   = true;
+        if (fpRings)  fpRings.hidden = false;
+        if (fpVisual) fpVisual.classList.remove('has-img');
+      }
+
+      syncPanelState();
+      fpEl.hidden = false;
+      fpEl.getBoundingClientRect();
+      fpEl.classList.add('is-open');
+      document.body.classList.add('fp-open');
+      fpSheet.focus();
+    }
+
+    function closePanel() {
+      fpEl.classList.remove('is-open');
+      document.body.classList.remove('fp-open');
+      fpSheet.addEventListener('transitionend', function handler() {
+        fpEl.hidden = true;
+        fpSheet.removeEventListener('transitionend', handler);
+      }, { once: true });
+      activeId = null;
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.cat-entry__see');
+      if (!btn) return;
+      var card = btn.closest('[data-fragrance-id]');
+      if (card) openPanel(card);
+    });
+
+    fpEl.querySelectorAll('[data-fmt][data-delta]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!activeId) return;
+        var fmt   = btn.dataset.fmt;
+        var delta = parseInt(btn.dataset.delta, 10);
+        var card  = document.querySelector('[data-fragrance-id="' + activeId + '"]');
+        var name  = card ? card.dataset.fragranceName : '';
+        var vc    = window.vencyCart;
+        if (!vc) return;
+        if (fmt === 'decant') {
+          vc.setDecantQty(activeId, name, Math.max(0, Math.min(3, vc.getDecantQty(activeId) + delta)));
+        } else {
+          vc.setBottleQty(activeId, name, fmt, Math.max(0, Math.min(10, vc.getBottleQty(activeId, fmt) + delta)));
+        }
+        setTimeout(syncPanelState, 0);
+      });
+    });
+
+    function showUndoToast(snapshotId, snapshot) {
+      var t = document.createElement('div');
+      t.className = 'vency-toast vency-toast--undo';
+      t.innerHTML = '<span>¡Listo! Ya está en tu pedido.</span>'
+        + '<button class="vency-toast__undo" type="button">Deshacer</button>';
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
+      var timer = setTimeout(dismiss, 4000);
+      function dismiss() {
+        clearTimeout(timer);
+        t.classList.remove('vency-toast--in');
+        setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 300);
+      }
+      t.querySelector('.vency-toast__undo').addEventListener('click', function () {
+        var vc = window.vencyCart;
+        if (vc) {
+          vc.setDecantQty(snapshotId, snapshot.name, snapshot.decant);
+          ['30ml', '100ml'].forEach(function (f) {
+            vc.setBottleQty(snapshotId, snapshot.name, f, snapshot[f]);
+          });
+        }
+        dismiss();
+      });
+    }
+
+    if (fpOrder) {
+      fpOrder.addEventListener('click', function () {
+        var vc  = window.vencyCart;
+        var id  = activeId;
+        var hasItem = vc && (vc.getDecantQty(id) > 0 ||
+          ['30ml', '100ml'].some(function (f) { return vc.getBottleQty(id, f) > 0; }));
+        if (hasItem && vc && preOpenSnap) {
+          showUndoToast(id, preOpenSnap);
+        }
+        closePanel();
+      });
+    }
+
+    fpClose.addEventListener('click', closePanel);
+    fpBackdrop.addEventListener('click', closePanel);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !fpEl.hidden) closePanel();
     });
   }
 
@@ -385,13 +560,17 @@
   wirePills();
   wireClearBtn();
   wireSearch();
+  wireFragPanel();
   applyFilters();
 
   if (location.hash) {
     setTimeout(function () {
       var el = document.getElementById(location.hash.slice(1));
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 80);
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var seeBtn = el.querySelector('.cat-entry__see');
+      if (seeBtn) seeBtn.click();
+    }, 200);
   }
 
 })();

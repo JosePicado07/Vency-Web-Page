@@ -199,6 +199,11 @@
   overflow: visible;
 }
 
+/* Hidden when panel (Ver →) is the primary interaction */
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail:not(.fmt-rail--sold-out) {
+  display: none;
+}
+
 /* --- Zone 1: SET TOGGLE --- */
 .fmt-rail__set {
   display: flex;
@@ -328,31 +333,67 @@
 
 .fmt-rail__buy-label {
   font-family: 'Manrope', sans-serif;
-  font-size: 0.55rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-muted);
-  margin-right: 0.1rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: var(--ink-subdued);
+  margin-right: 0.25rem;
   white-space: nowrap;
+  align-self: center;
 }
 
 :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn {
   display: inline-flex;
   flex-direction: column;
   gap: 1px;
-  padding: 0.3rem 0.7rem;
-  border: 1px solid var(--border);
+  padding: 0.3rem 0.9rem 0.3rem 0.7rem;
+  border: 2px solid oklch(56% 0.07 65);
   border-radius: 2px;
   min-height: 44px;
   justify-content: center;
-  background: var(--botanical-parchment);
   box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
 }
 
-:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:hover {
-  background: oklch(90% 0.010 75);
-  border-color: oklch(70% 0.05 65);
+/* 30ml — warm parchment-amber (entry) */
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="30ml"]:not([aria-pressed="true"]) {
+  background: var(--bottle-entry-bg);
+  border-color: var(--bottle-entry-border);
+}
+
+/* 100ml — deep volcanic amber (aged) */
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="100ml"]:not([aria-pressed="true"]) {
+  background: var(--bottle-aged-bg);
+  border-color: var(--bottle-aged-border);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="100ml"]:not([aria-pressed="true"]) .fmt-rail__label,
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="100ml"]:not([aria-pressed="true"]) .fmt-rail__price {
+  color: var(--volcanic-ink);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:not([aria-pressed="true"])::after {
+  content: '+';
+  position: absolute;
+  top: 4px;
+  right: 5px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--bottle-add-icon);
+  line-height: 1;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="30ml"]:hover:not([aria-pressed="true"]) {
+  background: var(--bottle-entry-bg-hover);
+  border-color: var(--bottle-entry-border-hover);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[data-fmt="100ml"]:hover:not([aria-pressed="true"]) {
+  background: var(--bottle-aged-bg-hover);
+  border-color: var(--bottle-aged-border-hover);
 }
 
 :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] {
@@ -372,6 +413,20 @@
 :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] .fmt-rail__label,
 :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn[aria-pressed="true"] .fmt-rail__price {
   color: var(--botanical-parchment);
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+:is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:disabled .fmt-rail__label::after {
+  content: ' — AGOTADO';
+  font-size: 0.42rem;
+  letter-spacing: 0.1em;
+  display: block;
+  color: var(--ink-muted);
 }
 
 /* --- Ultra Nicho: dark entry context --- */
@@ -456,8 +511,11 @@
     flex: 1 1 auto;
   }
 
-  .fmt-rail__buy {
+  :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy {
     justify-content: flex-start;
+    border-top: 1px solid var(--border);
+    padding: 0.55rem var(--space-md);
+    background: oklch(91% 0.005 80);
   }
 
   :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn {

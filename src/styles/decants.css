@@ -355,6 +355,35 @@
 
 /* Dimmed blocks stay clickable (replace-last behavior) */
 
+/* === SOLD OUT === */
+.dblock--soldout .dblock__top {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+}
+
+.dblock--soldout .dblock__trigger {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.dblock--soldout::before {
+  content: 'Agotado';
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  z-index: 10;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  background: oklch(18% 0.01 80 / 0.72);
+  color: oklch(92% 0.01 80);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
 /* === FILTERED OUT (filter bar hides this block) === */
 .dblock--filtered-out {
   display: none;
@@ -387,6 +416,8 @@
   justify-content: space-between;
   gap: var(--space-md);
   min-height: 4.5rem;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* === TRAY BOTTLES CHIP === */
@@ -399,8 +430,8 @@
   padding: 0.3rem 0.7rem;
   border: 1px solid oklch(42% 0.03 180);
   border-radius: 2px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  overflow: hidden;
+  min-width: 0;
 }
 
 /* === TRAY SLOTS === */
@@ -416,6 +447,9 @@
   flex: 1;
   max-width: 13rem;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid oklch(40% 0.025 180);
   transition: border-color 0.35s var(--ease-expo);
@@ -425,39 +459,9 @@
   border-bottom-color: var(--warm-ochre);
 }
 
-.dc-tray__slot--removable {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.dc-tray__slot--removable:hover,
-.dc-tray__slot--removable:focus-visible {
-  border-bottom-color: oklch(72% 0.06 65);
-  outline: none;
-}
-
-.dc-tray__slot--removable:focus-visible {
-  outline: 2px solid var(--warm-ochre);
-  outline-offset: 3px;
-  border-radius: 1px;
-}
-
-/* × appears after the slot name on filled+removable slots */
-.dc-tray__slot--removable .dc-tray__slot-name::after {
-  content: ' ×';
-  opacity: 0.28;
-  transition: opacity 0.15s;
-  font-weight: 400;
-  letter-spacing: 0;
-}
-
-.dc-tray__slot--removable:hover .dc-tray__slot-name::after,
-.dc-tray__slot--removable:focus-visible .dc-tray__slot-name::after {
-  opacity: 0.85;
-}
-
 .dc-tray__slot-name {
-  display: block;
+  flex: 1;
+  min-width: 0;
   font-family: 'Manrope', sans-serif;
   font-size: 0.65rem;
   font-weight: 500;
@@ -475,6 +479,88 @@
   color: var(--botanical-parchment);
 }
 
+.dc-tray__slot-remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--warm-ochre);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.dc-tray__slot-remove:hover { opacity: 1; }
+
+/* === TOAST (replacement notice, etc.) === */
+.vency-toast {
+  position: fixed;
+  bottom: calc(var(--tray-h, 80px) + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.45rem 1rem;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 200;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.vency-toast--in {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.vency-toast--undo {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.vency-toast__undo {
+  background: none;
+  border: none;
+  color: var(--warm-ochre);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* === BOTTLE CHIPS IN TRAY === */
+.dc-tray__bottle-chip {
+  display: inline-block;
+  max-width: calc(100% - 2rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.dc-tray__bottle-remove {
+  background: none;
+  border: none;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.25rem 0.4rem;
+  line-height: 1;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+}
+.dc-tray__bottle-remove:hover { opacity: 1; }
+
 /* === TRAY PROGRESS HINT === */
 .dc-tray__hint {
   font-family: 'Manrope', sans-serif;
@@ -487,6 +573,22 @@
   text-align: center;
   margin: 0;
   flex: 0 0 auto;
+}
+
+/* clear decants link inside hint */
+.dc-tray__hint-clear {
+  background: none;
+  border: none;
+  color: var(--warm-ochre);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0 0.25rem;
+  min-height: 2.75rem;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
 }
 
 /* === TRAY ACTION === */
@@ -529,7 +631,7 @@
 }
 
 .dc-tray__cta:disabled {
-  opacity: 0.35;
+  opacity: 0.6;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -634,14 +736,39 @@
   letter-spacing: -0.01em;
 }
 
-.dc-order__ref {
+.dc-order__ticket {
+  margin-top: var(--space-sm);
+  padding: 0.85rem 1rem 0.9rem;
+  background: oklch(95% 0.018 65);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.dc-order__ticket-label {
   font-family: 'Manrope', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--ink-muted);
-  margin-top: 0.35rem;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
+  color: oklch(52% 0.1 55);
+}
+
+.dc-order__ticket-ref {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--volcanic-ink);
+  letter-spacing: 0.03em;
+  line-height: 1.1;
+}
+
+.dc-order__ticket-note {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.63rem;
+  color: var(--ink-muted);
+  margin-top: 0.25rem;
+  line-height: 1.4;
 }
 
 .dc-order__actions {
@@ -649,7 +776,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  align-items: flex-start;
+  align-items: stretch;
+}
+
+.dc-order__actions .btn {
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+  padding-block: 0.9rem;
 }
 
 /* === MOBILE === */

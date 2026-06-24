@@ -8,11 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/styles.css?v=19">
-  <link rel="stylesheet" href="../styles/catalogo.css?v=19">
+  <link rel="stylesheet" href="../styles/styles.css?v=21">
+  <link rel="stylesheet" href="../styles/catalogo.css?v=37">
   <link rel="stylesheet" href="../styles/catalog.css?v=19">
-  <link rel="stylesheet" href="../styles/format-rail.css?v=19">
-  <link rel="stylesheet" href="../styles/decants.css?v=19">
+  <link rel="stylesheet" href="../styles/format-rail.css?v=24">
+  <link rel="stylesheet" href="../styles/decants.css?v=26">
 </head>
 <body class="page-catalogo">
 
@@ -27,7 +27,7 @@
     </button>
     <ul class="nav__links" id="nav-links" role="list">
       <li><a href="coleccion.html" class="nav__link">Colección</a></li>
-      <li><a href="catalogo.html" class="nav__link nav__link--active" aria-current="page">Catálogo</a></li>
+      <li><a href="catalogo.html" class="nav__link nav__link--active" aria-current="page">Comprar</a></li>
       <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
       <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
     </ul>
@@ -59,6 +59,10 @@
           </div>
         </div>
 
+        <p class="cat-header__howto animate-in" style="--delay:160ms">
+          Decants desde ₡5.000 · Frascos desde ₡12.000 · Pedís por WhatsApp · Enviamos a todo el país
+        </p>
+
         <!-- FILTER ROW — lives inside the header band -->
         <div class="cat-header__filter animate-in" style="--delay:200ms" aria-label="Filtrar catálogo">
           <div class="cat-filters__inner">
@@ -78,7 +82,7 @@
                 <span class="label cat-filter-group__label">CATEGORÍA</span>
                 <div class="cat-filter-group__pills">
                   <button class="cat-pill is-active"  aria-pressed="true"  data-filter="cat" data-value="todos">Todos</button>
-                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="vency">Vency</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="vency">Creaciones propias</button>
                   <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="disenador">Diseñador</button>
                   <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="nicho">Nicho</button>
                   <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="ultra-nicho">Ultra Nicho</button>
@@ -138,6 +142,7 @@
             <span class="label vency-coll-panel__tag">HYBRID</span>
             <p class="vency-coll-panel__desc">Fusiones que combinan múltiples referencias en una composición única.</p>
             <span class="label vency-coll-panel__coming">PRÓXIMAMENTE</span>
+            <a class="vency-coll-panel__notify" href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Quiero%20saber%20cu%C3%A1ndo%20lanzan%20la%20colecci%C3%B3n%20Hybrid." target="_blank" rel="noopener">Avisarme →</a>
           </div>
 
         </div>
@@ -156,8 +161,15 @@
       <div class="dc-set-banner" role="note" aria-label="Información sobre el Set de Decants">
         <div class="dc-set-banner__inner">
           <div class="dc-set-banner__copy">
-            <span class="label ochre-label">SET DE DECANTS · ₡12.000</span>
-            <p class="dc-set-banner__body">Elige 3 fragancias a ₡5.000 c/u, 10 ml cada una. Toca <strong>Añadir al set</strong> en cualquier fragancia del catálogo para comenzar.</p>
+            <p class="dc-set-banner__headline">Probá antes<br>de comprar.</p>
+            <div class="dc-set-banner__meta">
+              <span class="label dc-set-banner__tag">SET DE DECANTS</span>
+              <div class="dc-set-banner__pricing">
+                <span class="dc-set-banner__price">₡12.000</span>
+                <span class="dc-set-banner__saving">Ahorrás ₡3.000 vs comprar por separado</span>
+              </div>
+            </div>
+            <p class="dc-set-banner__body">Un decant es un <strong>atomizador de 10 ml con el perfume original</strong> — la forma de descubrir una fragancia antes de invertir en el frasco completo. Elegí 3 de cualquier categoría y armá tu set. Tocá <strong>Añadir al set</strong> para empezar.</p>
           </div>
           <div class="dc-set-banner__slots" aria-hidden="true">
             <span class="dc-set-banner__slot"></span>
@@ -197,15 +209,19 @@
     </div><!-- /col-catalog-body -->
 
     <!-- ORDER PANEL — expands when set is complete and "Ordenar" is tapped -->
-    <div class="dc-order" id="dc-order-panel" aria-live="polite">
+    <div class="dc-order" id="dc-order-panel" aria-live="polite" aria-label="Panel de pedido">
       <div class="dc-order__wrap">
       <div class="dc-order__inner">
 
         <div class="dc-order__summary">
-          <span class="label ochre-label">SU PEDIDO</span>
+          <span class="label ochre-label">TU PEDIDO</span>
           <div class="dc-order__lines js-dc-order-summary"></div>
           <p class="dc-order__price js-dc-order-price">₡12.000</p>
-          <p class="dc-order__ref js-dc-order-ref" hidden></p>
+          <div class="dc-order__ticket js-dc-order-ticket" hidden>
+            <span class="dc-order__ticket-label">N.° de pedido</span>
+            <span class="dc-order__ticket-ref js-dc-order-ref"></span>
+            <span class="dc-order__ticket-note">Usá este número al enviar tu comprobante.</span>
+          </div>
         </div>
 
         <div class="delivery-group" role="group" aria-label="Método de entrega">
@@ -216,7 +232,7 @@
               <span class="delivery-opt__indicator"></span>
               <span class="delivery-opt__text">
                 <span class="delivery-opt__name">SINPE Móvil</span>
-                <span class="delivery-opt__desc">Pago en línea · +506 7277-3156</span>
+                <span class="delivery-opt__desc">Transferís y enviás comprobante · +506 7277-3156</span>
               </span>
             </label>
             <label class="delivery-opt">
@@ -224,7 +240,7 @@
               <span class="delivery-opt__indicator"></span>
               <span class="delivery-opt__text">
                 <span class="delivery-opt__name">Recoger en local</span>
-                <span class="delivery-opt__desc">Heredia · pago en sitio</span>
+                <span class="delivery-opt__desc">Heredia · coordinás horario por WhatsApp</span>
               </span>
             </label>
           </div>
@@ -237,21 +253,19 @@
           <div class="payment-method">
             <span class="label">SINPE MÓVIL</span>
             <p class="payment-method__number">+506 7277-3156</p>
-            <p class="payment-method__note js-dc-sinpe-note">Incluir en el mensaje: las tres fragancias elegidas</p>
-          </div>
-          <div class="payment-method">
-            <span class="label">DEPÓSITO BANCARIO</span>
-            <p class="payment-method__number">Banco Nacional</p>
-            <p class="payment-method__note">Cuenta: 000-000000-0 · Vency Atelier</p>
+            <ol class="sinpe-steps">
+              <li>Transferí <strong class="js-sinpe-amount">₡12.000</strong> al <strong>+506 7277-3156</strong></li>
+              <li>Tomá captura del comprobante</li>
+              <li>Volvé aquí y tocá el botón de abajo</li>
+            </ol>
           </div>
         </div>
 
         <div class="dc-order__actions">
           <p class="order-panel__confirm">
-            Su pedido se confirma una vez recibido el comprobante de pago.
-            Envíelo por WhatsApp junto con su nombre.
+            Transferí el monto exacto por SINPE y enviá el comprobante por WhatsApp con tu nombre.
           </p>
-          <p class="order-panel__multi">¿Una orden grande o especial? <a href="https://wa.me/50672773156" target="_blank" rel="noopener">Escríbenos directamente.</a></p>
+          <p class="order-panel__multi">¿Pedido especial o en cantidad? <a href="https://wa.me/50672773156" target="_blank" rel="noopener">Escribinos directamente.</a></p>
           <a
             href="#"
             class="btn btn--primary js-dc-wa-btn"
@@ -273,12 +287,12 @@
   <div class="dc-tray" id="dc-tray" role="region" aria-label="Set en composición" aria-live="polite">
     <div class="dc-tray__inner">
       <div class="dc-tray__slots" aria-hidden="true">
-        <div class="dc-tray__slot" data-slot="0"><span class="dc-tray__slot-name">—</span></div>
-        <div class="dc-tray__slot" data-slot="1"><span class="dc-tray__slot-name">—</span></div>
-        <div class="dc-tray__slot" data-slot="2"><span class="dc-tray__slot-name">—</span></div>
+        <div class="dc-tray__slot" data-slot="0"><span class="dc-tray__slot-name">—</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
+        <div class="dc-tray__slot" data-slot="1"><span class="dc-tray__slot-name">—</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
+        <div class="dc-tray__slot" data-slot="2"><span class="dc-tray__slot-name">—</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
       </div>
       <span class="dc-tray__bottles js-tray-bottles" hidden></span>
-      <p class="dc-tray__hint js-tray-hint" hidden></p>
+      <div class="dc-tray__hint js-tray-hint" hidden></div>
       <div class="dc-tray__action">
         <span class="dc-tray__price js-dc-tray-price" aria-hidden="true"></span>
         <button
@@ -310,6 +324,7 @@
       <nav class="footer__nav" aria-label="Políticas y contacto">
         <a href="legal.html" class="footer__link">Políticas</a>
         <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
       </nav>
       <p class="footer__copy">
         <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
@@ -324,11 +339,93 @@
     </svg>
   </button>
 
-  <script src="../scripts/fragrance-data.js?v=19"></script>
+  <script src="../scripts/fragrance-data.js?v=20"></script>
   <script src="../scripts/nav.js?v=19"></script>
   <script src="../scripts/scroll.js?v=19"></script>
-  <script src="../scripts/catalogo-data.js?v=19"></script>
-  <script src="../scripts/catalogo.js?v=19"></script>
-  <script src="../scripts/decants.js?v=21"></script>
+  <!-- Fragrance detail panel -->
+  <div class="fp" id="js-fp" role="dialog" aria-modal="true" aria-labelledby="js-fp-name" hidden>
+    <div class="fp__backdrop" id="js-fp-backdrop"></div>
+    <div class="fp__sheet" tabindex="-1">
+      <div class="fp__head">
+        <span class="fp__badge" id="js-fp-badge"></span>
+        <button class="fp__close" id="js-fp-close" type="button" aria-label="Cerrar panel">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="fp__scroll">
+        <div class="fp__visual" aria-hidden="true">
+          <img class="fp__img" id="js-fp-img" src="" alt="" hidden>
+          <div class="fp__rings" id="js-fp-rings">
+            <div class="fp__ring fp__ring--3"></div>
+            <div class="fp__ring fp__ring--2"></div>
+            <div class="fp__ring fp__ring--1"></div>
+          </div>
+        </div>
+        <div class="fp__body">
+          <h2 class="fp__name" id="js-fp-name"></h2>
+          <p class="fp__notes" id="js-fp-notes"></p>
+          <div class="fp__choices">
+            <span class="fp__bottles-label">Decant · 10 ml</span>
+            <div class="fp__bottle">
+              <span class="fp__bottle-left">
+                <span class="fp__bottle-size">Muestra 10 ml</span>
+                <span class="fp__bottle-price">₡5.000 c/u</span>
+              </span>
+              <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-decant">
+                <button class="fp__add-btn" type="button" data-fmt="decant" data-delta="1">+ Agregar</button>
+                <div class="fp__stepper" aria-hidden="true">
+                  <button class="fp__step-btn" type="button" data-fmt="decant" data-delta="-1" aria-label="Quitar uno">−</button>
+                  <span class="fp__step-qty">0</span>
+                  <button class="fp__step-btn" type="button" data-fmt="decant" data-delta="1" aria-label="Agregar uno">+</button>
+                </div>
+              </div>
+            </div>
+            <p class="fp__set-nudge" id="js-fp-nudge" hidden>Set de 3 decants: <strong>₡12.000</strong> — ahorrás ₡3.000</p>
+            <div class="fp__sep" aria-hidden="true">o</div>
+            <div class="fp__bottles" id="js-fp-bottles">
+              <span class="fp__bottles-label">Frasco completo</span>
+              <div class="fp__bottle-row">
+                <div class="fp__bottle" data-fmt="30ml">
+                  <span class="fp__bottle-left">
+                    <span class="fp__bottle-size">Frasco 30 ml</span>
+                    <span class="fp__bottle-price">₡12.000</span>
+                  </span>
+                  <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-30ml">
+                    <button class="fp__add-btn" type="button" data-fmt="30ml" data-delta="1">+ Agregar</button>
+                    <div class="fp__stepper" aria-hidden="true">
+                      <button class="fp__step-btn" type="button" data-fmt="30ml" data-delta="-1" aria-label="Quitar uno">−</button>
+                      <span class="fp__step-qty">0</span>
+                      <button class="fp__step-btn" type="button" data-fmt="30ml" data-delta="1" aria-label="Agregar uno">+</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="fp__bottle" data-fmt="100ml">
+                  <span class="fp__bottle-left">
+                    <span class="fp__bottle-size">Frasco 100 ml</span>
+                    <span class="fp__bottle-price">₡20.000</span>
+                  </span>
+                  <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-100ml">
+                    <button class="fp__add-btn" type="button" data-fmt="100ml" data-delta="1">+ Agregar</button>
+                    <div class="fp__stepper" aria-hidden="true">
+                      <button class="fp__step-btn" type="button" data-fmt="100ml" data-delta="-1" aria-label="Quitar uno">−</button>
+                      <span class="fp__step-qty">0</span>
+                      <button class="fp__step-btn" type="button" data-fmt="100ml" data-delta="1" aria-label="Agregar uno">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="fp__footer">
+        <button class="fp__order-btn" id="js-fp-order" type="button">Agregar a la orden</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/catalogo-data.js?v=22"></script>
+  <script src="../scripts/catalogo.js?v=31"></script>
+  <script src="../scripts/decants.js?v=32"></script>
 </body>
 </html>

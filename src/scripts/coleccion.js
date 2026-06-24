@@ -25,13 +25,7 @@
     else el.classList.add('is-in');
   }
 
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
+  var escHtml = window.escHtml;
 
   function renderEntry(frag) {
     var isIcon = frag.category === 'icon-series';
@@ -94,7 +88,15 @@
               + '<p class="catalog-entry__tag-list">' + frag.ocasionLabels.join(' · ') + '</p>'
             + '</div>'
           + '</div>'
-          + '<a class="catalog-entry__catalog-link" href="catalogo.html#' + frag.id + '">Ver en catálogo →</a>'
+          + (soldOut ? '' :
+              '<div class="catalog-entry__buy-row">'
+              + '<div class="catalog-entry__fmt-pills">'
+                + '<span class="catalog-entry__fmt-pill">Decant 10ml · ₡5.000</span>'
+                + '<span class="catalog-entry__fmt-pill">Frasco 30ml · ₡12.000</span>'
+                + '<span class="catalog-entry__fmt-pill">Frasco 100ml · ₡20.000</span>'
+              + '</div>'
+              + '<a class="catalog-entry__order-btn" href="catalogo.html#' + frag.id + '">Ordenar →</a>'
+            + '</div>')
         + '</div>'
       + '</div>'
 

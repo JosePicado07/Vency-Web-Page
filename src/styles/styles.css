@@ -49,6 +49,17 @@
   --border:  var(--atelier-stone);
   --border-dark: oklch(28% 0.03 180);
 
+  /* Bottle buy button surfaces — entry (30ml) and aged (100ml) */
+  --bottle-entry-bg:           oklch(89% 0.022 76);   /* warm parchment-amber, 30ml */
+  --bottle-entry-bg-hover:     oklch(83% 0.032 74);
+  --bottle-entry-border:       oklch(58% 0.07 66);
+  --bottle-entry-border-hover: oklch(50% 0.09 64);
+  --bottle-aged-bg:            oklch(76% 0.045 62);   /* deep volcanic amber, 100ml */
+  --bottle-aged-bg-hover:      oklch(68% 0.060 60);
+  --bottle-aged-border:        oklch(50% 0.10 60);
+  --bottle-aged-border-hover:  oklch(44% 0.12 58);
+  --bottle-add-icon:           oklch(48% 0.08 65);    /* + badge on unselected state */
+
   /* Easing */
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -217,6 +228,22 @@ a {
   outline: none;
 }
 .btn--primary:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 3px;
+}
+
+.btn--outline {
+  background: transparent;
+  color: var(--volcanic-ink);
+  border-color: var(--volcanic-ink);
+}
+.btn--outline:hover,
+.btn--outline:focus-visible {
+  background: var(--volcanic-ink);
+  color: var(--botanical-parchment);
+  outline: none;
+}
+.btn--outline:focus-visible {
   outline: 2px solid var(--warm-ochre);
   outline-offset: 3px;
 }
@@ -452,6 +479,25 @@ a {
   color: var(--ink-muted);
 }
 
+.hero__sessions-link {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+.hero__sessions-link a {
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 0.15s, border-color 0.15s;
+}
+.hero__sessions-link a:hover {
+  color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+}
+
 .hero__provenance {
   font-family: 'Manrope', sans-serif;
   font-size: 0.62rem;
@@ -558,6 +604,15 @@ a.coll-block:hover .coll-block__img-wrap img {
   line-height: 1.05;
   color: var(--volcanic-ink);
   margin-top: 0.1rem;
+}
+
+.coll-block__price {
+  font-family: 'Bitter', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--warm-ochre-dark);
+  display: block;
+  margin: 0.5rem 0 0.1rem;
 }
 
 .coll-block__desc {
@@ -917,6 +972,13 @@ a.coll-block:hover .coll-block__cta {
 .process__list {
   max-width: 1440px;
   margin: 0 auto;
+}
+
+.process__cta {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-lg) var(--space-md);
+  border-top: 1px solid var(--border);
 }
 
 .process__step {
@@ -1458,6 +1520,18 @@ a.coll-block:hover .coll-block__cta {
 
 .payment-method__note--light {
   color: var(--botanical-parchment);
+}
+
+.sinpe-steps {
+  padding-left: 1.1rem;
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--ink-subdued);
 }
 
 .order-panel__confirm {

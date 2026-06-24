@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preguntas frecuentes — Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Dudas sobre decants, envíos, pedidos y personalización. Todo lo que necesitás saber antes de ordenar en Vency Atelier.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=21">
+  <style>
+    .faq-header {
+      padding: calc(var(--nav-h) + var(--space-xl)) var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-header__inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .faq-header__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin: 0.75rem 0 0;
+    }
+    .faq-body {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-md) var(--space-xl);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item summary {
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.4rem 0;
+      cursor: pointer;
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--volcanic-ink);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item__chevron {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      stroke: var(--ink-muted);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .faq-item[open] .faq-item__chevron {
+      transform: rotate(180deg);
+    }
+    .faq-item summary:hover {
+      color: var(--warm-ochre);
+    }
+    .faq-item__body {
+      padding: 0 0 1.4rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--ink-subdued);
+      max-width: 62ch;
+    }
+    .faq-item__body a {
+      color: var(--warm-ochre);
+      text-underline-offset: 3px;
+    }
+    .faq-item__body a:hover {
+      color: var(--warm-ochre-dark);
+    }
+    .faq-cta {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .faq-cta__label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .faq-cta__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-nav" href="#faq-content">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
+      <li><a href="catalogo.html" class="nav__link">Comprar</a></li>
+      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <main id="faq-content" tabindex="-1">
+
+    <header class="faq-header">
+      <div class="faq-header__inner">
+        <span class="label sage-label animate-in">PREGUNTAS FRECUENTES · VENCY ATELIER</span>
+        <h1 class="faq-header__title animate-in" style="--delay:80ms">
+          Todo lo que<br>necesitás saber.
+        </h1>
+      </div>
+    </header>
+
+    <div class="faq-body" id="faq-content">
+
+      <details class="faq-item" open>
+        <summary>
+          ¿Cuánto dura un decant de 10 ml?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Entre 80 y 100 aplicaciones. Para la mayoría de personas, eso son varias semanas de uso diario — tiempo suficiente para saber si una fragancia realmente es tuya antes de invertir en el frasco completo.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          ¿Hacen envíos?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Sí, enviamos a todo el país. Coordinamos el método y el costo de envío por WhatsApp según tu ubicación. También podés recoger directamente en el atelier en Heredia si preferís.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          ¿Cómo funciona el pedido?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Elegís tus fragancias en el <a href="catalogo.html">catálogo</a>, confirmás por WhatsApp y pagás por SINPE Móvil. Una vez que nos enviás el comprobante de pago, confirmamos tu pedido el mismo día.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          ¿Puedo pedir una fragancia personalizada?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Sí. Trabajamos pedidos personalizados: podés describir lo que buscás y Anthonny compone algo para vos, o explorar el proceso juntos en una <a href="index.html#sesiones">Sesión de Atelier</a>. Escribinos por WhatsApp para coordinar.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          ¿Qué es una inspiración en fragancia?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Una inspiración es una fragancia creada a partir del estudio de un perfume de diseñador o de nicho: se analiza su estructura olfativa — las notas de salida, corazón y fondo — y se reinterpreta con materias primas de alta calidad. No es una copia ni un duplicado; es una lectura propia del mismo concepto, con personalidad y precio accesible. En Vency Atelier, todas nuestras inspiraciones pasan por el criterio del perfumista antes de llegar al catálogo.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          ¿Tienen política de cambios o devoluciones?
+          <svg class="faq-item__chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-item__body">
+          Sí. Encontrás todos los detalles en nuestras <a href="legal.html">Políticas</a>.
+        </div>
+      </details>
+
+      <div class="faq-cta">
+        <p class="faq-cta__label">¿No encontraste lo que buscabas?</p>
+        <div class="faq-cta__actions">
+          <a href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Tengo%20una%20pregunta." class="btn btn--primary" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+          <a href="catalogo.html" class="btn btn--outline">Ver el catálogo</a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="index.html#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link footer__link--active" aria-current="page">FAQ</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script src="../scripts/nav.js?v=19"></script>
+  <script src="../scripts/scroll.js?v=19"></script>
+</body>
+</html>

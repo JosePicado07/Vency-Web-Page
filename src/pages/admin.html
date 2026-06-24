@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#1b2b25">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vency">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <title>Vency Atelier · Vendedor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/admin.css?v=23">
+</head>
+<body>
+
+  <!-- Token gate -->
+  <div class="gate" id="js-gate" hidden>
+    <div class="gate__inner">
+      <p class="gate__brand">VENCY ATELIER</p>
+      <h1 class="gate__heading">Modo vendedor</h1>
+      <p class="gate__sub">Ingresá tu clave para continuar.</p>
+      <form class="gate__form" id="js-gate-form" novalidate>
+        <div class="gate__field">
+          <div class="gate__pw-wrap">
+            <label class="sr-only" for="js-gate-input">Clave de vendedor</label>
+            <input class="gate__input" id="js-gate-input" type="password"
+                   placeholder="Clave de vendedor" autocomplete="current-password"
+                   autocapitalize="none" spellcheck="false" required>
+            <button class="gate__eye" id="js-gate-eye" type="button"
+                    aria-label="Mostrar contraseña">
+              <svg class="gate__eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <button class="gate__btn" id="js-gate-btn" type="submit">Entrar</button>
+      </form>
+      <p class="gate__error" id="js-gate-error" role="alert" hidden>Clave incorrecta. Intentá de nuevo.</p>
+    </div>
+  </div>
+
+  <!-- Main app -->
+  <div class="app" id="js-app" hidden>
+
+    <header class="app-header">
+      <div class="app-header__left">
+        <span class="app-header__brand">VENCY ATELIER</span>
+        <span class="app-header__dot" aria-hidden="true">·</span>
+        <span class="app-header__mode">Vendedor</span>
+      </div>
+      <button class="app-header__install" id="js-install" type="button" hidden>Instalar</button>
+      <button class="app-header__logout" id="js-logout" type="button">Salir</button>
+    </header>
+
+    <!-- Ledger metrics -->
+    <section class="metrics" id="js-metrics" aria-label="Resumen de ventas">
+
+      <!-- Period tabs -->
+      <div class="metrics__period-tabs" role="tablist" aria-label="Período">
+        <button class="metrics__period-tab metrics__period-tab--active" id="js-tab-hoy"
+                role="tab" aria-selected="true" data-period="hoy" type="button">Hoy</button>
+        <button class="metrics__period-tab" id="js-tab-semana"
+                role="tab" aria-selected="false" data-period="semana" type="button">Semana</button>
+        <button class="metrics__period-tab" id="js-tab-mes"
+                role="tab" aria-selected="false" data-period="mes" type="button">Mes</button>
+        <button class="metrics__refresh-btn" id="js-refresh" type="button" aria-label="Actualizar métricas">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="23 4 23 10 17 10"/>
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Month navigation (solo visible en pestaña Mes) -->
+      <div class="metrics__month-nav" id="js-month-nav" hidden>
+        <button class="metrics__month-btn" id="js-month-prev" type="button" aria-label="Mes anterior">&#8592;</button>
+        <span class="metrics__month-label" id="js-month-label"></span>
+        <button class="metrics__month-btn" id="js-month-next" type="button" aria-label="Mes siguiente" disabled>&#8594;</button>
+      </div>
+
+      <!-- Primary figure: total del período -->
+      <div class="metrics__period-total">
+        <span class="metrics__period-label" id="js-period-label">HOY</span>
+        <span class="metrics__period-value" id="js-metric-period">—</span>
+      </div>
+
+      <div class="metrics__splits">
+        <div class="metrics__split">
+          <span class="metrics__split-label">Web</span>
+          <span class="metrics__split-value" id="js-metric-web">—</span>
+          <span class="metrics__split-pending" id="js-metric-web-pending" hidden></span>
+        </div>
+        <div class="metrics__split">
+          <span class="metrics__split-label">Local</span>
+          <span class="metrics__split-value" id="js-metric-local">—</span>
+        </div>
+        <div class="metrics__split">
+          <span class="metrics__split-label">Efectivo</span>
+          <span class="metrics__split-value" id="js-metric-efectivo">—</span>
+        </div>
+        <div class="metrics__split">
+          <span class="metrics__split-label">SINPE</span>
+          <span class="metrics__split-value" id="js-metric-sinpe">—</span>
+        </div>
+      </div>
+
+      <p class="metrics__top" id="js-metric-top"></p>
+
+      <!-- Sales list — collapsed by default -->
+      <div class="sales-section" id="js-sales-section">
+        <button class="sales-section__toggle" id="js-sales-toggle" type="button" aria-expanded="false">
+          <span class="sales-section__toggle-label" id="js-sales-toggle-label">PEDIDOS</span>
+          <svg class="sales-section__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3,5 7,9 11,5"/></svg>
+        </button>
+        <div class="sales-section__body" id="js-sales-body" hidden>
+          <div class="metrics__sales" id="js-sales-list" aria-label="Ventas del período"></div>
+          <p class="metrics__sales-empty" id="js-sales-empty" hidden>Sin ventas en este período.</p>
+          <button class="sales-section__showmore" id="js-sales-showmore" type="button" hidden></button>
+        </div>
+      </div>
+
+      <p class="metrics__offline" id="js-metrics-offline" hidden>Sin conexión — abrí la hoja directamente.</p>
+
+    </section>
+
+    <!-- Sales calendar — heatmap of daily revenue for the active month -->
+    <section class="admin-cal" id="js-admin-cal" hidden aria-label="Calendario de ventas"></section>
+
+    <!-- Mode tabs -->
+    <div class="mode-tabs" role="tablist" aria-label="Sección">
+      <button class="mode-tab mode-tab--active" id="js-mode-tab-vender"
+              data-mode="vender" role="tab" aria-selected="true" type="button"
+              aria-controls="js-mode-vender">Vender</button>
+      <button class="mode-tab" id="js-mode-tab-inventario"
+              data-mode="inventario" role="tab" aria-selected="false" type="button"
+              aria-controls="js-mode-inventario">Inventario</button>
+    </div>
+
+    <!-- Shared search -->
+    <div class="admin-search">
+      <label class="sr-only" for="js-search">Buscar fragancia</label>
+      <input class="admin-search__input" id="js-search" type="search"
+             placeholder="Buscar fragancia..." autocomplete="off" autocapitalize="none">
+    </div>
+
+    <!-- VENDER panel -->
+    <div id="js-mode-vender" role="tabpanel" aria-labelledby="js-mode-tab-vender">
+      <div class="dblock-grid" id="js-frag-list"></div>
+      <div class="grid-sentinel" id="js-frag-sentinel" aria-hidden="true"></div>
+    </div>
+
+    <!-- INVENTARIO panel -->
+    <div id="js-mode-inventario" role="tabpanel" aria-labelledby="js-mode-tab-inventario" hidden>
+      <p class="admin-hint" id="js-inv-hint" hidden>Cargando...</p>
+      <div class="dblock-grid" id="js-inv-list"></div>
+      <div class="grid-sentinel" id="js-inv-sentinel" aria-hidden="true"></div>
+    </div>
+
+  </div>
+
+  <!-- Floating cart tray -->
+  <div class="admin-tray" id="js-admin-tray" role="region" aria-label="Carrito" hidden>
+    <div class="admin-tray__slots" id="js-slots" aria-label="Decants seleccionados"></div>
+    <div class="admin-tray__bottles" id="js-bottles-list"></div>
+    <div class="admin-tray__footer">
+      <span class="admin-tray__total" id="js-total">&#8353;0</span>
+      <button class="admin-tray__open" id="js-open-panel" type="button">Registrar venta</button>
+    </div>
+  </div>
+
+  <!-- Slide-up order panel -->
+  <div class="admin-panel" id="js-admin-panel" role="dialog" aria-modal="true" aria-label="Confirmar venta" hidden>
+    <div class="admin-panel__backdrop" id="js-panel-backdrop"></div>
+    <div class="admin-panel__sheet" id="js-panel-sheet">
+      <div class="admin-panel__head">
+        <span class="admin-panel__title">Confirmar venta</span>
+        <button class="admin-panel__close" id="js-close-panel" type="button" aria-label="Cerrar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="admin-panel__body">
+        <div class="admin-panel__summary" id="js-panel-summary"></div>
+        <fieldset class="admin-panel__payment" aria-label="Método de pago">
+          <label class="pay-opt">
+            <input class="pay-opt__radio" type="radio" name="pago" value="Efectivo" checked>
+            <span class="pay-opt__label">Efectivo</span>
+          </label>
+          <label class="pay-opt">
+            <input class="pay-opt__radio" type="radio" name="pago" value="SINPE">
+            <span class="pay-opt__label">SINPE</span>
+          </label>
+        </fieldset>
+        <label class="sr-only" for="js-nota">Cliente o nota (opcional)</label>
+        <input class="admin-panel__note" id="js-nota" type="text"
+               placeholder="Cliente o nota (opcional)" maxlength="80" autocomplete="off">
+        <div class="admin-panel__footer">
+          <span class="admin-panel__total" id="js-panel-total">&#8353;0</span>
+          <button class="admin-panel__register" id="js-register" type="button" disabled>Confirmar</button>
+        </div>
+        <div class="pos__toast" id="js-toast" role="status" aria-live="polite" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="scroll-top" id="js-scroll-top" type="button" aria-label="Volver arriba" hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+         stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="18 15 12 9 6 15"/>
+    </svg>
+  </button>
+
+  <script src="../scripts/fragrance-data.js?v=20"></script>
+  <script src="../scripts/catalogo-data.js?v=19"></script>
+  <script src="../scripts/admin.js?v=28"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+</body>
+</html>

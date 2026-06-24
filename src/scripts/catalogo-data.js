@@ -8,7 +8,7 @@
   root.VENCY_FULL_CATALOG = [
 
     /* ── DISEÑADOR · HOMBRE ─────────────────────────────────── */
-    { brand: 'ARMANI',             name: 'Acqua di Giò',              cat: 'disenador', gender: 'hombre', notes: 'Cítricos, notas marinas, jazmín, cedro. Fresco, acuático y limpio.',          vencyInterpretation: { id: 'fresh-coast',         name: 'Fresh Coast'         } },
+    { brand: 'ARMANI',             name: 'Acqua di Giò',              cat: 'disenador', gender: 'hombre', notes: 'Cítricos, notas marinas, jazmín, cedro. Fresco, acuático y limpio.' },
     { brand: 'ARMANI',             name: 'Acqua di Giò Profondo',     cat: 'disenador', gender: 'hombre', notes: 'Bergamota, notas marinas, romero, pachulí. Acuático profundo y moderno.' },
     { brand: 'ARMANI',             name: 'Kogane',                    cat: 'disenador', gender: 'hombre', notes: 'Azafrán, cuero, oud, ámbar. Oriental lujoso y cálido.' },
 
@@ -61,7 +61,7 @@
     { brand: 'JEAN PAUL GAULTIER', name: 'Le Male Elixir',           cat: 'disenador', gender: 'hombre', notes: 'Miel, vainilla, tabaco. Muy dulce.' },
     { brand: 'JEAN PAUL GAULTIER', name: 'Ultra Male',               cat: 'disenador', gender: 'hombre', notes: 'Pera, canela, vainilla. Dulce de fiesta.' },
     { brand: 'JEAN PAUL GAULTIER', name: 'Paradise Garden',          cat: 'disenador', gender: 'hombre', notes: 'Coco, higo, notas verdes. Tropical fresco.' },
-    { brand: 'JEAN PAUL GAULTIER', name: 'No Limit$',                cat: 'disenador', gender: 'hombre', notes: 'Chocolate negro, especias, vainilla. Gourmand intenso.' },
+    { brand: 'PHILIPP PLEIN',      name: 'No Limit$',                cat: 'disenador', gender: 'hombre', notes: 'Chocolate negro, especias, vainilla. Gourmand intenso.' },
 
     { brand: 'VALENTINO',          name: 'Valentino Uomo',            cat: 'disenador', gender: 'hombre', notes: 'Avellana, café, chocolate. Elegante gourmand.' },
     { brand: 'VALENTINO',          name: 'Born in Roma Uomo',         cat: 'disenador', gender: 'hombre', notes: 'Violeta, salvia, vetiver. Moderno y versátil.' },
@@ -142,91 +142,95 @@
     { brand: 'PARFUMS DE MARLY',   name: 'Perseus',                   cat: 'nicho', gender: 'hombre', notes: 'Bergamota, toronja, vetiver, ámbar gris. Cítrico elegante y luminoso.' },
     { brand: 'PARFUMS DE MARLY',   name: 'Percival',                  cat: 'nicho', gender: 'hombre', notes: 'Mandarina, lavanda, geranio, almizcle. Limpio, fresco y muy versátil.' },
     { brand: 'PARFUMS DE MARLY',   name: 'Herod',                     cat: 'nicho', gender: 'hombre', notes: 'Tabaco, canela, vainilla, incienso. Tabaco dulce y refinado.' },
-    { brand: 'PARFUMS DE MARLY',   name: 'Pegasus',                   cat: 'nicho', gender: 'hombre', notes: 'Almendra amarga, vainilla, heliotropo, sándalo. Cremoso y elegante.' },
-    { brand: 'PARFUMS DE MARLY',   name: 'Layton',                    cat: 'nicho', gender: 'hombre', notes: 'Manzana, vainilla, cardamomo, maderas. Dulce especiado extremadamente versátil.' },
+    { brand: 'PARFUMS DE MARLY',   name: 'Pegasus',                   cat: 'nicho', gender: 'hombre', notes: 'Almendra amarga, vainilla, heliotropo, sándalo. Cremoso y elegante.',          vencyInterpretation: { id: 'silver-veil',          name: 'Silver Veil'         } },
+    { brand: 'PARFUMS DE MARLY',   name: 'Layton',                    cat: 'nicho', gender: 'hombre', notes: 'Manzana, vainilla, cardamomo, maderas. Dulce especiado extremadamente versátil.', vencyInterpretation: { id: 'apple-whisper',        name: 'Apple Whisper'       } },
     { brand: 'PARFUMS DE MARLY',   name: 'Delina',                    cat: 'nicho', gender: 'mujer',  notes: 'Lichi, rosa turca, peonía, vainilla. Rosa afrutada femenina.',              vencyInterpretation: { id: 'rose-desire',          name: 'Rose Desire'         } },
     { brand: 'PARFUMS DE MARLY',   name: 'Valaya',                    cat: 'nicho', gender: 'mujer',  notes: 'Durazno blanco, flor de azahar, almizcle. Limpio, lujoso y sofisticado.' },
 
     { brand: 'CLIVE CHRISTIAN',    name: 'No. 1 Imperial Men',        cat: 'nicho', gender: 'hombre', notes: 'Lima, cardamomo, sándalo, ámbar. Opulento y clásico.' },
-    { brand: 'CLIVE CHRISTIAN',    name: 'X For Men',                 cat: 'nicho', gender: 'hombre', notes: 'Ruibarbo, cardamomo, iris, cedro. Especiado elegante.' },
+    { brand: 'CLIVE CHRISTIAN',    name: 'X For Men',                 cat: 'nicho', gender: 'hombre', notes: 'Ruibarbo, cardamomo, iris, cedro. Especiado elegante.',                       vencyInterpretation: { id: 'private-reserve',      name: 'Private Reserve'     } },
 
-    { brand: 'ROJA',               name: 'Elysium',                   cat: 'nicho', gender: 'hombre', notes: 'Toronja, limón, vetiver, ámbar gris. Cítrico fresco de lujo.' },
-    { brand: 'ROJA',               name: 'Fetish',                    cat: 'nicho', gender: 'unisex', notes: 'Cuero, incienso, vetiver, ámbar. Oscuro y sofisticado.' },
+    { brand: 'ROJA',               name: 'Elysium',                   cat: 'nicho', gender: 'hombre', notes: 'Toronja, limón, vetiver, ámbar gris. Cítrico fresco de lujo.',              vencyInterpretation: { id: 'citrus-nirvana',       name: 'Citrus Nirvana'      } },
+    { brand: 'ROJA',               name: 'Fetish',                    cat: 'nicho', gender: 'unisex', notes: 'Cuero, incienso, vetiver, ámbar. Oscuro y sofisticado.',                       vencyInterpretation: { id: 'dark-sinner',          name: 'Dark Sinner'         } },
 
-    { brand: 'BYREDO',             name: 'Tobacco Mandarin',          cat: 'nicho', gender: 'unisex', notes: 'Mandarina, tabaco, cuero, maderas. Tabaco cítrico moderno.' },
-    { brand: 'BYREDO',             name: 'Mojave Ghost',              cat: 'nicho', gender: 'unisex', notes: 'Ambreta, violeta, sándalo, almizcle. Limpio, suave y etéreo.',               vencyInterpretation: { id: 'neutral-state',        name: 'Neutral State'       } },
+    { brand: 'BYREDO',             name: 'Tobacco Mandarin',          cat: 'nicho', gender: 'unisex', notes: 'Mandarina, tabaco, cuero, maderas. Tabaco cítrico moderno.',                 vencyInterpretation: { id: 'smoky-mandarin',       name: 'Smoky Mandarin'      } },
+    { brand: 'BYREDO',             name: 'Mojave Ghost',              cat: 'nicho', gender: 'unisex', notes: 'Ambreta, violeta, sándalo, almizcle. Limpio, suave y etéreo.' },
 
     { brand: 'LOUIS VUITTON',      name: 'Ombre Nomade',              cat: 'nicho', gender: 'unisex', notes: 'Oud, rosa, incienso, frambuesa. Oud oscuro y poderoso.',                     vencyInterpretation: { id: 'nomad-ritual',         name: 'Nomad Ritual'        } },
     { brand: 'LOUIS VUITTON',      name: 'Les Sables Roses',          cat: 'nicho', gender: 'unisex', notes: 'Rosa, oud, ámbar gris. Rosa oriental lujosa.' },
-    { brand: 'LOUIS VUITTON',      name: "L'Immensité",               cat: 'nicho', gender: 'hombre', notes: 'Jengibre, toronja, ámbar gris. Fresco especiado elegante.' },
-    { brand: 'LOUIS VUITTON',      name: 'Pacific Chill',             cat: 'nicho', gender: 'unisex', notes: 'Limón, menta, frutas, almizcle. Refrescante y relajante.' },
-    { brand: 'LOUIS VUITTON',      name: 'Imagination',               cat: 'nicho', gender: 'hombre', notes: 'Té negro, cítricos, jengibre, ambrox. Limpio, brillante y adictivo.' },
-    { brand: 'LOUIS VUITTON',      name: 'Attrape-Rêves',             cat: 'nicho', gender: 'mujer',  notes: 'Lichi, rosa, cacao, pachulí. Floral afrutado sofisticado.',               vencyInterpretation: { id: 'luminous-dream',       name: 'Luminous Dream'      } },
-    { brand: 'LOUIS VUITTON',      name: 'Symphony',                  cat: 'nicho', gender: 'unisex', notes: 'Cítricos brillantes, jengibre, almizcle. Lujo cítrico puro.' },
+    { brand: 'LOUIS VUITTON',      name: "L'Immensité",               cat: 'nicho', gender: 'hombre', notes: 'Jengibre, toronja, ámbar gris. Fresco especiado elegante.',               vencyInterpretation: { id: 'endless-horizon',      name: 'Endless Horizon'     } },
+    { brand: 'LOUIS VUITTON',      name: 'Pacific Chill',             cat: 'nicho', gender: 'unisex', notes: 'Limón, menta, frutas, almizcle. Refrescante y relajante.',                 vencyInterpretation: { id: 'fresh-coast',          name: 'Fresh Coast'         } },
+    { brand: 'LOUIS VUITTON',      name: 'Imagination',               cat: 'nicho', gender: 'hombre', notes: 'Té negro, cítricos, jengibre, ambrox. Limpio, brillante y adictivo.',      vencyInterpretation: { id: 'luminous-dream',       name: 'Luminous Dream'      } },
+    { brand: 'LOUIS VUITTON',      name: 'Attrape-Rêves',             cat: 'nicho', gender: 'mujer',  notes: 'Lichi, rosa, cacao, pachulí. Floral afrutado sofisticado.',               vencyInterpretation: { id: 'dream-trap',           name: 'Dream Trap'          } },
+    { brand: 'LOUIS VUITTON',      name: 'Symphony',                  cat: 'nicho', gender: 'unisex', notes: 'Cítricos brillantes, jengibre, almizcle. Lujo cítrico puro.',              vencyInterpretation: { id: 'citrus-melody',        name: 'Citrus Melody'       } },
 
-    { brand: 'BY KILIAN',          name: "Angels' Share",             cat: 'nicho', gender: 'unisex', notes: 'Coñac, canela, vainilla, tonka. Licor dulce espectacular.',                vencyInterpretation: { id: 'dream-trap',           name: 'Dream Trap'          } },
-    { brand: 'BY KILIAN',          name: 'Black Phantom',             cat: 'nicho', gender: 'unisex', notes: 'Ron, café, chocolate negro, caramelo. Gourmand oscuro.',                    vencyInterpretation: { id: 'dark-sinner',          name: 'Dark Sinner'         } },
-    { brand: 'BY KILIAN',          name: 'Smoking Hot',               cat: 'nicho', gender: 'unisex', notes: 'Tabaco, manzana, vainilla, canela. Dulce ahumado.' },
+    { brand: 'BY KILIAN',          name: "Angels' Share",             cat: 'nicho', gender: 'unisex', notes: 'Coñac, canela, vainilla, tonka. Licor dulce espectacular.' },
+    { brand: 'BY KILIAN',          name: 'Black Phantom',             cat: 'nicho', gender: 'unisex', notes: 'Ron, café, chocolate negro, caramelo. Gourmand oscuro.',                    vencyInterpretation: { id: 'phantom-ratio',        name: 'Phantom Ratio'       } },
+    { brand: 'BY KILIAN',          name: 'Smoking Hot',               cat: 'nicho', gender: 'unisex', notes: 'Tabaco, manzana, vainilla, canela. Dulce ahumado.',                         vencyInterpretation: { id: 'jagger-index',         name: 'Jagger Index'        } },
     { brand: 'BY KILIAN',          name: 'Good Girl Gone Bad',        cat: 'nicho', gender: 'mujer',  notes: 'Jazmín, osmanto, rosa, flores blancas. Floral sensual.' },
     { brand: 'BY KILIAN',          name: "Angels' Share Paradis",     cat: 'nicho', gender: 'unisex', notes: 'Coñac, frutas secas, vainilla, canela. Más intenso que Angels\' Share.' },
 
     { brand: 'ILMIN',              name: 'Il Femme',                  cat: 'nicho', gender: 'mujer',  notes: 'Flores blancas, vainilla, almizcle. Floral elegante.' },
     { brand: 'ILMIN',              name: 'Kakuno',                    cat: 'nicho', gender: 'unisex', notes: 'Frutas, especias suaves, maderas. Dulce especiado moderno.' },
 
-    { brand: 'CREED',              name: 'Silver Mountain Water',     cat: 'nicho', gender: 'hombre', notes: 'Té verde, grosella negra, almizcle. Fresco metálico y limpio.',             vencyInterpretation: { id: 'silver-veil',          name: 'Silver Veil'         } },
+    { brand: 'CREED',              name: 'Silver Mountain Water',     cat: 'nicho', gender: 'hombre', notes: 'Té verde, grosella negra, almizcle. Fresco metálico y limpio.' },
     { brand: 'CREED',              name: 'Green Irish Tweed',         cat: 'nicho', gender: 'hombre', notes: 'Hierba verde, iris, sándalo. Caballero clásico.',                           vencyInterpretation: { id: 'green-profile',        name: 'Green Profile'       } },
     { brand: 'CREED',              name: 'Aventus',                   cat: 'nicho', gender: 'hombre', notes: 'Piña, bergamota, abedul, almizcle. Frutal ahumado legendario.',             vencyInterpretation: { id: 'prime-authority',      name: 'Prime Authority'     } },
     { brand: 'CREED',              name: 'Aventus Absolu',            cat: 'nicho', gender: 'hombre', notes: 'Piña, pomelo, especias, maderas. Aventus más oscuro.',                      vencyInterpretation: { id: 'absolu-authority',     name: 'Absolu Authority'    } },
-    { brand: 'CREED',              name: 'Centaurus',                 cat: 'nicho', gender: 'hombre', notes: 'Tabaco, especias, maderas, resinas. Potente y cálido.' },
+    { brand: 'CREED',              name: 'Centaurus',                 cat: 'nicho', gender: 'hombre', notes: 'Tabaco, especias, maderas, resinas. Potente y cálido.',                      vencyInterpretation: { id: 'inner-wild',           name: 'Inner Wild'          } },
     { brand: 'CREED',              name: 'Aventus For Her',           cat: 'nicho', gender: 'mujer',  notes: 'Manzana verde, rosa, pachulí. Aventus femenino.' },
     { brand: 'CREED',              name: 'Royal Water',               cat: 'nicho', gender: 'unisex', notes: 'Cítricos, menta, albahaca, almizcle. Fresco aristocrático.' },
-    { brand: 'CREED',              name: 'Carmina',                   cat: 'nicho', gender: 'unisex', notes: 'Cereza negra, rosa, azafrán, ámbar. Sensual y elegante.' },
+    { brand: 'CREED',              name: 'Carmina',                   cat: 'nicho', gender: 'unisex', notes: 'Cereza negra, rosa, azafrán, ámbar. Sensual y elegante.',                    vencyInterpretation: { id: 'cherry-desire',        name: 'Cherry Desire'       } },
     { brand: 'CREED',              name: 'Queen Of Silk',             cat: 'nicho', gender: 'mujer',  notes: 'Osmanthus, vainilla, azafrán, almizcle. Floral oriental sedoso.',          vencyInterpretation: { id: 'queen-essence',        name: 'Queen Essence'       } },
 
     { brand: 'MAISON MARGIELA',    name: 'Replica: Autumn Vibes',     cat: 'nicho', gender: 'unisex', notes: 'Hojas secas, cardamomo, cedro. Bosque otoñal.' },
     { brand: 'MAISON MARGIELA',    name: 'Replica: By the Fireplace', cat: 'nicho', gender: 'unisex', notes: 'Castaña, vainilla, humo, madera. Chimenea acogedora.',                       vencyInterpretation: { id: 'fireside-memory',      name: 'Fireside Memory'     } },
-    { brand: 'MAISON MARGIELA',    name: 'Replica: Jazz Club',        cat: 'nicho', gender: 'unisex', notes: 'Ron, tabaco, vainilla. Bar elegante de jazz.',                               vencyInterpretation: { id: 'jagger-index',         name: 'Jagger Index'        } },
+    { brand: 'MAISON MARGIELA',    name: 'Replica: Jazz Club',        cat: 'nicho', gender: 'unisex', notes: 'Ron, tabaco, vainilla. Bar elegante de jazz.',                               vencyInterpretation: { id: 'night-light',          name: 'Night Light'         } },
 
     { brand: 'NISHANE',            name: 'Hundred Silent Ways',       cat: 'nicho', gender: 'unisex', notes: 'Durazno, vainilla, flores blancas. Dulce elegante.' },
     { brand: 'NISHANE',            name: 'Shem',                      cat: 'nicho', gender: 'unisex', notes: 'Rosa, incienso, especias, ámbar. Oriental refinado.' },
     { brand: 'NISHANE',            name: 'Hacivat',                   cat: 'nicho', gender: 'unisex', notes: 'Piña, musgo de roble, vetiver. Aventus más verde y limpio.' },
 
-    { brand: 'INITIO',             name: 'Oud for Greatness',         cat: 'nicho', gender: 'unisex', notes: 'Oud, azafrán, lavanda, almizcle. Oud moderno de lujo.' },
+    { brand: 'INITIO',             name: 'Oud for Greatness',         cat: 'nicho', gender: 'unisex', notes: 'Oud, azafrán, lavanda, almizcle. Oud moderno de lujo.',                      vencyInterpretation: { id: 'sacred-oud',           name: 'Sacred Oud'          } },
     { brand: 'INITIO',             name: 'Oud for Neo Greatness',     cat: 'nicho', gender: 'unisex', notes: 'Oud, especias, lavanda, maderas. Versión más fresca.' },
     { brand: 'INITIO',             name: 'Atomic Rose',               cat: 'nicho', gender: 'unisex', notes: 'Rosa, vainilla, ámbar. Rosa intensa y sensual.' },
     { brand: 'INITIO',             name: 'Musk Therapy',              cat: 'nicho', gender: 'unisex', notes: 'Almizcle blanco, bergamota, sándalo. Limpieza extrema.' },
-    { brand: 'INITIO',             name: 'Side Effect',               cat: 'nicho', gender: 'unisex', notes: 'Ron, tabaco, canela, vainilla. Seducción embotellada.' },
-    { brand: 'INITIO',             name: 'Rehab',                     cat: 'nicho', gender: 'unisex', notes: 'Lavanda, vetiver, sándalo, almizcle. Limpio y relajante.' },
+    { brand: 'INITIO',             name: 'Side Effect',               cat: 'nicho', gender: 'unisex', notes: 'Ron, tabaco, canela, vainilla. Seducción embotellada.',                      vencyInterpretation: { id: 'after-effect',         name: 'After Effect'        } },
+    { brand: 'INITIO',             name: 'Rehab',                     cat: 'nicho', gender: 'unisex', notes: 'Lavanda, vetiver, sándalo, almizcle. Limpio y relajante.',                   vencyInterpretation: { id: 'neutral-state',        name: 'Neutral State'       } },
 
     { brand: 'GUERLAIN',           name: 'Santal Pao Rosa',           cat: 'nicho', gender: 'unisex', notes: 'Rosa, sándalo, especias suaves. Cremoso y refinado.',                       vencyInterpretation: { id: 'santal-embrace',       name: 'Santal Embrace'      } },
 
     { brand: "PENHALIGON'S",       name: 'Lord George',               cat: 'nicho', gender: 'hombre', notes: 'Brandy, haba tonka, maderas. Caballero inglés elegante.' },
 
-    { brand: 'STÉPHANE HUMBERT LUCAS', name: 'God of Fire',          cat: 'nicho', gender: 'hombre', notes: 'Mango, jengibre, limón, maderas. Mango tropical explosivo.' },
+    { brand: 'STÉPHANE HUMBERT LUCAS', name: 'God of Fire',          cat: 'nicho', gender: 'hombre', notes: 'Mango, jengibre, limón, maderas. Mango tropical explosivo.',                vencyInterpretation: { id: 'golden-citrine',       name: 'Golden Citrine'      } },
     { brand: 'STÉPHANE HUMBERT LUCAS', name: 'Soleil de Jeddah',     cat: 'nicho', gender: 'unisex', notes: 'Cítricos, iris, vainilla, ámbar. Luminoso y lujoso.' },
 
     { brand: 'MAISON CRIVELLI',    name: 'Oud Cadenza',               cat: 'nicho', gender: 'unisex', notes: 'Oud, especias, cuero. Intenso y oscuro.' },
-    { brand: 'MAISON CRIVELLI',    name: 'Oud Maracujá',              cat: 'nicho', gender: 'unisex', notes: 'Maracuyá, oud, rosa, cuero. Frutal exótico y adictivo.' },
+    { brand: 'MAISON CRIVELLI',    name: 'Oud Maracujá',              cat: 'nicho', gender: 'unisex', notes: 'Maracuyá, oud, rosa, cuero. Frutal exótico y adictivo.',                    vencyInterpretation: { id: 'exotic-contrast',      name: 'Exotic Contrast'     } },
 
-    { brand: 'MAISON FRANCIS KURKDJIAN', name: 'Baccarat Rouge 540', cat: 'nicho', gender: 'unisex', notes: 'Azafrán, jazmín, ámbar gris, cedro. Dulce mineral y etéreo.' },
+    { brand: 'MAISON FRANCIS KURKDJIAN', name: 'Baccarat Rouge 540', cat: 'nicho', gender: 'unisex', notes: 'Azafrán, jazmín, ámbar gris, cedro. Dulce mineral y etéreo.',              vencyInterpretation: { id: 'rouge-elixir',         name: 'Rouge Elixir'        } },
+
+    { brand: 'LE LABO',            name: 'Santal 33',                 cat: 'nicho', gender: 'unisex', notes: 'Sándalo, cedro, cardamomo, iris, cuero. Sándalo seco y ahumado. Ícono moderno.', vencyInterpretation: { id: 'santal-code',        name: 'Santal Code'         } },
     { brand: 'MAISON FRANCIS KURKDJIAN', name: 'Grand Soir',         cat: 'nicho', gender: 'unisex', notes: 'Vainilla, benjuí, ámbar, tonka. Ámbar cálido magistral.',                  vencyInterpretation: { id: 'last-light',           name: 'Last Light'          } },
     { brand: 'MAISON FRANCIS KURKDJIAN', name: 'Oud Silk Mood',      cat: 'nicho', gender: 'unisex', notes: 'Rosa búlgara, oud, papiro. Rosa-oud elegante.' },
 
     { brand: 'MANCERA',            name: 'Cedrat Boise',              cat: 'nicho', gender: 'unisex', notes: 'Limón, grosella negra, cuero, maderas. Aventus con limón.' },
     { brand: 'MANCERA',            name: 'Red Tobacco',               cat: 'nicho', gender: 'unisex', notes: 'Tabaco, canela, incienso, vainilla. Bestia dulce y especiada.' },
-    { brand: 'MANCERA',            name: 'Instant Crush',             cat: 'nicho', gender: 'unisex', notes: 'Azafrán, vainilla, ámbar, jazmín. Primo de Baccarat más dulce.' },
+    { brand: 'MANCERA',            name: 'Amore Café',                cat: 'nicho', gender: 'unisex', notes: 'Café, vainilla, rosa, sándalo. Gourmand de café cremoso y seductor.',       vencyInterpretation: { id: 'midnight-coffee',      name: 'Midnight Coffee'     } },
+    { brand: 'MANCERA',            name: 'Instant Crush',             cat: 'nicho', gender: 'unisex', notes: 'Azafrán, vainilla, ámbar, jazmín. Primo de Baccarat más dulce.',           vencyInterpretation: { id: 'crush-effect',         name: 'Crush Effect'        } },
 
     /* ── ULTRA NICHO ────────────────────────────────────────── */
     { brand: 'XERJOFF',            name: 'XJ 1861',                   cat: 'ultra-nicho', gender: 'hombre', notes: 'Cítricos, lavanda, maderas. Fresco italiano elegante.' },
-    { brand: 'XERJOFF',            name: 'Erba Pura',                 cat: 'ultra-nicho', gender: 'unisex', notes: 'Naranja siciliana, limón, frutas exóticas, almizcle blanco. Frutal explosivo y muy proyectón.',  vencyInterpretation: { id: 'exotic-contraste',     name: 'Exotic Contraste'    } },
+    { brand: 'XERJOFF',            name: 'Erba Pura',                 cat: 'ultra-nicho', gender: 'unisex', notes: 'Naranja siciliana, limón, frutas exóticas, almizcle blanco. Frutal explosivo y muy proyectón.' },
     { brand: 'XERJOFF',            name: 'Alexandria II',             cat: 'ultra-nicho', gender: 'unisex', notes: 'Palisandro, lavanda, oud, vainilla, ámbar. Majestuoso, rico y extremadamente lujoso.' },
     { brand: 'XERJOFF',            name: 'Italica (2021)',            cat: 'ultra-nicho', gender: 'unisex', notes: 'Almendra, leche, caramelo, vainilla. Postre italiano embotellado.' },
     { brand: 'XERJOFF',            name: 'Opera',                     cat: 'ultra-nicho', gender: 'unisex', notes: 'Rosa turca, frutas, vainilla, cuero. Dulce, elegante y opulento.' },
     { brand: 'XERJOFF',            name: 'Bouquet Ideale',            cat: 'ultra-nicho', gender: 'mujer',  notes: 'Canela, nuez moscada, vainilla, tabaco. Oriental cálido y refinado.' },
     { brand: 'XERJOFF',            name: 'Levar del Sole',            cat: 'ultra-nicho', gender: 'unisex', notes: 'Cítricos, flores blancas, almizcle. Luminoso y sofisticado.' },
-    { brand: 'XERJOFF',            name: 'Naxos',                     cat: 'ultra-nicho', gender: 'hombre', notes: 'Miel, tabaco, lavanda, vainilla. Uno de los mejores tabacos dulces del mercado.' },
+    { brand: 'XERJOFF',            name: 'Naxos',                     cat: 'ultra-nicho', gender: 'hombre', notes: 'Miel, tabaco, lavanda, vainilla. Uno de los mejores tabacos dulces del mercado.', vencyInterpretation: { id: 'golden-heritage',      name: 'Golden Heritage'     } },
 
-    { brand: 'TOM FORD',           name: 'Fucking Fabulous',          cat: 'ultra-nicho', gender: 'unisex', notes: 'Cuero, almendra amarga, vainilla, tonka. Cuero cremoso moderno.',            vencyInterpretation: { id: 'shadow-leather',       name: 'Shadow Leather'      } },
+    { brand: 'TOM FORD',           name: 'Fucking Fabulous',          cat: 'ultra-nicho', gender: 'unisex', notes: 'Cuero, almendra amarga, vainilla, tonka. Cuero cremoso moderno.' },
+    { brand: 'TOM FORD',           name: 'Ombre Leather',             cat: 'ultra-nicho', gender: 'unisex', notes: 'Cuero, cardamomo, palo rosa, iris, pachulí. Cuero seco e iconic.',           vencyInterpretation: { id: 'shadow-leather',       name: 'Shadow Leather'      } },
     { brand: 'TOM FORD',           name: 'Black Orchid',              cat: 'ultra-nicho', gender: 'unisex', notes: 'Trufa, chocolate, orquídea negra, pachulí. Oscuro, misterioso y sensual.' },
     { brand: 'TOM FORD',           name: 'Tobacco Vanille',           cat: 'ultra-nicho', gender: 'unisex', notes: 'Tabaco, vainilla, cacao, frutas secas. Tabaco dulce de referencia.' },
     { brand: 'TOM FORD',           name: 'Noir de Noir',              cat: 'ultra-nicho', gender: 'unisex', notes: 'Rosa, pachulí, trufa, vainilla. Rosa oscura y sensual.' },
@@ -242,7 +246,7 @@
 
     { brand: 'KAJAL',              name: 'Dahab',                     cat: 'ultra-nicho', gender: 'unisex', notes: 'Manzana verde, maracuyá, almizcle, cedro. Frutal elegante.' },
     { brand: 'KAJAL',              name: 'Almaz',                     cat: 'ultra-nicho', gender: 'unisex', notes: 'Bergamota, frutas dulces, vainilla, ámbar. Dulce brillante.' },
-    { brand: 'KAJAL',              name: 'Lamar',                     cat: 'ultra-nicho', gender: 'unisex', notes: 'Piña, rosa, vainilla, almizcle. Tropical de lujo.' },
+    { brand: 'KAJAL',              name: 'Lamar',                     cat: 'ultra-nicho', gender: 'unisex', notes: 'Piña, rosa, vainilla, almizcle. Tropical de lujo.',                          vencyInterpretation: { id: 'aurum-mirage',         name: 'Aurum Mirage'        } },
 
     { brand: 'BOND NO. 9',         name: 'Bleecker Street',           cat: 'ultra-nicho', gender: 'unisex', notes: 'Arándano, hojas verdes, caramelo suave, pachulí. Verde dulce y único.' },
     { brand: 'BOND NO. 9',         name: 'Lafayette Street',          cat: 'ultra-nicho', gender: 'unisex', notes: 'Bergamota, manzana, vainilla, ámbar gris. Versátil y muy atractivo.' },
@@ -260,7 +264,7 @@
     { brand: 'KAYALI',             name: 'Eden Juicy Apple',          cat: 'ultra-nicho', gender: 'unisex', notes: 'Manzana roja, frutos rojos, vainilla. Dulce y juvenil.' },
 
     { brand: 'MATIÈRE PREMIÈRE',   name: 'Parisian Musc',             cat: 'ultra-nicho', gender: 'unisex', notes: 'Almizcle ambreta, cedro, semillas ambreta. Minimalista y elegante.' },
-    { brand: 'MATIÈRE PREMIÈRE',   name: 'Vanilla Powder',            cat: 'ultra-nicho', gender: 'unisex', notes: 'Vainilla, coco, almizcle blanco. Vainilla seca y sofisticada.' },
+    { brand: 'MATIÈRE PREMIÈRE',   name: 'Vanilla Powder',            cat: 'ultra-nicho', gender: 'unisex', notes: 'Vainilla, coco, almizcle blanco. Vainilla seca y sofisticada.',             vencyInterpretation: { id: 'vanille-skin',         name: 'Vanille Skin'        } },
 
     { brand: 'SPIRIT OF DUBAI',    name: 'Turath',                    cat: 'ultra-nicho', gender: 'unisex', notes: 'Azafrán, rosa, oud, ámbar, especias. Lujo árabe en estado puro.' },
 

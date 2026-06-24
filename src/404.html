@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página no encontrada — Vency Atelier</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles/styles.css?v=21">
+  <style>
+    .not-found {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-xl) var(--space-md);
+      text-align: center;
+    }
+    .not-found__code {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(6rem, 20vw, 14rem);
+      line-height: 1;
+      color: var(--border);
+      letter-spacing: -0.04em;
+      margin: 0;
+    }
+    .not-found__heading {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--volcanic-ink);
+      margin: 0.5rem 0 1rem;
+    }
+    .not-found__sub {
+      font-family: 'Manrope', sans-serif;
+      font-size: 1rem;
+      color: var(--ink-subdued);
+      max-width: 36ch;
+      line-height: 1.6;
+      margin: 0 0 2.5rem;
+    }
+    .not-found__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="./pages/index.html" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+  </nav>
+
+  <main class="not-found" aria-labelledby="nf-heading">
+    <p class="not-found__code" aria-hidden="true">404</p>
+    <h1 class="not-found__heading" id="nf-heading">Esta página no existe.</h1>
+    <p class="not-found__sub">Puede que el enlace haya cambiado o la dirección esté incorrecta.</p>
+    <div class="not-found__actions">
+      <a href="./pages/index.html" class="btn btn--primary">Ir al inicio</a>
+      <a href="./pages/catalogo.html" class="btn btn--outline">Ver el catálogo</a>
+    </div>
+  </main>
+
+</body>
+</html>

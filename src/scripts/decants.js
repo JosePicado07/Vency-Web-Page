@@ -12,16 +12,18 @@
   /* Registro opcional de pedidos en Google Sheets (best-effort, sin backend).
      Pegar aquí la URL del Web App de Apps Script. Vacío = desactivado.
      Ver docs/ORDER-LOG-SHEET.md para el setup. */
-  var SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbyqzvh10eup6nLlrILJEefExiwXBxvacqbbAj3l5CzQoKFsCR2XzBcniDbVMzQTetE6/exec';
+  var SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycby459LuBOjIkLDAs_to2zlLQ5uIJCJMsUhelMf_Aq3-I95a67rRAiz6xwjpN49GZRIE/exec';
 
   /* ---- State ---- */
   var selection       = []; /* decants:  { id, name }, max 3 */
   var bottles         = []; /* bottles:  { id, name, fmt, price } */
   var currentOrderRef = null;
+  var cachedStock     = {}; /* last fetched stock snapshot — refreshed every 2 min */
 
-  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
-  var BOTTLE_LABEL = { '30ml': '30 ml', '100ml': '100 ml' };
-  var SET_PRICE    = 12000;
+  var BOTTLE_PRICE  = { '30ml': 12000, '100ml': 20000 };
+  var BOTTLE_LABEL  = { '30ml': '30 ml', '100ml': '100 ml' };
+  var SET_PRICE     = 12000;
+  var DECANT_PRICE  = 5000;
 
   function generateRef() {
     return 'VA' + (Math.floor(Math.random() * 9000) + 1000);
@@ -33,6 +35,18 @@
 
   function esc(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function showToast(msg) {
+    var t = document.createElement('div');
+    t.className = 'vency-toast';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
+    setTimeout(function () {
+      t.classList.remove('vency-toast--in');
+      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 300);
+    }, 2500);
   }
 
   /* ---- DOM ---- */
@@ -60,7 +74,14 @@
   }
 
   function selectionNames() {
-    return selection.map(function (s) { return s.name; }).join(', ');
+    var counts = {}, order = [];
+    selection.forEach(function (s) {
+      if (!counts[s.id]) { counts[s.id] = 0; order.push(s); }
+      counts[s.id]++;
+    });
+    return order.map(function (s) {
+      return s.name + (counts[s.id] > 1 ? ' ×' + counts[s.id] : '');
+    }).join(', ');
   }
 
   function bottleIndex(id, fmt) {
@@ -72,9 +93,10 @@
 
   function decantComplete() { return selection.length === 3; }
   function decantPartial()  { return selection.length === 1 || selection.length === 2; }
-  function bottlesTotal()   { return bottles.reduce(function (s, b) { return s + b.price; }, 0); }
-  function cartTotal()      { return (decantComplete() ? SET_PRICE : 0) + bottlesTotal(); }
-  function canCheckout()    { return !decantPartial() && (decantComplete() || bottles.length > 0); }
+  function bottlesTotal()   { return bottles.reduce(function (s, b) { return s + b.price * (b.qty || 1); }, 0); }
+  function decantCost()     { return decantComplete() ? SET_PRICE : selection.length * DECANT_PRICE; }
+  function cartTotal()      { return decantCost() + bottlesTotal(); }
+  function canCheckout()    { return selection.length > 0 || bottles.length > 0; }
 
   /* ---- Selection logic ---- */
   function handleClick(id, name) {
@@ -86,17 +108,46 @@
     } else if (selection.length < 3) {
       selection.push({ id: id, name: name });
     } else {
+      var replaced = selection[selection.length - 1];
       selection.pop();
       selection.push({ id: id, name: name });
+      showToast('Se reemplazó ' + replaced.name);
     }
+    updateUI();
+  }
+
+  function setDecantQty(id, name, qty) {
+    for (var i = selection.length - 1; i >= 0; i--) {
+      if (selection[i].id === id) selection.splice(i, 1);
+    }
+    var available = 3 - selection.length;
+    var toAdd = Math.min(qty, available);
+    for (var j = 0; j < toAdd; j++) selection.push({ id: id, name: name });
     updateUI();
   }
 
   function handleBottleClick(id, name, fmt) {
     var idx = bottleIndex(id, fmt);
     if (idx >= 0) bottles.splice(idx, 1);
-    else bottles.push({ id: id, name: name, fmt: fmt, price: BOTTLE_PRICE[fmt] });
+    else bottles.push({ id: id, name: name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
     updateUI();
+  }
+
+  function setBottleQty(id, name, fmt, qty) {
+    var idx = bottleIndex(id, fmt);
+    if (qty <= 0) {
+      if (idx >= 0) bottles.splice(idx, 1);
+    } else if (idx >= 0) {
+      bottles[idx].qty = qty;
+    } else {
+      bottles.push({ id: id, name: name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: qty });
+    }
+    updateUI();
+  }
+
+  function getBottleQty(id, fmt) {
+    var idx = bottleIndex(id, fmt);
+    return idx >= 0 ? (bottles[idx].qty || 1) : 0;
   }
 
   /* ---- Tray slot removal (decants only) ---- */
@@ -168,27 +219,26 @@
     traySlots.forEach(function (slot, i) {
       var item = selection[i] || null;
       slot.classList.toggle('dc-tray__slot--filled', !!item);
-      slot.classList.toggle('dc-tray__slot--removable', !!item);
-      if (item) {
-        slot.setAttribute('role', 'button');
-        slot.setAttribute('tabindex', '0');
-        slot.setAttribute('aria-label', 'Quitar ' + item.name + ' del set');
-        slot.dataset.slotIndex = String(i);
-      } else {
-        slot.removeAttribute('role');
-        slot.removeAttribute('tabindex');
-        slot.removeAttribute('aria-label');
-        delete slot.dataset.slotIndex;
-      }
       var nameEl = slot.querySelector('.dc-tray__slot-name');
       if (nameEl) nameEl.textContent = item ? item.name : '—';
+      var removeBtn = slot.querySelector('.js-remove-decant');
+      if (removeBtn) {
+        removeBtn.hidden = !item;
+        if (item) removeBtn.dataset.slotIndex = String(i);
+      }
     });
 
     /* bottles chip */
     if (trayBottles) {
       if (bottles.length) {
-        var word = bottles.length === 1 ? ' frasco' : ' frascos';
-        trayBottles.textContent = (dCount > 0 ? '+ ' : '') + bottles.length + word;
+        var prefix = dCount > 0 ? '+ ' : '';
+        trayBottles.innerHTML = prefix + bottles.map(function (b, i) {
+          var qty = b.qty || 1;
+          return '<span class="dc-tray__bottle-chip">'
+            + esc(b.name) + ' ' + BOTTLE_LABEL[b.fmt] + (qty > 1 ? ' ×' + qty : '')
+            + ' <button class="dc-tray__bottle-remove js-remove-bottle" data-bottle-index="' + i + '" aria-label="Quitar ' + esc(b.name) + '">×</button>'
+            + '</span>';
+        }).join(' · ');
         trayBottles.hidden = false;
       } else {
         trayBottles.hidden = true;
@@ -207,12 +257,12 @@
       }
     }
 
-    /* hint — only when set is partial */
+    /* hint — bundle nudge when partial */
     var trayHint = tray.querySelector('.js-tray-hint');
     if (trayHint) {
       if (decantPartial()) {
         var r = 3 - dCount;
-        trayHint.textContent = 'Faltan ' + r + (r === 1 ? ' decant para el set' : ' decants para el set');
+        trayHint.textContent = 'Añadí ' + r + (r === 1 ? ' más' : ' más') + ' y armá el set por ' + colones(SET_PRICE);
         trayHint.hidden = false;
       } else {
         trayHint.hidden = true;
@@ -226,10 +276,8 @@
       orderBtn.setAttribute('aria-disabled', String(!can));
       if (panel.classList.contains('is-open')) {
         orderBtn.textContent = 'Cerrar';
-      } else if (decantPartial()) {
-        orderBtn.textContent = 'Completa tu set (faltan ' + (3 - dCount) + ')';
       } else {
-        orderBtn.textContent = 'Ordenar · ' + colones(cartTotal());
+        orderBtn.textContent = can ? 'Ordenar · ' + colones(cartTotal()) : 'Ordenar';
       }
     }
 
@@ -248,10 +296,17 @@
     if (decantComplete()) {
       items.push({ name: 'Set de 3 Decants · 10 ml', sub: selectionNames(), price: SET_PRICE,
                    wa: 'Set de 3 Decants (10 ml): ' + selectionNames() });
+    } else if (decantPartial()) {
+      selection.forEach(function (s) {
+        items.push({ name: s.name + ' · Decant 10 ml', sub: '', price: DECANT_PRICE,
+                     wa: s.name + ' · Decant 10 ml' });
+      });
     }
     bottles.forEach(function (b) {
-      items.push({ name: b.name + ' · Frasco ' + BOTTLE_LABEL[b.fmt], sub: '', price: b.price,
-                   wa: b.name + ' · Frasco ' + BOTTLE_LABEL[b.fmt] });
+      var qty   = b.qty || 1;
+      var qtySfx = qty > 1 ? ' ×' + qty : '';
+      items.push({ name: b.name + ' · Frasco ' + BOTTLE_LABEL[b.fmt] + qtySfx, sub: '', price: b.price * qty,
+                   wa: b.name + ' · Frasco ' + BOTTLE_LABEL[b.fmt] + qtySfx });
     });
     return items;
   }
@@ -259,14 +314,22 @@
   /* Best-effort order log to Google Sheets. Fires on checkout; if it fails,
      the order still goes through WhatsApp (the source of truth). */
   function logOrder() {
-    if (!SHEET_LOG_URL || !navigator.sendBeacon) return;
+    if (!SHEET_LOG_URL) return;
+    if (!currentOrderRef) currentOrderRef = generateRef();
+    var delivery = getSelectedDelivery();
     var payload = {
-      ref:     currentOrderRef || '',
+      ref:     currentOrderRef,
       items:   buildItems().map(function (it) { return it.wa; }).join(' | '),
       total:   cartTotal(),
-      entrega: getSelectedDelivery() === 'local' ? 'Recoger' : 'SINPE'
+      pago:    delivery === 'local' ? 'En sitio' : 'SINPE',
+      entrega: delivery === 'local' ? 'Recoger'  : 'SINPE',
+      canal:   'Web',
+      cliente: ''
     };
-    try { navigator.sendBeacon(SHEET_LOG_URL, JSON.stringify(payload)); } catch (e) { /* noop */ }
+    fetch(SHEET_LOG_URL, {
+      method: 'POST',
+      body:   JSON.stringify(payload)
+    }).catch(function () { /* best-effort — WhatsApp es la fuente de verdad */ });
   }
 
   function renderLines(items) {
@@ -294,33 +357,37 @@
     var items = buildItems();
     var ref   = currentOrderRef;
     var tail  = isLocal ? 'Voy a recoger en el local.' : 'Adjunto comprobante de pago.';
-    var msg   = 'Hola Vency Atelier! Quisiera ordenar:\n- '
-              + items.map(function (it) { return it.wa; }).join('\n- ')
-              + '\nTotal: ' + colones(cartTotal()) + '.'
-              + (ref ? ' Pedido ' + ref + '.' : '') + ' ' + tail;
+    var msg   = (ref ? '*Pedido ' + ref + ' — Vency Atelier*\n\n' : '')
+              + 'Hola! Quisiera ordenar:\n'
+              + items.map(function (it) { return '• ' + it.wa; }).join('\n')
+              + '\n\nTotal: ' + colones(cartTotal()) + '\n'
+              + tail;
 
     if (summaryEl) summaryEl.innerHTML = renderLines(items);
     if (priceEl)   priceEl.textContent = colones(cartTotal());
-    if (sinpeNote) sinpeNote.textContent = 'Incluir en el mensaje: tu pedido'
-                                         + (ref ? ' · Pedido ' + ref : '');
+    var sinpeAmt = panel.querySelector('.js-sinpe-amount');
+    if (sinpeAmt) sinpeAmt.textContent = colones(cartTotal());
+
+    var ticketEl = panel.querySelector('.js-dc-order-ticket');
+    var refEl    = panel.querySelector('.js-dc-order-ref');
+    if (ticketEl) ticketEl.hidden = !ref;
+    if (refEl)    refEl.textContent = ref || '';
+
     if (waBtn) {
       waBtn.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
-      waBtn.textContent = isLocal ? 'Enviar pedido por WhatsApp' : 'Enviar comprobante por WhatsApp';
-      waBtn.setAttribute('aria-label', isLocal
-        ? 'Enviar pedido por WhatsApp'
-        : 'Enviar comprobante de pago por WhatsApp');
+      var btnLabel = isLocal
+        ? ('Enviar pedido' + (ref ? ' ' + ref : '') + ' por WhatsApp')
+        : ('Enviar comprobante' + (ref ? ' \xb7 ' + ref : '') + ' por WhatsApp');
+      waBtn.textContent = btnLabel;
+      waBtn.setAttribute('aria-label', btnLabel);
     }
 
-    /* Confirmation note: payment-on-site (local) has no comprobante to send */
     var confirmEl = panel.querySelector('.order-panel__confirm');
     if (confirmEl) {
       confirmEl.textContent = isLocal
-        ? 'Envíe su pedido por WhatsApp con su nombre. El pago se realiza en el local.'
-        : 'Su pedido se confirma una vez recibido el comprobante de pago. Envíelo por WhatsApp junto con su nombre.';
+        ? 'Enviá tu pedido por WhatsApp con tu nombre. El pago se realiza en el local.'
+        : 'Transferí el monto exacto por SINPE. Luego tocá el botón y adjuntá el comprobante como imagen en ese mismo chat.';
     }
-
-    var refEl = panel.querySelector('.js-dc-order-ref');
-    if (refEl) { refEl.textContent = ref ? 'Pedido ' + ref : ''; refEl.hidden = !ref; }
   }
 
   function openPanel() {
@@ -356,29 +423,36 @@
 
     var trigger = block.querySelector('.dblock__trigger');
     if (trigger) {
-      trigger.addEventListener('click', function () { handleClick(id, name); });
+      trigger.addEventListener('click', function () {
+        if (trigger.disabled || block.dataset.soldOut === 'true' || cachedStock[id + ':decant'] === false) return;
+        handleClick(id, name);
+      });
     }
 
     block.querySelectorAll('.fmt-rail__buy-btn[data-fmt]').forEach(function (btn) {
       btn.addEventListener('click', function () {
+        if (btn.disabled || cachedStock[id + ':' + btn.dataset.fmt] === false) return;
         handleBottleClick(id, name, btn.dataset.fmt);
       });
     });
   });
 
-  /* ---- Wire up tray slot removal ---- */
-  traySlots.forEach(function (slot) {
-    slot.addEventListener('click', function () {
-      var idx = parseInt(slot.dataset.slotIndex, 10);
+  /* ---- Event delegation: decant remove + bottle remove + clear decants ---- */
+  tray.addEventListener('click', function (e) {
+    var decantRemove = e.target.closest('.js-remove-decant');
+    if (decantRemove) {
+      var idx = parseInt(decantRemove.dataset.slotIndex, 10);
       if (!isNaN(idx)) removeFromSlot(idx);
-    });
-    slot.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        var idx = parseInt(slot.dataset.slotIndex, 10);
-        if (!isNaN(idx)) removeFromSlot(idx);
-      }
-    });
+      return;
+    }
+    var bottleRemove = e.target.closest('.js-remove-bottle');
+    if (bottleRemove) {
+      var idx = parseInt(bottleRemove.dataset.bottleIndex, 10);
+      if (!isNaN(idx)) { bottles.splice(idx, 1); updateUI(); }
+      return;
+    }
+    var clearBtn = e.target.closest('.js-clear-decants');
+    if (clearBtn) { selection = []; updateUI(); }
   });
 
   /* ---- Wire up order button ---- */
@@ -408,6 +482,50 @@
     }
   });
 
+  /* ---- Stock público: carga inicial + refresco cada 2 minutos ---- */
+  function applyStockUI(stock) {
+    document.querySelectorAll('[data-fragrance-id]').forEach(function (block) {
+      var id = block.dataset.fragranceId;
+      if (stock[id + ':decant'] === false) {
+        block.dataset.soldOut = 'true';
+        block.classList.add('dblock--soldout');
+        var trigger = block.querySelector('.dblock__trigger');
+        if (trigger) {
+          trigger.disabled = true;
+          trigger.setAttribute('aria-label', block.dataset.fragranceName + ' — Agotado');
+        }
+      }
+      ['30ml', '100ml'].forEach(function (fmt) {
+        if (stock[id + ':' + fmt] === false) {
+          var btn = block.querySelector('.fmt-rail__buy-btn[data-fmt="' + fmt + '"]');
+          if (btn) {
+            btn.disabled = true;
+            btn.setAttribute('aria-label', fmt.replace('ml', ' ML') + ' — Agotado');
+          }
+        }
+      });
+    });
+  }
+
+  function refreshStock() {
+    if (!SHEET_LOG_URL) return;
+    fetch(SHEET_LOG_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'stock-public' })
+    })
+    .then(function (r) { return r.json(); })
+    .then(function (stock) {
+      cachedStock = stock;
+      applyStockUI(stock);
+    })
+    .catch(function () { /* silent — si falla, mantiene último snapshot */ })
+    .finally(function () {
+      setTimeout(refreshStock, 2 * 60 * 1000); /* reintentar en 2 min */
+    });
+  }
+
+  refreshStock();
+
   /* ---- Pre-select a decant from URL param (?add=Fragrance+Name) ---- */
   (function initFromUrl() {
     try {
@@ -423,5 +541,13 @@
       updateUI();
     } catch (e) { /* URLSearchParams unsupported — silent fallback */ }
   })();
+
+  window.vencyCart = {
+    setBottleQty:  setBottleQty,
+    getBottleQty:  getBottleQty,
+    setDecantQty:  setDecantQty,
+    getDecantQty:  countFor,
+    showToast:     showToast
+  };
 
 })();
