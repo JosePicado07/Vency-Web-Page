@@ -1316,6 +1316,7 @@ body.fp-open { overflow: hidden; }
 
 /* Panel image */
 .fp__visual.has-img { height: 130px; }
+.fp__visual.has-img .fp__rings { display: none; }
 .fp__img {
   position: absolute;
   inset: 0;
