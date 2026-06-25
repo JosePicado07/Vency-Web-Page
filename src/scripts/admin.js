@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbw4xOj5vcToyBnmmP_GwEKwedLVtmQFCZsnvHdxC4Ax-_gEYen5Ca_s6ZPFVlnz-Mc/exec';
+  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxwMVV3T_QXRhFbzBTDxGtG9dW_yQUKKsYbg3ACVdMkfOwgfHI4YZDj1Y8ssLe-ihnL/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var SET_PRICE     = 12000;
   var SINGLE_DECANT = 5000;
@@ -1268,7 +1268,18 @@
     var el  = document.createElement('div');
     el.className = 'dblock dblock--inv-mode';
     var id    = frag.id;
-    var entry = inventory[frag.name.toLowerCase().trim()] || inventory[id] || { oil_ml: 0 };
+    var searchName = frag.name.toLowerCase();
+    var entry = inventory[searchName];
+    if (!entry && inventory._byKeyword) {
+      var words = searchName.split(/\s+/);
+      for (var w = 0; w < words.length; w++) {
+        if (inventory._byKeyword[words[w]]) {
+          entry = inventory._byKeyword[words[w]];
+          break;
+        }
+      }
+    }
+    entry = entry || inventory[id] || { oil_ml: 0 };
     var oil   = entry.oil_ml || 0;
 
     var nameHtml = frag.brand
