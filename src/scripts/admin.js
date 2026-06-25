@@ -13,7 +13,7 @@
   var CAL_RED   = 20000;   /* ₡0.6M / 30 days — bad day */
   var PAGE_SIZE        = 12;
   var SALES_PREVIEW    = 5;
-  var LOW_OIL_ML       = 50;
+  var LOW_OIL_ML       = 30;
   var CONC_PRESETS     = [
     { label: 'EDC',    pct: 3  },
     { label: 'EDT',    pct: 10 },
