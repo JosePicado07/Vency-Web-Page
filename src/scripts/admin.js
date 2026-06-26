@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxyRdBJPo5_AJLaMVwqg8-xgcaKVJL160-KHVEtgEKCiiqpuLsUiwl_zJ0AvF96eeJe/exec';
+  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbwNTbhz8bHrt66CWCqmrTGANyz_6CkO7K8M0blzAR0Sa8raRLu_K61vdCpGsVvBtDo9/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var SET_PRICE     = 12000;
   var SINGLE_DECANT = 5000;
