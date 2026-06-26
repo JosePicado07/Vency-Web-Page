@@ -95,7 +95,10 @@
       var dk = frag.id + ':decant';
       var bk30 = frag.id + ':30ml';
       var bk100 = frag.id + ':100ml';
-      var soldOut = hasInventory && (!inventory[dk] || !inventory[dk].oil_ml)
+      // Only sold-out when admin tracks this id (any key present) AND all formats are zero.
+      // Untracked = unknown = assume in-stock.
+      var tracked = hasInventory && ((dk in inventory) || (bk30 in inventory) || (bk100 in inventory));
+      var soldOut = tracked && (!inventory[dk] || !inventory[dk].oil_ml)
                  && (!inventory[bk30] || !inventory[bk30].oil_ml)
                  && (!inventory[bk100] || !inventory[bk100].oil_ml);
       var railHtmlVency = soldOut
@@ -155,9 +158,15 @@
     var hasInv = inv && Object.keys(inv).length > 0;
     function isItemSoldOut(id) {
       if (!hasInv) return false;
-      return (!inv[id + ':decant'] || !inv[id + ':decant'].oil_ml)
-          && (!inv[id + ':30ml']   || !inv[id + ':30ml'].oil_ml)
-          && (!inv[id + ':100ml']  || !inv[id + ':100ml'].oil_ml);
+      // Only mark sold-out when admin actually tracks this id (any key present)
+      // AND every tracked format is zero. Untracked items (e.g. designer brands
+      // that aren't in admin) stay in-stock — missing data is not sold-out.
+      var dk = id + ':decant', bk30 = id + ':30ml', bk100 = id + ':100ml';
+      var tracked = (dk in inv) || (bk30 in inv) || (bk100 in inv);
+      if (!tracked) return false;
+      return (!inv[dk]   || !inv[dk].oil_ml)
+          && (!inv[bk30] || !inv[bk30].oil_ml)
+          && (!inv[bk100]|| !inv[bk100].oil_ml);
     }
 
     SECTIONS.forEach(function (sec) {
