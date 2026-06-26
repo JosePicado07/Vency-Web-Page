@@ -4,14 +4,9 @@
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos' };
 
-  var BATCH_SIZE    = 30;
-  var revealedCount = 0;
-  var passingEntries = [];
-
   var countEl   = document.querySelector('.js-cat-count');
   var emptyEl   = document.querySelector('.cat-empty');
   var sentinel  = document.getElementById('cat-sentinel');
-  var sentinelObserver = null;
 
   /* ── Helpers ─────────────────────────────────────────── */
   function slug(str) {
@@ -254,19 +249,6 @@
     });
   }
 
-  /* ── Infinite scroll ─────────────────────────────────── */
-  function revealBatch() {
-    var next = passingEntries.slice(revealedCount, revealedCount + BATCH_SIZE);
-    next.forEach(function (e) { e.classList.remove('cat-entry--hidden'); observeRow(e); });
-    revealedCount += next.length;
-    if (sentinel) sentinel.hidden = (revealedCount >= passingEntries.length);
-    // Yield to browser paint before updating section visibility
-    requestAnimationFrame(function () {
-      clearTimeout(window._updateVisTimeout);
-      window._updateVisTimeout = setTimeout(updateExternalSectionVisibility, 50);
-    });
-  }
-
   function updateExternalSectionVisibility() {
     document.querySelectorAll('.cat-section:not(.cat-section--vency)').forEach(function (sec) {
       var secCat   = sec.dataset.cat;
@@ -283,33 +265,21 @@
     });
   }
 
-  function setupSentinelObserver() {
-    if (sentinelObserver) sentinelObserver.disconnect();
-    if (!sentinel) return;
-    sentinelObserver = new IntersectionObserver(function (entries) {
-      if (entries[0].isIntersecting && revealedCount < passingEntries.length && !window._catScrollLock) {
-        revealBatch();
-      }
-    }, { rootMargin: '800px' }); // Preload 800px before sentinel is visible
-    sentinelObserver.observe(sentinel);
-  }
-
   /* ── Filter + render ─────────────────────────────────── */
   function render() {
-    passingEntries = [];
+    // ponytail: no lazy reveal — all entries are already in DOM; pagination saved nothing.
     document.querySelectorAll('.cat-section:not(.cat-section--vency) .cat-entry').forEach(function (entry) {
       var sec      = entry.closest('.cat-section');
       var secCat   = sec ? sec.dataset.cat : '';
       var catMatch = (filters.cat === 'todos' || filters.cat === secCat);
       var gMatch   = (filters.gender === 'todos' || entry.dataset.gender === filters.gender);
       var qMatch   = !filters.q || entry.dataset.search.indexOf(filters.q) !== -1;
-      entry.classList.add('cat-entry--hidden');
-      if (catMatch && gMatch && qMatch) passingEntries.push(entry);
+      var show = catMatch && gMatch && qMatch;
+      entry.classList.toggle('cat-entry--hidden', !show);
+      if (show) entry.classList.add('is-in');
     });
-
-    revealedCount = 0;
-    revealBatch();
-    setupSentinelObserver();
+    if (sentinel) sentinel.hidden = true;
+    updateExternalSectionVisibility();
 
     /* === Vency originals === */
     var vencySection = document.querySelector('.cat-section--vency');
@@ -326,7 +296,8 @@
     if (vencySection) vencySection.style.display = vencyVisible > 0 ? '' : 'none';
 
     /* === Count + empty === */
-    var grandTotal = passingEntries.length + vencyVisible;
+    var externalVisible = document.querySelectorAll('.cat-section:not(.cat-section--vency) .cat-entry:not(.cat-entry--hidden)').length;
+    var grandTotal = externalVisible + vencyVisible;
     if (countEl) countEl.textContent = grandTotal + (grandTotal === 1 ? ' fragancia' : ' fragancias');
     if (emptyEl) {
       emptyEl.classList.toggle('is-visible', grandTotal === 0);
