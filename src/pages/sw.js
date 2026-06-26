@@ -1,4 +1,4 @@
-var CACHE = 'vency-admin-v2';
+var CACHE = 'vency-admin-v3';
 
 self.addEventListener('install', function () {
   self.skipWaiting();

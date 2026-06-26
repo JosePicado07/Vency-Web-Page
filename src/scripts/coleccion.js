@@ -95,7 +95,7 @@
                 + '<span class="catalog-entry__fmt-pill">Frasco 30ml · ₡12.000</span>'
                 + '<span class="catalog-entry__fmt-pill">Frasco 100ml · ₡20.000</span>'
               + '</div>'
-              + '<a class="catalog-entry__order-btn" href="catalogo.html#' + frag.id + '">Ordenar →</a>'
+              + '<a class="catalog-entry__order-btn" href="comprar.html">Ordenar →</a>'
             + '</div>')
         + '</div>'
       + '</div>'

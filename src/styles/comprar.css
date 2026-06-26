@@ -1,0 +1,153 @@
+/* ============================================================
+   VENCY ATELIER — Comprar (format hub)
+   ============================================================ */
+
+.comprar-header {
+  padding: calc(var(--nav-h) + var(--space-xl)) var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.comprar-header__label {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--warm-ochre);
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.comprar-header__title {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--volcanic-ink);
+  margin: 0 0 1rem;
+}
+
+.comprar-header__sub {
+  font-family: 'Manrope', sans-serif;
+  font-size: clamp(0.9rem, 1.6vw, 1rem);
+  color: var(--ink-muted);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Format cards grid ──────────────────────────────────── */
+
+.comprar-formats {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 700px) {
+  .comprar-formats {
+    grid-template-columns: repeat(3, 1fr);
+    align-items: stretch;
+  }
+}
+
+/* ── Single format card ─────────────────────────────────── */
+
+.fmt-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.fmt-card:hover {
+  border-color: var(--warm-ochre);
+}
+
+.fmt-card__img-wrap {
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--volcanic-ink);
+}
+
+.fmt-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.3s, transform 0.4s var(--ease-expo, cubic-bezier(0.16,1,0.3,1));
+}
+
+.fmt-card:hover .fmt-card__img {
+  opacity: 1;
+  transform: scale(1.03);
+}
+
+.fmt-card__body {
+  padding: 1.5rem 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fmt-card__price {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--warm-ochre);
+}
+
+.fmt-card__title {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--volcanic-ink);
+  margin: 0;
+}
+
+.fmt-card__desc {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.88rem;
+  color: var(--ink-muted);
+  line-height: 1.6;
+  margin: 0;
+  flex: 1;
+}
+
+.fmt-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  transition: gap 0.2s;
+}
+
+.fmt-card:hover .fmt-card__cta {
+  gap: 0.7rem;
+}
+
+/* ── Decants card accent ────────────────────────────────── */
+.fmt-card--decant .fmt-card__price { color: var(--sage-mineral); }
+.fmt-card--decant:hover { border-color: var(--sage-mineral); }

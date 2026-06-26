@@ -1358,3 +1358,65 @@ body.fp-open { overflow: hidden; }
   color: var(--botanical-parchment);
 }
 
+/* ── Format journey filter (set via ?fmt= URL param) ──────── */
+
+/* Back link — only shown when a fmt filter is active */
+.fmt-back {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink-muted);
+  text-decoration: none;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--border);
+  transition: color 0.15s;
+}
+.fmt-back:hover { color: var(--volcanic-ink); }
+
+body.fmt--decant .fmt-back,
+body.fmt--30ml  .fmt-back,
+body.fmt--100ml .fmt-back {
+  display: flex;
+}
+
+/* Decant journey: hide the two bottle buy-buttons and the "o frasco completo" label */
+body.fmt--decant .fmt-rail__buy { display: none; }
+
+/* 30ml journey: hide the decant set trigger + 100ml button */
+body.fmt--30ml .fmt-rail__set      { display: none; }
+body.fmt--30ml [data-fmt="100ml"]  { display: none; }
+body.fmt--30ml .fmt-rail__buy-label { display: none; }
+
+/* 100ml journey: hide the decant set trigger + 30ml button */
+body.fmt--100ml .fmt-rail__set     { display: none; }
+body.fmt--100ml [data-fmt="30ml"]  { display: none; }
+body.fmt--100ml .fmt-rail__buy-label { display: none; }
+
+/* On bottle journeys hide only the decant slots, keep the order button */
+body.fmt--30ml  .dc-tray__slots,
+body.fmt--100ml .dc-tray__slots { display: none !important; }
+
+/* ── fp detail panel format filtering ────────────────────── */
+
+/* Decant journey: hide the full bottle section */
+body.fmt--decant .fp__bottles { display: none; }
+
+/* 30ml / 100ml journeys: hide decant row + nudge, hide the other bottle */
+body.fmt--30ml .fp__choices > .fp__bottles-label,
+body.fmt--30ml .fp__choices > .fp__bottle,
+body.fmt--30ml .fp__set-nudge,
+body.fmt--100ml .fp__choices > .fp__bottles-label,
+body.fmt--100ml .fp__choices > .fp__bottle,
+body.fmt--100ml .fp__set-nudge { display: none; }
+
+body.fmt--30ml  .fp__bottle[data-fmt="100ml"] { display: none; }
+body.fmt--100ml .fp__bottle[data-fmt="30ml"]  { display: none; }
+
+/* Hide "Frasco completo" label when only one size shows */
+body.fmt--30ml  .fp__bottles > .fp__bottles-label,
+body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
+

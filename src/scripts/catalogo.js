@@ -562,6 +562,10 @@
     });
   }
 
+  /* ── Format journey (URL param ?fmt=decant|30ml|100ml) ── */
+  var fmtMatch = location.search.match(/[?&]fmt=(decant|30ml|100ml)(?:&|$)/);
+  if (fmtMatch) document.body.classList.add('fmt--' + fmtMatch[1]);
+
   /* ── Init ────────────────────────────────────────────── */
   buildVencySection();
   buildSections();

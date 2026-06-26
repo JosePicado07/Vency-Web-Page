@@ -312,6 +312,13 @@
   function saveToken(t) { localStorage.setItem(TOKEN_KEY, t); }
   function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
+  /* ── XSS sanitization ── */
+  function escapeHtml_(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
   function showGate() {
     gate.hidden = false;
     app.hidden  = true;
@@ -559,7 +566,7 @@
     entries.sort(function (a, b) { return b.count - a.count; });
     topFragranceName = entries[0].name;
     topEl.innerHTML = '<strong>Top:</strong> ' + entries.slice(0, 3).map(function (e) {
-      return e.name + ' \xd7' + e.count;
+      return escapeHtml_(e.name) + ' \xd7' + e.count;
     }).join(' \xb7 ');
   }
 

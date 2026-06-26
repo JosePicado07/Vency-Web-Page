@@ -3,7 +3,7 @@
   "short_name": "Vency",
   "description": "Panel de ventas e inventario",
   "start_url": "/pages/admin.html",
-  "scope": "/pages/",
+  "scope": "/pages/admin.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#1b2b25",
@@ -19,13 +19,7 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "maskable any"
     }
   ]
 }

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprar — Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Elegí el formato que más te conviene: Decants para explorar, 30 ml para una prueba asertiva, o 100 ml cuando ya sabés cuál es tu favorita.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=22">
+  <link rel="stylesheet" href="../styles/comprar.css?v=1">
+</head>
+<body class="page-comprar">
+
+  <a class="skip-nav" href="#comprar-formats">Ir a los formatos</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier — inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
+      <li><a href="comprar.html" class="nav__link nav__link--active" aria-current="page">Comprar</a></li>
+      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <header class="comprar-header">
+      <span class="comprar-header__label">FORMATOS · VENCY ATELIER</span>
+      <h1 class="comprar-header__title">¿Cómo querés probarlo?</h1>
+      <p class="comprar-header__sub">
+        El mismo catálogo, la misma calidad.<br>
+        Elegí el formato según tu momento.
+      </p>
+    </header>
+
+    <section class="comprar-formats" id="comprar-formats" aria-label="Formatos disponibles">
+
+      <!-- DECANTS -->
+      <a class="fmt-card fmt-card--decant" href="catalogo.html?fmt=decant"
+         aria-label="Ver catálogo de Decants — desde ₡5.000">
+        <div class="fmt-card__img-wrap">
+          <img
+            class="fmt-card__img"
+            src="../assets/images/formats/decant-vial.jpg"
+            alt="Vial decant de 10 ml de Vency Atelier"
+            loading="lazy"
+            width="400" height="300"
+          >
+        </div>
+        <div class="fmt-card__body">
+          <span class="fmt-card__price">DECANTS · DESDE ₡5.000</span>
+          <h2 class="fmt-card__title">¿Sin idea de qué elegir?</h2>
+          <p class="fmt-card__desc">
+            Probá antes de invertir. Armá un set de 3 decants de 10 ml
+            por ₡12,000 y explorá la colección sin comprometerte.
+          </p>
+          <span class="fmt-card__cta">Ver decants →</span>
+        </div>
+      </a>
+
+      <!-- 30 ML -->
+      <a class="fmt-card fmt-card--30ml" href="catalogo.html?fmt=30ml"
+         aria-label="Ver catálogo de Frascos 30 ml — ₡12.000">
+        <div class="fmt-card__img-wrap">
+          <img
+            class="fmt-card__img"
+            src="../assets/images/formats/frasco-30ml.jpg"
+            alt="Frasco de 30 ml de Vency Atelier"
+            loading="lazy"
+            width="400" height="300"
+          >
+        </div>
+        <div class="fmt-card__body">
+          <span class="fmt-card__price">FRASCO 30 ML · ₡12.000</span>
+          <h2 class="fmt-card__title">Una prueba más asertiva.</h2>
+          <p class="fmt-card__desc">
+            Más duración, más perfume. Ideal si querés una prueba extendida
+            antes de invertir en el frasco completo.
+          </p>
+          <span class="fmt-card__cta">Ver 30 ml →</span>
+        </div>
+      </a>
+
+      <!-- 100 ML -->
+      <a class="fmt-card fmt-card--100ml" href="catalogo.html?fmt=100ml"
+         aria-label="Ver catálogo de Frascos 100 ml — ₡20.000">
+        <div class="fmt-card__img-wrap">
+          <img
+            class="fmt-card__img"
+            src="../assets/images/formats/frasco-100ml.jpg"
+            alt="Frasco de 100 ml de Vency Atelier"
+            loading="lazy"
+            width="400" height="300"
+          >
+        </div>
+        <div class="fmt-card__body">
+          <span class="fmt-card__price">FRASCO 100 ML · ₡20.000</span>
+          <h2 class="fmt-card__title">Ya sabés cuál es tu favorita.</h2>
+          <p class="fmt-card__desc">
+            La presentación completa. Atomizá sin miedo, regala
+            o simplemente disfrutá tu fragancia sin restricciones.
+          </p>
+          <span class="fmt-card__cta">Ver 100 ml →</span>
+        </div>
+      </a>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="comprar.html" class="footer__link">Comprar</a>
+        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="index.html#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <script src="../scripts/nav.js?v=19" defer></script>
+
+</body>
+</html>
