@@ -116,7 +116,7 @@
           (soldOut ? ' data-sold-out="true"' : '') + '>' +
           '<div class="cat-entry__info">' +
             '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
-            '<p class="cat-entry__name">' + fname + (soldOut ? '<span class="cat-badge cat-badge--sold-out">AGOTADO</span>' : '') + '</p>' +
+            '<p class="cat-entry__name">' + fname + '</p>' +
             '<p class="cat-entry__notes">' + escHtml(notes) + '</p>' +
             (isIcon && frag.inspiration
               ? '<p class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</p>'

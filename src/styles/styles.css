@@ -301,13 +301,10 @@ a {
   transition: background-color 0.4s var(--ease-expo), box-shadow 0.4s var(--ease-expo), border-color 0.4s var(--ease-expo);
 }
 
-/* Scroll state: subtle glass tint when past hero */
+/* Scroll state: commit to the parchment ground; ochre underline as state change */
 .nav--scrolled {
-  background-color: oklch(95.5% 0.006 88 / 0.92);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 1px 0 oklch(72% 0.005 80 / 0.25);
-  border-color: oklch(80% 0.004 80 / 0.4);
+  background-color: var(--botanical-parchment);
+  border-bottom-color: var(--warm-ochre);
 }
 
 .nav__logo {
@@ -590,10 +587,36 @@ a {
   margin-top: 0.85rem;
 }
 
+/* Asymmetric grid: Original Blend dominates as the tall hero, Icon + Hybrid
+   stack as smaller flanking beats. Reject repeat(3,1fr) — three formats are
+   not peer SKUs, they're a progression. */
 .colls-intro__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  min-height: 65svh;
+  grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+  grid-template-areas:
+    "original icon"
+    "original hybrid";
+  min-height: 80svh;
+}
+
+.coll-block--ob     { grid-area: original; }
+.coll-block--is     { grid-area: icon; }
+.coll-block--hybrid { grid-area: hybrid; }
+
+/* Original Blend: dominant proclamation */
+.coll-block--ob .coll-block__name {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  line-height: 0.98;
+}
+
+/* Icon Series: demoted secondary heading per One Proclamation Rule */
+.coll-block--is .coll-block__name {
+  font-size: clamp(1.1rem, 1.5vw, 1.45rem);
+}
+
+/* Hybrid: demoted too — closing dark moment, not a third hero */
+.coll-block--hybrid .coll-block__name {
+  font-size: clamp(1.1rem, 1.5vw, 1.45rem);
 }
 
 .coll-block {
@@ -604,8 +627,15 @@ a {
   overflow: hidden;
 }
 
-.coll-block:last-child {
+/* Right-column cells (Icon + Hybrid) have no right border — they're at the edge */
+.coll-block--is,
+.coll-block--hybrid {
   border-right: none;
+}
+
+/* Icon needs a bottom divider since Hybrid sits below it in the right column */
+.coll-block--is {
+  border-bottom: 1px solid var(--border);
 }
 
 .coll-block__img-wrap {

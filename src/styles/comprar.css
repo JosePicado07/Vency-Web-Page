@@ -40,6 +40,9 @@
 
 /* ── Format cards grid ──────────────────────────────────── */
 
+/* Three formats are not peer SKUs — they're a progression of commitment
+   (sample → middle → full). Decant gets the dominant entry-point block;
+   30ml + 100ml are smaller flanking beats. Reject repeat(3,1fr). */
 .comprar-formats {
   max-width: 1100px;
   margin: 0 auto;
@@ -51,8 +54,36 @@
 
 @media (min-width: 700px) {
   .comprar-formats {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "decant decant"
+      "thirty hundred";
     align-items: stretch;
+  }
+  .fmt-card--decant  { grid-area: decant; }
+  .fmt-card--30ml    { grid-area: thirty; }
+  .fmt-card--100ml   { grid-area: hundred; }
+
+  /* Decant hero — horizontal layout, image left, copy right */
+  .fmt-card--decant {
+    flex-direction: row;
+  }
+  .fmt-card--decant .fmt-card__img-wrap {
+    flex: 1.2;
+    aspect-ratio: auto;
+  }
+  .fmt-card--decant .fmt-card__body {
+    flex: 1;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+  }
+  .fmt-card--decant .fmt-card__title {
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    line-height: 1;
+  }
+  .fmt-card--decant .fmt-card__desc {
+    font-size: 0.95rem;
+    flex: 0;
   }
 }
 

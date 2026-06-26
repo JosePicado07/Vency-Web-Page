@@ -434,7 +434,7 @@
 }
 
 :is(.catalog-entry--vency-compact, .cat-entry) .fmt-rail__buy-btn:disabled .fmt-rail__label::after {
-  content: ' — AGOTADO';
+  content: ' · AGOTADO';
   font-size: 0.42rem;
   letter-spacing: 0.1em;
   display: block;
