@@ -614,10 +614,10 @@
         ? rawParts.map(function (p) { return '<span class="sale-row__item-line">' + p.trim() + '</span>'; }).join('')
         : '';
       row.innerHTML =
-        '<span class="sale-row__ref">'  + s.ref  + '</span>' +
-        '<span class="sale-row__hora">' + s.hora + '</span>' +
+        '<span class="sale-row__ref">'  + escapeHtml_(s.ref)  + '</span>' +
+        '<span class="sale-row__hora">' + escapeHtml_(s.hora) + '</span>' +
         '<span class="sale-row__items">' +
-          '<span class="sale-row__items-preview">' + s.items + '</span>' +
+          '<span class="sale-row__items-preview">' + escapeHtml_(s.items) + '</span>' +
           (hasMore
             ? '<span class="sale-row__items-full"><span class="sale-row__items-full__inner">' + fullHtml + '</span></span>' +
               '<button class="sale-row__more" type="button">ver m\xe1s</button>'
@@ -856,16 +856,16 @@
       el.innerHTML =
         '<div class="dblock__top">' +
           imgHtml +
-          '<div class="dblock__content"><h3 class="dblock__name">' + frag.name + '</h3></div>' +
+          '<div class="dblock__content"><h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3></div>' +
           '<button class="dblock__trigger js-decant-btn"' +
             (frag.soldOut ? ' disabled' : '') +
-            ' data-id="' + frag.id + '" data-name="' + frag.name + '" data-invkey="' + dk + '"' +
-            ' type="button" aria-label="' + frag.name + (frag.soldOut ? ' \xb7 Agotado"' : '"') + '>' +
+            ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '"' +
+            ' type="button" aria-label="' + escapeHtml_(frag.name) + (frag.soldOut ? ' \xb7 Agotado"' : '"') + '>' +
           '</button>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + frag.name + '" data-fmt="30ml" data-price="' + vb30Price + '" data-invkey="' + bk30 + '" type="button">30ML</button>' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + frag.name + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + bk100 + '" type="button">100ML</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="30ml" data-price="' + vb30Price + '" data-invkey="' + escapeHtml_(bk30) + '" type="button">30ML</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + escapeHtml_(bk100) + '" type="button">100ML</button>' +
         '</div>';
 
       if (frag.soldOut) el.classList.add('dblock--soldout');
@@ -883,10 +883,10 @@
       el.innerHTML =
         '<div class="dblock__top">' +
           '<div class="dblock__content">' +
-            (frag.brand ? '<span class="dblock__brand">' + frag.brand + '</span>' : '') +
-            '<h3 class="dblock__name">' + frag.name + '</h3>' +
+            (frag.brand ? '<span class="dblock__brand">' + escapeHtml_(frag.brand) + '</span>' : '') +
+            '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>' +
           '</div>' +
-          '<button class="dblock__trigger js-decant-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-invkey="' + dKey + '" type="button" aria-label="' + fullName + ' \xb7 Decant"></button>' +
+          '<button class="dblock__trigger js-decant-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(fullName) + '" data-invkey="' + escapeHtml_(dKey) + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 Decant"></button>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="30ml" data-price="' + b30Price + '" data-invkey="' + b30Key + '" type="button">30ML</button>' +
@@ -1126,7 +1126,7 @@
       var hasInv = !!inventory[s.id];
       el.innerHTML =
         '<div class="panel-item__head">' +
-          '<span class="panel-item__name">' + s.name + '</span>' +
+          '<span class="panel-item__name">' + escapeHtml_(s.name) + '</span>' +
           (!isSet ? '<span class="admin-panel__line-price">' + colones(SINGLE_DECANT) + '</span>' : '') +
         '</div>' +
         (hasInv ? concPickerHtml(s.pct, 'decant', idx) + oilCostHtml(s.pct, 10, 'decant', idx) : '');
@@ -1141,7 +1141,7 @@
       var hasInv = !!inventory[b.id];
       el.innerHTML =
         '<div class="panel-item__head">' +
-          '<div><span class="panel-item__name">' + b.name + '</span>' +
+          '<div><span class="panel-item__name">' + escapeHtml_(b.name) + '</span>' +
           '<span class="panel-item__sub">Frasco ' + (b.fmt === '30ml' ? '30 ml' : '100 ml') + '</span></div>' +
           '<span class="admin-panel__line-price">' + colones(b.price) + '</span>' +
         '</div>' +
