@@ -553,9 +553,11 @@
       renderCalendar();
       renderSalesList(filterSales());
     })
-    .catch(function () {
+    .catch(function (err) {
       metricsEl.classList.remove('loading');
       offline.hidden = false;
+      console.error('[Metrics load failed]', err);
+      if (refreshBtn) refreshBtn.disabled = false;
     });
   }
 
@@ -1369,6 +1371,14 @@
       el.value = (inventory[el.dataset.id] || {}).oil_ml || 0;
     });
   }
+
+  // Keyboard shortcut: "/" to focus search
+  document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && searchEl && !searchEl.contains(document.activeElement)) {
+      e.preventDefault();
+      searchEl.focus();
+    }
+  });
 
   /* ── Init ── */
   (function init() {
