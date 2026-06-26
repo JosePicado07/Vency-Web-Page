@@ -314,15 +314,11 @@
   contain-intrinsic-size: auto 400px;
 }
 
-/* Aggressive optimization for Icon Series (inspirations) */
+/* Optimization for Icon Series (no strict containment to avoid layout breaks) */
 .cat-entry--icon {
   content-visibility: auto;
-  contain: strict;
-  will-change: auto;
-  /* Deferred rendering for Icon Series entries off-screen */
-  @supports (content-visibility: auto) {
-    content-visibility: auto;
-  }
+  /* Skip strict containment — causes gaps on mobile
+     content-visibility: auto alone is sufficient for performance */
 }
 
 
