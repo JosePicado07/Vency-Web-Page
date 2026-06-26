@@ -554,9 +554,19 @@
       fpOrder.addEventListener('click', function () {
         var vc  = window.vencyCart;
         var id  = activeId;
-        var hasItem = vc && (vc.getDecantQty(id) > 0 ||
-          ['30ml', '100ml'].some(function (f) { return vc.getBottleQty(id, f) > 0; }));
-        if (hasItem && vc && preOpenSnap) {
+        if (!vc || !id) { closePanel(); return; }
+        var hasItem = vc.getDecantQty(id) > 0 ||
+          ['30ml', '100ml'].some(function (f) { return vc.getBottleQty(id, f) > 0; });
+        // No format picked → default to a decant. The CTA reads "Agregar a la
+        // orden"; users expect it to actually add something. Stepper still
+        // available to bump to a set of 3 from the tray.
+        if (!hasItem) {
+          var card = document.querySelector('[data-fragrance-id="' + id + '"]');
+          var name = card ? card.dataset.fragranceName : '';
+          vc.setDecantQty(id, name, 1);
+          hasItem = true;
+        }
+        if (hasItem && preOpenSnap) {
           showUndoToast(id, preOpenSnap);
         }
         closePanel();
