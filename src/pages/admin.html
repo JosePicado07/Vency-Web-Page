@@ -224,8 +224,19 @@
   </button>
 
   <script src="../scripts/fragrance-data.js?v=20"></script>
-  <script src="../scripts/catalogo-data.js?v=19"></script>
-  <script src="../scripts/admin.js?v=33"></script>
+  <script src="../scripts/admin.js?v=34"></script>
+  <script>
+    // Lazy-load catalogo-data.js (decant mode only)
+    var catalogoLoaded = false;
+    function loadCatalogo() {
+      if (catalogoLoaded) return;
+      var s = document.createElement('script');
+      s.src = '../scripts/catalogo-data.js?v=19';
+      document.head.appendChild(s);
+      catalogoLoaded = true;
+    }
+    loadCatalogo();
+  </script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js', { scope: './admin.html' });

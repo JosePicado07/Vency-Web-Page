@@ -524,7 +524,7 @@
     var offline   = document.getElementById('js-metrics-offline');
     var periodLbl = document.getElementById('js-period-label');
     var periodVal = document.getElementById('js-metric-period');
-    metricsEl.classList.add('is-loading');
+    metricsEl.classList.add('loading');
     if (periodLbl) periodLbl.textContent = PERIOD_LABELS[activePeriod] || activePeriod.toUpperCase();
     fetch(EXEC_URL, {
       method: 'POST',
@@ -532,7 +532,7 @@
     })
     .then(function (r) { return r.json(); })
     .then(function (d) {
-      metricsEl.classList.remove('is-loading');
+      metricsEl.classList.remove('loading');
       offline.hidden = true;
       if (periodVal) periodVal.textContent = colones(d.month || 0);
       document.getElementById('js-metric-web').textContent      = colones(d.web      || 0);
@@ -554,7 +554,7 @@
       renderSalesList(filterSales());
     })
     .catch(function () {
-      metricsEl.classList.remove('is-loading');
+      metricsEl.classList.remove('loading');
       offline.hidden = false;
     });
   }
