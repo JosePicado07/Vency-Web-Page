@@ -809,7 +809,7 @@ a.vency-coll-panel:hover .vency-coll-panel__arrow {
 }
 
 .cat-section--ultra-nicho .cat-section__desc {
-  color: oklch(50% 0.015 180);
+  color: oklch(50% 0.015 150);
 }
 
 /* === CATALOG LISTING BODY === */

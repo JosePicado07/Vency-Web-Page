@@ -6,18 +6,18 @@
 /* === TOKENS === */
 :root {
   /* Material palette */
-  --volcanic-ink:        oklch(18% 0.04 180);
+  --volcanic-ink:        oklch(18% 0.04 150);
   --botanical-parchment: oklch(95% 0.007 90);
   --warm-ochre:          oklch(55% 0.10 55);
   --sage-mineral:        oklch(48% 0.10 145);
   --atelier-stone:       oklch(75% 0.005 80);
 
   /* Hover state: volcanic ink lightened */
-  --volcanic-ink-hover:  oklch(26% 0.035 180);
+  --volcanic-ink-hover:  oklch(26% 0.035 150);
 
   /* Muted ink tones for secondary text — pass WCAG AA on parchment bg */
-  --ink-muted:           oklch(40% 0.022 180); /* ~5.5:1 on parchment, all text sizes */
-  --ink-subdued:         oklch(44% 0.018 180); /* ~4.7:1 on parchment, all text sizes */
+  --ink-muted:           oklch(40% 0.022 150); /* ~5.5:1 on parchment, all text sizes */
+  --ink-subdued:         oklch(44% 0.018 150); /* ~4.7:1 on parchment, all text sizes */
 
   /* Per-fragrance accent — Tabaco y Miel warm tobacco brown */
   --tobacco-ink:         oklch(24% 0.055 48);
@@ -34,11 +34,11 @@
 
   /* Muted ink tones for dark-section contexts */
   --ink-on-dark:         oklch(95% 0.007 90);   /* parchment alias for dark-bg clarity */
-  --ink-deep:            oklch(64% 0.018 180);  /* muted text on dark sections (~4.8:1, AA) */
+  --ink-deep:            oklch(64% 0.018 150);  /* muted text on dark sections (~4.8:1, AA) */
 
   /* Ultra-nicho dark surfaces (volcanic ink family) */
-  --ink-surface-deep:    oklch(18% 0.008 180);  /* dark rail ground */
-  --ink-surface:         oklch(22% 0.008 180);  /* dark chip ground */
+  --ink-surface-deep:    oklch(18% 0.008 150);  /* dark rail ground */
+  --ink-surface:         oklch(22% 0.008 150);  /* dark chip ground */
 
   /* Fluid type scale */
   --text-narrative:      clamp(1rem, 1.8vw, 1.15rem); /* running prose, all frag narratives */
@@ -47,7 +47,7 @@
   --bg:      var(--botanical-parchment);
   --fg:      var(--volcanic-ink);
   --border:  var(--atelier-stone);
-  --border-dark: oklch(28% 0.03 180);
+  --border-dark: oklch(28% 0.03 150);
 
   /* Bottle buy button surfaces — entry (30ml) and aged (100ml) */
   --bottle-entry-bg:           oklch(89% 0.022 76);   /* warm parchment-amber, 30ml */
@@ -751,7 +751,7 @@ a.coll-block:hover .coll-block__cta {
 }
 
 .coll-block--hybrid .coll-block__desc {
-  color: oklch(58% 0.015 180);
+  color: oklch(58% 0.015 150);
 }
 
 .coll-block__cta--wa {
@@ -923,7 +923,7 @@ a.coll-block:hover .coll-block__cta {
 .perfumista {
   background-color: var(--volcanic-ink);
   padding: 0 var(--space-md) var(--space-xl);
-  border-top: 1px solid oklch(22% 0.04 180);
+  border-top: 1px solid oklch(22% 0.04 150);
   overflow: hidden;
   scroll-margin-top: var(--nav-h);
 }
@@ -966,7 +966,7 @@ a.coll-block:hover .coll-block__cta {
 .perfumista__media {
   aspect-ratio: 3 / 4;
   overflow: hidden;
-  background-color: oklch(24% 0.03 180);
+  background-color: oklch(24% 0.03 150);
   max-height: 75svh;
 }
 
@@ -1298,11 +1298,11 @@ a.coll-block:hover .coll-block__cta {
 
 /* Inverted toggle (dark sections) */
 .format-toggle--inv {
-  border-color: oklch(32% 0.03 180);
+  border-color: oklch(32% 0.03 150);
 }
 
 .format-toggle--inv .format-toggle__opt + .format-toggle__opt .format-toggle__face {
-  border-left-color: oklch(32% 0.03 180);
+  border-left-color: oklch(32% 0.03 150);
 }
 
 .format-toggle--inv .format-toggle__face {
@@ -1311,7 +1311,7 @@ a.coll-block:hover .coll-block__cta {
 }
 
 .format-toggle--inv .format-toggle__opt:hover .format-toggle__radio:not(:checked) + .format-toggle__face {
-  background-color: oklch(28% 0.04 180);
+  background-color: oklch(28% 0.04 150);
   color: var(--botanical-parchment);
 }
 
@@ -1465,7 +1465,7 @@ a.coll-block:hover .coll-block__cta {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 1rem 2.25rem;
-  border: 1px solid oklch(40% 0.03 180);
+  border: 1px solid oklch(40% 0.03 150);
   border-radius: 0;
   cursor: pointer;
   background-color: transparent;

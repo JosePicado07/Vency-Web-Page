@@ -1,0 +1,25 @@
+# Node / build
+node_modules/
+package-lock.json
+package.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs (including malformed Windows-redirect filenames from earlier sessions)
+*.log
+C:Users*
+
+# Source PDFs (catalog references — keep local, don't ship)
+*.pdf
+
+# One-off utility scripts (kept locally, not part of the deployed site)
+generate-icons.js
+verify-admin.js
+
+# Loose images in repo root (assets live under src/assets/)
+/Logo*.png
+/Logo*.jpeg

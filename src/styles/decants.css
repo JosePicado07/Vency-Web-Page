@@ -397,7 +397,7 @@
   right: 0;
   z-index: 300;
   background: var(--volcanic-ink);
-  border-top: 1px solid oklch(30% 0.025 180);
+  border-top: 1px solid oklch(30% 0.025 150);
   transform: translateY(calc(100% + 1px));
   transition: transform 0.48s var(--ease-expo);
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -428,7 +428,7 @@
   letter-spacing: 0.04em;
   color: var(--botanical-parchment);
   padding: 0.3rem 0.7rem;
-  border: 1px solid oklch(42% 0.03 180);
+  border: 1px solid oklch(42% 0.03 150);
   border-radius: 2px;
   overflow: hidden;
   min-width: 0;
@@ -451,7 +451,7 @@
   align-items: center;
   gap: 0.25rem;
   padding-bottom: 0.35rem;
-  border-bottom: 1px solid oklch(40% 0.025 180);
+  border-bottom: 1px solid oklch(40% 0.025 150);
   transition: border-color 0.35s var(--ease-expo);
 }
 

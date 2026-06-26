@@ -126,7 +126,7 @@
 }
 
 .catalog-entry--vency-inv {
-  border-top-color: oklch(24% 0.03 180);
+  border-top-color: oklch(24% 0.03 150);
 }
 
 /* Set builder states */
@@ -711,7 +711,7 @@
 }
 
 .catalog-entry__order-btn:hover {
-  background: oklch(27% 0.036 180);
+  background: oklch(27% 0.036 150);
 }
 
 .catalog-entry--icon-series .catalog-entry__buy-row {
