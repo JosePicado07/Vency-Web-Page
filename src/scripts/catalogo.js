@@ -133,7 +133,7 @@
 
     container.innerHTML = html;
     container.querySelectorAll('.cat-entry').forEach(function (el, idx) {
-      el.style.setProperty('--entry-delay', (idx * 45) + 'ms');
+      el.style.setProperty('--entry-delay', (Math.min(idx, 8) * 45) + 'ms');
       observeRow(el);
     });
   }
@@ -238,7 +238,8 @@
             '</div>' +
             railHtml;
 
-          li.style.setProperty('--entry-delay', (itemIdx * 45) + 'ms');
+          // Cap cascade at 8 entries — past that, the wait feels like lag not stagger.
+          li.style.setProperty('--entry-delay', (Math.min(itemIdx, 8) * 45) + 'ms');
           list.appendChild(li);
         });
 
