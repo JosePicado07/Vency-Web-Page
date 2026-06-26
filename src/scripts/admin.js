@@ -847,6 +847,10 @@
       var vb100Price = 20000;
       var color = frag.characterColor || 'oklch(28% 0.04 180)';
       var light = isLightColor(color);
+      // Compute soldOut dynamically from current inventory
+      var isSoldOut = (!inventory[dk] || !inventory[dk].oil_ml) &&
+                      (!inventory[bk30] || !inventory[bk30].oil_ml) &&
+                      (!inventory[bk100] || !inventory[bk100].oil_ml);
 
       el.className = 'dblock dblock--admin' + (light ? ' dblock--admin-light' : '');
       el.style.cssText = '--dblock-color:' + color;
@@ -860,9 +864,9 @@
           imgHtml +
           '<div class="dblock__content"><h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3></div>' +
           '<button class="dblock__trigger js-decant-btn"' +
-            (frag.soldOut ? ' disabled' : '') +
+            (isSoldOut ? ' disabled' : '') +
             ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '"' +
-            ' type="button" aria-label="' + escapeHtml_(frag.name) + (frag.soldOut ? ' \xb7 Agotado"' : '"') + '>' +
+            ' type="button" aria-label="' + escapeHtml_(frag.name) + (isSoldOut ? ' \xb7 Agotado"' : '"') + '>' +
           '</button>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
@@ -870,7 +874,7 @@
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + escapeHtml_(bk100) + '" type="button">100ML</button>' +
         '</div>';
 
-      if (frag.soldOut) el.classList.add('dblock--soldout');
+      if (isSoldOut) el.classList.add('dblock--soldout');
 
     } else {
       var b30Price  = B30_PRICE[frag.cat]  || B30_PRICE['disenador'];
