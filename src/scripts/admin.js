@@ -14,6 +14,7 @@
   var PAGE_SIZE        = 12;
   var SALES_PREVIEW    = 5;
   var LOW_OIL_ML       = 30;
+  var topFragranceName = null;
   var CONC_PRESETS     = [
     { label: 'EDC',    pct: 3  },
     { label: 'EDT',    pct: 10 },
@@ -554,8 +555,9 @@
   function renderTop(fragrances) {
     var topEl   = document.getElementById('js-metric-top');
     var entries = Object.keys(fragrances).map(function (k) { return { name: k, count: fragrances[k] }; });
-    if (!entries.length) { topEl.textContent = ''; return; }
+    if (!entries.length) { topEl.textContent = ''; topFragranceName = null; return; }
     entries.sort(function (a, b) { return b.count - a.count; });
+    topFragranceName = entries[0].name;
     topEl.innerHTML = '<strong>Top:</strong> ' + entries.slice(0, 3).map(function (e) {
       return e.name + ' \xd7' + e.count;
     }).join(' \xb7 ');
@@ -1267,6 +1269,7 @@
   function buildInvRow(frag) {
     var el  = document.createElement('div');
     el.className = 'dblock dblock--inv-mode';
+    if (frag.name === topFragranceName) el.classList.add('dblock--best-seller');
     var id    = frag.id;
     var searchName = frag.name.toLowerCase();
     var entry = inventory[searchName];
