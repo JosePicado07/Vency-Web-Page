@@ -310,15 +310,8 @@
   border-top: 1px solid var(--border);
   cursor: default;
   padding-bottom: 0.25rem;
-  content-visibility: auto;
-  contain-intrinsic-size: auto 400px;
-}
-
-/* Optimization for Icon Series (no strict containment to avoid layout breaks) */
-.cat-entry--icon {
-  content-visibility: auto;
-  /* Skip strict containment — causes gaps on mobile
-     content-visibility: auto alone is sufficient for performance */
+  /* Removed content-visibility: auto (causes render delays on scroll)
+     containment at .cat-section level is sufficient for performance */
 }
 
 
