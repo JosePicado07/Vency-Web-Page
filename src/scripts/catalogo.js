@@ -107,7 +107,7 @@
         : buildRail(fname, fname, false);
 
       html +=
-        '<li class="cat-entry cat-entry--vency"' +
+        '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
           ' id="' + frag.id + '"' +
           ' data-fragrance-id="' + frag.id + '"' +
           ' data-fragrance-name="' + fname + '"' +

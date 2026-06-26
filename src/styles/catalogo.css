@@ -314,6 +314,17 @@
   contain-intrinsic-size: auto 400px;
 }
 
+/* Aggressive optimization for Icon Series (inspirations) */
+.cat-entry--icon {
+  content-visibility: auto;
+  contain: strict;
+  will-change: auto;
+  /* Deferred rendering for Icon Series entries off-screen */
+  @supports (content-visibility: auto) {
+    content-visibility: auto;
+  }
+}
+
 
 .cat-entry--hidden {
   display: none;
