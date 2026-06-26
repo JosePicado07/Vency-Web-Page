@@ -4,7 +4,7 @@
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos' };
 
-  var BATCH_SIZE    = 100;  // Load more at once to reduce update calls
+  var BATCH_SIZE    = 30;
   var revealedCount = 0;
   var passingEntries = [];
 
@@ -259,10 +259,12 @@
     var next = passingEntries.slice(revealedCount, revealedCount + BATCH_SIZE);
     next.forEach(function (e) { e.classList.remove('cat-entry--hidden'); observeRow(e); });
     revealedCount += next.length;
-    // Debounce visibility updates - only call once per scroll
-    clearTimeout(window._updateVisTimeout);
-    window._updateVisTimeout = setTimeout(updateExternalSectionVisibility, 100);
     if (sentinel) sentinel.hidden = (revealedCount >= passingEntries.length);
+    // Yield to browser paint before updating section visibility
+    requestAnimationFrame(function () {
+      clearTimeout(window._updateVisTimeout);
+      window._updateVisTimeout = setTimeout(updateExternalSectionVisibility, 50);
+    });
   }
 
   function updateExternalSectionVisibility() {
@@ -288,7 +290,7 @@
       if (entries[0].isIntersecting && revealedCount < passingEntries.length && !window._catScrollLock) {
         revealBatch();
       }
-    }, { rootMargin: '300px' });
+    }, { rootMargin: '800px' }); // Preload 800px before sentinel is visible
     sentinelObserver.observe(sentinel);
   }
 
