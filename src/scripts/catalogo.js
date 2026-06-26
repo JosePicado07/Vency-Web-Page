@@ -4,7 +4,7 @@
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos' };
 
-  var BATCH_SIZE    = 30;
+  var BATCH_SIZE    = 100;  // Load more at once to reduce update calls
   var revealedCount = 0;
   var passingEntries = [];
 
@@ -259,7 +259,9 @@
     var next = passingEntries.slice(revealedCount, revealedCount + BATCH_SIZE);
     next.forEach(function (e) { e.classList.remove('cat-entry--hidden'); observeRow(e); });
     revealedCount += next.length;
-    updateExternalSectionVisibility();
+    // Debounce visibility updates - only call once per scroll
+    clearTimeout(window._updateVisTimeout);
+    window._updateVisTimeout = setTimeout(updateExternalSectionVisibility, 100);
     if (sentinel) sentinel.hidden = (revealedCount >= passingEntries.length);
   }
 
