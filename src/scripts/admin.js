@@ -1374,6 +1374,10 @@
     invListEl.querySelectorAll('.js-inv-oil').forEach(function (el) {
       el.value = (inventory[el.dataset.id] || {}).oil_ml || 0;
     });
+    // Sync inventory to localStorage so public catalog shows updated sold-out state
+    try {
+      localStorage.setItem('vency_inventory', JSON.stringify(inventory));
+    } catch (e) {}
   }
 
   // Keyboard shortcut: "/" to focus search

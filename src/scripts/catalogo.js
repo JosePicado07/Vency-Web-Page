@@ -75,6 +75,10 @@
     var vencyCatalog = window.VENCY_CATALOG || [];
     if (!vencyCatalog.length) return;
 
+    // Load current inventory from localStorage (synced by admin)
+    var inventoryStr = localStorage.getItem('vency_inventory');
+    var inventory = inventoryStr ? JSON.parse(inventoryStr) : {};
+
     /* Same row template as the designer/nicho catalog (.cat-entry),
        with a small badge to mark Vency originals vs Icon Series. */
     var html = '<ul class="cat-brand__list">';
@@ -91,7 +95,13 @@
         ? '<span class="vency-compact__ref">· ' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</span> '
         : '';
 
-      var soldOut = !!frag.soldOut;
+      // Calculate soldOut dynamically from current inventory
+      var dk = frag.id + ':decant';
+      var bk30 = frag.id + ':30ml';
+      var bk100 = frag.id + ':100ml';
+      var soldOut = (!inventory[dk] || !inventory[dk].oil_ml)
+                 && (!inventory[bk30] || !inventory[bk30].oil_ml)
+                 && (!inventory[bk100] || !inventory[bk100].oil_ml);
       var railHtmlVency = soldOut
         ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
         : buildRail(fname, fname, false);
