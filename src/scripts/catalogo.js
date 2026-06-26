@@ -227,7 +227,7 @@
           li.innerHTML =
             '<div class="cat-entry__info">' +
               '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
-              '<p class="cat-entry__name">' + escHtml(displayName) + (itemSoldOut ? '<span class="cat-badge cat-badge--sold-out">AGOTADO</span>' : '') + '</p>' +
+              '<p class="cat-entry__name">' + escHtml(displayName) + '</p>' +
               notesHtml +
               inspoHtml +
               (itemSoldOut ? '' :
