@@ -70,9 +70,11 @@
     var vencyCatalog = window.VENCY_CATALOG || [];
     if (!vencyCatalog.length) return;
 
-    // Load current inventory from localStorage (synced by admin)
+    // Load current inventory from localStorage (synced by admin).
+    // ponytail: empty = "no data" = assume in-stock; admin sync is the only authority for sold-out.
     var inventoryStr = localStorage.getItem('vency_inventory');
-    var inventory = inventoryStr ? JSON.parse(inventoryStr) : {};
+    var inventory = inventoryStr ? JSON.parse(inventoryStr) : null;
+    var hasInventory = inventory && Object.keys(inventory).length > 0;
 
     /* Same row template as the designer/nicho catalog (.cat-entry),
        with a small badge to mark Vency originals vs Icon Series. */
@@ -94,7 +96,7 @@
       var dk = frag.id + ':decant';
       var bk30 = frag.id + ':30ml';
       var bk100 = frag.id + ':100ml';
-      var soldOut = (!inventory[dk] || !inventory[dk].oil_ml)
+      var soldOut = hasInventory && (!inventory[dk] || !inventory[dk].oil_ml)
                  && (!inventory[bk30] || !inventory[bk30].oil_ml)
                  && (!inventory[bk100] || !inventory[bk100].oil_ml);
       var railHtmlVency = soldOut
