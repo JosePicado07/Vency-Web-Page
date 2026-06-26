@@ -483,37 +483,8 @@
     }
   });
 
-  /* ---- Per-format sold-out from localStorage inventory (synced by admin).
-         ponytail: single source — admin writes vency_inventory, we read it
-         once on init. No more 2-min polling fetch. ---- */
-  (function applyStockFromInventory() {
-    var raw = localStorage.getItem('vency_inventory');
-    if (!raw) return;
-    var inv;
-    try { inv = JSON.parse(raw); } catch (e) { return; }
-    function empty(k) { return !inv[k] || !inv[k].oil_ml; }
-    document.querySelectorAll('[data-fragrance-id]').forEach(function (block) {
-      var id = block.dataset.fragranceId;
-      if (empty(id + ':decant')) {
-        block.dataset.soldOut = 'true';
-        block.classList.add('dblock--soldout');
-        var trigger = block.querySelector('.dblock__trigger');
-        if (trigger) {
-          trigger.disabled = true;
-          trigger.setAttribute('aria-label', block.dataset.fragranceName + ' · Agotado');
-        }
-      }
-      ['30ml', '100ml'].forEach(function (fmt) {
-        if (empty(id + ':' + fmt)) {
-          var btn = block.querySelector('.fmt-rail__buy-btn[data-fmt="' + fmt + '"]');
-          if (btn) {
-            btn.disabled = true;
-            btn.setAttribute('aria-label', fmt.replace('ml', ' ML') + ' · Agotado');
-          }
-        }
-      });
-    });
-  })();
+  // Sold-out state now computed in catalogo.js render path (single source).
+  // Late-applying script was causing AGOTADO to flash in during scroll.
 
   /* ---- Pre-select a decant from URL param (?add=Fragrance+Name) ---- */
   (function initFromUrl() {

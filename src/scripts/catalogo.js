@@ -120,11 +120,10 @@
             (isIcon && frag.inspiration
               ? '<p class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</p>'
               : '') +
-            (soldOut ? '' :
-              '<div class="cat-entry__foot">' +
-                '<a class="cat-entry__historia" href="coleccion.html#' + frag.id + '">historia →</a>' +
-                '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
-              '</div>') +
+            '<div class="cat-entry__foot">' +
+              '<a class="cat-entry__historia" href="coleccion.html#' + frag.id + '">historia →</a>' +
+              '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+            '</div>' +
           '</div>' +
           railHtmlVency +
         '</li>';
@@ -148,6 +147,18 @@
   function buildSections() {
     var container = document.getElementById('cat-content');
     if (!container) return;
+
+    // Same inventory bridge as Vency entries — compute sold-out at render time
+    // so the state is right on first paint (no late "AGOTADO popping in on scroll").
+    var invStr = localStorage.getItem('vency_inventory');
+    var inv = invStr ? JSON.parse(invStr) : null;
+    var hasInv = inv && Object.keys(inv).length > 0;
+    function isItemSoldOut(id) {
+      if (!hasInv) return false;
+      return (!inv[id + ':decant'] || !inv[id + ':decant'].oil_ml)
+          && (!inv[id + ':30ml']   || !inv[id + ':30ml'].oil_ml)
+          && (!inv[id + ':100ml']  || !inv[id + ':100ml'].oil_ml);
+    }
 
     SECTIONS.forEach(function (sec) {
       var brands = {};
@@ -219,22 +230,24 @@
             ? '<p class="cat-entry__inspo">' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</p>'
             : '';
 
-          var itemSoldOut = !!item.soldOut;
+          var itemSoldOut = !!item.soldOut || isItemSoldOut(li.dataset.fragranceId);
+          if (itemSoldOut) li.dataset.soldOut = 'true';
           var railHtml = itemSoldOut
             ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
             : buildRail(fragranceName, escHtml(item.name), isInv);
 
+          // Always show the foot — sold-out items still earn a "Ver →" so users
+          // can read the fragrance's story even when there's no stock to buy.
           li.innerHTML =
             '<div class="cat-entry__info">' +
               '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
               '<p class="cat-entry__name">' + escHtml(displayName) + '</p>' +
               notesHtml +
               inspoHtml +
-              (itemSoldOut ? '' :
-                '<div class="cat-entry__foot">' +
-                  (historiaHref ? '<a class="cat-entry__historia" href="' + historiaHref + '">historia →</a>' : '') +
-                  '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
-                '</div>') +
+              '<div class="cat-entry__foot">' +
+                (historiaHref ? '<a class="cat-entry__historia" href="' + historiaHref + '">historia →</a>' : '') +
+                '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+              '</div>' +
             '</div>' +
             railHtml;
 
