@@ -238,6 +238,7 @@
 /* === CATALOG SECTIONS === */
 .cat-section {
   border-bottom: 1px solid var(--border);
+  contain: layout style paint;
 }
 
 #cat-section-vency {
@@ -309,6 +310,8 @@
   border-top: 1px solid var(--border);
   cursor: default;
   padding-bottom: 0.25rem;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 400px;
 }
 
 
