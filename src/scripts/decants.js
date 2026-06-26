@@ -18,7 +18,6 @@
   var selection       = []; /* decants:  { id, name }, max 3 */
   var bottles         = []; /* bottles:  { id, name, fmt, price } */
   var currentOrderRef = null;
-  var cachedStock     = {}; /* last fetched stock snapshot — refreshed every 2 min */
 
   var BOTTLE_PRICE  = { '30ml': 12000, '100ml': 20000 };
   var BOTTLE_LABEL  = { '30ml': '30 ml', '100ml': '100 ml' };
@@ -29,13 +28,9 @@
     return 'VA' + (Math.floor(Math.random() * 9000) + 1000);
   }
 
-  function colones(n) {
-    return '₡' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }
+  function colones(n) { return '₡' + Number(n).toLocaleString('es-CR'); }
 
-  function esc(str) {
-    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  }
+  var esc = window.escHtml;
 
   function showToast(msg) {
     var t = document.createElement('div');
@@ -407,17 +402,14 @@
       orderBtn.setAttribute('aria-expanded', 'true');
       orderBtn.textContent = 'Cerrar';
     }
-    window._catScrollLock = true;
     setTimeout(function () {
       panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(function () { window._catScrollLock = false; }, 800);
     }, 120);
   }
 
   function closePanel() {
     panel.classList.remove('is-open');
     currentOrderRef = null;
-    window._catScrollLock = false;
     if (orderBtn) {
       orderBtn.setAttribute('aria-expanded', 'false');
       orderBtn.textContent = 'Ordenar · ' + colones(cartTotal());
@@ -433,14 +425,14 @@
     var trigger = block.querySelector('.dblock__trigger');
     if (trigger) {
       trigger.addEventListener('click', function () {
-        if (trigger.disabled || block.dataset.soldOut === 'true' || cachedStock[id + ':decant'] === false) return;
+        if (trigger.disabled || block.dataset.soldOut === 'true') return;
         handleClick(id, name);
       });
     }
 
     block.querySelectorAll('.fmt-rail__buy-btn[data-fmt]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        if (btn.disabled || cachedStock[id + ':' + btn.dataset.fmt] === false) return;
+        if (btn.disabled) return;
         handleBottleClick(id, name, btn.dataset.fmt);
       });
     });
@@ -491,49 +483,37 @@
     }
   });
 
-  /* ---- Stock público: carga inicial + refresco cada 2 minutos ---- */
-  function applyStockUI(stock) {
+  /* ---- Per-format sold-out from localStorage inventory (synced by admin).
+         ponytail: single source — admin writes vency_inventory, we read it
+         once on init. No more 2-min polling fetch. ---- */
+  (function applyStockFromInventory() {
+    var raw = localStorage.getItem('vency_inventory');
+    if (!raw) return;
+    var inv;
+    try { inv = JSON.parse(raw); } catch (e) { return; }
+    function empty(k) { return !inv[k] || !inv[k].oil_ml; }
     document.querySelectorAll('[data-fragrance-id]').forEach(function (block) {
       var id = block.dataset.fragranceId;
-      if (stock[id + ':decant'] === false) {
+      if (empty(id + ':decant')) {
         block.dataset.soldOut = 'true';
         block.classList.add('dblock--soldout');
         var trigger = block.querySelector('.dblock__trigger');
         if (trigger) {
           trigger.disabled = true;
-          trigger.setAttribute('aria-label', block.dataset.fragranceName + ' — Agotado');
+          trigger.setAttribute('aria-label', block.dataset.fragranceName + ' · Agotado');
         }
       }
       ['30ml', '100ml'].forEach(function (fmt) {
-        if (stock[id + ':' + fmt] === false) {
+        if (empty(id + ':' + fmt)) {
           var btn = block.querySelector('.fmt-rail__buy-btn[data-fmt="' + fmt + '"]');
           if (btn) {
             btn.disabled = true;
-            btn.setAttribute('aria-label', fmt.replace('ml', ' ML') + ' — Agotado');
+            btn.setAttribute('aria-label', fmt.replace('ml', ' ML') + ' · Agotado');
           }
         }
       });
     });
-  }
-
-  function refreshStock() {
-    if (!SHEET_LOG_URL) return;
-    fetch(SHEET_LOG_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'stock-public' })
-    })
-    .then(function (r) { return r.json(); })
-    .then(function (stock) {
-      cachedStock = stock;
-      applyStockUI(stock);
-    })
-    .catch(function () { /* silent — si falla, mantiene último snapshot */ })
-    .finally(function () {
-      setTimeout(refreshStock, 2 * 60 * 1000); /* reintentar en 2 min */
-    });
-  }
-
-  refreshStock();
+  })();
 
   /* ---- Pre-select a decant from URL param (?add=Fragrance+Name) ---- */
   (function initFromUrl() {

@@ -312,12 +312,8 @@
   function saveToken(t) { localStorage.setItem(TOKEN_KEY, t); }
   function clearToken() { localStorage.removeItem(TOKEN_KEY); }
 
-  /* ── XSS sanitization ── */
-  function escapeHtml_(str) {
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-  }
+  /* ── XSS sanitization — use shared escHtml from fragrance-data.js (escapes &<>"') ── */
+  var escapeHtml_ = window.escHtml;
 
   function showGate() {
     gate.hidden = false;
@@ -557,7 +553,8 @@
       metricsEl.classList.remove('loading');
       offline.hidden = false;
       console.error('[Metrics load failed]', err);
-      if (refreshBtn) refreshBtn.disabled = false;
+      var rb = document.getElementById('js-refresh');
+      if (rb) rb.disabled = false;
     });
   }
 
@@ -1285,17 +1282,7 @@
     if (frag.name === topFragranceName) el.classList.add('dblock--best-seller');
     var id    = frag.id;
     var searchName = frag.name.toLowerCase();
-    var entry = inventory[searchName];
-    if (!entry && inventory._byKeyword) {
-      var words = searchName.split(/\s+/);
-      for (var w = 0; w < words.length; w++) {
-        if (inventory._byKeyword[words[w]]) {
-          entry = inventory._byKeyword[words[w]];
-          break;
-        }
-      }
-    }
-    entry = entry || inventory[id] || { oil_ml: 0 };
+    var entry = inventory[searchName] || inventory[id] || { oil_ml: 0 };
     var oil   = entry.oil_ml || 0;
 
     var nameHtml = frag.brand
@@ -1382,9 +1369,9 @@
 
   // Keyboard shortcut: "/" to focus search
   document.addEventListener('keydown', function(e) {
-    if (e.key === '/' && searchEl && !searchEl.contains(document.activeElement)) {
+    if (e.key === '/' && searchInput && document.activeElement !== searchInput) {
       e.preventDefault();
-      searchEl.focus();
+      searchInput.focus();
     }
   });
 

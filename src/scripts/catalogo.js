@@ -6,7 +6,6 @@
 
   var countEl   = document.querySelector('.js-cat-count');
   var emptyEl   = document.querySelector('.cat-empty');
-  var sentinel  = document.getElementById('cat-sentinel');
 
   /* ── Helpers ─────────────────────────────────────────── */
   function slug(str) {
@@ -280,7 +279,6 @@
       entry.classList.toggle('cat-entry--hidden', !show);
       if (show) entry.classList.add('is-in');
     });
-    if (sentinel) sentinel.hidden = true;
     updateExternalSectionVisibility();
 
     /* === Vency originals === */
