@@ -862,9 +862,8 @@
       el.className = 'dblock dblock--admin' + (light ? ' dblock--admin-light' : '');
       el.style.cssText = '--dblock-color:' + color;
 
-      var imgHtml = frag.image
-        ? '<div class="dblock__img-wrap"><img src="' + frag.image + '" alt="" loading="lazy"></div>'
-        : '';
+      var imgSrc = frag.image || '../assets/images/default-bottle.jpg';
+      var imgHtml = '<div class="dblock__img-wrap"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
 
       el.innerHTML =
         '<div class="dblock__top">' +
@@ -892,9 +891,13 @@
       var b100Key   = invKey(frag, '100ml');
       var catCls    = 'dblock--ext-' + (frag.cat || 'disenador');
 
+      var extImgSrc = frag.image || '../assets/images/default-bottle.jpg';
+      var extImgHtml = '<div class="dblock__img-wrap"><img src="' + extImgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
+
       el.className = 'dblock dblock--admin ' + catCls;
       el.innerHTML =
         '<div class="dblock__top">' +
+          extImgHtml +
           '<div class="dblock__content">' +
             (frag.brand ? '<span class="dblock__brand">' + escapeHtml_(frag.brand) + '</span>' : '') +
             '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>' +
