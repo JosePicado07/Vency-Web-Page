@@ -12,7 +12,7 @@
   /* Registro opcional de pedidos en Google Sheets (best-effort, sin backend).
      Pegar aquí la URL del Web App de Apps Script. Vacío = desactivado.
      Ver docs/ORDER-LOG-SHEET.md para el setup. */
-  var SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycby459LuBOjIkLDAs_to2zlLQ5uIJCJMsUhelMf_Aq3-I95a67rRAiz6xwjpN49GZRIE/exec';
+  var SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzuJHp43JAzsQfAEpe6vWUzDqsOlA28vPSliOi4RsjgRr8d-m06t4MtzNKrdO2njZJW/exec';
 
   /* ---- State (persisted to localStorage so navigation keeps the cart) ---- */
   var CART_KEY = 'vency_cart_v1';
