@@ -585,19 +585,19 @@
         if (!vc || !id) { closePanel(); return; }
         var hasItem = vc.getDecantQty(id) > 0 ||
           ['30ml', '100ml'].some(function (f) { return vc.getBottleQty(id, f) > 0; });
-        // No format picked → default to a decant. The CTA reads "Agregar a la
-        // orden"; users expect it to actually add something. Stepper still
-        // available to bump to a set of 3 from the tray.
+        // No format picked → default to a decant. Skips the size-picker step
+        // for users who just want to order; the cart page still lets them
+        // bump to a set of 3 or swap formats.
         if (!hasItem) {
           var card = document.querySelector('[data-fragrance-id="' + id + '"]');
           var name = card ? card.dataset.fragranceName : '';
           vc.setDecantQty(id, name, 1);
           hasItem = true;
         }
-        if (hasItem && preOpenSnap) {
-          showUndoToast(id, preOpenSnap);
-        }
         closePanel();
+        // Go straight to the cart — what "Ordenar" should always do.
+        window.location.href = 'carrito.html';
+        return;
       });
     }
 
