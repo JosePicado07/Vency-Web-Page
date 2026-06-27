@@ -166,3 +166,270 @@ The sliding sheet with `border-radius: 16px 16px 0 0`, blur-backdrop, and transl
 **One sentence:** fix `comprar.html`, fix the colls-intro grid, and kill the duplicate AGOTADO — those three changes alone move the site from "AI made this" to "made by someone who knows exactly what they're doing."
 
 **Out of scope (called out, not fixed):** admin redesign, format-split deeper IA, image assets/photography, the coleccion-vs-catalogo IA overlap (separate strategic decision).
+
+---
+
+## Audit (impeccable · a11y / perf / responsive)
+
+Technical complement to the engineering and design sections above. Scope: public pages only (`index`, `catalogo`, `comprar`, `coleccion`, `faq`, `legal`) and their JS/CSS. Admin out of scope unless a shared file matters.
+
+### Health score
+
+| # | Dimension | Score | Key Finding |
+|---|-----------|-------|-------------|
+| 1 | Accessibility | 2.5/4 | Detail-panel dialog has no focus trap and never restores focus to its trigger. Heading hierarchy on `index.html` jumps h1 → h3. Sub-44px touch targets in the detail panel and on `.cat-entry__see`. |
+| 2 | Performance | 3/4 | Render-blocking Google Fonts and unscoped `nav.js`/`scroll.js` on index. No `srcset`/`sizes` on any responsive image. SW network-first writes every GET into cache (including third-party). |
+| 3 | Responsive | 3/4 | Touch targets are the main gap. Asymmetric grids behave well at the documented breakpoint, but `100svh` minimums on hero/colls cause iOS Safari content-clipping at narrow viewports without fallback. |
+| 4 | Theming | 3/4 | OKLCH token system intact, but hue-180 cyan leftovers in `catalog.css:451` and `decants.css:283` (the global sweep missed alpha-slash values). |
+| 5 | Anti-patterns | 3/4 | The big slop items were fixed this session. Remaining: glassmorphism backdrop on `.fp__backdrop` (purposeful blur, borderline OK), and `transform: scale(1.03)` hover reflex on images. |
+| **Total** | | **14.5/20** | **Good — address weak dimensions (a11y blockers in the detail-panel flow first).** |
+
+### Anti-patterns verdict
+
+Pass. The two slop grids (`comprar.html` format hub, `index.html` "Las Colecciones") were converted to asymmetric layouts this session; the duplicate AGOTADO badge and nav glassmorphism are gone. What remains reads as a brand site that has opinions, not as template work. Surviving template reflexes: `hover { transform: scale(1.03) }` on every image hover, the circular ochre `.to-top` FAB, and the `backdrop-filter: blur(3px)` on `.fp__backdrop` — all defensible, none blocking the verdict.
+
+### Executive summary
+
+- Audit Health Score: **14.5/20** (Good)
+- Issue counts: **3 P0**, **8 P1**, **9 P2**, **5 P3**
+- Top 5 critical:
+  1. Detail-panel dialog never restores focus to its trigger on close, and has no focus trap inside (P0, a11y)
+  2. `cat-entry__see` ("Ver →"), `fp__close`, `fp__step-btn`, and `fp__add-btn` are all under 44×44px (P0, a11y · WCAG 2.5.5)
+  3. `index.html` heading hierarchy jumps h1 → h3 inside `.colls-intro` (P1, a11y · WCAG 1.3.1)
+  4. Scripts `nav.js`/`scroll.js` loaded without `defer` and without `?v=` on `index.html`; version drift across pages (P1, perf · stale-JS risk)
+  5. No `srcset`/`sizes` on any image — mobile downloads the desktop-sized 900×900 hero (P1, perf)
+
+### Detailed findings
+
+#### Accessibility
+
+**[P0] Detail-panel focus is not trapped and never returns**
+- **Location**: `src/scripts/catalogo.js:447-501` (`openPanel` / `closePanel`)
+- **Category**: Accessibility
+- **Impact**: A keyboard or screen-reader user opens the fragrance panel via "Ver →" and can tab out of the dialog back into the (visually obscured) catalog. On close, focus is lost — falls to `<body>` instead of returning to the Ver button that opened it. Per WCAG 2.4.3 and the ARIA Authoring Practices for `dialog[aria-modal=true]`, focus must be trapped and restored.
+- **Standard**: WCAG 2.4.3 (Focus Order), WAI-ARIA dialog pattern
+- **Recommendation**: In `openPanel(cardEl)`, capture `var trigger = cardEl.querySelector('.cat-entry__see') || document.activeElement;` and store it on `fpEl._returnTo`. Add a `keydown` Tab handler scoped to `fpEl` (same shape as `nav.js:31-49`) that cycles between first/last focusable elements. In `closePanel()`, call `fpEl._returnTo?.focus()`. Same pattern as the existing nav focus trap.
+
+**[P0] Touch targets below 44×44px in the order flow**
+- **Location**: `src/styles/catalogo.css:1114` (`.fp__close` = 32×32), `:1288` (`.fp__step-btn` = 30×30), `:1260` (`.fp__add-btn` ≈ 24×60), `:1340` (`.cat-entry__see` ≈ 28×56)
+- **Category**: Responsive / Accessibility
+- **Impact**: The entire order entry path on mobile sits below 44px. WCAG 2.5.5 (AAA) is the standard threshold; 2.5.8 (AA in WCAG 2.2, 24px floor) is borderline. On touch devices, "Ver →" and the +/− steppers are mis-tap magnets.
+- **Standard**: WCAG 2.5.5 / 2.5.8
+- **Recommendation**: `min-height: 44px; min-width: 44px;` on `.fp__close`, `.fp__step-btn`, `.fp__add-btn`. For `.cat-entry__see`, raise padding to `0.65rem 1rem` or add `min-height: 44px`. Visual size can stay smaller — pad the hit area.
+
+**[P0] `cat-entry__see` button has no `aria-label` describing what it opens**
+- **Location**: `src/scripts/catalogo.js:125`, `:249`
+- **Category**: Accessibility
+- **Impact**: Screen readers announce "Ver button" with no context — which fragrance, what happens? `aria-haspopup="dialog"` is present (good) but the button needs the fragrance name interpolated.
+- **Standard**: WCAG 4.1.2 (Name, Role, Value)
+- **Recommendation**: `<button class="cat-entry__see" type="button" aria-haspopup="dialog" aria-label="Ver detalles de ${name}">Ver →</button>`. Keep visible "Ver →" copy; name lives in the label.
+
+**[P1] Heading hierarchy jumps h1 → h3 on `index.html`**
+- **Location**: `src/pages/index.html:36` (h1 hero) → `:78`/`:92`/`:103` (h3 inside `.coll-block`)
+- **Category**: Accessibility
+- **Impact**: Screen-reader rotor users get a broken document outline. The hero h1 should be followed by an h2 for the next section. This was caused this session when "La colección." h2 was deleted as restated-heading slop — correct aesthetically, but the heading level on the children wasn't bumped.
+- **Standard**: WCAG 1.3.1 (Info and Relationships)
+- **Recommendation**: Either (a) reintroduce a visually-hidden h2 (`<h2 class="sr-only">Las colecciones</h2>`), or (b) promote the three `.coll-block__name` from h3 to h2. Option (b) is cleaner.
+
+**[P1] Duplicate `id="faq-content"` on `faq.html`**
+- **Location**: `src/pages/faq.html:123` (on `<main>`) and `:134` (on inner `<div>`)
+- **Category**: Accessibility
+- **Impact**: Invalid HTML; the skip-nav `#faq-content` target is ambiguous; assistive tech may land on the wrong element.
+- **Standard**: WCAG 4.1.1 (Parsing — removed in 2.2, but duplicate IDs still cause practical issues)
+- **Recommendation**: Drop the inner duplicate: `<div class="faq-body" id="faq-content">` → `<div class="faq-body">`. Main already has the id.
+
+**[P1] `index.html` has no `<main>` landmark**
+- **Location**: `src/pages/index.html:13-289`
+- **Category**: Accessibility
+- **Impact**: Screen-reader landmark navigation expects `<main>`. Every other page has it; the landing page jumps from `<nav>` straight to sibling `<section>` elements.
+- **Standard**: WCAG 1.3.1, ARIA Landmark Roles
+- **Recommendation**: Wrap hero + colls-intro + perfumista + sessions + process in `<main id="content" tabindex="-1">`. Update skip-nav `href` to `#content`.
+
+**[P1] Skip-nav on `index.html` points to a non-focusable section**
+- **Location**: `src/pages/index.html:15` (`href="#coleccion"`); target `<section id="coleccion">` has no `tabindex`
+- **Category**: Accessibility
+- **Impact**: Skip-nav works visually but programmatic focus doesn't land on a focusable target; some screen readers won't announce the target.
+- **Standard**: WCAG 2.4.1 (Bypass Blocks)
+- **Recommendation**: Add `tabindex="-1"` to the target, OR (better) implement the `<main>` fix above and target `#content`.
+
+**[P1] Color contrast: `.coll-block--hybrid .coll-block__desc` borderline AA**
+- **Location**: `src/styles/styles.css:753-755` — `oklch(58% 0.015 150)` on `var(--volcanic-ink)` (`oklch(18% 0.04 150)`)
+- **Category**: Accessibility
+- **Impact**: Contrast ratio ≈ 4.1:1 — fails WCAG AA for body text (needs ≥4.5:1).
+- **Standard**: WCAG 1.4.3 (Contrast Minimum)
+- **Recommendation**: Bump to `oklch(64% 0.018 150)` (the existing `--ink-deep` token, documented as ~4.8:1). Reference the variable instead of a literal.
+
+**[P2] `<input type="search" id="cat-search">` has sr-only label and placeholder but no `aria-label`**
+- **Location**: `src/pages/catalogo.html:75-77`
+- **Category**: Accessibility
+- **Impact**: The sr-only label is correct; the placeholder is a hint, not a label. Some screen readers verbose; not broken.
+- **Recommendation**: No fix needed unless user testing flags verbosity.
+
+**[P2] `.dc-tray__slot-remove` is ~24×30px**
+- **Location**: `src/styles/decants.css:482-495`
+- **Category**: Responsive / Accessibility
+- **Impact**: Same touch-target class as the P0. Decant-remove × is hard to hit on phone.
+- **Recommendation**: `min-height: 44px; min-width: 44px;` (visual `×` stays small inside the pad).
+
+**[P2] "Las Colecciones" Hybrid block is a `<div>` while OB/IS are `<a>` — inconsistent structure**
+- **Location**: `src/pages/index.html:72-107`
+- **Category**: Accessibility
+- **Impact**: The Hybrid's only action is the inner WhatsApp link (good); the outer block isn't a navigation target by design (acceptable). Inconsistency flagged so reviewer doesn't try to "fix" it.
+- **Recommendation**: Accept as intentional variation.
+
+**[P3] Footer has two `<nav>` elements; verify aria-labels distinguish them**
+- **Location**: All footers
+- **Impact**: Already correctly labeled: "Navegación del pie de página" and "Políticas y contacto". Good.
+
+#### Performance
+
+**[P1] No `srcset`/`sizes` on any image**
+- **Location**: All `<img>` tags across all pages
+- **Category**: Performance
+- **Impact**: A mobile visitor downloads the full 900×900 (or 900×1200) PNG hero/coll images. The Citrus Enigma hero on `coleccion.html` is `loading="eager"` and ships full-res to a 375px phone. Wastes bandwidth, slows LCP.
+- **Recommendation**: Generate 480w/768w/1200w variants and add `srcset="… 480w, … 768w, … 1200w" sizes="(min-width: 900px) 50vw, 100vw"`. Start with `hero-botanica.png` and the three coll-block images on `index.html` — biggest win.
+
+**[P1] `nav.js` and `scroll.js` loaded without `defer` on `index.html`**
+- **Location**: `src/pages/index.html:287-288`
+- **Category**: Performance
+- **Impact**: At end-of-body so they don't block render in practice, but `defer` is the documented best-practice and ensures execution after DOMContentLoaded (subtle race with the `IntersectionObserver` setup in `scroll.js` is possible).
+- **Recommendation**: Add `defer` to both. Same on `coleccion.html`, `legal.html`, `faq.html` script tags.
+
+**[P1] `?v=` cache-bust drift across pages**
+- **Location**: `faq.html:11` uses `styles.css?v=21`; `legal.html:11` uses `styles.css` (no version); others use `?v=23`. Same for `scroll.js?v=19` on faq vs `?v=20` on coleccion vs unversioned on index.
+- **Category**: Performance / Correctness
+- **Impact**: A visitor moves index → faq and may load an older cached CSS, mixing tokens. Visual inconsistencies — and a CSS update could silently fail to reach faq users.
+- **Recommendation**: Settle on one version per asset and bump together, or drop `?v=` and trust the SW's network-first.
+
+**[P1] Service worker is network-first and caches every GET, including third-party**
+- **Location**: `src/pages/sw.js:19-30`
+- **Category**: Performance / Storage
+- **Impact**: Every Google Fonts CSS/woff2 and any third-party image gets cloned and stored in `vency-admin-v3`. Storage grows unbounded; quota-constrained devices may hit eviction noise.
+- **Recommendation**: Add a same-origin guard: `if (new URL(e.request.url).origin !== self.location.origin) return;` before the `caches.open`. Or use a separate `vency-runtime-v1` cache with an LRU cap.
+
+**[P2] Google Fonts is render-blocking**
+- **Location**: Every page `<head>`
+- **Category**: Performance
+- **Impact**: A render-blocking stylesheet on a third-party origin. URL has `display=swap` (good — fallback text shows immediately), but the stylesheet itself still blocks paint.
+- **Recommendation**: Either (a) self-host Bitter + Manrope subsets in `src/assets/fonts/` with `@font-face { font-display: swap }`, or (b) keep Google Fonts but use async load: `<link rel="preload" as="style" href="…" onload="this.rel='stylesheet'">` with `<noscript>` fallback. Option (a) eliminates the third-party round-trip.
+
+**[P2] Multiple CSS files on `catalogo.html` (5 files)**
+- **Location**: `src/pages/catalogo.html:11-15`
+- **Category**: Performance
+- **Impact**: 5 HTTP requests before first paint. HTTP/2 mitigates but doesn't eliminate. Each `<link>` is render-blocking.
+- **Recommendation**: Concatenate at build time. If no build step, accept — small files + HTTP/2 isn't catastrophic.
+
+**[P2] `scroll.js` registers two separate scroll listeners**
+- **Location**: `src/scripts/scroll.js:34, 44`
+- **Category**: Performance
+- **Impact**: Both `{ passive: true }` (good). Each reads `window.scrollY` (a layout read) every frame. Two listeners doing similar reads.
+- **Recommendation**: Combine into one `rAF`-throttled handler that batches both classList toggles. Minor.
+
+**[P3] `will-change: transform` on `.fp__sheet` is always set**
+- **Location**: `src/styles/catalogo.css:1079`
+- **Category**: Performance
+- **Impact**: `will-change` permanently promotes a layer; minor memory cost while panel is hidden. Best practice: add/remove dynamically.
+- **Recommendation**: Acceptable for a single panel. Leave.
+
+#### Responsive
+
+**[P1] `min-height: 100svh` on hero / `80svh` on colls-intro — no `vh` fallback**
+- **Location**: `src/styles/styles.css:459, 599`
+- **Category**: Responsive
+- **Impact**: `svh` correctly excludes mobile browser chrome (better than `vh`). Browser support: Safari 15.4+, Chrome 108+. Older iOS without `svh` falls back to default (auto) and the section collapses to content height.
+- **Recommendation**: Two-line fallback: `min-height: 100vh; min-height: 100svh;` (browser uses the second if supported). Same for `80svh`.
+
+**[P2] `comprar.html` decant card flips to row-flex at ≥700px — verified correct**
+- **Location**: `src/styles/comprar.css:54-89`
+- **Category**: Responsive
+- **Impact**: Image-left + body-right works for Decant; 30ml/100ml stack below. Card body has `padding: 2.5rem 2rem` (generous tap area).
+- **Recommendation**: None.
+
+**[P2] `.fp__sheet` uses `max-height: 92dvh`**
+- **Location**: `src/styles/catalogo.css:1073`
+- **Category**: Responsive
+- **Impact**: `.fp__scroll` is the inner overflow region; longer narratives scroll inside. Verified.
+- **Recommendation**: None.
+
+**[P2] Asymmetric "Las Colecciones" at the 899/900px boundary**
+- **Location**: `src/styles/styles.css:593-792`
+- **Category**: Responsive
+- **Impact**: At ≥900px the `1.7fr 1fr` grid renders; at ≤899px it collapses to single column. Hybrid block at mobile has `min-height: 200px` — may feel cramped at 320px viewports.
+- **Recommendation**: Acceptable. If iPhone SE testing surfaces complaints, raise to 240px.
+
+**[P3] Detail panel bottom-anchored on desktop too**
+- **Location**: `src/styles/catalogo.css:1050-1057`
+- **Category**: Responsive
+- **Impact**: Intentional per design audit ("strong moment"). Verified works.
+- **Recommendation**: None.
+
+#### Theming
+
+**[P2] Leftover hue-180 OKLCH values in `catalog.css` and `decants.css`**
+- **Location**: `src/styles/catalog.css:451` (`oklch(18% 0.04 180 / 0.12)`), `src/styles/decants.css:283` (`oklch(30% 0.04 180 / 0.3)`)
+- **Category**: Theming
+- **Impact**: The global hue-180→150 sweep missed these because the regex matched `\b180\b\s*\)` and these have ` / 0.x)` (alpha-slash). Two surfaces now use a slightly cooler/cyan ink than the rest of the system.
+- **Recommendation**: Regex `(oklch\([^)]*?)180(\s*[/)])` → replace with `$1150$2`. Catches alpha-slash and trailing-paren forms.
+
+**[P3] No dark-mode strategy declared**
+- **Location**: All stylesheets
+- **Category**: Theming
+- **Impact**: PRODUCT.md does not call for dark mode; brand ground is parchment, dark sections are intentional commitments. Acceptable to not support — should be documented.
+- **Recommendation**: One-line top-of-file comment in `styles.css`: `/* Light-only by design — brand ground is parchment; dark sections are intentional commitments, not auto-flipped. */`.
+
+#### Anti-patterns
+
+**[P2] `transform: scale(1.03)` hover on all images**
+- **Location**: `styles.css`, `comprar.css`, etc.
+- **Category**: Anti-pattern (design audit C6)
+- **Impact**: Template-reflex hover. Not banned, recognizable.
+- **Recommendation**: Already in design audit deferred list. Optional polish.
+
+**[P3] `.fp__backdrop` uses `backdrop-filter: blur(3px)`**
+- **Location**: `src/styles/catalogo.css:1063`
+- **Category**: Anti-pattern (glassmorphism)
+- **Impact**: Design audit flagged this as "purposeful, not wallpaper" — it earns its place.
+- **Recommendation**: None.
+
+### Patterns & systemic issues
+
+1. **Touch targets are systemically <44px in custom controls.** Five distinct buttons in the order/panel flow ship below WCAG threshold. A site-wide `--touch-min: 44px;` token plus `min-height: var(--touch-min); min-width: var(--touch-min);` on every `<button>` would close most of this.
+
+2. **No `srcset` discipline.** Every `<img>` is single-resolution. The site loads as if every viewport is desktop.
+
+3. **Script and style `?v=` strings drift independently per page.** Without a build step the version numbers will never be consistent. Either remove them and trust the SW, or write a one-line bump script.
+
+4. **The detail-panel dialog is the highest-traffic interaction and lacks standard ARIA dialog plumbing** (focus trap, return-focus, escape). All three are 10–20 lines of JS; the pattern already exists in `nav.js`.
+
+### Positive findings
+
+- `prefers-reduced-motion` honored in JS (`scroll.js`, `carousel.js`) AND in CSS (entrance animation guards across `styles.css`, `catalogo.css`, `coleccion.css`, `admin.css`). Few sites get this right.
+- Hero image is `loading="eager"` (correct LCP signal); coll-blocks and process images are `loading="lazy"`.
+- Skip-nav exists on every page.
+- Mobile nav has a proper focus trap, ESC handler, click-outside-to-close in `nav.js`.
+- OKLCH-only color system with documented contrast ratios in token comments. Rare and disciplined.
+- The catalog scroll cascade was capped at 8 entries this session — the bottom of Vency Atelier no longer waits 1.9s.
+- `font-display=swap` in the Google Fonts URL (FOIT avoided).
+- `<details>`/`<summary>` on FAQ uses native semantics — no JS, no fake-accordion drama.
+- Every `<img>` has descriptive `alt` text (not generic "image").
+- Hero h1 uses `<span>` masked-reveal without breaking screen-reader linearity.
+- Every page uses `lang="es"`.
+
+### Recommended actions
+
+In priority order:
+
+1. **[P0] `/impeccable harden src/scripts/catalogo.js`** — focus-trap, return-focus, and ESC handling on the `.fp` dialog. Same pattern as `nav.js:31-49`.
+2. **[P0] `/impeccable adapt src/styles/catalogo.css`** — bump `.fp__close`, `.fp__step-btn`, `.fp__add-btn`, `.cat-entry__see` to `min-height: 44px; min-width: 44px;`.
+3. **[P0] `/impeccable clarify src/scripts/catalogo.js`** — `aria-label="Ver detalles de ${name}"` on the `.cat-entry__see` buttons.
+4. **[P1] `/impeccable adapt src/pages/index.html`** — wrap content in `<main id="content" tabindex="-1">`, promote `.coll-block__name` h3 → h2.
+5. **[P1] `/impeccable optimize src/pages/*.html`** — add `srcset`/`sizes` to hero + coll-block images; add `defer` to all script tags; reconcile `?v=` cache-bust strings.
+6. **[P1] `/impeccable harden src/pages/sw.js`** — same-origin guard before caching.
+7. **[P1] `/impeccable adapt src/styles/styles.css`** — two-line `vh; svh` fallback on hero/colls; bump Hybrid desc color to `--ink-deep` for AA.
+8. **[P2] `/impeccable polish src/styles/{catalog,decants}.css`** — sweep leftover hue-180 to hue 150.
+9. **[P2] `/impeccable polish src/pages/faq.html`** — drop duplicate `id="faq-content"`.
+10. **[P3] `/impeccable polish src/styles/styles.css`** — one-line dark-mode-not-supported comment.
+
+> You can ask me to run these one at a time, all at once, or in any order you prefer.
+>
+> Re-run `/impeccable audit` after fixes to see your score improve.

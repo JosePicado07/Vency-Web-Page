@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu carrito · Vency Atelier</title>
+  <meta name="description" content="Revisa tu pedido, ajusta cantidades y confirmá por WhatsApp.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=50">
+  <link rel="stylesheet" href="../styles/decants.css?v=50">
+  <link rel="stylesheet" href="../styles/carrito.css?v=1">
+</head>
+<body class="page-carrito">
+
+  <a class="skip-nav" href="#main">Ir al contenido principal</a>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
+      <li><a href="comprar.html" class="nav__link">Comprar</a></li>
+      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li><a href="index.html#sesiones" class="nav__link">Sesiones</a></li>
+    </ul>
+  </nav>
+
+  <main id="main">
+
+    <header class="carrito-header">
+      <a class="carrito-header__back" href="catalogo.html">← Seguir comprando</a>
+      <span class="label sage-label">TU PEDIDO · VENCY ATELIER</span>
+      <h1 class="carrito-header__title">Carrito.</h1>
+    </header>
+
+    <!-- Empty state -->
+    <section class="carrito-empty" id="js-cart-empty" hidden>
+      <p class="carrito-empty__line">Tu carrito está vacío.</p>
+      <p class="carrito-empty__sub">Explorá la colección y agregá una fragancia.</p>
+      <a class="btn btn--primary" href="catalogo.html">Explorar la colección</a>
+    </section>
+
+    <!-- Cart body -->
+    <section class="carrito" id="js-cart" hidden>
+
+      <div class="carrito__items" id="js-cart-items" aria-label="Productos en tu carrito"></div>
+
+      <div class="carrito__totals">
+        <div class="carrito__total-row carrito__total-row--grand">
+          <span class="carrito__total-label">Total</span>
+          <span class="carrito__total-value" id="js-cart-total">₡0</span>
+        </div>
+        <p class="carrito__set-nudge" id="js-cart-nudge" hidden></p>
+      </div>
+
+      <div class="delivery-group" role="group" aria-label="Método de entrega">
+        <span class="label">ENTREGA</span>
+        <div class="delivery-opts">
+          <label class="delivery-opt">
+            <input class="delivery-opt__radio js-delivery-radio" type="radio" name="delivery" value="sinpe" checked>
+            <span class="delivery-opt__indicator"></span>
+            <span class="delivery-opt__text">
+              <span class="delivery-opt__name">SINPE Móvil</span>
+              <span class="delivery-opt__desc">Transferís y enviás comprobante · +506 7277-3156</span>
+            </span>
+          </label>
+          <label class="delivery-opt">
+            <input class="delivery-opt__radio js-delivery-radio" type="radio" name="delivery" value="local">
+            <span class="delivery-opt__indicator"></span>
+            <span class="delivery-opt__text">
+              <span class="delivery-opt__name">Recoger en local</span>
+              <span class="delivery-opt__desc">Heredia · coordinás horario por WhatsApp</span>
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="order-panel__pickup js-pickup-note" aria-hidden="true">
+        <p class="payment-method__note">Pasá a recoger al atelier en Heredia. El pago se realiza en sitio.</p>
+      </div>
+
+      <div class="order-panel__methods" id="js-methods">
+        <div class="payment-method">
+          <span class="label">SINPE MÓVIL</span>
+          <p class="payment-method__number">+506 7277-3156</p>
+          <ol class="sinpe-steps">
+            <li>Transferí <strong class="js-sinpe-amount">₡0</strong> al <strong>+506 7277-3156</strong></li>
+            <li>Tomá captura del comprobante</li>
+            <li>Volvé y tocá el botón de abajo</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="dc-order__ticket" id="js-cart-ticket" hidden>
+        <span class="dc-order__ticket-label">N.° de pedido</span>
+        <span class="dc-order__ticket-ref" id="js-cart-ref"></span>
+        <span class="dc-order__ticket-note">Usá este número al enviar tu comprobante.</span>
+      </div>
+
+      <div class="dc-order__actions">
+        <p class="order-panel__confirm" id="js-cart-confirm-text">
+          Transferí el monto exacto por SINPE y enviá el comprobante por WhatsApp con tu nombre.
+        </p>
+        <a
+          href="#"
+          class="btn btn--primary"
+          id="js-cart-wa"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Enviar pedido por WhatsApp
+        </a>
+        <button class="carrito__clear" id="js-cart-clear" type="button">Vaciar carrito</button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="coleccion.html" class="footer__link">Colección</a>
+        <a href="comprar.html" class="footer__link">Comprar</a>
+        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="index.html#sesiones" class="footer__link">Sesiones</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="../scripts/fragrance-data.js?v=50" defer></script>
+  <script src="../scripts/nav.js?v=50" defer></script>
+  <script src="../scripts/carrito.js?v=1" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+/* ============================================================
+   CART PAGE · Vency Atelier
+   Reuses delivery-* and dc-order__* from decants.css
+   ============================================================ */
+
+.page-carrito main {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: calc(var(--nav-h) + var(--space-md)) var(--space-md) var(--space-xl);
+}
+
+.carrito-header {
+  margin-bottom: var(--space-lg);
+}
+
+.carrito-header__back {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--warm-ochre);
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  min-height: 44px;
+  padding: 0.6rem 0;
+}
+
+.carrito-header__back:hover {
+  color: var(--warm-ochre-dark);
+}
+
+.carrito-header__title {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  color: var(--volcanic-ink);
+  margin: 0.75rem 0 0;
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+
+.carrito-empty {
+  text-align: center;
+  padding: var(--space-xl) var(--space-md);
+}
+
+.carrito-empty__line {
+  font-family: 'Bitter', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--volcanic-ink);
+  margin: 0 0 0.5rem;
+}
+
+.carrito-empty__sub {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  margin: 0 0 var(--space-lg);
+}
+
+/* ── Cart body ───────────────────────────────────────────── */
+
+.carrito {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.carrito__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.carrito__group {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-sm);
+}
+
+.carrito__group-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.85rem;
+}
+
+.carrito__item-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.carrito__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-top: 1px solid var(--border-subtle, oklch(90% 0.004 90));
+}
+
+.carrito__item:first-child { border-top: none; }
+
+.carrito__item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.carrito__item-name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--volcanic-ink);
+  margin: 0 0 0.15rem;
+  line-height: 1.2;
+}
+
+.carrito__item-price {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin: 0;
+}
+
+/* ── Qty controls ────────────────────────────────────────── */
+
+.carrito__qty {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1.5px solid var(--warm-ochre);
+  border-radius: 2px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.carrito__qty-btn {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  color: var(--warm-ochre);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s;
+}
+
+.carrito__qty-btn:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--warm-ochre) 12%, var(--botanical-parchment));
+}
+
+.carrito__qty-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.carrito__qty-val {
+  min-width: 28px;
+  text-align: center;
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--volcanic-ink);
+  padding: 0 0.35rem;
+}
+
+.carrito__qty-rm {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-left: 1.5px solid var(--warm-ochre);
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s, color 0.12s;
+}
+
+.carrito__qty-rm:hover {
+  background: color-mix(in oklch, var(--state-error, oklch(45% 0.18 25)) 12%, var(--botanical-parchment));
+  color: var(--state-error, oklch(45% 0.18 25));
+}
+
+/* ── Totals ──────────────────────────────────────────────── */
+
+.carrito__totals {
+  padding: var(--space-md) 0;
+  border-top: 2px solid var(--volcanic-ink);
+  border-bottom: 1px solid var(--border);
+}
+
+.carrito__total-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.carrito__total-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.carrito__total-row--grand .carrito__total-label {
+  color: var(--volcanic-ink);
+  font-size: 0.82rem;
+}
+
+.carrito__total-value {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--volcanic-ink);
+  letter-spacing: -0.01em;
+}
+
+.carrito__set-nudge {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.82rem;
+  color: var(--warm-ochre-dark);
+  margin: 0.6rem 0 0;
+  line-height: 1.4;
+}
+
+/* ── Clear-cart link ─────────────────────────────────────── */
+
+.carrito__clear {
+  background: none;
+  border: none;
+  color: var(--ink-muted);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  padding: 0.6rem 0;
+  min-height: 44px;
+  align-self: center;
+  margin-top: 0.5rem;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.carrito__clear:hover {
+  color: var(--state-error, oklch(45% 0.18 25));
+  text-decoration-color: var(--state-error, oklch(45% 0.18 25));
+}
+
+/* ── Methods (reused class hooks from decants.css) ─────── */
+
+.order-panel__methods.is-hidden { display: none; }
+.order-panel__pickup.is-visible { display: block; padding: var(--space-md) 0; }
+.order-panel__pickup            { display: none; }

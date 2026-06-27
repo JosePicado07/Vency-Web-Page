@@ -14,10 +14,39 @@
      Ver docs/ORDER-LOG-SHEET.md para el setup. */
   var SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycby459LuBOjIkLDAs_to2zlLQ5uIJCJMsUhelMf_Aq3-I95a67rRAiz6xwjpN49GZRIE/exec';
 
-  /* ---- State ---- */
+  /* ---- State (persisted to localStorage so navigation keeps the cart) ---- */
+  var CART_KEY = 'vency_cart_v1';
   var selection       = []; /* decants:  { id, name }, max 3 */
-  var bottles         = []; /* bottles:  { id, name, fmt, price } */
+  var bottles         = []; /* bottles:  { id, name, fmt, price, qty } */
   var currentOrderRef = null;
+
+  (function loadCart() {
+    try {
+      var raw = localStorage.getItem(CART_KEY);
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      if (Array.isArray(data.selection)) selection = data.selection;
+      if (Array.isArray(data.bottles))   bottles   = data.bottles;
+      if (typeof data.ref === 'string')  currentOrderRef = data.ref;
+    } catch (e) { /* corrupt — ignore */ }
+  })();
+
+  function persistCart() {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify({
+        selection: selection,
+        bottles:   bottles,
+        ref:       currentOrderRef
+      }));
+    } catch (e) { /* quota or disabled — silent */ }
+  }
+
+  function clearCart() {
+    selection.length = 0;
+    bottles.length   = 0;
+    currentOrderRef  = null;
+    persistCart();
+  }
 
   var BOTTLE_PRICE  = { '30ml': 12000, '100ml': 20000 };
   var BOTTLE_LABEL  = { '30ml': '30 ml', '100ml': '100 ml' };
@@ -154,6 +183,7 @@
 
   /* ---- UI sync ---- */
   function updateUI() {
+    persistCart();
     updateBlocks();
     updateTray();
     if (panel.classList.contains('is-open')) syncPanel();
@@ -273,16 +303,12 @@
       }
     }
 
-    /* order button */
+    /* order button — always points at the cart page now */
     if (orderBtn) {
       var can = canCheckout();
       orderBtn.disabled = !can;
       orderBtn.setAttribute('aria-disabled', String(!can));
-      if (panel.classList.contains('is-open')) {
-        orderBtn.textContent = 'Cerrar';
-      } else {
-        orderBtn.textContent = can ? 'Ordenar · ' + colones(cartTotal()) : 'Ordenar';
-      }
+      orderBtn.textContent = can ? 'Ver carrito · ' + colones(cartTotal()) : 'Carrito vacío';
     }
 
     if (!canCheckout() && panel.classList.contains('is-open')) closePanel();
@@ -456,12 +482,11 @@
     if (clearBtn) { selection = []; updateUI(); }
   });
 
-  /* ---- Wire up order button ---- */
+  /* ---- Wire up order button: navigate to dedicated cart page ---- */
   if (orderBtn) {
     orderBtn.addEventListener('click', function () {
       if (orderBtn.disabled) return;
-      if (panel.classList.contains('is-open')) closePanel();
-      else openPanel();
+      window.location.href = 'carrito.html';
     });
   }
 
@@ -507,7 +532,10 @@
     getBottleQty:  getBottleQty,
     setDecantQty:  setDecantQty,
     getDecantQty:  countFor,
-    showToast:     showToast
+    showToast:     showToast,
+    // Read-only snapshots for /carrito.html (it doesn't load decants.js):
+    getState:      function () { return { selection: selection.slice(), bottles: bottles.slice(), ref: currentOrderRef }; },
+    clear:         clearCart
   };
 
 })();
