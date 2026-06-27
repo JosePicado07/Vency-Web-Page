@@ -125,7 +125,7 @@
               : '') +
             '<div class="cat-entry__foot">' +
               '<a class="cat-entry__historia" href="coleccion.html#' + frag.id + '">historia →</a>' +
-              '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+              '<button class="cat-entry__see" type="button" aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">Ver →</button>' +
             '</div>' +
           '</div>' +
           railHtmlVency +
@@ -255,7 +255,7 @@
               inspoHtml +
               '<div class="cat-entry__foot">' +
                 (historiaHref ? '<a class="cat-entry__historia" href="' + historiaHref + '">historia →</a>' : '') +
-                '<button class="cat-entry__see" type="button" aria-haspopup="dialog">Ver →</button>' +
+                '<button class="cat-entry__see" type="button" aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">Ver →</button>' +
               '</div>' +
             '</div>' +
             railHtml;
@@ -417,6 +417,25 @@
 
     var activeId = null;
     var preOpenSnap = null;
+    var triggerEl  = null; // trigger that opened the panel — focus returns here on close
+
+    // Focus trap: while the panel is open, Tab cycles within the sheet only.
+    function trapTab(e) {
+      if (e.key !== 'Tab' || fpEl.hidden) return;
+      var focusables = fpSheet.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables.length) return;
+      var first = focusables[0];
+      var last  = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
 
     function syncCtrl(fmt, qty) {
       var ctrl = document.getElementById('js-fp-ctrl-' + fmt);
@@ -487,24 +506,33 @@
       fpEl.getBoundingClientRect();
       fpEl.classList.add('is-open');
       document.body.classList.add('fp-open');
+      document.addEventListener('keydown', trapTab);
       fpSheet.focus();
     }
 
     function closePanel() {
       fpEl.classList.remove('is-open');
       document.body.classList.remove('fp-open');
+      document.removeEventListener('keydown', trapTab);
       fpSheet.addEventListener('transitionend', function handler() {
         fpEl.hidden = true;
         fpSheet.removeEventListener('transitionend', handler);
       }, { once: true });
       activeId = null;
+      if (triggerEl && typeof triggerEl.focus === 'function') {
+        triggerEl.focus();
+      }
+      triggerEl = null;
     }
 
     document.addEventListener('click', function (e) {
       var btn = e.target.closest('.cat-entry__see');
       if (!btn) return;
       var card = btn.closest('[data-fragrance-id]');
-      if (card) openPanel(card);
+      if (card) {
+        triggerEl = btn;
+        openPanel(card);
+      }
     });
 
     fpEl.querySelectorAll('[data-fmt][data-delta]').forEach(function (btn) {

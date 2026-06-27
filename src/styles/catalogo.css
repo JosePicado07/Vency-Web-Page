@@ -1112,8 +1112,8 @@ body.fp-open { overflow: hidden; }
 }
 
 .fp__close {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   background: oklch(88% 0.008 80);
@@ -1267,7 +1267,8 @@ body.fp-open { overflow: hidden; }
   border: 1.5px solid var(--warm-ochre);
   border-radius: 2px;
   background: none;
-  padding: 0.28rem 0.65rem;
+  padding: 0.28rem 0.85rem;
+  min-height: 44px;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
@@ -1286,8 +1287,8 @@ body.fp-open { overflow: hidden; }
   overflow: hidden;
 }
 .fp__step-btn {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border: none;
   background: none;
   cursor: pointer;
@@ -1341,7 +1342,8 @@ body.fp-open { overflow: hidden; }
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.35rem 0.8rem;
+  padding: 0.35rem 1rem;
+  min-height: 44px;
   border: 1.5px solid var(--warm-ochre);
   border-radius: 2px;
   background: none;
