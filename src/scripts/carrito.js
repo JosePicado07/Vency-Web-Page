@@ -94,7 +94,9 @@
   }
 
   function clearAll() {
-    state = { selection: [], bottles: [], ref: null };
+    state.selection.length = 0;  // mutate in place — safer than reassignment
+    state.bottles.length   = 0;
+    state.ref = null;
     save();
   }
 
