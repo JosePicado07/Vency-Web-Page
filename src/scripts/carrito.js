@@ -23,7 +23,10 @@
   };
 
   // ─── State ─────────────────────────────────────────────────────────────
-  var state = { selection: [], bottles: [], ref: null };
+  // pending = { ref, sentAt, waHref } when the user has tapped WhatsApp.
+  // While pending, the cart shows a confirmation card instead of the order form.
+  var state = { selection: [], bottles: [], ref: null, pending: null };
+  var PENDING_TTL_MS = 24 * 60 * 60 * 1000; // 1 day
 
   function load() {
     try {
@@ -33,11 +36,22 @@
       if (Array.isArray(data.selection)) state.selection = data.selection;
       if (Array.isArray(data.bottles))   state.bottles   = data.bottles;
       if (typeof data.ref === 'string')  state.ref       = data.ref;
+      if (data.pending && typeof data.pending === 'object') {
+        // Expire pending if older than TTL
+        if (Date.now() - (data.pending.sentAt || 0) < PENDING_TTL_MS) {
+          state.pending = data.pending;
+        }
+      }
     } catch (e) { /* corrupt — start fresh */ }
   }
 
   function save() {
-    try { localStorage.setItem(CART_KEY, JSON.stringify(state)); } catch (e) {}
+    try { localStorage.setItem(CART_KEY, JSON.stringify({
+      selection: state.selection,
+      bottles:   state.bottles,
+      ref:       state.ref,
+      pending:   state.pending
+    })); } catch (e) {}
   }
 
   function generateRef() {
@@ -97,6 +111,7 @@
     state.selection.length = 0;  // mutate in place — safer than reassignment
     state.bottles.length   = 0;
     state.ref = null;
+    state.pending = null;
     save();
   }
 
@@ -114,6 +129,11 @@
   var confirmTxt = document.getElementById('js-cart-confirm-text');
   var waBtn      = document.getElementById('js-cart-wa');
   var clearBtn   = document.getElementById('js-cart-clear');
+  // Post-order confirmation card
+  var sentEl     = document.getElementById('js-cart-sent');
+  var sentRefEl  = document.getElementById('js-sent-ref');
+  var sentResend = document.getElementById('js-sent-resend');
+  var sentNewBtn = document.getElementById('js-sent-new');
 
   // ─── Render ────────────────────────────────────────────────────────────
   function renderItems() {
@@ -179,6 +199,19 @@
   }
 
   function render() {
+    // Post-order takes priority: cart still in storage so the user can
+    // re-send the same message if needed, but the form is replaced with
+    // a confirmation card.
+    if (state.pending && state.pending.ref) {
+      if (emptyEl) emptyEl.hidden = true;
+      if (cartEl)  cartEl.hidden  = true;
+      if (sentEl)  sentEl.hidden  = false;
+      if (sentRefEl)  sentRefEl.textContent = state.pending.ref;
+      if (sentResend && state.pending.waHref) sentResend.href = state.pending.waHref;
+      return;
+    }
+    if (sentEl) sentEl.hidden = true;
+
     var empty = isEmpty();
     emptyEl.hidden = !empty;
     cartEl.hidden  = empty;
@@ -334,10 +367,10 @@
     });
   }
 
-  // Log order to Sheets when user opens WhatsApp (fire-and-forget)
+  // Log order to Sheets + mark pending when the user opens WhatsApp.
   if (waBtn) {
     waBtn.addEventListener('click', function () {
-      if (!SHEET_URL || isEmpty()) return;
+      if (isEmpty()) return;
       var delivery = (document.querySelector('.js-delivery-radio:checked') || {}).value || 'sinpe';
       var items = [];
       if (decantCount() === 3) items.push('Set de 3 Decants (10 ml): ' + grouped_wa());
@@ -348,20 +381,50 @@
         var qty = b.qty || 1;
         items.push(b.name + ' · Frasco ' + (BOTTLE_LABEL[b.fmt] || b.fmt) + (qty > 1 ? ' ×' + qty : ''));
       });
-      fetch(SHEET_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          ref:     state.ref || '',
-          items:   items.join(' | '),
-          total:   total(),
-          pago:    delivery === 'local' ? 'En sitio' : 'SINPE',
-          entrega: delivery === 'local' ? 'Recoger'  : 'SINPE',
-          canal:   'Web',
-          cliente: ''
-        })
-      }).catch(function () {});
+
+      if (SHEET_URL) {
+        fetch(SHEET_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            ref:     state.ref || '',
+            items:   items.join(' | '),
+            total:   total(),
+            pago:    delivery === 'local' ? 'En sitio' : 'SINPE',
+            entrega: delivery === 'local' ? 'Recoger'  : 'SINPE',
+            canal:   'Web',
+            cliente: ''
+          })
+        }).catch(function () {});
+      }
+
+      // Mark the cart as pending so the next render shows the
+      // confirmation card instead of the order form. We do NOT clear the
+      // cart items — the user might come back to re-send the same order.
+      state.pending = {
+        ref:    state.ref,
+        sentAt: Date.now(),
+        waHref: waBtn.getAttribute('href') || ''
+      };
+      save();
     });
   }
+
+  // Confirmation card actions
+  if (sentNewBtn) {
+    sentNewBtn.addEventListener('click', function () {
+      clearAll();   // resets cart + pending; render() will show the empty state
+      render();
+    });
+  }
+
+  // When the user returns from WhatsApp (tab visible again), re-render so
+  // the confirmation card surfaces without needing a manual refresh.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible') {
+      load();
+      render();
+    }
+  });
 
   // ─── Init ──────────────────────────────────────────────────────────────
   load();

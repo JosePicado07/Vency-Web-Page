@@ -264,6 +264,62 @@
   text-decoration-color: var(--state-error, oklch(45% 0.18 25));
 }
 
+/* ── Post-order confirmation card ────────────────────────
+   Surfaces after the user taps "Enviar pedido por WhatsApp".
+   Replaces the form (not stacked above it) — one strong thing per screen. */
+
+.carrito-sent {
+  padding: var(--space-lg) 0;
+  border-top: 2px solid var(--volcanic-ink);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: var(--space-lg);
+}
+
+.carrito-sent__ack {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: clamp(1.8rem, 4.5vw, 2.6rem);
+  line-height: 1;
+  color: var(--volcanic-ink);
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.carrito-sent__ref {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin: 0 0 1.25rem;
+}
+
+.carrito-sent__ref .label { color: var(--ink-muted); }
+
+.carrito-sent__ref strong {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  color: var(--warm-ochre);
+}
+
+.carrito-sent__sub {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+  line-height: 1.55;
+  margin: 0 0 var(--space-md);
+  max-width: 50ch;
+}
+
+.carrito-sent__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.carrito-sent__actions .btn { align-self: stretch; text-align: center; }
+
 /* ── Methods (reused class hooks from decants.css) ─────── */
 
 .order-panel__methods.is-hidden { display: none; }

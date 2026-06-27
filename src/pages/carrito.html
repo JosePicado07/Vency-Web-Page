@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/styles.css?v=51">
   <link rel="stylesheet" href="../styles/decants.css?v=51">
-  <link rel="stylesheet" href="../styles/carrito.css?v=1">
+  <link rel="stylesheet" href="../styles/carrito.css?v=2">
 </head>
 <body class="page-carrito">
 
@@ -43,6 +43,22 @@
       <p class="carrito-empty__line">Tu carrito está vacío.</p>
       <p class="carrito-empty__sub">Explorá la colección y agregá una fragancia.</p>
       <a class="btn btn--primary" href="catalogo.html">Explorar la colección</a>
+    </section>
+
+    <!-- Post-order confirmation (rendered when the user has tapped WhatsApp) -->
+    <section class="carrito-sent" id="js-cart-sent" hidden>
+      <p class="carrito-sent__ack">Pedido enviado.</p>
+      <p class="carrito-sent__ref">
+        <span class="label">N.° DE PEDIDO</span>
+        <strong id="js-sent-ref"></strong>
+      </p>
+      <p class="carrito-sent__sub">
+        Tony recibió tu mensaje en WhatsApp. Si pagaste por SINPE, recordá enviar el comprobante a ese mismo chat.
+      </p>
+      <div class="carrito-sent__actions">
+        <a class="btn btn--primary" id="js-sent-resend" href="#" target="_blank" rel="noopener noreferrer">Re-enviar por WhatsApp</a>
+        <button class="carrito__clear" id="js-sent-new" type="button">Empezar un pedido nuevo</button>
+      </div>
     </section>
 
     <!-- Cart body -->
@@ -139,7 +155,7 @@
 
   <script src="../scripts/fragrance-data.js?v=51" defer></script>
   <script src="../scripts/nav.js?v=51" defer></script>
-  <script src="../scripts/carrito.js?v=3" defer></script>
+  <script src="../scripts/carrito.js?v=4" defer></script>
 
 </body>
 </html>

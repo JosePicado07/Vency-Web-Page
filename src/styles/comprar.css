@@ -161,6 +161,36 @@
   flex: 1;
 }
 
+.fmt-card__footnote {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin: -0.5rem 0 0;
+  padding: 0 0.25rem;
+}
+.fmt-card__faq {
+  color: var(--warm-ochre);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, var(--warm-ochre) 30%, transparent);
+  text-underline-offset: 3px;
+  font-weight: 500;
+}
+.fmt-card__faq:hover {
+  color: var(--warm-ochre-dark);
+  text-decoration-color: var(--warm-ochre-dark);
+}
+
+/* Footnote sits under the Decant card only — desktop grid: decant spans both columns */
+@media (min-width: 700px) {
+  .fmt-card__footnote { grid-area: footnote; }
+  .comprar-formats {
+    grid-template-areas:
+      "decant decant"
+      "footnote footnote"
+      "thirty hundred";
+  }
+}
+
 .fmt-card__cta {
   display: inline-flex;
   align-items: center;
