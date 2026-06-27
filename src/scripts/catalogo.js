@@ -583,22 +583,36 @@
         var vc  = window.vencyCart;
         var id  = activeId;
         if (!vc || !id) { closePanel(); return; }
-        var hasItem = vc.getDecantQty(id) > 0 ||
+        var card = document.querySelector('[data-fragrance-id="' + id + '"]');
+        var name = card ? card.dataset.fragranceName : '';
+        var hadItem = vc.getDecantQty(id) > 0 ||
           ['30ml', '100ml'].some(function (f) { return vc.getBottleQty(id, f) > 0; });
-        // No format picked → default to a decant. Skips the size-picker step
-        // for users who just want to order; the cart page still lets them
-        // bump to a set of 3 or swap formats.
-        if (!hasItem) {
-          var card = document.querySelector('[data-fragrance-id="' + id + '"]');
-          var name = card ? card.dataset.fragranceName : '';
-          vc.setDecantQty(id, name, 1);
-          hasItem = true;
-        }
+        // No format picked → default to a decant so the CTA always adds
+        // something. User stays on the catalog; the tray surfaces and the
+        // nav cart link updates. Checkout is its own deliberate step
+        // (tray or nav → /carrito.html → "Enviar pedido por WhatsApp").
+        if (!hadItem) vc.setDecantQty(id, name, 1);
         closePanel();
-        // Go straight to the cart — what "Ordenar" should always do.
-        window.location.href = 'carrito.html';
-        return;
+        showAddedToast(name);
       });
+    }
+
+    function showAddedToast(name) {
+      // Reuse the existing .vency-toast styling from decants.css. Includes
+      // a "Ver carrito" affordance so users who want to checkout now can.
+      var existing = document.querySelector('.vency-toast--added');
+      if (existing) existing.remove();
+      var t = document.createElement('div');
+      t.className = 'vency-toast vency-toast--undo vency-toast--added';
+      t.innerHTML =
+        '<span>' + (name ? name + ' agregado.' : 'Agregado al carrito.') + '</span>' +
+        '<a class="vency-toast__undo" href="carrito.html">Ver carrito →</a>';
+      document.body.appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
+      setTimeout(function () {
+        t.classList.remove('vency-toast--in');
+        setTimeout(function () { if (t.parentNode) t.remove(); }, 300);
+      }, 3500);
     }
 
     fpClose.addEventListener('click', closePanel);

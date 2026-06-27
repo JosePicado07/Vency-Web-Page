@@ -501,3 +501,70 @@ Fourth pass. Engineering, design, a11y/perf/responsive sections live above. This
 | 15 | "Tony responde en una hora" copy | 🟢 low | XS |
 
 **One-sentence summary:** the buy flow now works mechanically end-to-end; the next round of wins is **closing the post-order loop** (findings 4 + 16) and **explaining what a decant is before the user has to guess** (finding 1).
+
+---
+
+## Audit refresh (consolidated)
+
+Fifth pass · status-check. Spot-checks the fixes from the prior four passes and surfaces what the recent work introduced or left undone.
+
+### Verdict per dimension
+
+| Dimension | Was | Now | Note |
+|---|---|---|---|
+| Engineering (ponytail) | 17 findings, T1–T4 | T1–T3 cleared; **~200 lines of zombie code** remain (inline order panel + openPanel/closePanel/buildItems/syncPanel in `decants.js`, now unreachable after the tray-to-cart navigation switch). | Worth one sweep commit. |
+| Design (impeccable) | All "slop" patterns flagged | All slop shipped: asymmetric grids, no glass, no em-dash, hue 150, hero distilled. | Open: drench-one-section per page, coleccion/catalogo IA. |
+| A11y / Perf / Responsive | 14.5/20, 3 P0 + 8 P1 | P0s + most P1s done. **Hero LCP still ~1.5 MB PNG** — `build-images.js` exists but has not been run; no WebP files in tree yet. | Biggest perf win still pending. |
+| UX | 16 findings, #1 + #4 highest impact | **#1 (decant explainer)** and **#4 (post-order state)** shipped this session. **Pending state has cross-page UX disconnects** — see findings below. | Closing the post-order loop is partial. |
+
+### Verified-shipped checklist
+
+- [x] AGOTADO double-render — single rail badge in both Vency and external paths
+- [x] Em-dashes → `·` (no `—` in any rendered HTML / CSS content)
+- [x] Hero distilled to headline + body + CTA (`index.html`)
+- [x] `<main id="main">` + skip-nav target + sr-only h2 for heading order
+- [x] `fetchpriority="high"` + `loading="eager"` on hero image
+- [x] `defer` on every public-page `<script src=…>`
+- [x] `decoding="async"` on every `<img>`
+- [x] Dead `cat-sentinel`, `_catScrollLock`, `admin.min.js`: gone
+- [x] Cart persistence (`vency_cart_v1`) + nav cart-link injected by `nav.js`
+- [x] Detail panel focus trap + restore (catalogo.js)
+- [x] 44×44 touch targets on `.fp__close`, `.fp__step-btn`, `.fp__add-btn`, `.cat-entry__see`
+- [x] Tray label "Ver carrito · ₡X" → navigates to `/carrito.html`
+- [x] `Vaciar carrito` in-page undo toast (no native `confirm()`)
+- [x] Pending state with 24h TTL + visibilitychange re-render
+- [x] "Empezar un pedido nuevo" wired to `clearAll()`
+- [x] Decant explainer copy on `comprar.html` + FAQ anchor `que-es-un-decant`
+- [x] EXEC_URL updated to new deployment across admin/decants/carrito
+
+### New findings (ranked by impact)
+
+1. **🔴 Nav cart badge ignores pending state** (`nav.js:80-91`). After the user taps WhatsApp, `pending` is set but the cart items remain. Nav badge still reads selection+bottles count → reads "Carrito 3" while `/carrito.html` reads "Pedido enviado." Same disconnect on the floating tray (`decants.js:307-312`): it still says "Ver carrito · ₡X". The post-order loop is leaky. Fix: both `readCartCount` and the tray label should check `state.pending` and, when present, either hide or show "Pedido VA#### enviado".
+
+2. **🔴 Two competing display-scale moments on `/carrito.html` when pending.** `<h1>Carrito.</h1>` in `.carrito-header` always renders, plus `<p class="carrito-sent__ack">Pedido enviado.</p>` at near-h1 scale below. DESIGN.md "one strong thing per screen." Fix: when `state.pending` is active, hide `.carrito-header__title` (or swap to sr-only) and let "Pedido enviado." carry the page.
+
+3. **🟡 "Empezar un pedido nuevo" button uses `.carrito__clear` styling** (`carrito.css:245-265`) — small underlined ink-muted text with red hover. That style means "danger / undo" elsewhere. After a "Pedido enviado." headline, this reads as "are you sure?" rather than the natural next move. Fix: introduce `.carrito-sent__new` styled as a quiet outline button (border, ochre text, ≥44px height) alongside Re-enviar.
+
+4. **🟡 FAQ link `.fmt-card__faq` on comprar.html has no padding / min-height** (`comprar.css:171-181`). Plain `<a>` at `font-size: 0.78rem` inside a `<p>`. Tap target well under 44px. WCAG 2.5.5 — same rule we already enforced on cart buttons. Fix: `display: inline-block; padding: 0.6rem 0; min-height: 44px;` on the link (not the wrapping `<p>`).
+
+5. **🟡 `coleccion.html` has no add-to-cart at all.** Loads `coleccion.js` but not `decants.js`, and renders no rail. A user browsing "Colección" from the top nav can't add anything — must navigate to `catalogo.html` first. Already flagged as IA overlap in design audit; this is the concrete UX cost. Fix path: either load `decants.js` on coleccion.html and add a rail, or rewrite the nav so "Colección" goes to `catalogo.html` and `coleccion.html` becomes a long-form editorial page (not a second catalog).
+
+6. **🟡 Cart items remain editable in storage during pending state.** UI hides the form, so direct user mutation can't happen. But `addDecant`-via-URL-param (`decants.js` initFromUrl) could still mutate `vency_cart_v1` on page load while pending. Defensive fix: skip URL-param add when `pending` is set, OR auto-clear pending when any new add happens.
+
+7. **🟢 Cache-stamp drift returned.** 32 references at `?v=51`, but `catalogo.js?v=52`, `carrito.js?v=4`, `carrito.css?v=2` are off-stream. Same pattern the audit already warned about. Bump everything to a single `?v=52` (or higher) in the next commit so future-you doesn't ship inconsistent JS combos again.
+
+8. **🟢 `build-images.js` shipped but not run.** No WebP files exist on disk; `<img>` tags still point at original PNGs averaging 1.5 MB. The single biggest perf win on the audit is queued behind one `npm i sharp && node build-images.js`.
+
+9. **🟢 Zombie code from the tray-redirect refactor.** `decants.js` still defines `openPanel`, `closePanel`, `buildItems`, `syncPanel`, `getSelectedDelivery`, the waBtn handler, and the delivery-toggle wiring (~150 lines). The DOM panel they target (`#dc-order-panel` in `catalogo.html`, ~70 lines) is also dead. None of it runs anymore — the tray click goes straight to `/carrito.html`. Safe deletion, ~200 line drop.
+
+### Top 5 next moves (impact ÷ effort)
+
+| # | Move | Closes | Effort |
+|---|---|---|---|
+| 1 | **Pending-aware nav badge + tray label** | Finding #1 above; finishes the UX #4 loop | XS |
+| 2 | **Hide `Carrito.` h1 + restyle "Empezar nuevo" button when pending** | Findings #2 + #3 | XS |
+| 3 | **`build-images.js` run + wire `<picture>` srcset** | Audit's largest remaining perf gap | M (one-time) |
+| 4 | **Sweep zombie order-panel code** from `decants.js` + `catalogo.html` | Finding #9; ~200 lines removed | S |
+| 5 | **Cache-stamp resync + `.fmt-card__faq` tap target** | Findings #4 + #7; both XS | XS |
+
+**One-sentence summary:** UX #4 shipped but only halfway — the post-order signal is correct on `/carrito.html` and invisible everywhere else; the next 10 minutes of work is teaching the nav badge and the floating tray about `pending`.
