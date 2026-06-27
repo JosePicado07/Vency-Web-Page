@@ -288,11 +288,47 @@
     r.addEventListener('change', render);
   });
 
+  // In-page undo toast — replaces the native confirm() that exposed the
+  // tunnel URL and clashed with the brand visually.
+  function showUndoToast(snapshot) {
+    var existing = document.querySelector('.vency-toast--undo');
+    if (existing) existing.remove();
+
+    var t = document.createElement('div');
+    t.className = 'vency-toast vency-toast--undo';
+    t.innerHTML =
+      '<span>Carrito vaciado.</span>' +
+      '<button class="vency-toast__undo" type="button">Deshacer</button>';
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
+
+    var timer = setTimeout(dismiss, 5000);
+    function dismiss() {
+      clearTimeout(timer);
+      t.classList.remove('vency-toast--in');
+      setTimeout(function () { if (t.parentNode) t.remove(); }, 300);
+    }
+    t.querySelector('.vency-toast__undo').addEventListener('click', function () {
+      state.selection = snapshot.selection.slice();
+      state.bottles   = snapshot.bottles.slice();
+      state.ref       = snapshot.ref;
+      save();
+      render();
+      dismiss();
+    });
+  }
+
   if (clearBtn) {
     clearBtn.addEventListener('click', function () {
-      if (!confirm('¿Vaciar el carrito?')) return;
+      if (isEmpty()) return;
+      var snap = {
+        selection: state.selection.slice(),
+        bottles:   state.bottles.slice(),
+        ref:       state.ref
+      };
       clearAll();
       render();
+      showUndoToast(snap);
     });
   }
 
