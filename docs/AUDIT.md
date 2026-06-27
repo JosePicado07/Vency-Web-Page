@@ -433,3 +433,71 @@ In priority order:
 > You can ask me to run these one at a time, all at once, or in any order you prefer.
 >
 > Re-run `/impeccable audit` after fixes to see your score improve.
+
+---
+
+## UX (user experience)
+
+Fourth pass. Engineering, design, a11y/perf/responsive sections live above. This pass walks the actual flows — landing → first decant → WhatsApp sent — and flags where a user gets confused, slowed, or surprised. Severity: `blocker` (cannot complete), `friction` (slows / creates doubt), `polish` (small win), `delight` (chance to exceed expectations).
+
+### Tier 1 — first-time-buyer friction (revenue impact)
+
+1. **Decant concept is never explained.** `friction` · First time a visitor sees "decant" is on `comprar.html` or a fragrance row. PRODUCT.md treats it as a known noun. New customers in Costa Rica don't know what a 10 ml decant is. Fix: one short FAQ-style sentence on `comprar.html` directly under the Decant card — "Mini-frasco de 10 ml para probar antes de comprar el frasco completo" — and link to `faq.html#que-es-un-decant`. Add a corresponding FAQ entry if missing.
+
+2. **Set-of-3 savings hidden until cart.** `friction` · The Decant card on `comprar.html` says "Un set de tres por ₡12.000" but doesn't show the implicit ₡3.000 discount vs ₡5.000 × 3. The carrot exists but isn't presented at the moment of decision. Fix: surface "Ahorrás ₡3.000 si llevás 3" as a sage-mineral footnote on the Decant card. Same line could appear in the detail panel when decant qty is 1 or 2.
+
+3. **Two parallel "collection" pages (`coleccion.html` vs `catalogo.html`) confuse navigation.** `friction` · Nav has "Colección" → `coleccion.html` and "Comprar" → `comprar.html` → `catalogo.html`. Same fragrances, different layouts, different filter states. Users hitting "Colección" from nav see a different experience than the buy flow. Design audit flagged this strategically; UX impact: cart-add from `coleccion.html` does work, but the back-link goes to `catalogo.html` so you lose your place. Fix (cheapest): make "Seguir comprando" on `/carrito.html` use `document.referrer` so it returns to wherever you came from.
+
+4. **No order-sent confirmation, no cart reset.** `blocker-adjacent` · After tapping "Enviar pedido por WhatsApp", the user lands in WhatsApp. They come back to the site → cart is still full, same VA####, no signal that anything happened. If they re-tap WhatsApp they send a duplicate; if they re-tap "Agregar a la orden" on another fragrance, it stacks on the prior order. Fix: when the WhatsApp link is tapped, mark the cart as `pending`. On next page-load (or `visibilitychange` return) show a `/carrito.html?sent=VA####` state — single line "Pedido VA#### enviado. Esperando tu comprobante." plus an "Empezar uno nuevo" button that clears the cart.
+
+### Tier 2 — flow friction
+
+5. **The order ref VA#### regenerates only when cart is non-empty, then sticks indefinitely.** `friction` · Returning after a week with the same VA#### means Tony could see two different orders with the same ref. Fix: include a `createdAt` timestamp in the localStorage cart; if older than 24 h, mint a new ref on next render.
+
+6. **SINPE 3-step instructions appear before the user has committed to SINPE.** `friction` · The radio defaults to SINPE; the steps render below it. Users who want "Recoger en local" see the SINPE block first and might assume SINPE is required. The toggle hides the methods block correctly (already wired), but the cognitive load is real. Fix: lead with a one-line question above the toggle — "¿Cómo querés pagar?" — so the user knows they are choosing.
+
+7. **"Agregar a la orden" semantics still ambiguous.** `friction` · The CTA at the bottom of the detail panel reads "Agregar a la orden". Recent feedback ("clicking it adds nothing") showed users do not expect it to default to a decant. Now that it adds + navigates to `/carrito.html`, the wording is slightly wrong: it is really "Ordenar este". Fix: rename to **"Ordenar este decant"** (or **"Agregar al pedido"** if the format depends on what the user picked) so the action matches the verb.
+
+8. **Tray says "Ver carrito · ₡X" but disappears when scrolling fast on Vency section.** `polish` · Tray uses `transform: translateY` to slide; some mobile browsers drop the fixed-position element behind the scroll. Likely not reproducible on modern Chrome / Safari but worth a smoke test. Fix: if reports come in, switch to `position: sticky` inside a wrapper or add `will-change: transform`.
+
+9. **"Vaciar carrito" link is small and underline-only.** `polish` · Below the WhatsApp CTA, easy to miss until you want it. Acceptable. But the *opposite* is more dangerous: it sits right next to a high-stakes action, and on mobile a thumb miss could clear the cart. The undo toast covers this, but a tiny confirm pause (double-tap or 2 s slide-in confirm button) would be safer than relying on undo.
+
+### Tier 3 — sold-out items
+
+10. **AGOTADO with no fallback affordance.** `friction → delight` · A user finds a fragrance, taps Ver, sees the AGOTADO badge in the rail and no way to act. Fix: add a "Avisarme cuando vuelva" link on sold-out rows that opens a pre-filled WhatsApp message — "Hola! Me interesa Citrus Enigma cuando vuelva al inventario." Zero backend needed. Brand voice stays artisan ("avisarme" not "notify me").
+
+11. **No "restock soon" hint when admin marks low stock.** `polish` · Admin already tracks oil_ml per format. If `0 < oil_ml < threshold` (say 30 ml), show a quiet "Últimas unidades" on the rail. Encourages decisive purchase without manufacturing urgency.
+
+### Tier 4 — edge cases users actually hit
+
+12. **localStorage disabled / Safari private mode.** `friction` · Cart silently does not persist. User adds an item → navigates → cart is empty. They blame the site. Fix: feature-detect localStorage on init; if write throws, show a one-line bar at the top of `/carrito.html` and the floating tray: "Modo privado: tu carrito no se guardará si recargás." No crash, just honest.
+
+13. **Network slow after WhatsApp tap.** `polish` · `target="_blank"` opens WhatsApp in a new tab; on slow mobile, that tab is blank for 1–2 seconds. The Vency tab is unchanged — the user might tap again. Fix: on click, disable the button for 2 s and swap label to "Abriendo WhatsApp…" before letting the new tab take over.
+
+14. **Apps Script log POST fails silently.** `friction (for Tony, not the customer)` · If `SHEET_URL` returns an error, the user still completes WhatsApp checkout but Tony's sheet does not get the row. Tony has to manually reconcile. Already noted in engineering audit; UX impact: trust gap if Tony later asks "did your order come through?" Fix: keep a `vency_unsynced_orders` localStorage queue; retry on next visit; surface a tiny "Re-enviando registro" status only if Tony is the one viewing (Tony-mode flag).
+
+### Tier 5 — trust / brand voice
+
+15. **WhatsApp-as-checkout is the strongest brand alignment on the site.** `delight` · Most artisan / luxury sites apologize for not having Stripe. Vency confidently routes orders through a personal channel. Lean into it: the cart's confirm copy could say "Tony te responde en menos de una hora" (if true) — turn a perceived limitation into an artisan promise.
+
+16. **No "thank you" moment after order placed.** `delight` · WhatsApp closes the loop *outside* the site. The opportunity: when user returns from WhatsApp, show a one-time card on `/carrito.html` — "Gracias por tu pedido VA####. Tony ya lo recibió." Pull from the same `pending` flag suggested in finding #4. Cheap, but the only emotional moment in the whole flow.
+
+### Recommended fix order (impact ÷ effort)
+
+| # | Fix | Impact | Effort |
+|---|---|---|---|
+| 4 + 16 | Order-sent state + thank-you on return | 🔴 high | M |
+| 1 | Decant explainer on `comprar.html` | 🔴 high | XS |
+| 2 | Set savings line at decision moment | 🟡 med | XS |
+| 12 | localStorage disabled warning | 🟡 med | XS |
+| 10 | "Avisarme" WhatsApp link on AGOTADO | 🟡 med | S |
+| 3 | Smart "Seguir comprando" via referrer | 🟡 med | XS |
+| 5 | Ref expiry after 24 h | 🟢 low | XS |
+| 13 | WhatsApp tap throttle | 🟢 low | XS |
+| 7 | Rename "Agregar a la orden" CTA | 🟢 low | XS |
+| 6 | Pay-method preamble copy | 🟢 low | XS |
+| 14 | Unsynced-order retry queue | (Tony only) | M |
+| 11 | "Últimas unidades" hint | 🟢 low | S |
+| 15 | "Tony responde en una hora" copy | 🟢 low | XS |
+
+**One-sentence summary:** the buy flow now works mechanically end-to-end; the next round of wins is **closing the post-order loop** (findings 4 + 16) and **explaining what a decant is before the user has to guess** (finding 1).
