@@ -8,11 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/styles.css?v=23">
+  <link rel="stylesheet" href="../styles/styles.css?v=50">
 </head>
 <body>
 
-  <a class="skip-nav" href="#coleccion">Ir al contenido principal</a>
+  <a class="skip-nav" href="#main">Ir al contenido principal</a>
 
   <!-- NAV -->
   <nav class="nav" aria-label="Navegación principal">
@@ -29,6 +29,7 @@
     </ul>
   </nav>
 
+  <main id="main">
   <!-- HERO -->
   <section class="hero" aria-label="Presentación de Vency Atelier">
     <div class="hero__inner">
@@ -48,11 +49,12 @@
       </div>
 
       <div class="hero__media animate-in" style="--delay:190ms">
-        <img
+        <img decoding="async"
           src="../assets/images/hero-botanica.png"
           alt="Frasco de Vency Atelier junto a flores de jazmín blanco sobre madera natural"
           class="hero__image"
           loading="eager"
+          fetchpriority="high"
           width="900"
           height="900"
         >
@@ -63,7 +65,8 @@
   <!-- LAS COLECCIONES -->
   <section class="colls-intro" id="coleccion" aria-label="Las colecciones de Vency Atelier">
     <header class="colls-intro__hdr">
-      <span class="label sage-label animate-in">LAS COLECCIONES · VENCY ATELIER</span>
+      <span class="label sage-label animate-in" aria-hidden="true">LAS COLECCIONES · VENCY ATELIER</span>
+      <h2 class="sr-only">Las colecciones</h2>
     </header>
 
     <div class="colls-intro__grid">
@@ -71,7 +74,7 @@
       <!-- ORIGINAL BLEND -->
       <a class="coll-block coll-block--ob" href="coleccion.html" aria-label="Ver colección Original Blend">
         <div class="coll-block__img-wrap">
-          <img src="../assets/images/originals/citrus-enigma.png" alt="Citrus Enigma · Original Blend de Vency Atelier" loading="lazy" width="900" height="675">
+          <img decoding="async" src="../assets/images/originals/citrus-enigma.png" alt="Citrus Enigma · Original Blend de Vency Atelier" loading="lazy" width="900" height="675">
         </div>
         <div class="coll-block__content">
           <span class="label coll-block__tag">ORIGINAL BLEND</span>
@@ -85,7 +88,7 @@
       <!-- ICON SERIES -->
       <a class="coll-block coll-block--is" href="coleccion.html#apple-whisper" aria-label="Ver colección Icon Series">
         <div class="coll-block__img-wrap">
-          <img src="../assets/images/inspirations/apple-whisper.png" alt="Apple Brandy on the Rocks · Kilian · Icon Series de Vency Atelier" loading="lazy" width="900" height="1200">
+          <img decoding="async" src="../assets/images/inspirations/apple-whisper.png" alt="Apple Brandy on the Rocks · Kilian · Icon Series de Vency Atelier" loading="lazy" width="900" height="1200">
         </div>
         <div class="coll-block__content">
           <span class="label coll-block__tag">ICON SERIES</span>
@@ -131,7 +134,7 @@
         </p>
       </div>
       <div class="perfumista__media animate-in" style="--delay:120ms">
-        <img
+        <img decoding="async"
           src="../assets/images/perfumista-taller.png"
           alt="Anthonny Villegas, perfumista maestro y fundador de Vency Atelier, trabajando en su taller de Heredia"
           loading="lazy"
@@ -195,7 +198,7 @@
             </p>
           </div>
           <div class="process__step-media">
-            <img
+            <img decoding="async"
               src="../assets/images/proceso-ingredientes.png"
               alt="Materias primas naturales: vainilla, canela, resinas y aceites esenciales sobre piedra"
               loading="lazy"
@@ -219,7 +222,7 @@
             </p>
           </div>
           <div class="process__step-media">
-            <img
+            <img decoding="async"
               src="../assets/images/proceso-mezcla.png"
               alt="Beaker de laboratorio durante el proceso de mezcla en el atelier de Vency Atelier"
               loading="lazy"
@@ -243,7 +246,7 @@
             </p>
           </div>
           <div class="process__step-media">
-            <img
+            <img decoding="async"
               src="../assets/images/proceso-embotellado.png"
               alt="Frascos de Vency Atelier alineados para embotellado, elaborados a mano en Heredia"
               loading="lazy"
@@ -259,6 +262,7 @@
       <a href="comprar.html" class="btn btn--primary">Ver el catálogo completo →</a>
     </div>
   </section>
+  </main>
 
   <!-- FOOTER -->
   <footer class="footer">
@@ -284,8 +288,8 @@
     </div>
   </footer>
 
-  <script src="../scripts/nav.js"></script>
-  <script src="../scripts/scroll.js"></script>
+  <script defer src="../scripts/nav.js"></script>
+  <script defer src="../scripts/scroll.js"></script>
 </body>
 </html>
 

@@ -456,6 +456,7 @@ a {
    HERO
    ============================================================ */
 .hero {
+  min-height: 100vh;  /* fallback for browsers without svh */
   min-height: 100svh;
   padding-top: calc(var(--nav-h) + var(--space-lg));
   padding-bottom: var(--space-lg);
@@ -470,6 +471,7 @@ a {
   grid-template-columns: 1fr;
   gap: var(--space-lg);
   align-items: center;
+  min-height: calc(100vh - var(--nav-h) - var(--space-lg) * 2);
   min-height: calc(100svh - var(--nav-h) - var(--space-lg) * 2);
 }
 
@@ -751,7 +753,7 @@ a.coll-block:hover .coll-block__cta {
 }
 
 .coll-block--hybrid .coll-block__desc {
-  color: oklch(58% 0.015 150);
+  color: oklch(72% 0.015 150);  /* bumped from 58% — was borderline AA on volcanic-ink */
 }
 
 .coll-block__cta--wa {
