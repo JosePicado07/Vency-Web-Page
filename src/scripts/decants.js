@@ -538,4 +538,7 @@
     clear:         clearCart
   };
 
+  // Show the tray on load if the cart already has items from a prior session
+  if (selection.length > 0 || bottles.length > 0) updateUI();
+
 })();
