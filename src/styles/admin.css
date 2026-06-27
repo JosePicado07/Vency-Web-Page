@@ -805,11 +805,14 @@ body {
   flex-direction: column;
   justify-content: flex-end;
   overflow: hidden;
+  cursor: pointer; /* whole top area adds a decant; admin.js delegates the click */
 }
+.dblock--admin.dblock--soldout .dblock__top { cursor: not-allowed; }
 
 .dblock--admin .dblock__img-wrap {
   position: absolute;
   inset: 0;
+  pointer-events: none;
 }
 
 .dblock--admin .dblock__img-wrap img {
@@ -986,14 +989,8 @@ body {
   margin: 0;
 }
 
-.dblock--best-seller::before {
-  content: '👑';
-  position: absolute;
-  top: 0.3rem;
-  right: 0.4rem;
-  z-index: 4;
-  font-size: 1.2rem;
-  line-height: 1;
+.dblock--best-seller {
+  box-shadow: inset 0 0 0 1px var(--warm-ochre);
 }
 
 .inv-stock-badge {
@@ -1027,6 +1024,30 @@ body {
 
 .inv-stock-badge--low   { background: oklch(40% 0.15 25 / 0.82); }
 .inv-stock-badge--empty { background: oklch(35% 0.08 25 / 0.65); }
+
+.inv-best-badge {
+  position: absolute;
+  top: 0.45rem;
+  left: 0.45rem;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.22rem 0.42rem 0.2rem 0.35rem;
+  border-radius: 4px;
+  background: var(--warm-ochre);
+  color: var(--botanical-parchment);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  line-height: 1;
+  pointer-events: none;
+}
+.inv-best-badge svg {
+  flex-shrink: 0;
+}
 
 /* ── Inventory card: name block ── */
 

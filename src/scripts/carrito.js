@@ -9,7 +9,7 @@
 
   var CART_KEY  = 'vency_cart_v1';
   var WA_NUMBER = '50672773156';
-  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbzuJHp43JAzsQfAEpe6vWUzDqsOlA28vPSliOi4RsjgRr8d-m06t4MtzNKrdO2njZJW/exec';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
 
   var SET_PRICE    = 12000;
   var DECANT_PRICE = 5000;

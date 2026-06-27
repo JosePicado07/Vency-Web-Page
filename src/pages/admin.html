@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/admin.min.css?v=51">
+  <link rel="stylesheet" href="../styles/admin.min.css?v=54">
 </head>
 <body>
 
@@ -224,19 +224,8 @@
   </button>
 
   <script src="../scripts/fragrance-data.js?v=51"></script>
-  <script src="../scripts/admin.js?v=51"></script>
-  <script>
-    // Lazy-load catalogo-data.js (decant mode only)
-    var catalogoLoaded = false;
-    function loadCatalogo() {
-      if (catalogoLoaded) return;
-      var s = document.createElement('script');
-      s.src = '../scripts/catalogo-data.js?v=51';
-      document.head.appendChild(s);
-      catalogoLoaded = true;
-    }
-    loadCatalogo();
-  </script>
+  <script src="../scripts/catalogo-data.js?v=51"></script>
+  <script src="../scripts/admin.js?v=3"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js', { scope: './admin.html' });

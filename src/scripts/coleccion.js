@@ -27,6 +27,125 @@
 
   var escHtml = window.escHtml;
 
+  /* ── Cart helpers ────────────────────────────────────────────────── */
+  var CART_KEY  = 'vency_cart_v1';
+  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
+
+  function addToCart(frag, fmt) {
+    if (!frag) return;
+    try {
+      var raw = localStorage.getItem(CART_KEY);
+      var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
+      if (fmt === 'decant') {
+        cart.selection.push({ id: frag.id, name: frag.name });
+      } else {
+        cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
+      }
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('vency-cart-update'));
+
+      var drawer = document.querySelector('.js-cart-drawer');
+      var overlay = document.querySelector('.js-cart-overlay');
+      if (drawer && overlay) {
+        overlay.classList.add('is-open');
+        drawer.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        var evt = document.createEvent('Event');
+        evt.initEvent('cart-render', true, false);
+        drawer.dispatchEvent(evt);
+      }
+    } catch (e) {}
+  }
+
+  /* ── Format modal ────────────────────────────────────────────────── */
+  var fmtOverlay = document.querySelector('.js-fmt-overlay');
+  var fmtModal   = document.querySelector('.js-fmt-modal');
+  var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
+  var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
+  var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
+  var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
+  var fmtFrag    = null;
+
+  if (fmtOverlay && fmtModal) {
+    fmtClose.addEventListener('click', closeFmtModal);
+    fmtOverlay.addEventListener('click', function (e) {
+      if (e.target === fmtOverlay) closeFmtModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && fmtOverlay.classList.contains('is-open')) closeFmtModal();
+    });
+
+    fmtOptions.addEventListener('change', function (e) {
+      fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) {
+        o.classList.toggle('is-selected', o.querySelector('input').checked);
+      });
+      fmtConfirm.disabled = false;
+    });
+
+    fmtConfirm.addEventListener('click', function () {
+      if (!fmtFrag) return;
+      var selected = fmtOptions.querySelector('input:checked');
+      if (!selected) return;
+      var fmt = selected.value;
+      addToCart(fmtFrag, fmt);
+      closeFmtModal();
+
+      var lastPill = document.querySelector('[data-fmt-last="' + fmtFrag.id + '-' + fmt + '"]');
+      if (lastPill) {
+        var orig = lastPill.textContent;
+        lastPill.textContent = '✓ Añadido';
+        setTimeout(function () { lastPill.textContent = orig; }, 900);
+      }
+    });
+  }
+
+  function openFmtModal(frag) {
+    if (!fmtOverlay || !fmtModal || !fmtImg || !fmtName || !fmtOptions) return;
+    fmtFrag = frag;
+    fmtImg.src = frag.image;
+    fmtImg.alt = frag.name;
+    fmtName.textContent = frag.name;
+    fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
+    fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
+    fmtConfirm.disabled = true;
+
+    var prices = {
+      decant: '₡5.000',
+      '30ml': '₡12.000',
+      '100ml': '₡20.000'
+    };
+    var labels = {
+      decant: 'Decant 10ml',
+      '30ml': 'Frasco 30ml',
+      '100ml': 'Frasco 100ml'
+    };
+    var descriptions = {
+      decant: 'Para descubrir y llevar contigo',
+      '30ml': 'Para conocerlo bien',
+      '100ml': 'Para quedarte con él'
+    };
+
+    fmtOptions.querySelectorAll('input').forEach(function (r) {
+      var val = r.value;
+      var wrapper = r.closest('.fmt-option');
+      var priceEl = wrapper.querySelector('.fmt-option__price');
+      var labelEl = wrapper.querySelector('.fmt-option__label');
+      var descEl = wrapper.querySelector('.fmt-option__desc');
+      if (priceEl) priceEl.textContent = prices[val] || '';
+      if (labelEl) labelEl.textContent = labels[val] || '';
+      if (descEl) descEl.textContent = descriptions[val] || '';
+    });
+
+    fmtOverlay.classList.add('is-open');
+  }
+
+  function closeFmtModal() {
+    if (!fmtOverlay) return;
+    fmtOverlay.classList.remove('is-open');
+    fmtFrag = null;
+  }
+
   function renderEntry(frag) {
     var isIcon = frag.category === 'icon-series';
     var hasInspoImg = isIcon && frag.inspiration && frag.inspiration.image;
@@ -90,12 +209,7 @@
           + '</div>'
           + (soldOut ? '' :
               '<div class="catalog-entry__buy-row">'
-              + '<div class="catalog-entry__fmt-pills">'
-                + '<span class="catalog-entry__fmt-pill">Decant 10ml · ₡5.000</span>'
-                + '<span class="catalog-entry__fmt-pill">Frasco 30ml · ₡12.000</span>'
-                + '<span class="catalog-entry__fmt-pill">Frasco 100ml · ₡20.000</span>'
-              + '</div>'
-              + '<a class="catalog-entry__order-btn" href="comprar.html">Ordenar →</a>'
+              + '<button class="catalog-entry__order-btn" type="button" data-fmt-trigger="' + frag.id + '">Añadir</button>'
             + '</div>')
         + '</div>'
       + '</div>'
@@ -153,6 +267,25 @@
         var targetEl = document.getElementById(location.hash.slice(1));
         if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 80);
+    }
+
+    /* ── Event delegation: "Añadir" opens format modal ──────── */
+    var grid = document.getElementById('catalog-grid');
+    if (grid) {
+      grid.addEventListener('click', function (e) {
+        var btn = e.target.closest('.catalog-entry__order-btn');
+        if (!btn) return;
+
+        var entry = btn.closest('[data-fragrance-id]');
+        if (!entry) return;
+        var id = entry.getAttribute('data-fragrance-id');
+        var frag = null;
+        for (var i = 0; i < ordered.length; i++) {
+          if (ordered[i].id === id) { frag = ordered[i]; break; }
+        }
+        if (!frag) return;
+        openFmtModal(frag);
+      });
     }
   }
 

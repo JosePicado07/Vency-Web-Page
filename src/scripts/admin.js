@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbzuJHp43JAzsQfAEpe6vWUzDqsOlA28vPSliOi4RsjgRr8d-m06t4MtzNKrdO2njZJW/exec';
+  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var SET_PRICE     = 12000;
   var SINGLE_DECANT = 5000;
@@ -824,13 +824,23 @@
 
   fragList.addEventListener('click', function (e) {
     var btn = e.target.closest('button');
-    if (!btn) return;
-    if (btn.classList.contains('js-decant-btn'))
-      toggleDecant(btn.dataset.id, btn.dataset.name, btn.dataset.invkey);
-    if (btn.classList.contains('js-bottle-btn'))
-      toggleBottle(btn.dataset.id, btn.dataset.name, btn.dataset.fmt,
-        btn.dataset.price ? parseInt(btn.dataset.price, 10) : undefined,
-        btn.dataset.invkey);
+    if (btn) {
+      if (btn.classList.contains('js-decant-btn'))
+        toggleDecant(btn.dataset.id, btn.dataset.name, btn.dataset.invkey);
+      if (btn.classList.contains('js-bottle-btn'))
+        toggleBottle(btn.dataset.id, btn.dataset.name, btn.dataset.fmt,
+          btn.dataset.price ? parseInt(btn.dataset.price, 10) : undefined,
+          btn.dataset.invkey);
+      return;
+    }
+    // Click on the image / name area also adds a decant — saves a precision tap.
+    // Excludes the 30ml/100ml footer so those stay independent.
+    var card = e.target.closest('.dblock--admin');
+    if (!card || e.target.closest('.dblock__footer')) return;
+    var decantBtn = card.querySelector('.js-decant-btn');
+    if (decantBtn && !decantBtn.disabled) {
+      toggleDecant(decantBtn.dataset.id, decantBtn.dataset.name, decantBtn.dataset.invkey);
+    }
   });
 
   function buildFragRow(frag) {
@@ -1289,8 +1299,13 @@
       ? '<span class="dblock__brand">' + frag.brand + '</span><h3 class="dblock__name">' + frag.name + '</h3>'
       : '<h3 class="dblock__name">' + frag.name + '</h3>';
 
+    var bestLabel = frag.name === topFragranceName
+      ? '<span class="inv-best-badge"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 1L5 3L7 3.5L5.5 5.5L6 8L4 6.5L2 8L2.5 5.5L1 3.5L3 3Z"/></svg>M\xc1S VENDIDO</span>'
+      : '';
+
     el.innerHTML =
       '<div class="dblock__top">' +
+        bestLabel +
         '<div class="inv-stock-badge js-inv-total' + (oil > 0 && oil < LOW_OIL_ML ? ' inv-stock-badge--low' : '') + (oil <= 0 ? ' inv-stock-badge--empty' : '') + '" data-id="' + id + '">' + fmtOil(oil) + '</div>' +
         '<div class="inv-name-block">' + nameHtml + '</div>' +
       '</div>' +

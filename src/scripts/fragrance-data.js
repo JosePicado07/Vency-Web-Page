@@ -34,7 +34,7 @@
     },
     {
       id: 'infusion-carmesi',
-      name: 'Infusión Carmesí',
+      name: 'Obsesión Carmesí',
       category: 'original-blend',
       notes: ['cereza', 'hibisco', 'rosa', 'resina', 'vetiver'],
       noteLabels: ['Cereza oscura', 'Hibisco', 'Rosa', 'Resina', 'Vetiver'],
