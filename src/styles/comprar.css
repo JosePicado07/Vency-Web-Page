@@ -52,6 +52,17 @@
   gap: 1.5rem;
 }
 
+/* Desktop: let the format hub use the canvas. 1100 cap on a 1920 viewport
+   leaves the cards reading as small mobile blocks centered in too much
+   negative space. Push to 1440 with generous internal padding. */
+@media (min-width: 1024px) {
+  .comprar-formats {
+    max-width: 1440px;
+    padding: clamp(var(--space-xl), 5vw, 5rem) clamp(var(--space-md), 4vw, 3rem);
+    gap: 2rem;
+  }
+}
+
 @media (min-width: 700px) {
   .comprar-formats {
     grid-template-columns: 1fr 1fr;

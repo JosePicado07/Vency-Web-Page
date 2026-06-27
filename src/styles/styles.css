@@ -1251,6 +1251,30 @@ a.coll-block:hover .coll-block__cta {
   max-width: 600px;
 }
 
+/* Desktop: single column centered, not awkwardly left-anchored in a wide band.
+   The dark void on the right was reading as a missing image; centering makes
+   the negative space symmetric and intentional. */
+@media (min-width: 1024px) {
+  .sessions {
+    padding: clamp(var(--space-xl), 8vw, 7rem) var(--space-md);
+  }
+  .sessions__inner {
+    max-width: 680px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .sessions__inner .label,
+  .sessions__inner .sessions__body {
+    /* tighten the readable measure when centered */
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .sessions__cta {
+    display: flex;
+    justify-content: center;
+  }
+}
+
 .sessions__headline {
   font-family: 'Bitter', serif;
   font-weight: 900;
@@ -2549,6 +2573,8 @@ a.coll-block:hover .coll-block__cta {
   right: -2px;
   border-radius: 4px 0 0 4px;
 }
+/* Same SVG reused for both buttons — flip the icon (not the button frame). */
+.cart-upsell-arrow--next svg { transform: scaleX(-1); }
 .cart-upsell-arrow:hover {
   background: var(--warm-ochre);
   color: var(--botanical-parchment);
