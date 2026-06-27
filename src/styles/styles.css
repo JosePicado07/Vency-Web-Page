@@ -362,8 +362,10 @@ a {
   outline-offset: 2px;
 }
 
-/* Cart link with count badge — only shown when cart has items */
-.js-nav-cart {
+/* Cart link with count badge — only shown when cart has items.
+   :not([hidden]) prevents display:inline-flex from overriding the
+   HTML hidden attribute when count=0. */
+.js-nav-cart:not([hidden]) {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;

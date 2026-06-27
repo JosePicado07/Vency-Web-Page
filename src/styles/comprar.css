@@ -64,13 +64,18 @@
   .fmt-card--30ml    { grid-area: thirty; }
   .fmt-card--100ml   { grid-area: hundred; }
 
-  /* Decant hero — horizontal layout, image left, copy right */
+  /* Decant hero — horizontal layout, image left, copy right.
+     max-height + min-height keep the hero from running to the image's
+     natural pixel height (which was pushing 30 ml + 100 ml off-screen). */
   .fmt-card--decant {
     flex-direction: row;
+    min-height: 320px;
+    max-height: 420px;
   }
   .fmt-card--decant .fmt-card__img-wrap {
     flex: 1.2;
     aspect-ratio: auto;
+    height: 100%;
   }
   .fmt-card--decant .fmt-card__body {
     flex: 1;
