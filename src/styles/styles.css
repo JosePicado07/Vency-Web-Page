@@ -363,14 +363,16 @@ a {
 }
 
 /* Cart link with count badge — only shown when cart has items.
-   :not([hidden]) prevents display:inline-flex from overriding the
-   HTML hidden attribute when count=0. */
-.js-nav-cart:not([hidden]) {
+   .nav__link sets display:inline-flex with class-level specificity,
+   so the UA [hidden]{display:none} loses. Add an attribute-selector
+   rule (class+attr beats class alone) to restore hidden behavior. */
+.js-nav-cart {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   color: var(--warm-ochre);
 }
+.js-nav-cart[hidden] { display: none; }
 .js-nav-cart:hover { color: var(--warm-ochre-dark); }
 .nav__cart-badge {
   display: inline-flex;
