@@ -17,6 +17,8 @@ The palette is a four-role system anchored in Costa Rican natural materials: vol
 
 This system explicitly rejects the aesthetics of its competitors. Department-store perfumery (white surfaces, grid layouts, lifestyle photography of faces) is forbidden. Maximalist luxury ornamentation (gold, baroque borders, logomania) is forbidden. Startup conversion logic (gradient CTAs, card grids, social proof statistics) is forbidden. Generic e-commerce orthodoxy (Shopify breadcrumbs, add-to-cart as the dominant visual element) is forbidden. What remains is specific, material, Costa Rican, and made by hand.
 
+**The model is laboratorio, not workshop.** This distinction shapes every layout decision. The fragrances are pre-mixed at the atelier and ready to ship; the experience the visual system needs to convey is "small-batch made by a known hand in Heredia," not "compose your own at the counter with the perfumer." That means: no multi-step customization wizards, no quiz-flow UIs, no name-on-the-bottle preview, no in-store dual-screen consultation surfaces, no presence of the customer's hand on the product. The atelier composes; the customer chooses. Everything visual flows from that.
+
 **Key Characteristics:**
 - Full four-color palette, every role named after a material found in the Costa Rican natural world
 - Slab serif (Bitter) and humanist sans (Manrope) paired by letterform contrast, not weight tricks
@@ -109,6 +111,7 @@ When components are documented, prioritize: primary and ghost buttons, navigatio
 - **Do** respect `prefers-reduced-motion`: all choreographed entrances fall back to a simple `opacity` fade at 300ms with no transform.
 - **Do** use Botanical Parchment (not white) as the lightest ground color, always.
 - **Do** test the Color Scarcity Rule: count how many times Sage Mineral appears per page. If it exceeds one per major section, reduce.
+- **Do** communicate the "personal" of the brand as a *structural* fact (small-batch, hand-blended in Heredia, named atelier, ingredient ledger) — not as a *service* the customer participates in. Provenance, batch, materials, place. The label says the fragrance name and Vency Atelier. That is the entire intimacy story.
 
 ### Don't:
 
@@ -123,3 +126,4 @@ When components are documented, prioritize: primary and ghost buttons, navigatio
 - **Don't** animate CSS layout properties (width, height, padding, margin). Transition only transform and opacity.
 - **Don't** let the Sage Mineral accent appear more than once per major section. Scarcity is the mechanism.
 - **Don't** use the reflex-reject fonts: no Fraunces, Newsreader, Lora, Crimson, Playfair Display, Cormorant, Syne, IBM Plex, Space Mono, Space Grotesk, Inter, DM Sans, Plus Jakarta Sans, Instrument Sans.
+- **Don't** build any UI that implies a bespoke or customization service: multi-step "design your fragrance" wizards, name-on-label preview moments, color palette or accent pickers, "compose your scent" quiz flows, dual-screen POS pairing surfaces, or affiliate-driven "your personal scent" upsells. The brand makes a small-batch, finished composition; the visual system should never suggest otherwise. If a UI moment would only make sense at a perfumer's counter with the customer's hand on the formula, it does not belong here.
