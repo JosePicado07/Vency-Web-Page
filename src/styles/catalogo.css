@@ -1587,22 +1587,23 @@ body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
    image + the fragrance name. Many per row, less scroll.
    ============================================================ */
 
+/* Fixed 4-column grid (drops to 2 on phones so bottles don't get tiny). */
 .cat-brand__list {
-  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 0.5rem 0.75rem;
   padding: 0 var(--space-md) var(--space-md);
 }
 
 @media (min-width: 640px) {
   .cat-brand__list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 0.75rem 1rem;
   }
 }
 
 @media (min-width: 1024px) {
   .cat-brand__list {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem 1.25rem;
     padding: 0 var(--space-lg) var(--space-lg);
   }
