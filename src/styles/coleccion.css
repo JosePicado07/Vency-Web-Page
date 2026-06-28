@@ -241,27 +241,31 @@
   outline-offset: 2px;
 }
 
-/* Header: image + provenance label + serif name proclaim together. */
+/* Header: image as the hero (centered, large), name underneath.
+   The bottle proclaims; the name names. One strong thing first. */
 .fmt-modal__head {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
+  gap: 0.85rem;
   padding-right: 2.5rem; /* clear the close button */
+  padding-left: 2.5rem;  /* mirror for visual balance */
   margin-bottom: 1.75rem;
 }
 .fmt-modal__img {
-  width: 72px;
-  height: 72px;
-  object-fit: cover;
-  background: color-mix(in oklch, var(--atelier-stone) 60%, var(--botanical-parchment));
-  border-radius: 2px;
+  width: clamp(180px, 55vw, 240px);
+  height: clamp(180px, 55vw, 240px);
+  object-fit: contain;
+  padding: 0.6rem;
+  background: color-mix(in oklch, var(--atelier-stone) 35%, var(--botanical-parchment));
+  border-radius: 3px;
   display: block;
 }
 .fmt-modal__name {
   font-family: 'Bitter', serif;
   font-weight: 700;
-  font-size: clamp(1.35rem, 4.5vw, 1.6rem);
+  font-size: clamp(1.45rem, 4.5vw, 1.75rem);
   line-height: 1.1;
   color: var(--volcanic-ink);
   letter-spacing: -0.01em;
