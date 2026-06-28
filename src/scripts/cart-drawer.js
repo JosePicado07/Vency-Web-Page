@@ -116,8 +116,35 @@
     var candidates = catalog.filter(function (f) { return !inCartIds[f.id]; });
     if (candidates.length === 0) { upsell.innerHTML = ''; return; }
 
-    var shuffled = candidates.slice().sort(function () { return 0.5 - Math.random(); });
-    var show = shuffled.slice(0, 8);
+    // Score each candidate by how many notes it shares with the items
+    // already in the cart. The set of notes is gathered across every cart
+    // item (Vency lookup by id; entries we can't resolve simply contribute
+    // nothing). Ties are broken randomly so the rail still feels alive.
+    var cartNotes = {};
+    Object.keys(inCartIds).forEach(function (id) {
+      var frag = catalog.find(function (f) { return f.id === id; });
+      if (frag && Array.isArray(frag.notes)) {
+        frag.notes.forEach(function (n) { cartNotes[n] = true; });
+      }
+    });
+
+    var ranked;
+    if (Object.keys(cartNotes).length === 0) {
+      // Cart is empty or items have no resolvable notes → keep it random.
+      ranked = candidates.slice().sort(function () { return 0.5 - Math.random(); });
+    } else {
+      ranked = candidates.map(function (f) {
+        var fNotes = Array.isArray(f.notes) ? f.notes : [];
+        var overlap = 0;
+        for (var i = 0; i < fNotes.length; i++) if (cartNotes[fNotes[i]]) overlap++;
+        return { frag: f, score: overlap, tie: Math.random() };
+      }).sort(function (a, b) {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.tie - b.tie;
+      }).map(function (x) { return x.frag; });
+    }
+
+    var show = ranked.slice(0, 8);
 
     var arrowSvg =
       '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
