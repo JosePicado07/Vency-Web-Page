@@ -836,6 +836,14 @@ a {
   outline-offset: 4px;
 }
 
+/* Centered variant — used at the close of a section instead of inside
+   the hero text column. Centers the band on the page, keeps the
+   label / meta / arrow geometry intact. */
+.hero__ledger--center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .hero__provenance {
   font-family: 'Manrope', sans-serif;
   font-size: 0.62rem;
