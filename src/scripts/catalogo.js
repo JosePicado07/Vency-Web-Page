@@ -105,6 +105,10 @@
         ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
         : buildRail(fname, fname, false);
 
+      var thumbSrc = frag.image
+        ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
+        : '../assets/images/_webp/default-bottle-400.webp';
+
       html +=
         '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
           ' id="' + frag.id + '"' +
@@ -116,18 +120,21 @@
           ' data-search="' + escHtml(searchStr) + '"' +
           ' data-ocasion="' + ocasion + '"' +
           (soldOut ? ' data-sold-out="true"' : '') + '>' +
-          '<div class="cat-entry__info">' +
-            '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
-            '<p class="cat-entry__name">' + fname + '</p>' +
-            '<p class="cat-entry__notes">' + escHtml(notes) + '</p>' +
-            (isIcon && frag.inspiration
-              ? '<p class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</p>'
-              : '') +
-            '<div class="cat-entry__foot">' +
-              '<a class="cat-entry__historia" href="coleccion.html#' + frag.id + '">historia →</a>' +
-              '<button class="cat-entry__see" type="button" aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">Ver →</button>' +
-            '</div>' +
-          '</div>' +
+          '<button class="cat-entry__card cat-entry__see" type="button"' +
+            ' aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">' +
+            '<span class="cat-entry__img-wrap">' +
+              '<img class="cat-entry__img" src="' + thumbSrc + '" alt="" loading="lazy"' +
+                ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
+              (soldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
+            '</span>' +
+            '<span class="cat-entry__info">' +
+              '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
+              '<span class="cat-entry__name">' + fname + '</span>' +
+              (isIcon && frag.inspiration
+                ? '<span class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</span>'
+                : '') +
+            '</span>' +
+          '</button>' +
           railHtmlVency +
         '</li>';
     });
@@ -226,6 +233,9 @@
           li.dataset.fragranceImg  = interp
             ? '../assets/images/inspirations/' + interp.id + '.png'
             : '../assets/images/default-bottle.jpg';
+          var extThumbSrc = interp
+            ? '../assets/images/inspirations/_webp/' + interp.id + '-400.webp'
+            : '../assets/images/_webp/default-bottle-400.webp';
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
           if (item.soldOut) li.dataset.soldOut = 'true';
 
@@ -245,19 +255,25 @@
             ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
             : buildRail(fragranceName, escHtml(item.name), isInv);
 
-          // Always show the foot — sold-out items still earn a "Ver →" so users
-          // can read the fragrance's story even when there's no stock to buy.
+          // Card layout: image + name + provenance. Click anywhere on the card
+          // opens the detail panel where notes/history/buy live. Match the
+          // admin Vender section's image-led card grid.
           li.innerHTML =
-            '<div class="cat-entry__info">' +
-              '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
-              '<p class="cat-entry__name">' + escHtml(displayName) + '</p>' +
-              notesHtml +
-              inspoHtml +
-              '<div class="cat-entry__foot">' +
-                (historiaHref ? '<a class="cat-entry__historia" href="' + historiaHref + '">historia →</a>' : '') +
-                '<button class="cat-entry__see" type="button" aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">Ver →</button>' +
-              '</div>' +
-            '</div>' +
+            '<button class="cat-entry__card cat-entry__see" type="button"' +
+              ' aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">' +
+              '<span class="cat-entry__img-wrap">' +
+                '<img class="cat-entry__img" src="' + extThumbSrc + '" alt="" loading="lazy"' +
+                  ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
+                (itemSoldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
+              '</span>' +
+              '<span class="cat-entry__info">' +
+                '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
+                '<span class="cat-entry__name">' + escHtml(displayName) + '</span>' +
+                (interp
+                  ? '<span class="cat-entry__inspo">' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</span>'
+                  : '') +
+              '</span>' +
+            '</button>' +
             railHtml;
 
           // Cap cascade at 8 entries — past that, the wait feels like lag not stagger.

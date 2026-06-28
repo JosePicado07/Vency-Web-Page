@@ -1449,3 +1449,133 @@ body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
   }
 }
 
+
+
+/* ============================================================
+   CARD GRID — public catalog rendered as image-led cards
+   (matches the admin Vender section composition).
+   Cards are the entry to the detail modal; the whole card is a button.
+   ============================================================ */
+
+.cat-brand__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.25rem;
+  padding: 0 var(--space-md) var(--space-lg);
+  margin: 0;
+  list-style: none;
+}
+
+@media (min-width: 1024px) {
+  .cat-brand__list {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.5rem;
+    padding: 0 var(--space-lg) var(--space-lg);
+  }
+}
+
+.cat-entry {
+  border-top: none;
+  padding: 0;
+  background: transparent;
+  list-style: none;
+}
+
+.cat-entry__card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--botanical-parchment);
+  text-align: left;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  transition: border-color 0.2s var(--ease-expo);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cat-entry__card:hover { border-color: var(--warm-ochre); }
+.cat-entry__card:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
+
+.cat-entry__img-wrap {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--atelier-stone);
+}
+
+.cat-entry__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s var(--ease-expo);
+}
+
+.cat-entry__card:hover .cat-entry__img { transform: scale(1.04); }
+
+.cat-entry__sold-out {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--botanical-parchment);
+  background: oklch(15% 0.01 60 / 0.78);
+  padding: 0.3rem 0.55rem;
+  border-radius: 2px;
+}
+
+.cat-entry__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.8rem 0.9rem 0.95rem;
+}
+
+.cat-entry__provenance {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--warm-ochre);
+}
+
+.cat-entry__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  line-height: 1.15;
+  color: var(--volcanic-ink);
+  letter-spacing: -0.005em;
+}
+
+.cat-entry__inspo {
+  font-family: 'Manrope', sans-serif;
+  font-style: italic;
+  font-size: 0.7rem;
+  color: var(--ink-muted);
+  line-height: 1.3;
+  margin-top: 0.15rem;
+}
+
+/* Hide legacy row-only elements that are no longer rendered into the card.
+   The detail panel now holds notes / story / buy controls. */
+.cat-entry__notes,
+.cat-entry__foot,
+.cat-entry__historia { display: none; }
+
+/* Sold-out gets the overlay badge on the image; suppress the bottom rail. */
+.cat-entry .fmt-rail--sold-out { display: none; }
