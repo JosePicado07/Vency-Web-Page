@@ -2267,14 +2267,27 @@ a.coll-block:hover .coll-block__cta {
   margin-top: auto;
   overflow: hidden;
 }
+.cart-drawer__upsell-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-bottom: var(--space-sm);
+}
 .cart-drawer__upsell-label {
   font-family: 'Manrope', sans-serif;
   font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  color: var(--volcanic-ink);
+}
+.cart-drawer__upsell-meta {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--ink-muted);
-  margin-bottom: var(--space-sm);
+  line-height: 1.4;
 }
 .cart-drawer__upsell-wrap {
   position: relative;

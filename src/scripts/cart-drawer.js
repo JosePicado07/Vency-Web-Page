@@ -161,7 +161,10 @@
       '</svg>';
 
     upsell.innerHTML =
-      '<div class="cart-drawer__upsell-label">Completa con</div>' +
+      '<div class="cart-drawer__upsell-head">' +
+        '<div class="cart-drawer__upsell-label">Completa con</div>' +
+        '<div class="cart-drawer__upsell-meta">Decant 10 ml · ₡5.000 c/u</div>' +
+      '</div>' +
       '<div class="cart-drawer__upsell-wrap">' +
         '<button class="cart-upsell-arrow cart-upsell-arrow--prev" type="button" aria-label="Anterior">' + arrowSvg + '</button>' +
         '<div class="cart-drawer__upsell-items">' +
