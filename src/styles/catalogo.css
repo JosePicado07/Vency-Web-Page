@@ -1303,6 +1303,12 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   border-radius: 3px;
   padding: 0;
   text-align: center;
+  /* Every card the same outer size regardless of image format or text
+     length: stretch to the full grid-cell height, let the info area
+     absorb the extra space below the (1:1) image. */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   transition:
     border-color 0.25s var(--ease-expo),
     background-color 0.25s var(--ease-expo),
@@ -1327,11 +1333,16 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
 
 .cat-entry__card:hover .cat-entry__img { transform: scale(1.06); }
 
-/* Info row beneath the image — name only, centered, smaller. */
+/* Info row beneath the image — name only, centered, smaller.
+   Fixed min-height + 2-line clamp so cards with longer names don't
+   stretch their row taller than the rest. */
 .cat-entry__info {
-  padding: 0.15rem 0.25rem 0.5rem;
+  flex: 1;
+  min-height: 3.4rem;
+  padding: 0.35rem 0.5rem 0.65rem;
   text-align: center;
   gap: 0.1rem;
+  justify-content: flex-start;
 }
 
 /* Hide per-card metadata; brand groupings + the detail panel handle it. */
@@ -1355,6 +1366,13 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   letter-spacing: 0;
   color: var(--volcanic-ink);
   text-transform: none;
+  /* Cap at two lines so "Acqua di Giò Profondo" doesn't make its card
+     taller than "Pure XS". Longer names ellipsize. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Vency originals keep the serif name to match the brand voice. */
