@@ -10,7 +10,10 @@
   var upsell  = drawer && drawer.querySelector('.js-cart-upsell');
   if (!overlay || !drawer || !body) return;
 
-  var catalog = window.VENCY_CATALOG || [];
+  // Always read fresh — fragrance-data.js may load in a different position
+  // on different pages. Caching once at IIFE init lost the rail on pages
+  // where script order put cart-drawer first.
+  function getCatalog() { return window.VENCY_CATALOG || []; }
 
   function openCart() {
     overlay.classList.add('is-open');
@@ -59,6 +62,7 @@
     }
 
     var DECANT_PRICE = 5000;
+    var catalog = getCatalog();
     var itemsHtml = '';
     var total = 0;
 
@@ -113,6 +117,7 @@
       (cart.bottles || []).forEach(function (b) { inCartIds[b.id] = true; });
     }
 
+    var catalog = getCatalog();
     var candidates = catalog.filter(function (f) { return !inCartIds[f.id]; });
     if (candidates.length === 0) { upsell.innerHTML = ''; return; }
 
