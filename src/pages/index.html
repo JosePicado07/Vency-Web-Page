@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/styles.css?v=58">
+  <link rel="stylesheet" href="../styles/styles.css?v=59">
 </head>
 <body>
 
@@ -44,7 +44,6 @@
         </p>
         <div class="hero__actions animate-in" style="--delay:360ms">
           <a href="catalogo.html" class="btn btn--primary">Explorar la colección</a>
-          <button class="quiz-trigger js-quiz-trigger" type="button">Descubrí tu fragancia</button>
         </div>
         <p class="hero__sessions-link animate-in" style="--delay:400ms">
           <a href="catalogo.html">Ver el catálogo completo →</a>
@@ -301,55 +300,6 @@
     </div>
   </div>
 
-  <!-- Quiz -->
-  <div class="quiz-overlay js-quiz-overlay" role="dialog" aria-modal="true" aria-label="Descubrí tu fragancia ideal">
-    <div class="quiz-modal js-quiz-modal">
-      <div class="quiz-modal__header">
-        <span class="quiz-modal__step-label js-quiz-step-label">PASO 1 DE 4</span>
-        <button class="quiz-modal__close js-quiz-close" type="button" aria-label="Cerrar quiz">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="quiz-modal__body">
-        <div class="quiz-step js-quiz-step is-active" data-key="mood">
-          <p class="quiz-step__question">¿Qué ánimo querés reflejar hoy?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="atrevido"> <span class="quiz-opt__name">Atrevido</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="elegante"> <span class="quiz-opt__name">Elegante</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="casual"> <span class="quiz-opt__name">Casual</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="poderoso"> <span class="quiz-opt__name">Poderoso</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="natural"> <span class="quiz-opt__name">Natural</span></label>
-          </div>
-        </div>
-        <div class="quiz-step js-quiz-step" data-key="notes">
-          <p class="quiz-step__question">¿Qué nota te llama más la atención?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="citricos"> <span class="quiz-opt__name">Cítricos</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="flores"> <span class="quiz-opt__name">Flores</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="maderas"> <span class="quiz-opt__name">Maderas</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="dulce"> <span class="quiz-opt__name">Dulce</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="especias"> <span class="quiz-opt__name">Especias</span></label>
-          </div>
-        </div>
-        <div class="quiz-step js-quiz-step" data-key="occasion">
-          <p class="quiz-step__question">¿Para qué ocasión la vas a usar?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="diario"> <span class="quiz-opt__name">Diario</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="noche"> <span class="quiz-opt__name">Noche</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="formal"> <span class="quiz-opt__name">Formal</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="verano"> <span class="quiz-opt__name">Verano</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="fin-de-semana"> <span class="quiz-opt__name">Fin de semana</span></label>
-          </div>
-        </div>
-        <div class="quiz-result js-quiz-result"></div>
-      </div>
-      <div class="quiz-modal__footer">
-        <button class="quiz-modal__back js-quiz-back" type="button" disabled>Atrás</button>
-        <button class="quiz-modal__next js-quiz-next" type="button" disabled>SIGUIENTE</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Cart overlay + drawer -->
   <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
   <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
@@ -375,7 +325,6 @@
 
   <script src="../scripts/fragrance-data.js?v=51" defer></script>
   <script src="../scripts/search.js?v=51" defer></script>
-  <script src="../scripts/quiz.js?v=51" defer></script>
   <script src="../scripts/cart-drawer.js?v=51" defer></script>
 </body>
 </html>

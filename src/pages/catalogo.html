@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/styles.css?v=58">
-  <link rel="stylesheet" href="../styles/catalogo.css?v=56">
+  <link rel="stylesheet" href="../styles/styles.css?v=59">
+  <link rel="stylesheet" href="../styles/catalogo.css?v=57">
   <link rel="stylesheet" href="../styles/catalog.css?v=51">
   <link rel="stylesheet" href="../styles/format-rail.css?v=51">
   <link rel="stylesheet" href="../styles/decants.css?v=51">
@@ -382,89 +382,8 @@
   <script defer src="../scripts/fragrance-data.js?v=51"></script>
   <script defer src="../scripts/nav.js?v=51"></script>
   <script defer src="../scripts/scroll.js?v=51"></script>
-  <!-- Fragrance detail panel -->
-  <div class="fp" id="js-fp" role="dialog" aria-modal="true" aria-labelledby="js-fp-name" hidden>
-    <div class="fp__backdrop" id="js-fp-backdrop"></div>
-    <div class="fp__sheet" tabindex="-1">
-      <div class="fp__head">
-        <span class="fp__badge" id="js-fp-badge"></span>
-        <button class="fp__close" id="js-fp-close" type="button" aria-label="Cerrar panel">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="fp__scroll">
-        <div class="fp__visual" aria-hidden="true">
-          <img decoding="async" class="fp__img" id="js-fp-img" src="" alt="" hidden>
-          <div class="fp__rings" id="js-fp-rings">
-            <div class="fp__ring fp__ring--3"></div>
-            <div class="fp__ring fp__ring--2"></div>
-            <div class="fp__ring fp__ring--1"></div>
-          </div>
-        </div>
-        <div class="fp__body">
-          <h2 class="fp__name" id="js-fp-name"></h2>
-          <p class="fp__notes" id="js-fp-notes"></p>
-          <div class="fp__choices">
-            <span class="fp__bottles-label">Decant · 10 ml</span>
-            <div class="fp__bottle">
-              <span class="fp__bottle-left">
-                <span class="fp__bottle-size">Muestra 10 ml</span>
-                <span class="fp__bottle-price">₡5.000 c/u</span>
-              </span>
-              <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-decant">
-                <button class="fp__add-btn" type="button" data-fmt="decant" data-delta="1">+ Agregar</button>
-                <div class="fp__stepper" aria-hidden="true">
-                  <button class="fp__step-btn" type="button" data-fmt="decant" data-delta="-1" aria-label="Quitar uno">−</button>
-                  <span class="fp__step-qty">0</span>
-                  <button class="fp__step-btn" type="button" data-fmt="decant" data-delta="1" aria-label="Agregar uno">+</button>
-                </div>
-              </div>
-            </div>
-            <p class="fp__set-nudge" id="js-fp-nudge" hidden>Set de 3 decants: <strong>₡12.000</strong> · ahorrás ₡3.000</p>
-            <div class="fp__bottles" id="js-fp-bottles">
-              <span class="fp__bottles-label">Frasco completo</span>
-              <div class="fp__bottle-row">
-                <div class="fp__bottle" data-fmt="30ml">
-                  <span class="fp__bottle-left">
-                    <span class="fp__bottle-size">Frasco 30 ml</span>
-                    <span class="fp__bottle-price">₡12.000</span>
-                  </span>
-                  <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-30ml">
-                    <button class="fp__add-btn" type="button" data-fmt="30ml" data-delta="1">+ Agregar</button>
-                    <div class="fp__stepper" aria-hidden="true">
-                      <button class="fp__step-btn" type="button" data-fmt="30ml" data-delta="-1" aria-label="Quitar uno">−</button>
-                      <span class="fp__step-qty">0</span>
-                      <button class="fp__step-btn" type="button" data-fmt="30ml" data-delta="1" aria-label="Agregar uno">+</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="fp__bottle" data-fmt="100ml">
-                  <span class="fp__bottle-left">
-                    <span class="fp__bottle-size">Frasco 100 ml</span>
-                    <span class="fp__bottle-price">₡20.000</span>
-                  </span>
-                  <div class="fp__bottle-ctrl is-zero" id="js-fp-ctrl-100ml">
-                    <button class="fp__add-btn" type="button" data-fmt="100ml" data-delta="1">+ Agregar</button>
-                    <div class="fp__stepper" aria-hidden="true">
-                      <button class="fp__step-btn" type="button" data-fmt="100ml" data-delta="-1" aria-label="Quitar uno">−</button>
-                      <span class="fp__step-qty">0</span>
-                      <button class="fp__step-btn" type="button" data-fmt="100ml" data-delta="1" aria-label="Agregar uno">+</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="fp__footer">
-        <button class="fp__order-btn" id="js-fp-order" type="button">Agregar al carrito</button>
-      </div>
-    </div>
-  </div>
-
   <script defer src="../scripts/catalogo-data.js?v=51"></script>
-  <script defer src="../scripts/catalogo.js?v=56"></script>
+  <script defer src="../scripts/catalogo.js?v=57"></script>
   <script defer src="../scripts/decants.js?v=51"></script>
 
   <!-- ── SHARED OVERLAYS ──────────────────────────────────────── -->
@@ -497,55 +416,6 @@
     </div>
   </div>
 
-  <!-- Quiz -->
-  <div class="quiz-overlay js-quiz-overlay" role="dialog" aria-modal="true" aria-label="Descubrí tu fragancia ideal">
-    <div class="quiz-modal js-quiz-modal">
-      <div class="quiz-modal__header">
-        <span class="quiz-modal__step-label js-quiz-step-label">PASO 1 DE 4</span>
-        <button class="quiz-modal__close js-quiz-close" type="button" aria-label="Cerrar quiz">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="quiz-modal__body">
-        <div class="quiz-step js-quiz-step is-active" data-key="mood">
-          <p class="quiz-step__question">¿Qué ánimo querés reflejar hoy?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="atrevido"> <span class="quiz-opt__name">Atrevido</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="elegante"> <span class="quiz-opt__name">Elegante</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="casual"> <span class="quiz-opt__name">Casual</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="poderoso"> <span class="quiz-opt__name">Poderoso</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-mood" value="natural"> <span class="quiz-opt__name">Natural</span></label>
-          </div>
-        </div>
-        <div class="quiz-step js-quiz-step" data-key="notes">
-          <p class="quiz-step__question">¿Qué nota te llama más la atención?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="citricos"> <span class="quiz-opt__name">Cítricos</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="flores"> <span class="quiz-opt__name">Flores</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="maderas"> <span class="quiz-opt__name">Maderas</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="dulce"> <span class="quiz-opt__name">Dulce</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-notes" value="especias"> <span class="quiz-opt__name">Especias</span></label>
-          </div>
-        </div>
-        <div class="quiz-step js-quiz-step" data-key="occasion">
-          <p class="quiz-step__question">¿Para qué ocasión la vas a usar?</p>
-          <div class="quiz-step__options">
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="diario"> <span class="quiz-opt__name">Diario</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="noche"> <span class="quiz-opt__name">Noche</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="formal"> <span class="quiz-opt__name">Formal</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="verano"> <span class="quiz-opt__name">Verano</span></label>
-            <label class="quiz-opt"><input type="radio" name="quiz-occasion" value="fin-de-semana"> <span class="quiz-opt__name">Fin de semana</span></label>
-          </div>
-        </div>
-        <div class="quiz-result js-quiz-result"></div>
-      </div>
-      <div class="quiz-modal__footer">
-        <button class="quiz-modal__back js-quiz-back" type="button" disabled>Atrás</button>
-        <button class="quiz-modal__next js-quiz-next" type="button" disabled>SIGUIENTE</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Cart overlay + drawer -->
   <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
   <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
@@ -571,7 +441,6 @@
 
   <script src="../scripts/fragrance-data.js?v=51" defer></script>
   <script src="../scripts/search.js?v=51" defer></script>
-  <script src="../scripts/quiz.js?v=51" defer></script>
   <script src="../scripts/cart-drawer.js?v=51" defer></script>
 </body>
 </html>
