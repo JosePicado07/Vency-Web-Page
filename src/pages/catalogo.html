@@ -9,10 +9,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/styles.css?v=58">
-  <link rel="stylesheet" href="../styles/catalogo.css?v=55">
+  <link rel="stylesheet" href="../styles/catalogo.css?v=56">
   <link rel="stylesheet" href="../styles/catalog.css?v=51">
   <link rel="stylesheet" href="../styles/format-rail.css?v=51">
   <link rel="stylesheet" href="../styles/decants.css?v=51">
+  <link rel="stylesheet" href="../styles/coleccion.css?v=51">
 </head>
 <body class="page-catalogo">
 
@@ -281,6 +282,49 @@
 
   </main>
 
+  <!-- ── Format selector modal (same as Colección) ──────────────────── -->
+  <div class="fmt-overlay js-fmt-overlay" role="dialog" aria-modal="true" aria-label="Elegí el formato">
+    <div class="fmt-modal js-fmt-modal">
+      <button class="fmt-modal__close js-fmt-close" type="button" aria-label="Cerrar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="fmt-modal__head">
+        <img class="fmt-modal__img js-fmt-img" src="" alt="" width="64" height="64">
+        <h3 class="fmt-modal__name js-fmt-name"></h3>
+      </div>
+      <div class="fmt-modal__options js-fmt-options">
+        <label class="fmt-option">
+          <input type="radio" name="fmt-choice" value="decant">
+          <span class="fmt-option__indicator"></span>
+          <span class="fmt-option__info">
+            <span class="fmt-option__label">Decant 10ml</span>
+            <span class="fmt-option__desc">Para descubrir y llevar contigo</span>
+          </span>
+          <span class="fmt-option__price">₡5.000</span>
+        </label>
+        <label class="fmt-option">
+          <input type="radio" name="fmt-choice" value="30ml">
+          <span class="fmt-option__indicator"></span>
+          <span class="fmt-option__info">
+            <span class="fmt-option__label">Frasco 30ml</span>
+            <span class="fmt-option__desc">Para conocerlo bien</span>
+          </span>
+          <span class="fmt-option__price">₡12.000</span>
+        </label>
+        <label class="fmt-option">
+          <input type="radio" name="fmt-choice" value="100ml">
+          <span class="fmt-option__indicator"></span>
+          <span class="fmt-option__info">
+            <span class="fmt-option__label">Frasco 100ml</span>
+            <span class="fmt-option__desc">Para quedarte con él</span>
+          </span>
+          <span class="fmt-option__price">₡20.000</span>
+        </label>
+      </div>
+      <button class="fmt-modal__confirm js-fmt-confirm" type="button" disabled>Añadir al carrito</button>
+    </div>
+  </div>
+
   <!-- FIXED SELECTION TRAY -->
   <div class="dc-tray" id="dc-tray" role="region" aria-label="Set en composición" aria-live="polite">
     <div class="dc-tray__inner">
@@ -422,7 +466,7 @@
   </div>
 
   <script defer src="../scripts/catalogo-data.js?v=51"></script>
-  <script defer src="../scripts/catalogo.js?v=54"></script>
+  <script defer src="../scripts/catalogo.js?v=55"></script>
   <script defer src="../scripts/decants.js?v=51"></script>
 
   <!-- ── SHARED OVERLAYS ──────────────────────────────────────── -->

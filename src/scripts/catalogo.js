@@ -4,6 +4,89 @@
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos' };
 
+  /* ── Format selector modal (mirror of Colección) ──────────────────
+     Same HTML/CSS as coleccion.html — driven by the same cart logic.
+     openFmtModal(frag) where frag = { id, name, image }. */
+  var CART_KEY     = 'vency_cart_v1';
+  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
+
+  function fmtAddToCart(frag, fmt) {
+    if (!frag) return;
+    try {
+      var raw = localStorage.getItem(CART_KEY);
+      var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
+      if (fmt === 'decant') {
+        cart.selection.push({ id: frag.id, name: frag.name });
+      } else {
+        cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
+      }
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('vency-cart-update'));
+
+      // Open the shared cart drawer if it exists (cart-drawer.js wires it)
+      var drawer  = document.querySelector('.js-cart-drawer');
+      var overlay = document.querySelector('.js-cart-overlay');
+      if (drawer && overlay) {
+        overlay.classList.add('is-open');
+        drawer.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        var evt = document.createEvent('Event');
+        evt.initEvent('cart-render', true, false);
+        drawer.dispatchEvent(evt);
+      }
+    } catch (e) {}
+  }
+
+  var fmtOverlay = document.querySelector('.js-fmt-overlay');
+  var fmtModal   = fmtOverlay && fmtOverlay.querySelector('.js-fmt-modal');
+  var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
+  var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
+  var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
+  var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
+  var fmtFrag    = null;
+
+  if (fmtOverlay && fmtModal) {
+    fmtClose.addEventListener('click', closeFmtModal);
+    fmtOverlay.addEventListener('click', function (e) {
+      if (e.target === fmtOverlay) closeFmtModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && fmtOverlay.classList.contains('is-open')) closeFmtModal();
+    });
+    fmtOptions.addEventListener('change', function () {
+      fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) {
+        o.classList.toggle('is-selected', o.querySelector('input').checked);
+      });
+      fmtConfirm.disabled = false;
+    });
+    fmtConfirm.addEventListener('click', function () {
+      if (!fmtFrag) return;
+      var selected = fmtOptions.querySelector('input:checked');
+      if (!selected) return;
+      fmtAddToCart(fmtFrag, selected.value);
+      closeFmtModal();
+    });
+  }
+
+  function openFmtModal(frag) {
+    if (!fmtOverlay || !fmtModal || !fmtImg || !fmtName || !fmtOptions) return;
+    fmtFrag = frag;
+    fmtImg.src = frag.image || '../assets/images/_webp/default-bottle-400.webp';
+    fmtImg.alt = frag.name || '';
+    fmtName.textContent = frag.name || '';
+    fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
+    fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
+    fmtConfirm.disabled = true;
+    fmtOverlay.classList.add('is-open');
+  }
+
+  function closeFmtModal() {
+    if (!fmtOverlay) return;
+    fmtOverlay.classList.remove('is-open');
+    fmtFrag = null;
+  }
+
   var countEl   = document.querySelector('.js-cat-count');
   var emptyEl   = document.querySelector('.cat-empty');
 
@@ -545,9 +628,13 @@
       var btn = e.target.closest('.cat-entry__see');
       if (!btn) return;
       var card = btn.closest('[data-fragrance-id]');
-      if (card) {
+      if (card && typeof openFmtModal === 'function') {
         triggerEl = btn;
-        openPanel(card);
+        openFmtModal({
+          id:    card.dataset.fragranceId,
+          name:  card.dataset.fragranceName,
+          image: card.dataset.fragranceImg
+        });
       }
     });
 
