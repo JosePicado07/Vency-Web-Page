@@ -81,6 +81,7 @@
         o.classList.toggle('is-selected', o.querySelector('input').checked);
       });
       fmtConfirm.disabled = false;
+      fmtConfirm.textContent = 'Añadir al carrito';
     });
 
     fmtConfirm.addEventListener('click', function () {
@@ -109,6 +110,7 @@
     fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
     fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
     fmtConfirm.disabled = true;
+    fmtConfirm.textContent = 'Elegí un formato';
 
     var prices = {
       decant: '₡5.000',
