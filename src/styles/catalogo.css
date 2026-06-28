@@ -1609,21 +1609,27 @@ body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
   }
 }
 
-/* Card: no border, no parchment chrome — bottle sits on the ground. */
+/* Card chrome: a hairline border in the brand's stone tone with a soft
+   parchment ground. Lifts to warm ochre on hover. Square (1:1) crop,
+   contain the bottle so its silhouette is preserved. */
 .cat-entry__card {
-  border: none;
-  background: transparent;
-  border-radius: 0;
+  border: 1px solid color-mix(in oklch, var(--border) 75%, transparent);
+  background: color-mix(in oklch, var(--botanical-parchment) 92%, var(--atelier-stone) 8%);
+  border-radius: 3px;
   padding: 0;
   text-align: center;
+  transition:
+    border-color 0.25s var(--ease-expo),
+    background-color 0.25s var(--ease-expo),
+    box-shadow 0.25s var(--ease-expo);
 }
 
 .cat-entry__card:hover {
-  border-color: transparent;
-  background: transparent;
+  border-color: var(--warm-ochre);
+  background: var(--botanical-parchment);
+  box-shadow: 0 2px 0 0 color-mix(in oklch, var(--warm-ochre) 18%, transparent);
 }
 
-/* Square crop, contain the bottle so its silhouette is preserved. */
 .cat-entry__img-wrap {
   aspect-ratio: 1 / 1;
   background: transparent;
@@ -1631,7 +1637,7 @@ body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
 
 .cat-entry__img {
   object-fit: contain;
-  padding: 0.4rem;
+  padding: 0.55rem;
 }
 
 .cat-entry__card:hover .cat-entry__img { transform: scale(1.06); }
