@@ -1579,3 +1579,102 @@ body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
 
 /* Sold-out gets the overlay badge on the image; suppress the bottom rail. */
 .cat-entry .fmt-rail--sold-out { display: none; }
+
+
+/* ============================================================
+   HIGH-DENSITY GRID — bottles only, no card chrome.
+   Brand grouping handles the metadata; the card is just the
+   image + the fragrance name. Many per row, less scroll.
+   ============================================================ */
+
+.cat-brand__list {
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 0.5rem 0.75rem;
+  padding: 0 var(--space-md) var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .cat-brand__list {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cat-brand__list {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem 1.25rem;
+    padding: 0 var(--space-lg) var(--space-lg);
+  }
+}
+
+/* Card: no border, no parchment chrome — bottle sits on the ground. */
+.cat-entry__card {
+  border: none;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  text-align: center;
+}
+
+.cat-entry__card:hover {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* Square crop, contain the bottle so its silhouette is preserved. */
+.cat-entry__img-wrap {
+  aspect-ratio: 1 / 1;
+  background: transparent;
+}
+
+.cat-entry__img {
+  object-fit: contain;
+  padding: 0.4rem;
+}
+
+.cat-entry__card:hover .cat-entry__img { transform: scale(1.06); }
+
+/* Info row beneath the image — name only, centered, smaller. */
+.cat-entry__info {
+  padding: 0.15rem 0.25rem 0.5rem;
+  text-align: center;
+  gap: 0.1rem;
+}
+
+/* Hide per-card metadata; brand groupings + the detail panel handle it. */
+.cat-entry__provenance,
+.cat-entry__inspo { display: none; }
+
+/* Vency entries keep a subtle distinction so the originals don't read as
+   another generic bottle in the wider list. */
+.cat-entry--vency .cat-entry__provenance {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.1rem;
+}
+
+.cat-entry__name {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+  font-size: clamp(0.72rem, 1.2vw, 0.82rem);
+  line-height: 1.25;
+  letter-spacing: 0;
+  color: var(--volcanic-ink);
+  text-transform: none;
+}
+
+/* Vency originals keep the serif name to match the brand voice. */
+.cat-entry--vency .cat-entry__name {
+  font-family: 'Bitter', serif;
+  font-weight: 700;
+}
+
+/* Sold-out badge gets smaller too. */
+.cat-entry__sold-out {
+  top: 0.35rem;
+  right: 0.35rem;
+  font-size: 0.5rem;
+  padding: 0.22rem 0.45rem;
+}
