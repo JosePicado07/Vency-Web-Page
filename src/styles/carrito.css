@@ -9,6 +9,13 @@
   padding: calc(var(--nav-h) + var(--space-md)) var(--space-md) var(--space-xl);
 }
 
+@media (min-width: 1024px) {
+  .page-carrito main {
+    max-width: 960px;
+    padding: calc(var(--nav-h) + var(--space-lg)) var(--space-lg) var(--space-xl);
+  }
+}
+
 .carrito-header {
   margin-bottom: var(--space-lg);
   display: flex;

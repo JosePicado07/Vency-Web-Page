@@ -58,6 +58,7 @@
       return;
     }
 
+    var DECANT_PRICE = 5000;
     var itemsHtml = '';
     var total = 0;
 
@@ -65,16 +66,16 @@
       var frag = catalog.filter(function (f) { return f.id === s.id; })[0];
       var name = frag ? frag.name : s.id;
       var img  = frag ? frag.image : '';
-      var price = s.qty === '30ml' ? 15000 : 0;
+      total += DECANT_PRICE;
       itemsHtml +=
         '<div class="cart-item">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
             '<div class="cart-item__name">' + escHtml(name) + '</div>' +
-            '<div class="cart-item__variant">Decant · ' + escHtml(s.qty || '') + '</div>' +
-            '<div class="cart-item__qty">Cant: ' + (s.qty || 0) + '</div>' +
+            '<div class="cart-item__variant">Decant · 10 ml</div>' +
+            '<div class="cart-item__qty">Cant: 1</div>' +
           '</div>' +
-          '<div class="cart-item__price">₡' + formatPrice(price) + '</div>' +
+          '<div class="cart-item__price">₡' + formatPrice(DECANT_PRICE) + '</div>' +
         '</div>';
     });
 
@@ -82,16 +83,18 @@
       var frag = catalog.filter(function (f) { return f.id === b.id; })[0];
       var name = frag ? frag.name : b.id;
       var img  = frag ? frag.image : '';
-      var price = 35000;
+      var qty = b.qty || 1;
+      var unitPrice = b.price || 0;
+      total += unitPrice * qty;
       itemsHtml +=
         '<div class="cart-item">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
             '<div class="cart-item__name">' + escHtml(name) + '</div>' +
-            '<div class="cart-item__variant">Botella · 30ml</div>' +
-            '<div class="cart-item__qty">Cant: ' + (b.qty || 1) + '</div>' +
+            '<div class="cart-item__variant">Botella · ' + escHtml(b.fmt || '30 ml') + '</div>' +
+            '<div class="cart-item__qty">Cant: ' + qty + '</div>' +
           '</div>' +
-          '<div class="cart-item__price">₡' + formatPrice(price) + '</div>' +
+          '<div class="cart-item__price">₡' + formatPrice(unitPrice) + '</div>' +
         '</div>';
     });
 
@@ -120,6 +123,10 @@
       '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
         '<polyline points="7,2 3,6 7,10"/>' +
       '</svg>';
+    var arrowNextSvg =
+      '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<polyline points="5,2 9,6 5,10"/>' +
+      '</svg>';
 
     upsell.innerHTML =
       '<div class="cart-drawer__upsell-label">Completa con</div>' +
@@ -133,7 +140,7 @@
             '</button>';
           }).join('') +
         '</div>' +
-        '<button class="cart-upsell-arrow cart-upsell-arrow--next" type="button" aria-label="Siguiente">' + arrowSvg + '</button>' +
+        '<button class="cart-upsell-arrow cart-upsell-arrow--next" type="button" aria-label="Siguiente">' + arrowNextSvg + '</button>' +
       '</div>';
 
     wireUpsellArrows();

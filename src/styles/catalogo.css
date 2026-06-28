@@ -1425,3 +1425,27 @@ body.fmt--100ml .fp__bottle[data-fmt="30ml"]  { display: none; }
 body.fmt--30ml  .fp__bottles > .fp__bottles-label,
 body.fmt--100ml .fp__bottles > .fp__bottles-label { display: none; }
 
+/* ── DESKTOP: compact catalog header ── */
+@media (min-width: 1024px) {
+  .cat-header {
+    padding: var(--space-sm) var(--space-lg) 0;
+  }
+  .cat-header__title-row {
+    padding-bottom: 0.25rem;
+  }
+  .cat-header__title {
+    font-size: clamp(2rem, 3vw, 2.8rem);
+  }
+  .cat-header__howto {
+    font-size: 0.65rem;
+    margin: 0.3rem 0 0.4rem;
+  }
+  .cat-header__filter {
+    margin: 0 calc(-1 * var(--space-lg));
+    padding: 0 var(--space-lg);
+  }
+  .cat-filters__inner {
+    padding: 0.35rem 0;
+  }
+}
+

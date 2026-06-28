@@ -110,6 +110,12 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .col-header {
+    padding: calc(var(--nav-h) + var(--space-lg)) var(--space-lg) var(--space-lg);
+  }
+}
+
 /* ============================================================
    MOBILE POLISH — Collection page layout refinements
    ============================================================ */

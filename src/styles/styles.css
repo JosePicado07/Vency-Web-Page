@@ -1020,6 +1020,10 @@ a.coll-block:hover .coll-block__cta {
 @media (max-width: 899px) {
   .colls-intro__grid {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "original"
+      "icon"
+      "hybrid";
     min-height: unset;
   }
 
@@ -1247,31 +1251,62 @@ a.coll-block:hover .coll-block__cta {
   scroll-margin-top: var(--nav-h);
 }
 
+.sessions__grid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 .sessions__inner {
   max-width: 600px;
 }
 
-/* Desktop: single column centered, not awkwardly left-anchored in a wide band.
-   The dark void on the right was reading as a missing image; centering makes
-   the negative space symmetric and intentional. */
+/* Desktop: two-column — copy left, ambient brand mark right */
 @media (min-width: 1024px) {
   .sessions {
-    padding: clamp(var(--space-xl), 8vw, 7rem) var(--space-md);
+    padding: clamp(var(--space-xl), 8vw, 7rem) var(--space-lg);
+  }
+  .sessions__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    align-items: center;
   }
   .sessions__inner {
-    max-width: 680px;
-    margin: 0 auto;
-    text-align: center;
+    max-width: 520px;
   }
   .sessions__inner .label,
   .sessions__inner .sessions__body {
-    /* tighten the readable measure when centered */
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 0;
+    margin-right: 0;
   }
   .sessions__cta {
     display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.sessions__mark {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .sessions__mark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 0;
+    opacity: 0.06;
+    user-select: none;
+    pointer-events: none;
+  }
+  .sessions__mark-letter {
+    font-family: 'Bitter', serif;
+    font-weight: 900;
+    font-size: clamp(10rem, 15vw, 16rem);
+    line-height: 0.75;
+    color: var(--botanical-parchment);
+    letter-spacing: -0.06em;
   }
 }
 
@@ -2390,6 +2425,12 @@ a.coll-block:hover .coll-block__cta {
   flex-direction: column;
   transform: translateX(100%);
   transition: transform var(--dur-slow) var(--ease-expo);
+}
+
+@media (min-width: 1024px) {
+  .cart-drawer {
+    width: 440px;
+  }
 }
 .cart-drawer.is-open {
   transform: translateX(0);
