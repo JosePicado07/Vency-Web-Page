@@ -763,7 +763,80 @@ a {
   flex-wrap: wrap;
   gap: 1.25rem;
   margin-bottom: var(--space-sm);
-}.hero__provenance {
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Hero secondary CTA — a ledger reference, not a stripped-down link.
+   Reads as the "while you're here, the full catalog is documented
+   over there" entry. Provenance voice (Manrope uppercase tracked),
+   hairline band, asymmetric pairing with the filled primary above.
+   ───────────────────────────────────────────────────────────────── */
+.hero__ledger {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  margin: var(--space-sm) 0 var(--space-md);
+  padding: 0.95rem 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.25s var(--ease-expo);
+  max-width: 30rem;
+}
+
+.hero__ledger-label {
+  grid-column: 1;
+  grid-row: 1;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--volcanic-ink);
+  line-height: 1.1;
+  transition: color 0.25s var(--ease-expo);
+}
+
+.hero__ledger-meta {
+  grid-column: 1;
+  grid-row: 2;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+  line-height: 1.35;
+  margin-top: 0.3rem;
+}
+
+.hero__ledger-mark {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  color: var(--warm-ochre);
+  transition: transform 0.25s var(--ease-expo), color 0.25s var(--ease-expo);
+}
+
+.hero__ledger:hover .hero__ledger-label,
+.hero__ledger:focus-visible .hero__ledger-label {
+  color: var(--warm-ochre);
+}
+
+.hero__ledger:hover .hero__ledger-mark,
+.hero__ledger:focus-visible .hero__ledger-mark {
+  transform: translateX(4px);
+  color: var(--warm-ochre-dark, var(--warm-ochre));
+}
+
+.hero__ledger:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 4px;
+}
+
+.hero__provenance {
   font-family: 'Manrope', sans-serif;
   font-size: 0.62rem;
   font-weight: 500;

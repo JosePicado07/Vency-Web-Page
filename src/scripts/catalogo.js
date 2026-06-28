@@ -515,6 +515,22 @@
   wireSearch();
   render();
 
+  // Wire card clicks → open the format modal. (Was previously inside
+  // wireFragPanel, which got stripped in the dead-code cleanup. The
+  // modal driver itself is at the top of this file.)
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.cat-entry__see');
+    if (!btn) return;
+    var card = btn.closest('[data-fragrance-id]');
+    if (card) {
+      openFmtModal({
+        id:    card.dataset.fragranceId,
+        name:  card.dataset.fragranceName,
+        image: card.dataset.fragranceImg
+      });
+    }
+  });
+
   if (location.hash) {
     setTimeout(function () {
       var el = document.getElementById(location.hash.slice(1));
