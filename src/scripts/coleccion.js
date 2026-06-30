@@ -50,9 +50,7 @@
         overlay.classList.add('is-open');
         drawer.classList.add('is-open');
         document.body.style.overflow = 'hidden';
-        var evt = document.createEvent('Event');
-        evt.initEvent('cart-render', true, false);
-        drawer.dispatchEvent(evt);
+        drawer.dispatchEvent(new CustomEvent('cart-render', { bubbles: true }));
       }
     } catch (e) {}
   }
@@ -63,6 +61,8 @@
   var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
   var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
   var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
+  var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
   var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
   var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
   var fmtFrag    = null;
@@ -107,8 +107,23 @@
     fmtImg.src = frag.image;
     fmtImg.alt = frag.name;
     fmtName.textContent = frag.name;
-    fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
-    fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
+    if (fmtInspo) {
+      if (frag.inspiration) {
+        fmtInspo.textContent = 'Inspirado en: ' + frag.inspiration.name + ' · ' + frag.inspiration.brand;
+        fmtInspo.hidden = false;
+      } else {
+        fmtInspo.hidden = true;
+      }
+    }
+    if (fmtNotes) {
+      var noteStr = Array.isArray(frag.noteLabels) ? frag.noteLabels.join(' · ') : '';
+      if (noteStr) { fmtNotes.textContent = noteStr; fmtNotes.hidden = false; }
+      else { fmtNotes.hidden = true; }
+    }
+    var inputs = fmtOptions.querySelectorAll('input');
+    var options = fmtOptions.querySelectorAll('.fmt-option');
+    inputs.forEach(function (r) { r.checked = false; });
+    options.forEach(function (o) { o.classList.remove('is-selected'); });
     fmtConfirm.disabled = true;
     fmtConfirm.textContent = 'Elegí un formato';
 
@@ -128,7 +143,7 @@
       '100ml': 'Para quedarte con él'
     };
 
-    fmtOptions.querySelectorAll('input').forEach(function (r) {
+    inputs.forEach(function (r) {
       var val = r.value;
       var wrapper = r.closest('.fmt-option');
       var priceEl = wrapper.querySelector('.fmt-option__price');

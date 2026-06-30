@@ -2,7 +2,32 @@
   'use strict';
 
   var catalog   = window.VENCY_FULL_CATALOG || [];
-  var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos' };
+  var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos', vencyCat: 'todos' };
+
+  // Parse ?category=X from URL and apply initial filter
+  var urlParams = new URLSearchParams(location.search);
+  var urlCat = urlParams.get('category');
+  switch (urlCat) {
+    case 'original':
+      filters.cat = 'todos';
+      filters.vencyCat = 'todos';
+      break;
+    case 'disenador':
+      filters.cat = 'disenador';
+      filters.vencyCat = 'ocultar';
+      break;
+    case 'niche':
+      filters.cat = 'nicho';
+      filters.vencyCat = 'ocultar';
+      break;
+    case 'ultra':
+      filters.cat = 'ultra-nicho';
+      filters.vencyCat = 'ocultar';
+      break;
+    default:
+      filters.cat = 'todos';
+      filters.vencyCat = 'todos';
+  }
 
   /* ── Format selector modal (mirror of Colección) ──────────────────
      Same HTML/CSS as coleccion.html — driven by the same cart logic.
@@ -30,9 +55,7 @@
         overlay.classList.add('is-open');
         drawer.classList.add('is-open');
         document.body.style.overflow = 'hidden';
-        var evt = document.createEvent('Event');
-        evt.initEvent('cart-render', true, false);
-        drawer.dispatchEvent(evt);
+        drawer.dispatchEvent(new CustomEvent('cart-render', { bubbles: true }));
       }
     } catch (e) {}
   }
@@ -42,6 +65,9 @@
   var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
   var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
   var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtHistory = fmtModal && fmtModal.querySelector('.js-fmt-history');
+  var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
+  var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
   var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
   var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
   var fmtFrag    = null;
@@ -76,6 +102,30 @@
     fmtImg.src = frag.image || '../assets/images/_webp/default-bottle-400.webp';
     fmtImg.alt = frag.name || '';
     fmtName.textContent = frag.name || '';
+    if (fmtHistory) {
+      if (frag.href) {
+        fmtHistory.href = frag.href;
+        fmtHistory.hidden = false;
+      } else {
+        fmtHistory.hidden = true;
+      }
+    }
+    if (fmtInspo) {
+      if (frag.inspo) {
+        fmtInspo.textContent = 'Inspirado en: ' + frag.inspo;
+        fmtInspo.hidden = false;
+      } else {
+        fmtInspo.hidden = true;
+      }
+    }
+    if (fmtNotes) {
+      if (frag.notes) {
+        fmtNotes.textContent = frag.notes;
+        fmtNotes.hidden = false;
+      } else {
+        fmtNotes.hidden = true;
+      }
+    }
     fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
     fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
     fmtConfirm.disabled = true;
@@ -98,6 +148,11 @@
   }
 
   var escHtml = window.escHtml;
+
+  function debounce(fn, ms) {
+    var t;
+    return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
 
   /* Entrance: rows reveal in waves as they enter the viewport.
      CSS holds the pre-state (only under prefers-reduced-motion: no-preference). */
@@ -194,14 +249,22 @@
         ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
         : '../assets/images/_webp/default-bottle-400.webp';
 
+      var historiaHref = 'coleccion.html#' + frag.id;
+      var inspoText = isIcon && frag.inspiration
+        ? escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand)
+        : '';
+
       html +=
         '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
           ' id="' + frag.id + '"' +
           ' data-fragrance-id="' + frag.id + '"' +
           ' data-fragrance-name="' + fname + '"' +
           ' data-fragrance-cat="vency"' +
+          ' data-fragrance-vency-cat="' + frag.category + '"' +
           ' data-fragrance-notes="' + escHtml(notes) + '"' +
           ' data-fragrance-img="' + escHtml(frag.image || '../assets/images/default-bottle.jpg') + '"' +
+          ' data-fragrance-href="' + escHtml(historiaHref) + '"' +
+          (inspoText ? ' data-fragrance-inspo="' + inspoText + '"' : '') +
           ' data-search="' + escHtml(searchStr) + '"' +
           ' data-ocasion="' + ocasion + '"' +
           (soldOut ? ' data-sold-out="true"' : '') + '>' +
@@ -314,6 +377,8 @@
           li.dataset.fragranceId   = interp ? interp.id : slug(item.brand + '-' + item.name);
           li.dataset.fragranceName = interp ? interp.name : item.brand + ' · ' + item.name;
           li.dataset.fragranceCat  = sec.cat;
+          if (historiaHref) li.dataset.fragranceHref = historiaHref;
+          li.dataset.fragranceInspo = escHtml(item.name) + ' · ' + escHtml(item.brand);
           li.dataset.fragranceNotes = item.notes || '';
           li.dataset.fragranceImg  = interp
             ? '../assets/images/inspirations/' + interp.id + '.png'
@@ -390,10 +455,21 @@
     });
   }
 
+  /* ── Cached DOM references ──────────────────────────── */
+  var catSectionNodes = null;
+  function getCatSections() {
+    if (!catSectionNodes) {
+      catSectionNodes = document.querySelectorAll('.cat-section');
+    }
+    return catSectionNodes;
+  }
+
   /* ── Filter + render ─────────────────────────────────── */
   function render() {
+    var sections = getCatSections();
     // ponytail: no lazy reveal — all entries are already in DOM; pagination saved nothing.
-    document.querySelectorAll('.cat-section:not(.cat-section--vency) .cat-entry').forEach(function (entry) {
+    var entries = document.querySelectorAll('.cat-section:not(.cat-section--vency) .cat-entry');
+    entries.forEach(function (entry) {
       var sec      = entry.closest('.cat-section');
       var secCat   = sec ? sec.dataset.cat : '';
       var catMatch = (filters.cat === 'todos' || filters.cat === secCat);
@@ -406,21 +482,25 @@
     updateExternalSectionVisibility();
 
     /* === Vency originals === */
-    var vencySection = document.querySelector('.cat-section--vency');
+    var vencySection = sections.length ? document.querySelector('.cat-section--vency') : null;
     var vencyVisible = 0;
-    document.querySelectorAll('.cat-entry--vency[data-search]').forEach(function (entry) {
+    (document.querySelectorAll('.cat-entry--vency[data-search]') || []).forEach(function (entry) {
       var catMatch     = (filters.cat === 'todos' || filters.cat === 'vency');
+      var vencyMatch   = (filters.vencyCat === 'todos' || entry.dataset.fragranceVencyCat === filters.vencyCat);
       var qMatch       = !filters.q || entry.dataset.search.indexOf(filters.q) !== -1;
       var ocasionMatch = (filters.ocasion === 'todos' ||
         (entry.dataset.ocasion && entry.dataset.ocasion.indexOf(filters.ocasion) !== -1));
-      var show = catMatch && qMatch && ocasionMatch;
+      var show = catMatch && vencyMatch && qMatch && ocasionMatch;
       entry.style.display = show ? '' : 'none';
       if (show) vencyVisible++;
     });
     if (vencySection) vencySection.style.display = vencyVisible > 0 ? '' : 'none';
 
     /* === Count + empty === */
-    var externalVisible = document.querySelectorAll('.cat-section:not(.cat-section--vency) .cat-entry:not(.cat-entry--hidden)').length;
+    var externalVisible = 0;
+    for (var i = 0; i < entries.length; i++) {
+      if (!entries[i].classList.contains('cat-entry--hidden')) externalVisible++;
+    }
     var grandTotal = externalVisible + vencyVisible;
     if (countEl) countEl.textContent = grandTotal + (grandTotal === 1 ? ' fragancia' : ' fragancias');
     if (emptyEl) {
@@ -436,6 +516,11 @@
     var panel     = document.getElementById('cat-filter-panel');
     if (!toggleBtn || !panel) return;
 
+    if (location.search.indexOf('filter=1') !== -1) {
+      panel.hidden = false;
+      toggleBtn.setAttribute('aria-expanded', 'true');
+    }
+
     toggleBtn.addEventListener('click', function () {
       var isOpen = !panel.hidden;
       panel.hidden = isOpen;
@@ -448,7 +533,8 @@
     var clearBtn  = document.querySelector('.js-filter-clear');
     var count = (filters.cat !== 'todos' ? 1 : 0)
               + (filters.gender !== 'todos' ? 1 : 0)
-              + (filters.ocasion !== 'todos' ? 1 : 0);
+              + (filters.ocasion !== 'todos' ? 1 : 0)
+              + (filters.vencyCat !== 'todos' ? 1 : 0);
     if (badge)    { badge.textContent = count > 0 ? count : ''; badge.hidden = count === 0; }
     if (clearBtn) { clearBtn.hidden = count === 0; }
   }
@@ -457,6 +543,7 @@
     filters.cat    = 'todos';
     filters.gender = 'todos';
     filters.ocasion = 'todos';
+    filters.vencyCat = 'todos';
     document.querySelectorAll('.cat-pill[data-filter]').forEach(function (p) {
       var active = p.dataset.value === 'todos';
       p.classList.toggle('is-active', active);
@@ -496,19 +583,32 @@
   function wireSearch() {
     var input = document.getElementById('cat-search');
     if (!input) return;
-    input.addEventListener('input', function () {
+    input.addEventListener('input', debounce(function () {
       filters.q = input.value.trim().toLowerCase();
       render();
-    });
+    }, 200));
   }
 
 /* ── Format journey (URL param ?fmt=decant|30ml|100ml) ── */
   var fmtMatch = location.search.match(/[?&]fmt=(decant|30ml|100ml)(?:&|$)/);
   if (fmtMatch) document.body.classList.add('fmt--' + fmtMatch[1]);
 
+  /* Sync filter pills to initial URL-param state */
+  function syncPillsToFilters() {
+    Object.keys(filters).forEach(function (dim) {
+      var val = filters[dim];
+      document.querySelectorAll('.cat-pill[data-filter="' + dim + '"]').forEach(function (p) {
+        var active = p.dataset.value === val;
+        p.classList.toggle('is-active', active);
+        p.setAttribute('aria-pressed', String(active));
+      });
+    });
+  }
+
   /* ── Init ────────────────────────────────────────────── */
   buildVencySection();
   buildSections();
+  syncPillsToFilters();
   wireFilterToggle();
   wirePills();
   wireClearBtn();
@@ -526,7 +626,10 @@
       openFmtModal({
         id:    card.dataset.fragranceId,
         name:  card.dataset.fragranceName,
-        image: card.dataset.fragranceImg
+        image: card.dataset.fragranceImg,
+        href:  card.dataset.fragranceHref || null,
+        inspo: card.dataset.fragranceInspo || null,
+        notes: card.dataset.fragranceNotes || ''
       });
     }
   });

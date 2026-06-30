@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/styles.css?v=62">
+  <link rel="stylesheet" href="../styles/styles.css?v=70">
   <link rel="stylesheet" href="../styles/coleccion.css?v=53">
   <link rel="stylesheet" href="../styles/catalog.css?v=51">
 </head>
@@ -24,9 +24,24 @@
       <span class="nav__toggle-bar"></span>
     </button>
     <ul class="nav__links" id="nav-links" role="list">
-      <li><a href="coleccion.html" class="nav__link nav__link--active" aria-current="page">Colección</a></li>
-      <li><a href="catalogo.html" class="nav__link">Comprar</a></li>
-      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
     </ul>
   </nav>
 
@@ -67,9 +82,9 @@
         <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
       </p>
       <nav class="footer__nav" aria-label="Navegación del pie de página">
-        <a href="coleccion.html" class="footer__link">Colección</a>
         <a href="catalogo.html" class="footer__link">Catálogo</a>
-        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="perfumista.html" class="footer__link">El Perfumista</a>
+        <a href="guia.html" class="footer__link">Guía</a>
       </nav>
       <nav class="footer__nav" aria-label="Políticas y contacto">
         <a href="legal.html" class="footer__link">Políticas</a>
@@ -89,7 +104,7 @@
     </svg>
   </button>
 
-  <!-- ── Format selector modal ────────────────────────────────── -->
+  <!-- -- Format selector modal ---------------------------------- -->
   <div class="fmt-overlay js-fmt-overlay" role="dialog" aria-modal="true" aria-label="Elegí el formato">
     <div class="fmt-modal js-fmt-modal">
       <button class="fmt-modal__close js-fmt-close" type="button" aria-label="Cerrar">
@@ -97,7 +112,11 @@
       </button>
       <div class="fmt-modal__head">
         <img class="fmt-modal__img js-fmt-img" src="" alt="" width="64" height="64">
-        <h3 class="fmt-modal__name js-fmt-name"></h3>
+        <div class="fmt-modal__head-text">
+          <h3 class="fmt-modal__name js-fmt-name"></h3>
+          <p class="fmt-modal__inspo js-fmt-inspo" hidden></p>
+          <p class="fmt-modal__notes js-fmt-notes" hidden></p>
+        </div>
       </div>
       <div class="fmt-modal__options js-fmt-options">
         <label class="fmt-option">
@@ -132,7 +151,7 @@
     </div>
   </div>
 
-  <!-- ── SHARED OVERLAYS ──────────────────────────────────────── -->
+  <!-- -- SHARED OVERLAYS ---------------------------------------- -->
 
   <!-- Search -->
   <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true" aria-label="Buscar fragancias">
@@ -146,17 +165,17 @@
       <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
       <div class="search-overlay__results js-search-results"></div>
       <div class="search-overlay__categories js-search-categories">
-        <a href="coleccion.html" class="search-cat">
-          <span class="search-cat__label">COLECCIÓN</span>
-          <span class="search-cat__name">Original Blend</span>
+        <a href="catalogo.html?category=original" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Vency</span>
         </a>
         <a href="catalogo.html" class="search-cat">
-          <span class="search-cat__label">INSPIRACIONES</span>
-          <span class="search-cat__name">Icon Series</span>
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Catálogo completo</span>
         </a>
-        <a href="coleccion.html" class="search-cat">
-          <span class="search-cat__label">FORMATOS</span>
-          <span class="search-cat__name">Decants & Botellas</span>
+        <a href="perfumista.html" class="search-cat">
+          <span class="search-cat__label">ATELIER</span>
+          <span class="search-cat__name">El Perfumista</span>
         </a>
       </div>
     </div>
@@ -187,11 +206,11 @@
     </div>
   </div>
 
-  <script defer src="../scripts/fragrance-data.js?v=51"></script>
-  <script defer src="../scripts/nav.js?v=51"></script>
+  <script defer src="../scripts/fragrance-data.js?v=52"></script>
+  <script defer src="../scripts/nav.js?v=55"></script>
   <script defer src="../scripts/scroll.js?v=51"></script>
-  <script defer src="../scripts/coleccion.js?v=22"></script>
-  <script src="../scripts/search.js?v=51" defer></script>
-  <script src="../scripts/cart-drawer.js?v=4" defer></script>
+  <script defer src="../scripts/coleccion.js?v=23"></script>
+  <script src="../scripts/search.js?v=52" defer></script>
+  <script src="../scripts/cart-drawer.js?v=5" defer></script>
 </body>
 </html>
