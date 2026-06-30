@@ -9,7 +9,7 @@
   var urlCat = urlParams.get('category');
   switch (urlCat) {
     case 'original':
-      filters.cat = 'todos';
+      filters.cat = 'vency';
       filters.vencyCat = 'todos';
       break;
     case 'disenador':
