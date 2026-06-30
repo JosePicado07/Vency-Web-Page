@@ -242,26 +242,27 @@
 }
 
 /* Header: bottle portrait on top, identity below.
-   The bottle commands the space — name and options follow. */
+   Wrap shrinks to the image's natural width — no grey side bars. */
 .fmt-modal__head {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding-right: 0;
   margin-bottom: 1.25rem;
 }
 .fmt-modal__img-wrap {
   position: relative;
-  width: 100%;
-  height: clamp(190px, 46vw, 280px);
+  width: fit-content;
+  max-width: 100%;
   overflow: hidden;
   background: color-mix(in oklch, var(--atelier-stone) 28%, var(--botanical-parchment));
   border-radius: 3px;
   margin-bottom: 1rem;
 }
 .fmt-modal__img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center center;
+  height: clamp(190px, 46vw, 260px);
+  width: auto;
+  max-width: 100%;
   display: block;
   transition: opacity 0.18s ease-out;
 }
@@ -289,6 +290,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 0.25rem;
+  align-self: stretch;
 }
 .fmt-modal__name {
   font-family: 'Bitter', serif;
