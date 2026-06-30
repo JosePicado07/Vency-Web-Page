@@ -35,6 +35,9 @@
     '30ml':  '../assets/images/formats/frasco-30ml.jpg',
     '100ml': '../assets/images/formats/frasco-100ml.jpg'
   };
+  Object.keys(FMT_IMAGES).forEach(function (k) {
+    var pre = new Image(); pre.src = FMT_IMAGES[k];
+  });
 
   function addToCart(frag, fmt) {
     if (!frag) return;
