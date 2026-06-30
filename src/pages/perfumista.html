@@ -1,0 +1,434 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anthonny Villegas · Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Conocé la historia de Anthonny Villegas, ingeniero químico y perfumista costarricense. De vuelta en Heredia, crea fragancias artesanales con materias primas de alta calidad.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=70">
+  <style>
+    .perfumista-hero {
+      padding: calc(var(--nav-h) + var(--space-xl)) var(--space-md) var(--space-xl);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .perfumista-hero__image {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+      height: auto;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 2px;
+      margin-bottom: var(--space-lg);
+      background: var(--border);
+    }
+    .perfumista-hero__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: -0.015em;
+      margin: 0.5rem 0 0.75rem;
+      color: var(--volcanic-ink);
+    }
+    .perfumista-hero__subtitle {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 500;
+      font-size: clamp(0.9rem, 1.5vw, 1.05rem);
+      color: var(--ink-muted);
+      letter-spacing: 0.02em;
+    }
+    .perfumista-section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-md);
+    }
+    .perfumista-section--bleed {
+      max-width: 900px;
+    }
+    .perfumista-section__label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+    .perfumista-section__heading {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      margin: 0 0 1.25rem;
+      color: var(--volcanic-ink);
+    }
+    .perfumista-section__body {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.92rem, 1.2vw, 1rem);
+      line-height: 1.75;
+      color: var(--ink-subdued);
+    }
+    .perfumista-section__body p {
+      margin: 0 0 1.25rem;
+    }
+    .perfumista-section__body p:last-child {
+      margin-bottom: 0;
+    }
+    .perfumista-section__body strong {
+      color: var(--volcanic-ink);
+      font-weight: 600;
+    }
+    .perfumista-divider {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+    .perfumista-divider__line {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+    .perfumista-process {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    @media (min-width: 540px) {
+      .perfumista-process {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .perfumista-process__step {
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+    .perfumista-process__num {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+    .perfumista-process__name {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--volcanic-ink);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .perfumista-process__desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.88rem;
+      line-height: 1.65;
+      color: var(--ink-subdued);
+    }
+    .perfumista-cta {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-md) calc(var(--space-xl) * 1.5);
+      text-align: center;
+    }
+    .perfumista-cta__heading {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      line-height: 1.15;
+      margin: 0 0 0.75rem;
+      color: var(--volcanic-ink);
+    }
+    .perfumista-cta__text {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.9rem, 1.2vw, 0.98rem);
+      color: var(--ink-subdued);
+      line-height: 1.65;
+      margin: 0 0 1.5rem;
+    }
+    .perfumista-quote {
+      background: var(--botanical-parchment);
+      padding: var(--space-lg) var(--space-md);
+      margin: 0;
+    }
+    .perfumista-quote__inner {
+      max-width: 620px;
+      margin: 0 auto;
+    }
+    .perfumista-quote__text {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      line-height: 1.5;
+      color: var(--volcanic-ink);
+      margin: 0 0 0.75rem;
+    }
+    .perfumista-quote__attr {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+      font-style: normal;
+    }
+  </style>
+</head>
+<body class="page-perfumista">
+
+  <a class="skip-nav" href="#perfumista-content">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link nav__link--active" aria-current="page">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <main id="perfumista-content" tabindex="-1">
+
+    <!-- HERO -->
+    <header class="perfumista-hero animate-in">
+      <span class="label sage-label animate-in">EL PERFUMISTA · HEREDIA, COSTA RICA</span>
+      <img
+        class="perfumista-hero__image animate-in"
+        src="../assets/images/perfumista-taller.png"
+        alt="Anthonny Villegas en su taller de perfumería en Heredia"
+        width="500"
+        height="625"
+        loading="lazy"
+        style="--delay:100ms"
+      >
+      <h1 class="perfumista-hero__title animate-in" style="--delay:160ms">
+        Anthonny<br>Villegas
+      </h1>
+      <p class="perfumista-hero__subtitle animate-in" style="--delay:220ms">
+        Ingeniero químico · perfumista
+      </p>
+    </header>
+
+    <!-- QUOTE -->
+    <figure class="perfumista-quote animate-in">
+      <blockquote class="perfumista-quote__inner">
+        <p class="perfumista-quote__text">
+          "Empecé con un Phillip Plein. No con un libro de química · con una fragancia que no me salía de la cabeza."
+        </p>
+        <figcaption class="perfumista-quote__attr">· Anthonny Villegas</figcaption>
+      </blockquote>
+    </figure>
+
+    <!-- ORIGEN -->
+    <section class="perfumista-section animate-in" style="--delay:80ms">
+      <span class="perfumista-section__label">Origen</span>
+      <h2 class="perfumista-section__heading">De vuelta en casa</h2>
+      <div class="perfumista-section__body">
+        <p>
+          Todo empezó con un <strong>Phillip Plein No Limit$</strong>. No con una clase magistral ni con un libro de química: con una fragancia que no le salía de la cabeza y una pregunta cada vez más difícil de ignorar — ¿qué hace exactamente que algo huela así?
+        </p>
+        <p>
+          Esa pregunta lo llevó a estudiar <strong>Ingeniería Química</strong> en España. La carrera le dio el lenguaje técnico para algo que ya intuía: cómo se comportan ciertas moléculas en la piel, por qué algunas fragancias abren de una forma y terminan siendo completamente otra, qué significa la proyección más allá del marketing.
+        </p>
+        <p>
+          Al volver a Costa Rica, la opción obvia era la industria. En cambio, armó un laboratorio pequeño en Heredia y empezó a formular desde cero. Así nació <strong>Vency Atelier</strong>.
+        </p>
+      </div>
+    </section>
+
+    <div class="perfumista-divider animate-in"><hr class="perfumista-divider__line"></div>
+
+    <!-- FILOSOFÍA -->
+    <section class="perfumista-section animate-in" style="--delay:80ms">
+      <span class="perfumista-section__label">Filosofía</span>
+      <h2 class="perfumista-section__heading">Taller, no fábrica</h2>
+      <div class="perfumista-section__body">
+        <p>
+          Antes de vender cualquier fragancia, Anthonny la usa durante semanas. En el súper, durmiendo, en día caluroso, en día fresco. Si algo le parece raro en el día tres, la fórmula cambia.
+        </p>
+        <p>
+          La mayoría de los perfumistas evalúan en tiras de papel. Anthonny evalúa en piel propia porque es la única prueba que le importa: si él no la usaría, no debería venderla.
+        </p>
+        <p>
+          Los lotes son pequeños porque a esa escala se puede controlar todo — temperatura de maceración, tiempo de reposo, si una materia prima llegó diferente esta vez. No hay producción en serie porque no hay margen para decisiones tomadas a ciegas. Cada frasco sale con el número de lote. No es branding: es la forma de rastrear qué pasó si algo no funciona.
+        </p>
+      </div>
+    </section>
+
+    <div class="perfumista-divider animate-in"><hr class="perfumista-divider__line"></div>
+
+    <!-- PROCESO CREATIVO -->
+    <section class="perfumista-section perfumista-section--bleed animate-in" style="--delay:80ms">
+      <span class="perfumista-section__label">Proceso creativo</span>
+      <h2 class="perfumista-section__heading">Del concepto al frasco</h2>
+      <div class="perfumista-section__body">
+        <p>
+          Cada fragancia pasa por las mismas cuatro etapas, aunque los tiempos cambian según la composición. No hay atajos porque no funcionan — si una fórmula no maceró bien, se nota en la piel.
+        </p>
+      </div>
+      <div class="perfumista-process">
+        <div class="perfumista-process__step animate-in" style="--delay:120ms">
+          <span class="perfumista-process__num">01 · Concepto</span>
+          <span class="perfumista-process__name">Brief olfativo</span>
+          <p class="perfumista-process__desc">
+            Todo parte de una idea: una memoria, un lugar, una textura. Anthonny traduce esa intención en un perfil olfativo con notas de salida, corazón y fondo definidas.
+          </p>
+        </div>
+        <div class="perfumista-process__step animate-in" style="--delay:180ms">
+          <span class="perfumista-process__num">02 · Mezcla</span>
+          <span class="perfumista-process__name">Formulación y blending</span>
+          <p class="perfumista-process__desc">
+            Se pesa cada materia prima con precisión de laboratorio. La mezcla se homogeniza y se deja reposar para que los componentes empiecen a integrarse.
+          </p>
+        </div>
+        <div class="perfumista-process__step animate-in" style="--delay:240ms">
+          <span class="perfumista-process__num">03 · Maceración</span>
+          <span class="perfumista-process__name">Reposo y evolución</span>
+          <p class="perfumista-process__desc">
+            La fórmula macera durante semanas en condiciones controladas. Durante este tiempo el perfumista evalúa el desarrollo y decide si la composición está lista o requiere ajustes.
+          </p>
+        </div>
+        <div class="perfumista-process__step animate-in" style="--delay:300ms">
+          <span class="perfumista-process__num">04 · Envasado</span>
+          <span class="perfumista-process__name">Filtrado y etiquetado</span>
+          <p class="perfumista-process__desc">
+            Una vez aprobada, la fragancia se filtra, se envasa manualmente y se etiqueta con la información del lote. Cada unidad se registra antes de salir del taller.
+          </p>
+        </div>
+      </div>
+      <div class="perfumista-section__body" style="margin-top:1.5rem">
+        <p>
+          En la <strong>Icon Series</strong> hay una etapa más: Anthonny usa el perfume original durante días, identifica qué es lo que lo hace funcionar, y reconstruye ese concepto con sus propias materias primas. No es copia — es entender la lógica de algo que ya funciona y hacerlo desde cero.
+        </p>
+      </div>
+    </section>
+
+    <div class="perfumista-divider animate-in"><hr class="perfumista-divider__line"></div>
+
+    <!-- CTA -->
+    <section class="perfumista-cta animate-in" style="--delay:100ms">
+      <h2 class="perfumista-cta__heading">Conocé las fragancias</h2>
+      <p class="perfumista-cta__text">
+        Cada frasco cuenta una historia. Explorá la tienda completa y encontrá la tuya.
+      </p>
+      <a href="catalogo.html" class="btn btn--primary">Ver el catálogo</a>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="perfumista.html" class="footer__link footer__link--active" aria-current="page">El Perfumista</a>
+        <a href="guia.html" class="footer__link">Guía</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script defer src="../scripts/nav.js?v=55"></script>
+  <script defer src="../scripts/scroll.js?v=51"></script>
+
+  <!-- -- SHARED OVERLAYS ---------------------------------------- -->
+
+  <!-- Search -->
+  <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true" aria-label="Buscar fragancias">
+    <div class="search-overlay__header">
+      <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado…" autocomplete="off" aria-label="Buscar fragancias">
+      <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar búsqueda">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="search-overlay__body">
+      <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
+      <div class="search-overlay__results js-search-results"></div>
+      <div class="search-overlay__categories js-search-categories">
+        <a href="catalogo.html?category=original" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Vency</span>
+        </a>
+        <a href="catalogo.html" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Catálogo completo</span>
+        </a>
+        <a href="perfumista.html" class="search-cat">
+          <span class="search-cat__label">ATELIER</span>
+          <span class="search-cat__name">El Perfumista</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart overlay + drawer -->
+  <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+      <div>
+        <div class="cart-drawer__title">Tu carrito</div>
+        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+      </div>
+      <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body js-cart-body"></div>
+    <div class="cart-drawer__upsell js-cart-upsell"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total js-cart-total-wrap">
+        <span class="cart-drawer__total-label">Total</span>
+        <span class="cart-drawer__total-amount js-cart-total">₡0</span>
+      </div>
+      <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
+    </div>
+  </div>
+
+  <script src="../scripts/fragrance-data.js?v=52" defer></script>
+  <script src="../scripts/search.js?v=52" defer></script>
+  <script src="../scripts/cart-drawer.js?v=5" defer></script>
+</body>
+</html>
