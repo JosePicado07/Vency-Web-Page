@@ -60,17 +60,17 @@
     } catch (e) {}
   }
 
-  var fmtOverlay = document.querySelector('.js-fmt-overlay');
-  var fmtModal   = fmtOverlay && fmtOverlay.querySelector('.js-fmt-modal');
-  var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
-  var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
-  var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
-  var fmtHistory = fmtModal && fmtModal.querySelector('.js-fmt-history');
-  var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
-  var fmtPhrase  = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
-  var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
-  var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
-  var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
+  var fmtOverlay  = document.querySelector('.js-fmt-overlay');
+  var fmtModal    = fmtOverlay && fmtOverlay.querySelector('.js-fmt-modal');
+  var fmtClose    = fmtModal && fmtModal.querySelector('.js-fmt-close');
+  var fmtImg      = fmtModal && fmtModal.querySelector('.js-fmt-img');
+  var fmtImgBadge = fmtModal && fmtModal.querySelector('.js-fmt-img-badge');
+  var fmtName     = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtHistory  = fmtModal && fmtModal.querySelector('.js-fmt-history');
+  var fmtPhrase   = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
+  var fmtNotes    = fmtModal && fmtModal.querySelector('.js-fmt-notes');
+  var fmtOptions  = fmtModal && fmtModal.querySelector('.js-fmt-options');
+  var fmtConfirm  = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
   var fmtFrag    = null;
 
   if (fmtOverlay && fmtModal) {
@@ -111,14 +111,7 @@
         fmtHistory.hidden = true;
       }
     }
-    if (fmtInspo) {
-      if (frag.inspo) {
-        fmtInspo.textContent = 'Inspirado en: ' + frag.inspo;
-        fmtInspo.hidden = false;
-      } else {
-        fmtInspo.hidden = true;
-      }
-    }
+    if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspo;
     if (fmtPhrase) {
       if (frag.phrase) { fmtPhrase.textContent = frag.phrase; fmtPhrase.hidden = false; }
       else { fmtPhrase.hidden = true; }

@@ -245,21 +245,43 @@
    Kills the centered tower. The image is a reference, not a centrepiece. */
 .fmt-modal__head {
   display: grid;
-  grid-template-columns: 72px 1fr;
+  grid-template-columns: 96px 1fr;
   align-items: start;
   gap: 0.9rem;
   padding-right: 2.5rem; /* clear the close button */
   margin-bottom: 1rem;
 }
+.fmt-modal__img-wrap {
+  position: relative;
+  width: 96px;
+  flex-shrink: 0;
+  align-self: start;
+}
 .fmt-modal__img {
-  width: 72px;
-  height: 72px;
+  width: 96px;
+  height: 96px;
   object-fit: contain;
   padding: 0.5rem;
   background: color-mix(in oklch, var(--atelier-stone) 35%, var(--botanical-parchment));
   border-radius: 3px;
   display: block;
-  flex-shrink: 0;
+}
+.fmt-modal__img-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--warm-ochre);
+  color: var(--botanical-parchment);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.48rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.22rem 0.2rem;
+  border-radius: 0 0 3px 3px;
+  display: block;
 }
 .fmt-modal__head-text {
   display: flex;

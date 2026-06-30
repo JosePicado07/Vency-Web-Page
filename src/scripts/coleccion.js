@@ -56,16 +56,16 @@
   }
 
   /* ── Format modal ────────────────────────────────────────────────── */
-  var fmtOverlay = document.querySelector('.js-fmt-overlay');
-  var fmtModal   = document.querySelector('.js-fmt-modal');
-  var fmtClose   = fmtModal && fmtModal.querySelector('.js-fmt-close');
-  var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
-  var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
-  var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
-  var fmtPhrase  = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
-  var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
-  var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
-  var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
+  var fmtOverlay  = document.querySelector('.js-fmt-overlay');
+  var fmtModal    = document.querySelector('.js-fmt-modal');
+  var fmtClose    = fmtModal && fmtModal.querySelector('.js-fmt-close');
+  var fmtImg      = fmtModal && fmtModal.querySelector('.js-fmt-img');
+  var fmtImgBadge = fmtModal && fmtModal.querySelector('.js-fmt-img-badge');
+  var fmtName     = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtPhrase   = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
+  var fmtNotes    = fmtModal && fmtModal.querySelector('.js-fmt-notes');
+  var fmtOptions  = fmtModal && fmtModal.querySelector('.js-fmt-options');
+  var fmtConfirm  = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
   var fmtFrag    = null;
 
   if (fmtOverlay && fmtModal) {
@@ -108,14 +108,7 @@
     fmtImg.src = frag.image;
     fmtImg.alt = frag.name;
     fmtName.textContent = frag.name;
-    if (fmtInspo) {
-      if (frag.inspiration) {
-        fmtInspo.textContent = 'Inspirado en: ' + frag.inspiration.name + ' · ' + frag.inspiration.brand;
-        fmtInspo.hidden = false;
-      } else {
-        fmtInspo.hidden = true;
-      }
-    }
+    if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspiration;
     if (fmtPhrase) {
       if (frag.narrative) { fmtPhrase.textContent = frag.narrative; fmtPhrase.hidden = false; }
       else { fmtPhrase.hidden = true; }
