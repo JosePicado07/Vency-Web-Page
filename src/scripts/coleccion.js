@@ -89,11 +89,12 @@
       fmtConfirm.disabled = false;
       fmtConfirm.textContent = 'Añadir al carrito';
       if (fmtImg && FMT_IMAGES[e.target.value]) {
+        var nextSrc = FMT_IMAGES[e.target.value];
         fmtImg.style.opacity = '0';
         setTimeout(function () {
-          fmtImg.src = FMT_IMAGES[e.target.value];
+          fmtImg.src = nextSrc;
           fmtImg.style.opacity = '1';
-        }, 90);
+        }, 200);
       }
     });
 
