@@ -282,6 +282,8 @@
   border-radius: 0 0 3px 3px;
   display: block;
 }
+/* display:block above overrides UA [hidden]{display:none} — re-enforce it */
+.fmt-modal__img-badge[hidden] { display: none; }
 .fmt-modal__head-text {
   display: flex;
   flex-direction: column;
