@@ -13,6 +13,13 @@
 
   var categories = overlay.querySelector('.js-search-categories');
   var allFrags = catalog;
+  allFrags.forEach(function (f) {
+    f._search = (f.name + ' ' + (f.noteLabels||[]).join(' ') + ' ' + (f.narrative||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  });
+
+  function getFocusable(el) {
+    return el.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])');
+  }
 
   function openSearch() {
     overlay.classList.add('is-open');
@@ -42,13 +49,28 @@
     if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
       closeSearch();
     }
+    if (e.key === 'Tab' && overlay.classList.contains('is-open')) {
+      var focusable = getFocusable(overlay);
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
   });
 
   overlay.addEventListener('click', function (e) {
     if (e.target === overlay) closeSearch();
   });
 
-  input.addEventListener('input', function () {
+  function debounce(fn, ms) {
+    var t;
+    return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+  }
+
+  input.addEventListener('input', debounce(function () {
     var q = input.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     if (q.length < 1) {
       overlay.classList.remove('has-results');
@@ -58,10 +80,7 @@
     if (categories) categories.hidden = true;
 
     var matched = allFrags.filter(function (f) {
-      var name = f.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      var notes = (f.noteLabels || []).join(' ').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      var narrative = (f.narrative || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      return name.indexOf(q) !== -1 || notes.indexOf(q) !== -1 || narrative.indexOf(q) !== -1;
+      return f._search.indexOf(q) !== -1;
     });
 
     if (matched.length === 0) {
@@ -81,7 +100,7 @@
       '</a>';
     }).join('');
     overlay.classList.add('has-results');
-  });
+  }));
 
   var escHtml = window.escHtml || function (s) {
     return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
