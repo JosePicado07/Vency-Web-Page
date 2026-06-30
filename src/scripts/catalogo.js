@@ -67,6 +67,7 @@
   var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
   var fmtHistory = fmtModal && fmtModal.querySelector('.js-fmt-history');
   var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
+  var fmtPhrase  = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
   var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
   var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
   var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
@@ -118,13 +119,13 @@
         fmtInspo.hidden = true;
       }
     }
+    if (fmtPhrase) {
+      if (frag.phrase) { fmtPhrase.textContent = frag.phrase; fmtPhrase.hidden = false; }
+      else { fmtPhrase.hidden = true; }
+    }
     if (fmtNotes) {
-      if (frag.notes) {
-        fmtNotes.textContent = frag.notes;
-        fmtNotes.hidden = false;
-      } else {
-        fmtNotes.hidden = true;
-      }
+      if (frag.notes) { fmtNotes.textContent = frag.notes; fmtNotes.hidden = false; }
+      else { fmtNotes.hidden = true; }
     }
     fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
     fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
@@ -379,7 +380,10 @@
           li.dataset.fragranceCat  = sec.cat;
           if (historiaHref) li.dataset.fragranceHref = historiaHref;
           li.dataset.fragranceInspo = escHtml(item.name) + ' · ' + escHtml(item.brand);
-          li.dataset.fragranceNotes = item.notes || '';
+          var rawNotes = item.notes || '';
+          var dotIdx   = rawNotes.indexOf('. ');
+          li.dataset.fragranceNotes  = dotIdx !== -1 ? rawNotes.slice(0, dotIdx) : rawNotes;
+          li.dataset.fragrancePhrase = dotIdx !== -1 ? rawNotes.slice(dotIdx + 2) : '';
           li.dataset.fragranceImg  = interp
             ? '../assets/images/inspirations/' + interp.id + '.png'
             : '../assets/images/default-bottle.jpg';
@@ -624,12 +628,13 @@
     var card = btn.closest('[data-fragrance-id]');
     if (card) {
       openFmtModal({
-        id:    card.dataset.fragranceId,
-        name:  card.dataset.fragranceName,
-        image: card.dataset.fragranceImg,
-        href:  card.dataset.fragranceHref || null,
-        inspo: card.dataset.fragranceInspo || null,
-        notes: card.dataset.fragranceNotes || ''
+        id:     card.dataset.fragranceId,
+        name:   card.dataset.fragranceName,
+        image:  card.dataset.fragranceImg,
+        href:   card.dataset.fragranceHref || null,
+        inspo:  card.dataset.fragranceInspo || null,
+        notes:  card.dataset.fragranceNotes || '',
+        phrase: card.dataset.fragrancePhrase || ''
       });
     }
   });

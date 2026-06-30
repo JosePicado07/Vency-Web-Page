@@ -318,6 +318,20 @@
   max-width: 28ch;
 }
 
+/* Phrase: the one-liner that captures the mood. Serif, slightly larger,
+   centered — sits between inspo and notes as the emotional hook. */
+.fmt-modal__phrase {
+  font-family: 'Bitter', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--volcanic-ink);
+  text-align: center;
+  margin: 0;
+  line-height: 1.4;
+  max-width: 26ch;
+}
+
 /* Notes: ingredient-list voice between head and options. Separated from
    the options by a hairline to keep hierarchy clean. Manrope label,
    small, muted — the notes tell you what's inside, not what to do. */

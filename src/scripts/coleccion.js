@@ -62,6 +62,7 @@
   var fmtImg     = fmtModal && fmtModal.querySelector('.js-fmt-img');
   var fmtName    = fmtModal && fmtModal.querySelector('.js-fmt-name');
   var fmtInspo   = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
+  var fmtPhrase  = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
   var fmtNotes   = fmtModal && fmtModal.querySelector('.js-fmt-notes');
   var fmtOptions = fmtModal && fmtModal.querySelector('.js-fmt-options');
   var fmtConfirm = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
@@ -114,6 +115,10 @@
       } else {
         fmtInspo.hidden = true;
       }
+    }
+    if (fmtPhrase) {
+      if (frag.narrative) { fmtPhrase.textContent = frag.narrative; fmtPhrase.hidden = false; }
+      else { fmtPhrase.hidden = true; }
     }
     if (fmtNotes) {
       var noteStr = Array.isArray(frag.noteLabels) ? frag.noteLabels.join(' · ') : '';
