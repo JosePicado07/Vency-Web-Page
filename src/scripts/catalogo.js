@@ -261,9 +261,7 @@
         : '../assets/images/_webp/default-bottle-400.webp';
 
       var historiaHref = 'coleccion.html#' + frag.id;
-      var inspoText = isIcon && frag.inspiration
-        ? escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand)
-        : '';
+      var inspoText = ''; /* Vency creations (original + icon-series) never get the badge */
 
       html +=
         '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
@@ -394,12 +392,13 @@
           var dotIdx   = rawNotes.indexOf('. ');
           li.dataset.fragranceNotes  = dotIdx !== -1 ? rawNotes.slice(0, dotIdx) : rawNotes;
           li.dataset.fragrancePhrase = dotIdx !== -1 ? rawNotes.slice(dotIdx + 2) : '';
-          li.dataset.fragranceImg  = interp
-            ? '../assets/images/inspirations/' + interp.id + '.png'
-            : '../assets/images/default-bottle.jpg';
-          var extThumbSrc = interp
-            ? '../assets/images/inspirations/_webp/' + interp.id + '-400.webp'
-            : '../assets/images/_webp/default-bottle-400.webp';
+          /* Modal opens with the Vency decant bottle; format swap takes over from there. */
+          li.dataset.fragranceImg = FMT_IMAGES.decant;
+          /* Card thumbnail: use item.image when provided (original bottle photo), else default. */
+          var extThumbSrc = item.image
+            || (interp
+              ? '../assets/images/inspirations/_webp/' + interp.id + '-400.webp'
+              : '../assets/images/_webp/default-bottle-400.webp');
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
           if (item.soldOut) li.dataset.soldOut = 'true';
 
