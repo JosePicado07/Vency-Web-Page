@@ -228,7 +228,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  color: var(--ink-muted);
+  color: var(--volcanic-ink);
   transition: color 0.18s var(--ease-expo), background 0.18s var(--ease-expo);
   -webkit-tap-highlight-color: transparent;
 }
@@ -260,8 +260,7 @@
 .fmt-modal__img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 1.1rem;
+  object-fit: cover;
   display: block;
   transition: opacity 0.18s ease-out;
 }

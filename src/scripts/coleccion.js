@@ -125,7 +125,7 @@
     fmtImg.src = frag.image;
     fmtImg.alt = frag.name;
     fmtName.textContent = frag.name;
-    if (fmtImgBadge) fmtImgBadge.hidden = true; /* Vency creations never get badge */
+    if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspiration;
     if (fmtPhrase) {
       if (frag.narrative) { fmtPhrase.textContent = frag.narrative; fmtPhrase.hidden = false; }
       else { fmtPhrase.hidden = true; }

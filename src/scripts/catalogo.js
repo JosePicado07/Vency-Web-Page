@@ -261,7 +261,9 @@
         : '../assets/images/_webp/default-bottle-400.webp';
 
       var historiaHref = 'coleccion.html#' + frag.id;
-      var inspoText = ''; /* Vency creations (original + icon-series) never get the badge */
+      var inspoText = (isIcon && frag.inspiration)
+        ? escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand)
+        : '';
 
       html +=
         '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
