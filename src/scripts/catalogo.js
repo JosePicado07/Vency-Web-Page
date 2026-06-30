@@ -428,6 +428,7 @@
                 '<img class="cat-entry__img" src="' + extThumbSrc + '" alt="" loading="lazy"' +
                   ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
                 (itemSoldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
+                '<span class="cat-entry__img-badge">INSPIRADO EN</span>' +
               '</span>' +
               '<span class="cat-entry__info">' +
                 '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +

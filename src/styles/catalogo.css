@@ -1222,6 +1222,22 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   border-radius: 2px;
 }
 
+.cat-entry__img-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--warm-ochre);
+  color: var(--botanical-parchment);
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.48rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0.28rem 0.2rem;
+}
+
 .cat-entry__info {
   display: flex;
   flex-direction: column;
@@ -1387,4 +1403,53 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   right: 0.35rem;
   font-size: 0.5rem;
   padding: 0.22rem 0.45rem;
+}
+
+/* === Decant intro popup (shown once on first "Añadir al set" click) === */
+.decant-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}
+.decant-popup[hidden] {
+  display: none;
+}
+.decant-popup__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+}
+.decant-popup__card {
+  position: relative;
+  background: var(--botanical-parchment);
+  max-width: 420px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  z-index: 1;
+}
+.decant-popup__headline {
+  font-family: 'Bitter', serif;
+  font-weight: 900;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  color: var(--volcanic-ink);
+  margin: 0 0 1rem;
+}
+.decant-popup__body {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: var(--ink-muted);
+  margin: 0 0 1.75rem;
+}
+.decant-popup__body strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.decant-popup__cta {
+  min-width: 160px;
 }
