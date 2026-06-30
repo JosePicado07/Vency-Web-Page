@@ -74,6 +74,7 @@
   var fmtImg      = fmtModal && fmtModal.querySelector('.js-fmt-img');
   var fmtImgBadge = fmtModal && fmtModal.querySelector('.js-fmt-img-badge');
   var fmtName     = fmtModal && fmtModal.querySelector('.js-fmt-name');
+  var fmtInspo    = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
   var fmtHistory  = fmtModal && fmtModal.querySelector('.js-fmt-history');
   var fmtPhrase   = fmtModal && fmtModal.querySelector('.js-fmt-phrase');
   var fmtNotes    = fmtModal && fmtModal.querySelector('.js-fmt-notes');
@@ -129,6 +130,10 @@
       }
     }
     if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspo;
+    if (fmtInspo) {
+      if (frag.inspo) { fmtInspo.textContent = frag.inspo; fmtInspo.hidden = false; }
+      else { fmtInspo.hidden = true; }
+    }
     if (fmtPhrase) {
       if (frag.phrase) { fmtPhrase.textContent = frag.phrase; fmtPhrase.hidden = false; }
       else { fmtPhrase.hidden = true; }
