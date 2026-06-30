@@ -392,8 +392,8 @@
           var dotIdx   = rawNotes.indexOf('. ');
           li.dataset.fragranceNotes  = dotIdx !== -1 ? rawNotes.slice(0, dotIdx) : rawNotes;
           li.dataset.fragrancePhrase = dotIdx !== -1 ? rawNotes.slice(dotIdx + 2) : '';
-          /* Modal opens with the Vency decant bottle; format swap takes over from there. */
-          li.dataset.fragranceImg = FMT_IMAGES.decant;
+          /* Modal opens with the original fragrance photo; format swap takes over on option select. */
+          li.dataset.fragranceImg = item.image || '../assets/images/default-bottle.jpg';
           /* Card thumbnail: use item.image when provided (original bottle photo), else default. */
           var extThumbSrc = item.image
             || (interp
