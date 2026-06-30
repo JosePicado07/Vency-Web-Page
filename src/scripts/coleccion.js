@@ -30,6 +30,11 @@
   /* ── Cart helpers ────────────────────────────────────────────────── */
   var CART_KEY  = 'vency_cart_v1';
   var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
+  var FMT_IMAGES = {
+    decant: '../assets/images/formats/decant-vial.jpg',
+    '30ml':  '../assets/images/formats/frasco-30ml.jpg',
+    '100ml': '../assets/images/formats/frasco-100ml.jpg'
+  };
 
   function addToCart(frag, fmt) {
     if (!frag) return;
@@ -83,6 +88,13 @@
       });
       fmtConfirm.disabled = false;
       fmtConfirm.textContent = 'Añadir al carrito';
+      if (fmtImg && FMT_IMAGES[e.target.value]) {
+        fmtImg.style.opacity = '0';
+        setTimeout(function () {
+          fmtImg.src = FMT_IMAGES[e.target.value];
+          fmtImg.style.opacity = '1';
+        }, 90);
+      }
     });
 
     fmtConfirm.addEventListener('click', function () {
