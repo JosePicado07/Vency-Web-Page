@@ -241,29 +241,27 @@
   outline-offset: 2px;
 }
 
-/* Header: compact horizontal row — bottle thumbnail left, identity right.
-   Kills the centered tower. The image is a reference, not a centrepiece. */
+/* Header: bottle portrait on top, identity below.
+   The bottle commands the space — name and options follow. */
 .fmt-modal__head {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  align-items: start;
-  gap: 0.9rem;
-  padding-right: 2.5rem; /* clear the close button */
-  margin-bottom: 1rem;
+  display: block;
+  padding-right: 0;
+  margin-bottom: 1.25rem;
 }
 .fmt-modal__img-wrap {
   position: relative;
-  width: 120px;
-  flex-shrink: 0;
-  align-self: start;
+  width: 100%;
+  height: clamp(190px, 46vw, 280px);
+  overflow: hidden;
+  background: color-mix(in oklch, var(--atelier-stone) 28%, var(--botanical-parchment));
+  border-radius: 3px;
+  margin-bottom: 1rem;
 }
 .fmt-modal__img {
-  width: 120px;
-  height: 120px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  padding: 0.5rem;
-  background: color-mix(in oklch, var(--atelier-stone) 35%, var(--botanical-parchment));
-  border-radius: 3px;
+  padding: 1.1rem;
   display: block;
   transition: opacity 0.18s ease-out;
 }
