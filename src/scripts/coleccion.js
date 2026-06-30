@@ -31,9 +31,9 @@
   var CART_KEY  = 'vency_cart_v1';
   var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
   var FMT_IMAGES = {
-    decant: '../assets/images/formats/decant-vial.jpg',
-    '30ml':  '../assets/images/formats/frasco-30ml.jpg',
-    '100ml': '../assets/images/formats/frasco-100ml.jpg'
+    decant: '../assets/images/formats/decant-vial.webp',
+    '30ml':  '../assets/images/formats/frasco-30ml.webp',
+    '100ml': '../assets/images/formats/frasco-100ml.webp'
   };
   Object.keys(FMT_IMAGES).forEach(function (k) {
     var pre = new Image(); pre.src = FMT_IMAGES[k];
