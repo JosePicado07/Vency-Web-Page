@@ -92,12 +92,13 @@
       });
       fmtConfirm.disabled = false;
       fmtConfirm.textContent = 'Añadir al carrito';
-      if (fmtImg && FMT_IMAGES[e.target.value]) {
-        var nextSrc = FMT_IMAGES[e.target.value];
-        fmtImg.style.opacity = '0';
+      var checked = fmtOptions.querySelector('input:checked');
+      var img = fmtModal && fmtModal.querySelector('.js-fmt-img');
+      if (checked && img && FMT_IMAGES[checked.value]) {
+        img.style.opacity = '0';
         setTimeout(function () {
-          fmtImg.src = nextSrc;
-          fmtImg.style.opacity = '1';
+          img.src = FMT_IMAGES[checked.value];
+          img.style.opacity = '1';
         }, 200);
       }
     });
