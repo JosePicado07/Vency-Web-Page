@@ -1,6 +1,6 @@
 /**
- * Vency Atelier — Mobile navigation toggle
- * Hamburger open/close with keyboard and outside-click handling.
+ * Vency Atelier — Navigation
+ * Hamburger toggle, Shop accordion, injected search/cart.
  */
 (function () {
   'use strict';
@@ -9,8 +9,20 @@
   var toggle = document.querySelector('.nav__toggle');
   if (!toggle || !nav) return;
 
+  var links = nav.querySelector('.nav__links');
+
+  function setLinksHeight(open) {
+    if (!links) return;
+    if (open) {
+      links.style.height = links.scrollHeight + 'px';
+    } else {
+      links.style.height = '0';
+    }
+  }
+
   function openMenu() {
     nav.classList.add('is-open');
+    setLinksHeight(true);
     toggle.setAttribute('aria-expanded', 'true');
     toggle.setAttribute('aria-label', 'Cerrar menú');
     document.body.style.overflow = 'hidden';
@@ -18,6 +30,7 @@
 
   function closeMenu() {
     nav.classList.remove('is-open');
+    setLinksHeight(false);
     toggle.setAttribute('aria-expanded', 'false');
     toggle.setAttribute('aria-label', 'Abrir menú');
     document.body.style.overflow = '';
@@ -27,12 +40,80 @@
     nav.classList.contains('is-open') ? closeMenu() : openMenu();
   });
 
-  /* ESC closes menu; Tab cycles focus within nav (focus trap) */
-  document.addEventListener('keydown', function (e) {
-    if (!nav.classList.contains('is-open')) return;
-    if (e.key === 'Escape') {
+  /* ── Shop accordions + outside click ─────────────────── */
+  var shopToggle = document.querySelector('.js-shop-toggle');
+  var shopMenu   = document.getElementById('shop-submenu');
+
+  document.addEventListener('click', function (e) {
+    /* toggle shop menus */
+    var btn = e.target.closest('.js-shop-toggle, .js-hero-shop-toggle');
+    if (btn) {
+      e.preventDefault();
+      var m = document.getElementById(btn.getAttribute('aria-controls'));
+      if (!m) return;
+      var isOpen = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      m.classList.toggle('is-open');
+      /* drive submenu height exactly; then re-measure nav links if mobile nav is open */
+      if (m.classList.contains('nav__submenu')) {
+        m.style.height = !isOpen ? m.scrollHeight + 'px' : '0';
+        if (nav.classList.contains('is-open')) setLinksHeight(true);
+      }
+      return;
+    }
+
+    /* close hero shop on outside click */
+    var heroShop = document.querySelector('.hero__shop-menu');
+    if (heroShop && heroShop.classList.contains('is-open')) {
+      var heroTrigger = document.querySelector('.hero__shop-trigger');
+      if (heroTrigger && !heroTrigger.contains(e.target)) {
+        heroShop.classList.remove('is-open');
+        var heroBtn = document.querySelector('.js-hero-shop-toggle');
+        if (heroBtn) heroBtn.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    /* close nav shop on outside click */
+    if (shopMenu && shopMenu.classList.contains('is-open')) {
+      var shopItem = document.querySelector('.nav__item--shop');
+      if (shopItem && !shopItem.contains(e.target)) {
+        shopMenu.classList.remove('is-open');
+        if (shopToggle) shopToggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+
+    /* close mobile nav on outside click */
+    if (nav.classList.contains('is-open') && !nav.contains(e.target)) {
       closeMenu();
-      toggle.focus();
+    }
+
+    /* close menus on link click */
+    if (e.target.closest('.hero__shop-link')) {
+      var heroShopMenu = document.querySelector('.hero__shop-menu');
+      if (heroShopMenu) heroShopMenu.classList.remove('is-open');
+      var heroBtn = document.querySelector('.js-hero-shop-toggle');
+      if (heroBtn) heroBtn.setAttribute('aria-expanded', 'false');
+    }
+    if (e.target.closest('.nav__link[href], .nav__sublink')) {
+      closeMenu();
+    }
+  });
+
+  /* ── Keyboard ────────────────────────────────────────── */
+  document.addEventListener('keydown', function (e) {
+    var isNavOpen  = nav.classList.contains('is-open');
+    var isHeroOpen = document.querySelector('.hero__shop-menu')?.classList.contains('is-open');
+    var isShopOpen = shopMenu?.classList.contains('is-open');
+    if (!isNavOpen && !isHeroOpen && !isShopOpen) return;
+    if (e.key === 'Escape') {
+      if (isNavOpen) closeMenu();
+      if (shopMenu) shopMenu.classList.remove('is-open');
+      if (shopToggle) shopToggle.setAttribute('aria-expanded', 'false');
+      var heroShop = document.querySelector('.hero__shop-menu');
+      if (heroShop) heroShop.classList.remove('is-open');
+      var heroBtn = document.querySelector('.js-hero-shop-toggle');
+      if (heroBtn) heroBtn.setAttribute('aria-expanded', 'false');
+      if (isNavOpen) toggle.focus();
       return;
     }
     if (e.key === 'Tab') {
@@ -48,25 +129,10 @@
     }
   });
 
-  /* Click outside the nav closes menu */
-  document.addEventListener('click', function (e) {
-    if (nav.classList.contains('is-open') && !nav.contains(e.target)) {
-      closeMenu();
-    }
-  });
-
-  /* Clicking any nav link closes menu (covers anchor links on same page) */
-  nav.querySelectorAll('.nav__link').forEach(function (link) {
-    link.addEventListener('click', closeMenu);
-  });
-
-  /* ── Injected nav items (search + cart) ───────────────────────────────
-     Added from JS so every page gets them without editing 7 HTMLs. */
-
+  /* ── Injected nav items (search + cart) ──────────────── */
   var navLinks = nav.querySelector('.nav__links');
   if (!navLinks) return;
 
-  /* Skip injection if already present (JS runs once) */
   if (!nav.querySelector('.js-search-btn') && !nav.querySelector('.js-nav-cart')) {
     /* ── Search trigger ─── */
     var searchLi = document.createElement('li');
@@ -81,10 +147,14 @@
     /* ── Cart link with live count badge ─── */
     var cartLi = document.createElement('li');
     cartLi.className = 'nav__cart-wrap';
-    cartLi.innerHTML =
-      '<a href="#" class="nav__link js-nav-cart js-cart-trigger" hidden aria-label="Ver carrito">' +
-        'Carrito <span class="nav__cart-badge js-nav-cart-count">0</span>' +
-      '</a>';
+    var onCarritoPage = document.body.classList.contains('page-carrito');
+    cartLi.innerHTML = onCarritoPage
+      ? '<a href="carrito.html" class="nav__link js-nav-cart" aria-label="Ver carrito">' +
+          'Carrito <span class="nav__cart-badge js-nav-cart-count" hidden>0</span>' +
+        '</a>'
+      : '<a href="#" class="nav__link js-nav-cart js-cart-trigger" aria-label="Ver carrito">' +
+          'Carrito <span class="nav__cart-badge js-nav-cart-count" hidden>0</span>' +
+        '</a>';
     navLinks.appendChild(cartLi);
 
     var cartLink  = cartLi.querySelector('.js-nav-cart');
@@ -105,12 +175,8 @@
 
     function refreshCart() {
       var n = readCartCount();
-      if (n > 0) {
-        cartLink.hidden = false;
-        cartCount.textContent = n;
-      } else {
-        cartLink.hidden = true;
-      }
+      cartCount.hidden = n === 0;
+      if (n > 0) cartCount.textContent = n;
     }
 
     refreshCart();
@@ -118,9 +184,9 @@
       if (e.key === 'vency_cart_v1') refreshCart();
     });
     document.addEventListener('visibilitychange', refreshCart);
-    setInterval(refreshCart, 1000);
+    window.addEventListener('vency-cart-update', refreshCart);
 
-    /* Cart link click always closes mobile menu */
+
     cartLink.addEventListener('click', closeMenu);
   }
 })();

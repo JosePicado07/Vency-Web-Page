@@ -2,8 +2,10 @@
 # Publish directory: src/
 
 /                   /pages/index.html       301
-/coleccion          /pages/coleccion.html   301
 /catalogo           /pages/catalogo.html    301
+/coleccion          /pages/coleccion.html   301
 /faq                /pages/faq.html         301
+/guia               /pages/guia.html        301
+/perfumista         /pages/perfumista.html  301
+/carrito            /pages/carrito.html     301
 /legal              /pages/legal.html       301
-/decants            /pages/decants.html     301

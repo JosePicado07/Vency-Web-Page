@@ -15,23 +15,47 @@
   // where script order put cart-drawer first.
   function getCatalog() { return window.VENCY_CATALOG || []; }
 
-  function openCart() {
+  var catalogMap = null;
+  function getCatalogMap() {
+    if (!catalogMap) {
+      catalogMap = {};
+      getCatalog().forEach(function (f) { catalogMap[f.id] = f; });
+    }
+    return catalogMap;
+  }
+
+  var _openTrigger = null;
+
+  function openCart(triggerEl) {
+    _openTrigger = triggerEl || null;
     overlay.classList.add('is-open');
     drawer.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     renderCart();
+    setTimeout(function () { if (close) close.focus(); }, 60);
   }
 
   function closeCart() {
     overlay.classList.remove('is-open');
     drawer.classList.remove('is-open');
     document.body.style.overflow = '';
+    if (_openTrigger) { _openTrigger.focus(); _openTrigger = null; }
   }
 
   close.addEventListener('click', closeCart);
   overlay.addEventListener('click', closeCart);
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeCart();
+    if (!drawer.classList.contains('is-open')) return;
+    if (e.key === 'Escape') { closeCart(); return; }
+    if (e.key === 'Tab') {
+      var focusable = Array.prototype.slice.call(
+        drawer.querySelectorAll('a[href], button:not([disabled]), input, [tabindex]:not([tabindex="-1"])')
+      );
+      if (focusable.length === 0) return;
+      var first = focusable[0], last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
   });
 
   function getCart() {
@@ -54,7 +78,7 @@
       body.innerHTML =
         '<div class="cart-drawer__empty">' +
           '<p class="cart-drawer__empty-text">Tu viaje olfativo comienza aquí.</p>' +
-          '<a href="coleccion.html" class="btn btn--primary">Explorar colección</a>' +
+          '<a href="catalogo.html" class="btn btn--primary">Explorar la tienda</a>' +
         '</div>';
       if (totalEl) totalEl.textContent = '';
       renderUpsell();
@@ -62,29 +86,45 @@
     }
 
     var DECANT_PRICE = 5000;
-    var catalog = getCatalog();
+    var SET_PRICE    = 12000;
     var itemsHtml = '';
     var total = 0;
 
+    var cmap = getCatalogMap();
+
+    var decantCount = selection.length;
+    var _drem = decantCount % 3, _dsets = Math.floor(decantCount / 3);
+    total += _dsets * SET_PRICE + _drem * DECANT_PRICE;
+
+    if (decantCount > 0) {
+      var isComplete = _drem === 0;
+      var nudge = isComplete
+        ? (_dsets > 1 ? _dsets + ' sets completos' : 'Set completo') + ' · ahorrás ₡' + formatPrice(_dsets * 3000)
+        : 'Añadí ' + (3 - _drem) + ' más y armá ' + (_dsets > 0 ? 'otro' : 'el') + ' set por ₡12.000';
+      itemsHtml += '<p class="cart-drawer__bundle-badge' + (isComplete ? ' cart-drawer__bundle-badge--complete' : '') + '">' + nudge + '</p>';
+    }
+
     selection.forEach(function (s) {
-      var frag = catalog.filter(function (f) { return f.id === s.id; })[0];
+      var frag = cmap[s.id];
       var name = frag ? frag.name : s.id;
       var img  = frag ? frag.image : '';
-      total += DECANT_PRICE;
       itemsHtml +=
         '<div class="cart-item">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
             '<div class="cart-item__name">' + escHtml(name) + '</div>' +
             '<div class="cart-item__variant">Decant · 10 ml</div>' +
-            '<div class="cart-item__qty">Cant: 1</div>' +
+            '<div class="cart-item__qty">₡' + formatPrice(DECANT_PRICE) + '</div>' +
+            '<button class="cart-item__remove js-cart-remove" type="button"' +
+              ' data-remove-type="decant" data-remove-id="' + escHtml(s.id) + '"' +
+              ' aria-label="Quitar ' + escHtml(name) + '">Quitar</button>' +
           '</div>' +
           '<div class="cart-item__price">₡' + formatPrice(DECANT_PRICE) + '</div>' +
         '</div>';
     });
 
     bottles.forEach(function (b) {
-      var frag = catalog.filter(function (f) { return f.id === b.id; })[0];
+      var frag = cmap[b.id];
       var name = frag ? frag.name : b.id;
       var img  = frag ? frag.image : '';
       var qty = b.qty || 1;
@@ -95,10 +135,13 @@
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
             '<div class="cart-item__name">' + escHtml(name) + '</div>' +
-            '<div class="cart-item__variant">Botella · ' + escHtml(b.fmt || '30 ml') + '</div>' +
-            '<div class="cart-item__qty">Cant: ' + qty + '</div>' +
+            '<div class="cart-item__variant">Frasco · ' + escHtml(b.fmt || '30ml') + (qty > 1 ? ' · ' + qty + ' uds' : '') + '</div>' +
+            '<div class="cart-item__qty">₡' + formatPrice(unitPrice) + (qty > 1 ? ' c/u' : '') + '</div>' +
+            '<button class="cart-item__remove js-cart-remove" type="button"' +
+              ' data-remove-type="bottle" data-remove-id="' + escHtml(b.id) + '" data-remove-fmt="' + escHtml(b.fmt || '') + '"' +
+              ' aria-label="Quitar ' + escHtml(name) + '">Quitar</button>' +
           '</div>' +
-          '<div class="cart-item__price">₡' + formatPrice(unitPrice) + '</div>' +
+          '<div class="cart-item__price">₡' + formatPrice(unitPrice * qty) + '</div>' +
         '</div>';
     });
 
@@ -126,8 +169,9 @@
     // item (Vency lookup by id; entries we can't resolve simply contribute
     // nothing). Ties are broken randomly so the rail still feels alive.
     var cartNotes = {};
+    var cmap = getCatalogMap();
     Object.keys(inCartIds).forEach(function (id) {
-      var frag = catalog.find(function (f) { return f.id === id; });
+      var frag = cmap[id];
       if (frag && Array.isArray(frag.notes)) {
         frag.notes.forEach(function (n) { cartNotes[n] = true; });
       }
@@ -135,8 +179,12 @@
 
     var ranked;
     if (Object.keys(cartNotes).length === 0) {
-      // Cart is empty or items have no resolvable notes → keep it random.
-      ranked = candidates.slice().sort(function () { return 0.5 - Math.random(); });
+      // Cart is empty or items have no resolvable notes → keep it random (Fisher-Yates).
+      ranked = candidates.slice();
+      for (var i = ranked.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = ranked[i]; ranked[i] = ranked[j]; ranked[j] = tmp;
+      }
     } else {
       ranked = candidates.map(function (f) {
         var fNotes = Array.isArray(f.notes) ? f.notes : [];
@@ -223,15 +271,18 @@
     return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
-  var escHtml = window.escHtml || function (s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  };
+  var escHtml = window.escHtml;
 
   var cartTriggers = document.querySelectorAll('.js-cart-trigger');
-  cartTriggers.forEach(function (t) { t.addEventListener('click', openCart); });
+  cartTriggers.forEach(function (t) {
+    t.addEventListener('click', function (e) { openCart(e.currentTarget); });
+  });
 
+  var onCarritoPage = document.body.classList.contains('page-carrito');
   var navCart = document.querySelector('.js-nav-cart');
-  if (navCart) navCart.addEventListener('click', function (e) { e.preventDefault(); openCart(); });
+  if (navCart && !onCarritoPage) {
+    navCart.addEventListener('click', function (e) { e.preventDefault(); openCart(e.currentTarget); });
+  }
 
   window.addEventListener('storage', function (e) {
     if (e.key === 'vency_cart_v1' && drawer.classList.contains('is-open')) renderCart();
@@ -241,7 +292,62 @@
   });
   window.addEventListener('vency-cart-update', function () {
     if (drawer.classList.contains('is-open')) renderCart();
+    updateMiniTray();
   });
   drawer.addEventListener('cart-render', renderCart);
+
+  /* ── Mini tray (only on catalog pages that have the format modal) ── */
+  var miniTray = null;
+  if (!document.getElementById('dc-tray') && document.querySelector('.js-fmt-overlay')) {
+    miniTray = document.createElement('div');
+    miniTray.className = 'cart-mini-tray js-cart-mini-tray';
+    miniTray.innerHTML =
+      '<span class="cart-mini-tray__summary js-mini-tray-summary"></span>' +
+      '<button class="btn btn--primary cart-mini-tray__btn js-mini-tray-open" type="button">Ver carrito</button>';
+    document.body.appendChild(miniTray);
+    miniTray.querySelector('.js-mini-tray-open').addEventListener('click', openCart);
+  }
+
+  function updateMiniTray() {
+    if (!miniTray) return;
+    var cart = getCart();
+    var selection = (cart && cart.selection) || [];
+    var bottles   = (cart && cart.bottles) || [];
+    var n = selection.length + bottles.reduce(function (s, b) { return s + (b.qty || 1); }, 0);
+    var SET_PRICE = 12000; var DECANT_PRICE = 5000;
+    var decTotal = selection.length === 3 ? SET_PRICE : selection.length * DECANT_PRICE;
+    var botTotal = bottles.reduce(function (s, b) { return s + (b.price || 0) * (b.qty || 1); }, 0);
+    var total = decTotal + botTotal;
+    miniTray.classList.toggle('cart-mini-tray--visible', n > 0);
+    var summaryEl = miniTray.querySelector('.js-mini-tray-summary');
+    if (summaryEl) summaryEl.textContent = n + (n === 1 ? ' artículo' : ' artículos') + ' · ₡' + formatPrice(total);
+  }
+
+  updateMiniTray();
+
+  body.addEventListener('click', function (e) {
+    var btn = e.target.closest('.js-cart-remove');
+    if (!btn) return;
+    try {
+      var raw = localStorage.getItem('vency_cart_v1');
+      var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [] };
+      var type  = btn.dataset.removeType;
+      var rmId  = btn.dataset.removeId;
+      var i;
+      if (type === 'decant') {
+        for (i = cart.selection.length - 1; i >= 0; i--) {
+          if (cart.selection[i].id === rmId) { cart.selection.splice(i, 1); break; }
+        }
+      } else if (type === 'bottle') {
+        var fmt = btn.dataset.removeFmt;
+        for (i = cart.bottles.length - 1; i >= 0; i--) {
+          if (cart.bottles[i].id === rmId && cart.bottles[i].fmt === fmt) { cart.bottles.splice(i, 1); break; }
+        }
+      }
+      localStorage.setItem('vency_cart_v1', JSON.stringify(cart));
+      window.dispatchEvent(new CustomEvent('vency-cart-update'));
+      renderCart();
+    } catch (err) {}
+  });
 
 })();

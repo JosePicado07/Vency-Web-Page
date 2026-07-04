@@ -1,204 +1,376 @@
-# Desktop Audit Report
+# Audit Report
 
-Viewport: 1920×1080
+Captured at two viewports.
 
-## index
+## desktop
 
-Total elements: 113
+### index
 
-- `.hero` → 1920×1109 at (0,0)
-- `.hero__inner` → 1440×845 at (240,168)
-- `.hero__text` → 806×779 at (240,201)
-- `.hero__headline` → 806×470 at (240,201)
-- `.hero__headline-line` → 806×120 at (240,201)
-- `.hero__headline-word animate-in visible` → 536×144 at (240,184)
-- `.hero__headline-line` → 806×120 at (240,321)
-- `.hero__headline-word animate-in visible` → 530×144 at (240,304)
-- `.hero__headline-line` → 806×230 at (240,441)
-- `.hero__headline-word animate-in visible` → 509×254 at (240,424)
-- `.hero__body animate-in visible` → 586×95 at (240,719)
-- `.hero__actions animate-in visible` → 806×52 at (240,862)
-- `.hero__sessions-link animate-in visible` → 806×18 at (240,938)
-- `.hero__media` → 634×845 at (1094,168)
-- `.hero__image` → 634×845 at (1094,164)
-- `.colls-intro__grid` → 1920×1564 at (0,1285)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
+Elements: 83
 
-### Cards (4)
+- `.hero` → 1920×1131
+- `.hero__inner` → 1440×867
+- `.hero__text` → 806×867
+- `.hero__headline` → 806×470
+- `.hero__headline-line` → 806×120
+- `.hero__headline-word animate-in visible` → 536×144
+- `.hero__headline-line` → 806×120
+- `.hero__headline-word animate-in visible` → 530×144
+- `.hero__headline-line` → 806×230
+- `.hero__headline-word animate-in visible` → 509×254
+- `.hero__body animate-in visible` → 586×95
+- `.hero__actions animate-in visible` → 806×52
+- `.hero__ledger animate-in visible` → 480×81
+- `.hero__ledger-label` → 448×13
+- `.hero__ledger-meta` → 448×15
+- `.hero__ledger-mark` → 16×16
+- `.hero__media` → 634×845
+- `.hero__image` → 634×845
+- `.colls-intro__grid` → 1920×1564
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
 
-- `.coll-block coll-block--ob` → 1209×1564 font:18px / Manrope
-- `.coll-block__img-wrap` → 1208×1237 font:18px / Manrope
-- `.coll-block coll-block--is` → 711×1361 font:18px / Manrope
-- `.coll-block__img-wrap` → 711×1067 font:18px / Manrope
-
----
-
-## coleccion
-
-Total elements: 150
-
-- `.col-header` → 1920×562 at (0,0)
-- `.col-header__inner` → 1440×297 at (240,168)
-- `.col-header__title animate-in visible` → 706×268 at (240,197)
-- `.col-header__body animate-in visible` → 670×102 at (1010,363)
-- `.catalog-grid` → 1440×5369 at (240,562)
-- `.catalog-entry__inner` → 1440×741 at (240,563)
-- `.catalog-entry__inner` → 1440×823 at (240,1304)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×211 at (1920,869)
+Cards (4):
+- `.coll-block coll-block--ob` → 1209×1564
+- `.coll-block__img-wrap` → 1208×1237
+- `.coll-block coll-block--is` → 711×1361
+- `.coll-block__img-wrap` → 711×1067
 
 ---
 
-## comprar
+### coleccion
 
-Total elements: 128
+Elements: 118
 
-- `.comprar-header` → 1920×321 at (0,0)
-- `.comprar-header__label` → 1824×19 at (48,120)
-- `.comprar-header__title` → 1824×137 at (48,155)
-- `.comprar-formats` → 1000×604 at (460,321)
-- `.footer` → 1920×414 at (0,925)
-- `.footer__inner` → 1440×222 at (240,1021)
-- `.footer__wordmark` → 125×22 at (897,1021)
-- `.footer__tagline` → 304×31 at (808,1063)
-- `.footer__nav` → 410×30 at (755,1114)
-- `.footer__link` → 73×30 at (755,1114)
-- `.footer__link` → 61×30 at (868,1114)
-- `.footer__link` → 95×30 at (969,1114)
-- `.footer__link` → 61×30 at (1104,1114)
-- `.footer__nav` → 238×30 at (841,1163)
-- `.footer__link` → 65×30 at (841,1163)
-- `.footer__link` → 69×30 at (946,1163)
-- `.footer__link` → 24×30 at (1055,1163)
-- `.footer__copy` → 383×31 at (768,1213)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
-
-### Cards (24)
-
-- `.fmt-card fmt-card--decant` → 291×460 font:18px / Manrope
-- `.fmt-card__img-wrap` → 289×216 font:18px / Manrope
-- `.fmt-card__img` → 289×216 font:18px / Manrope
-- `.fmt-card__body` → 289×242 font:18px / Manrope
-- `.fmt-card__price` → 252×18 font:10.88px / Manrope
-- `.fmt-card__title` → 252×42 font:19.2px / Bitter
-- `.fmt-card__desc` → 252×84 font:13.12px / Manrope
-- `.fmt-card__cta` → 252×21 font:12.48px / Manrope
-- `.fmt-card fmt-card--30ml` → 291×460 font:18px / Manrope
-- `.fmt-card__img-wrap` → 289×217 font:18px / Manrope
-- `.fmt-card__img` → 289×217 font:18px / Manrope
-- `.fmt-card__body` → 289×242 font:18px / Manrope
-- `.fmt-card__price` → 252×18 font:10.88px / Manrope
-- `.fmt-card__title` → 252×21 font:19.2px / Bitter
-- `.fmt-card__desc` → 252×105 font:13.12px / Manrope
-- `.fmt-card__cta` → 252×21 font:12.48px / Manrope
-- `.fmt-card fmt-card--100ml` → 291×460 font:18px / Manrope
-- `.fmt-card__img-wrap` → 289×216 font:18px / Manrope
-- `.fmt-card__img` → 289×216 font:18px / Manrope
-- `.fmt-card__body` → 289×242 font:18px / Manrope
-- `.fmt-card__price` → 252×18 font:10.88px / Manrope
-- `.fmt-card__title` → 252×21 font:19.2px / Bitter
-- `.fmt-card__desc` → 252×105 font:13.12px / Manrope
-- `.fmt-card__cta` → 252×21 font:12.48px / Manrope
+- `.col-header` → 1920×562
+- `.col-header__inner` → 1440×297
+- `.col-header__title animate-in visible` → 706×268
+- `.col-header__body animate-in visible` → 670×102
+- `.catalog-grid` → 1440×5369
+- `.catalog-entry__inner` → 1440×741
+- `.catalog-entry__inner` → 1440×823
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×211
 
 ---
 
-## catalogo
+### comprar
 
-Total elements: 183
+Elements: 184
 
-- `.cat-header` → 1920×235 at (0,72)
-- `.cat-header__inner` → 1440×210 at (240,96)
-- `.cat-header__title-row` → 1440×95 at (240,127)
-- `.cat-header__title` → 237×83 at (240,135)
-- `.cat-header__meta` → 308×23 at (1372,195)
-- `.cat-header__count js-cat-count label label--faint` → 107×18 at (1372,195)
-- `.cat-header__howto animate-in visible` → 1440×17 at (240,227)
-- `.cat-header__filter animate-in visible` → 1632×56 at (144,250)
-- `.cat-filters__inner` → 1440×55 at (240,251)
-- `.vency-collections__inner` → 1440×183 at (240,351)
-- `.cat-section cat-section--vency` → 1920×8928 at (0,354)
-- `.cat-section__header` → 1440×53 at (240,354)
-- `.cat-section__title` → 45×12 at (288,374)
-- `.dc-set-banner__inner` → 1440×306 at (240,462)
-- `.dc-tray__inner` → 1440×79 at (240,1082)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
+- `.cat-header` → 1920×235
+- `.cat-header__inner` → 1440×210
+- `.cat-header__title-row` → 1440×95
+- `.cat-header__title` → 237×83
+- `.cat-header__meta` → 311×23
+- `.cat-header__count js-cat-count label label--faint` → 110×18
+- `.cat-header__howto animate-in visible` → 1440×17
+- `.cat-header__filter animate-in visible` → 1632×56
+- `.cat-filters__inner` → 1440×55
+- `.vency-collections__inner` → 1440×183
+- `.cat-section cat-section--vency` → 1920×4742
+- `.cat-section__header` → 1440×53
+- `.cat-section__title` → 45×12
+- `.dc-set-banner__inner` → 1440×306
+- `.dc-tray__inner` → 1440×79
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
 
----
-
-## carrito
-
-Total elements: 112
-
-- `.carrito-header` → 768×143 at (576,168)
-- `.carrito-header__back` → 127×44 at (576,168)
-- `.carrito-header__title` → 194×52 at (576,259)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
+Cards (28):
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+- `.cat-entry__img-wrap` → 295×295
+- `.cat-entry__info` → 104×55
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+- `.cat-entry__img-wrap` → 295×295
+- `.cat-entry__info` → 95×55
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+  … and 18 more
 
 ---
 
-## admin
+### catalogo
 
-Total elements: 15
+Elements: 184
 
-- `.gate__inner` → 336×240 at (792,420)
+- `.cat-header` → 1920×235
+- `.cat-header__inner` → 1440×210
+- `.cat-header__title-row` → 1440×95
+- `.cat-header__title` → 237×83
+- `.cat-header__meta` → 311×23
+- `.cat-header__count js-cat-count label label--faint` → 110×18
+- `.cat-header__howto animate-in visible` → 1440×17
+- `.cat-header__filter animate-in visible` → 1632×56
+- `.cat-filters__inner` → 1440×55
+- `.vency-collections__inner` → 1440×183
+- `.cat-section cat-section--vency` → 1920×4742
+- `.cat-section__header` → 1440×53
+- `.cat-section__title` → 45×12
+- `.dc-set-banner__inner` → 1440×306
+- `.dc-tray__inner` → 1440×79
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
+
+Cards (28):
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+- `.cat-entry__img-wrap` → 295×295
+- `.cat-entry__info` → 104×55
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+- `.cat-entry__img-wrap` → 295×295
+- `.cat-entry__info` → 95×55
+- `.cat-entry cat-entry--vency is-in` → 297×357
+- `.cat-entry__card cat-entry__see` → 297×357
+  … and 18 more
 
 ---
 
-## faq
+### carrito
 
-Total elements: 135
+Elements: 80
 
-- `.faq-header` → 1920×524 at (0,0)
-- `.faq-header__inner` → 760×195 at (580,232)
-- `.faq-header__title animate-in visible` → 760×152 at (580,275)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
+- `.carrito-header` → 768×143
+- `.carrito-header__back` → 127×44
+- `.carrito-header__title` → 194×52
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
 
 ---
 
-## legal
+### admin
 
-Total elements: 110
+Elements: 15
 
-- `.legal-header` → 1920×677 at (0,0)
-- `.legal-header__inner` → 1440×348 at (240,232)
-- `.legal-header__title animate-in visible` → 1440×193 at (240,276)
-- `.legal-header__body animate-in visible` → 584×63 at (240,518)
-- `.legal-sections` → 964×4174 at (668,773)
-- `.legal-section` → 964×599 at (668,773)
-- `.legal-section__num` → 964×96 at (668,797)
-- `.legal-section__title` → 964×38 at (668,897)
-- `.legal-section__body` → 681×293 at (668,983)
-- `.legal-section` → 964×672 at (668,1372)
-- `.legal-section__num` → 964×96 at (668,1469)
-- `.legal-section__title` → 964×38 at (668,1569)
-- `.search-overlay__header` → 1920×97 at (0,0)
-- `.quiz-modal__header` → 520×84 at (700,209)
-- `.quiz-modal__footer` → 520×112 at (700,759)
-- `.cart-drawer__header` → 440×146 at (1920,0)
-- `.cart-drawer__footer` → 440×207 at (1920,873)
+- `.gate__inner` → 336×240
+
+---
+
+### faq
+
+Elements: 102
+
+- `.faq-header` → 1920×524
+- `.faq-header__inner` → 760×195
+- `.faq-header__title animate-in visible` → 760×152
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
+
+---
+
+### legal
+
+Elements: 78
+
+- `.legal-header` → 1920×677
+- `.legal-header__inner` → 1440×348
+- `.legal-header__title animate-in visible` → 1440×193
+- `.legal-header__body animate-in visible` → 584×63
+- `.legal-sections` → 964×4174
+- `.legal-section` → 964×599
+- `.legal-section__num` → 964×96
+- `.legal-section__title` → 964×38
+- `.legal-section__body` → 681×293
+- `.legal-section` → 964×672
+- `.legal-section__num` → 964×96
+- `.legal-section__title` → 964×38
+- `.search-overlay__header` → 1920×97
+- `.cart-drawer__header` → 440×146
+- `.cart-drawer__footer` → 440×207
+
+---
+
+## mobile
+
+### index
+
+Elements: 70
+
+- `.hero` → 375×1168
+- `.hero__inner` → 319×1012
+- `.hero__text` → 319×558
+- `.hero__headline` → 319×219
+- `.hero__headline-line` → 319×56
+- `.hero__headline-word animate-in visible` → 250×67
+- `.hero__headline-line` → 319×56
+- `.hero__headline-word animate-in visible` → 247×67
+- `.hero__headline-line` → 319×108
+- `.hero__headline-word animate-in visible` → 238×119
+- `.hero__body animate-in visible` → 319×106
+- `.hero__actions animate-in visible` → 319×52
+- `.hero__ledger animate-in visible` → 319×81
+- `.hero__ledger-label` → 287×13
+- `.hero__ledger-meta` → 287×15
+- `.hero__ledger-mark` → 16×16
+- `.hero__media` → 319×425
+- `.hero__image` → 319×425
+- `.colls-intro__grid` → 375×1250
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
+
+Cards (2):
+- `.coll-block coll-block--ob` → 375×528
+- `.coll-block__img-wrap` → 375×260
+
+---
+
+### coleccion
+
+Elements: 105
+
+- `.col-header` → 375×488
+- `.col-header__inner` → 319×331
+- `.col-header__title animate-in visible` → 319×123
+- `.col-header__body animate-in visible` → 319×136
+- `.catalog-grid` → 375×3486
+- `.catalog-entry__inner` → 375×575
+- `.catalog-entry__inner` → 375×553
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×163
+
+---
+
+### comprar
+
+Elements: 162
+
+- `.cat-header` → 375×295
+- `.cat-header__inner` → 343×278
+- `.cat-header__title-row` → 343×123
+- `.cat-header__title` → 139×49
+- `.cat-header__meta` → 311×23
+- `.cat-header__count js-cat-count label label--faint` → 110×18
+- `.cat-header__howto animate-in visible` → 343×37
+- `.cat-header__filter animate-in visible` → 375×61
+- `.cat-filters__inner` → 343×60
+- `.vency-collections__inner` → 375×378
+- `.cat-section cat-section--vency` → 375×5163
+- `.cat-section__header` → 375×43
+- `.cat-section__title` → 39×10
+- `.dc-set-banner__inner` → 319×338
+- `.dc-tray__inner` → 375×110
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
+
+Cards (16):
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+- `.cat-entry__img-wrap` → 152×152
+- `.cat-entry__info` → 94×54
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+- `.cat-entry__img-wrap` → 152×152
+- `.cat-entry__info` → 89×54
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+  … and 6 more
+
+---
+
+### catalogo
+
+Elements: 162
+
+- `.cat-header` → 375×295
+- `.cat-header__inner` → 343×278
+- `.cat-header__title-row` → 343×123
+- `.cat-header__title` → 139×49
+- `.cat-header__meta` → 311×23
+- `.cat-header__count js-cat-count label label--faint` → 110×18
+- `.cat-header__howto animate-in visible` → 343×37
+- `.cat-header__filter animate-in visible` → 375×61
+- `.cat-filters__inner` → 343×60
+- `.vency-collections__inner` → 375×378
+- `.cat-section cat-section--vency` → 375×5163
+- `.cat-section__header` → 375×43
+- `.cat-section__title` → 39×10
+- `.dc-set-banner__inner` → 319×338
+- `.dc-tray__inner` → 375×110
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
+
+Cards (16):
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+- `.cat-entry__img-wrap` → 152×152
+- `.cat-entry__info` → 94×54
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+- `.cat-entry__img-wrap` → 152×152
+- `.cat-entry__info` → 89×54
+- `.cat-entry cat-entry--vency` → 154×213
+- `.cat-entry__card cat-entry__see` → 154×213
+  … and 6 more
+
+---
+
+### carrito
+
+Elements: 80
+
+- `.carrito-header` → 319×125
+- `.carrito-header__back` → 127×44
+- `.carrito-header__title` → 126×33
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
+
+---
+
+### admin
+
+Elements: 15
+
+- `.gate__inner` → 327×240
+
+---
+
+### faq
+
+Elements: 88
+
+- `.faq-header` → 375×336
+- `.faq-header__inner` → 319×119
+- `.faq-header__title animate-in visible` → 319×76
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
+
+---
+
+### legal
+
+Elements: 69
+
+- `.legal-header` → 375×372
+- `.legal-header__inner` → 319×243
+- `.legal-header__title animate-in visible` → 319×89
+- `.legal-header__body animate-in visible` → 319×82
+- `.frag-nav__inner` → 375×76
+- `.legal-sections` → 319×4072
+- `.legal-section` → 319×596
+- `.legal-section__num` → 319×56
+- `.legal-section__title` → 319×25
+- `.legal-section__body` → 319×427
+- `.legal-section` → 319×653
+- `.legal-section__num` → 319×56
+- `.legal-section__title` → 319×25
+- `.legal-section__body` → 319×427
+- `.search-overlay__header` → 375×81
+- `.cart-drawer__header` → 375×106
+- `.cart-drawer__footer` → 375×159
 
 ---
 

@@ -48,6 +48,30 @@
     },
   ];
 
+  // Weighted scoring: each answer value contributes points to one or more profiles.
+  // Only Q1 values matched RESULTS keys before — Q2-Q4 were silently ignored.
+  var SCORES = {
+    // Q1 — sensation
+    fresco:    { fresco: 3 },
+    calido:    { calido: 3 },
+    elegante:  { elegante: 3 },
+    delicado:  { delicado: 3 },
+    // Q2 — notes
+    citrico:   { fresco: 3, delicado: 1 },
+    floral:    { delicado: 3, fresco: 1 },
+    especiado: { calido: 2, elegante: 2 },
+    amaderado: { elegante: 3, calido: 1 },
+    // Q3 — moment
+    dia:       { fresco: 2, delicado: 1 },
+    noche:     { elegante: 2, calido: 2 },
+    cualquier: { fresco: 1, calido: 1 },
+    especial:  { elegante: 2, calido: 1 },
+    // Q4 — intensity
+    sutil:     { delicado: 2, fresco: 1 },
+    moderada:  { fresco: 1, delicado: 1, calido: 1 },
+    fuerte:    { elegante: 2, calido: 2 },
+  };
+
   var RESULTS = {
     fresco: {
       title: 'Perfil Fresco y Vibrante',
@@ -59,35 +83,37 @@
       title: 'Perfil Cálido y Envolvente',
       desc: 'Te atraen las fragancias dulces, cremosas y reconfortantes. Vainilla, ámbar, especias y gourmand te definen. Perfectas para la noche y climas frescos.',
       familias: 'Oriental · Gourmand · Especiada',
-      recs: ['apple-whisper', 'after-effect', 'crush-effect', 'fireside-memory']
+      recs: ['after-effect', 'fireside-memory', 'apple-whisper', 'last-light']
     },
     elegante: {
       title: 'Perfil Sofisticado y Enigmático',
       desc: 'Buscás profundidad, carácter y distinción. Las maderas nobles, el cuero, el incienso y el oud son tu territorio. Fragancias con personalidad y estela.',
       familias: 'Amaderada · Oriental · Cuero',
-      recs: ['dark-sinner', 'absolu-authority', 'fresh-signature', 'exotic-contrast']
+      recs: ['dark-sinner', 'exotic-contrast', 'sacred-oud', 'santal-code']
     },
     delicado: {
       title: 'Perfil Floral y Refinado',
-      desc: 'Las flores te hablan. Preferís composiciones elegantes y suaves. Rosas, jazmines, lirios y violetas son tus aliados olfativos.',
+      desc: 'Las flores te hablan. Preferís composiciones elegantes y suaves. Rosas, jazmines y pétalos suaves son tus aliados olfativos.',
       familias: 'Floral · Atalcada · Verde',
-      recs: ['dream-trap', 'vency-rouge', 'cherry-desire', 'aurum-mirage']
+      recs: ['rose-desire', 'dream-trap', 'vency-rouge', 'cherry-desire']
     },
   };
 
   var BACK_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5m7-7-7 7 7 7"/></svg>';
 
   function getResult() {
-    var counts = {};
-    Object.keys(answers).forEach(function (k) {
-      var v = answers[k];
-      counts[v] = (counts[v] || 0) + 1;
+    var totals = { fresco: 0, calido: 0, elegante: 0, delicado: 0 };
+    Object.keys(answers).forEach(function (step) {
+      var pts = SCORES[answers[step]] || {};
+      Object.keys(pts).forEach(function (profile) {
+        totals[profile] += pts[profile];
+      });
     });
-    var max = 0, top = 'fresco';
-    Object.keys(counts).forEach(function (v) {
-      if (counts[v] > max) { max = counts[v]; top = v; }
+    var top = 'fresco', max = -1;
+    Object.keys(totals).forEach(function (p) {
+      if (totals[p] > max) { max = totals[p]; top = p; }
     });
-    return RESULTS[top] || RESULTS.fresco;
+    return RESULTS[top];
   }
 
   function getRecFrags(ids) {

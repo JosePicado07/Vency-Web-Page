@@ -51,20 +51,18 @@
       if (fmt === 'decant') {
         cart.selection.push({ id: frag.id, name: frag.name });
       } else {
-        cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
+        var existingBottle = null;
+        for (var bi = 0; bi < cart.bottles.length; bi++) {
+          if (cart.bottles[bi].id === frag.id && cart.bottles[bi].fmt === fmt) { existingBottle = cart.bottles[bi]; break; }
+        }
+        if (existingBottle) {
+          existingBottle.qty = (existingBottle.qty || 1) + 1;
+        } else {
+          cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
+        }
       }
       localStorage.setItem(CART_KEY, JSON.stringify(cart));
       window.dispatchEvent(new CustomEvent('vency-cart-update'));
-
-      // Open the shared cart drawer if it exists (cart-drawer.js wires it)
-      var drawer  = document.querySelector('.js-cart-drawer');
-      var overlay = document.querySelector('.js-cart-overlay');
-      if (drawer && overlay) {
-        overlay.classList.add('is-open');
-        drawer.classList.add('is-open');
-        document.body.style.overflow = 'hidden';
-        drawer.dispatchEvent(new CustomEvent('cart-render', { bubbles: true }));
-      }
     } catch (e) {}
   }
 

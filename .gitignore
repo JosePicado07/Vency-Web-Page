@@ -23,3 +23,9 @@ verify-admin.js
 # Loose images in repo root (assets live under src/assets/)
 /Logo*.png
 /Logo*.jpeg
+
+# Local env — contains Stripe secret key, never commit
+.dev.vars
+
+# Wrangler build cache
+.wrangler/

@@ -3,6 +3,9 @@
  * Add new entries here to grow the catalog; both coleccion and decants consume this.
  */
 (function (root) {
+  window.escHtml = window.escHtml || function (s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  };
   root.VENCY_CATALOG = [
     {
       id: 'citrus-enigma',

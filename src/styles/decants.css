@@ -539,14 +539,21 @@
 
 /* === BOTTLE CHIPS IN TRAY === */
 .dc-tray__bottle-chip {
-  display: inline-block;
-  max-width: calc(100% - 2rem);
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  max-width: 100%;
+  gap: 0.1rem;
+}
+.dc-tray__bottle-text {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  vertical-align: middle;
+  flex: 0 1 auto;
+  min-width: 1.5rem;
 }
 .dc-tray__bottle-remove {
+  flex-shrink: 0;
   background: none;
   border: none;
   color: inherit;
@@ -866,6 +873,31 @@
 @media (max-width: 767px) {
   .has-tray main {
     padding-bottom: 9rem;
+  }
+}
+
+/* === DESKTOP: more room for bottles, full names === */
+@media (min-width: 1024px) {
+  .dc-tray__inner {
+    flex-wrap: wrap;
+    gap: 0.5rem var(--space-md);
+  }
+
+  .dc-tray__slots {
+    flex: 0 0 auto;
+    min-width: 24rem;
+  }
+
+  .dc-tray__bottles {
+    overflow: visible;
+    flex: 1 1 auto;
+    min-width: 12rem;
+  }
+
+  .dc-tray__bottle-text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
   }
 }
 

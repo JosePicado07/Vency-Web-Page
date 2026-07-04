@@ -12,101 +12,121 @@ const PAGES = [
   { name: 'legal',       path: '/pages/legal.html' },
 ];
 
+const VIEWPORTS = [
+  { label: 'desktop', width: 1920, height: 1080 },
+  { label: 'mobile',  width: 375,  height: 812  },
+];
+
 try { mkdirSync('audit-screenshots'); } catch (e) {}
 
 const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
-const page = await context.newPage();
+const allResults = [];
 
-const results = [];
+for (const vp of VIEWPORTS) {
+  console.log(`\n══════════════════════════════════════`);
+  console.log(`  VIEWPORT: ${vp.label} (${vp.width}×${vp.height})`);
+  console.log(`══════════════════════════════════════`);
 
-for (const { name, path } of PAGES) {
-  console.log(`\n=== ${name} ===`);
-  await page.goto(`http://localhost:8000${path}`, { waitUntil: 'networkidle', timeout: 15000 });
-  await page.waitForTimeout(500);
+  const context = await browser.newContext({ viewport: { width: vp.width, height: vp.height } });
+  const page = await context.newPage();
+  const results = [];
 
-  // Full-page screenshot
-  await page.screenshot({ path: `audit-screenshots/${name}-full.png`, fullPage: true });
-
-  // Viewport screenshot (what user sees first)
-  await page.screenshot({ path: `audit-screenshots/${name}-viewport.png` });
-
-  // Collect computed styles of all elements
-  const info = await page.evaluate(() => {
-    const data = [];
-    const skipTags = new Set(['SCRIPT', 'STYLE', 'LINK', 'META', 'TITLE', 'HEAD']);
-
-    function walk(el, depth) {
-      if (depth > 8) return;
-      if (skipTags.has(el.tagName)) return;
-
-      const tag = el.tagName.toLowerCase();
-      const cls = el.className && typeof el.className === 'string' ? el.className.trim().slice(0, 80) : '';
-      const id = el.id || '';
-      const rect = el.getBoundingClientRect();
-
-      // Skip tiny/invisible elements
-      if (rect.width < 5 || rect.height < 5) return;
-      if (rect.top > window.innerHeight + 500) return;
-
-      const cs = getComputedStyle(el);
-      data.push({
-        tag, cls, id,
-        rect: { w: Math.round(rect.width), h: Math.round(rect.height), t: Math.round(rect.top), l: Math.round(rect.left) },
-        font: cs.fontSize + ' / ' + cs.fontFamily.split(',')[0].replace(/['"]/g, ''),
-        color: cs.color,
-        bg: cs.backgroundColor,
-        display: cs.display,
-        gap: cs.gap,
-        padding: [cs.paddingTop, cs.paddingRight, cs.paddingBottom, cs.paddingLeft].map(x => parseFloat(x)).join(' '),
-        margin: [cs.marginTop, cs.marginRight, cs.marginBottom, cs.marginLeft].map(x => parseFloat(x)).join(' '),
-      });
-
-      for (const child of el.children) walk(child, depth + 1);
+  for (const { name, path } of PAGES) {
+    console.log(`\n--- ${name} ---`);
+    try {
+      await page.goto(`http://localhost:8000${path}`, { waitUntil: 'networkidle', timeout: 15000 });
+    } catch (e) {
+      console.log(`  TIMEOUT — taking screenshot anyway`);
     }
+    await page.waitForTimeout(800);
 
-    walk(document.body, 0);
-    return data;
-  });
+    // Full-page screenshot
+    await page.screenshot({ path: `audit-screenshots/${name}-${vp.label}-full.png`, fullPage: true });
 
-  results.push({ name, elements: info });
-  console.log(`  ${info.length} elements captured`);
+    // Viewport screenshot
+    await page.screenshot({ path: `audit-screenshots/${name}-${vp.label}-viewport.png` });
+
+    // Collect computed styles
+    const info = await page.evaluate(() => {
+      const data = [];
+      const skipTags = new Set(['SCRIPT', 'STYLE', 'LINK', 'META', 'TITLE', 'HEAD']);
+
+      function walk(el, depth) {
+        if (depth > 8) return;
+        if (skipTags.has(el.tagName)) return;
+
+        const tag = el.tagName.toLowerCase();
+        const cls = el.className && typeof el.className === 'string' ? el.className.trim().slice(0, 80) : '';
+        const id = el.id || '';
+        const rect = el.getBoundingClientRect();
+
+        if (rect.width < 5 || rect.height < 5) return;
+        if (rect.top > window.innerHeight + 500) return;
+
+        const cs = getComputedStyle(el);
+        data.push({
+          tag, cls, id,
+          rect: { w: Math.round(rect.width), h: Math.round(rect.height), t: Math.round(rect.top), l: Math.round(rect.left) },
+          font: cs.fontSize + ' / ' + cs.fontFamily.split(',')[0].replace(/['"]/g, ''),
+          color: cs.color,
+          bg: cs.backgroundColor,
+          display: cs.display,
+          gap: cs.gap,
+          padding: [cs.paddingTop, cs.paddingRight, cs.paddingBottom, cs.paddingLeft].map(x => parseFloat(x)).join(' '),
+          margin: [cs.marginTop, cs.marginRight, cs.marginBottom, cs.marginLeft].map(x => parseFloat(x)).join(' '),
+        });
+
+        for (const child of el.children) walk(child, depth + 1);
+      }
+
+      walk(document.body, 0);
+      return data;
+    });
+
+    results.push({ name, elements: info });
+    console.log(`  ${info.length} elements`);
+  }
+
+  allResults.push({ viewport: vp.label, pages: results });
+  await context.close();
 }
 
 // Write structured JSON
-writeFileSync('audit-screenshots/data.json', JSON.stringify(results, null, 2));
+writeFileSync('audit-screenshots/data.json', JSON.stringify(allResults, null, 2));
 
-// Generate a summary report
-let report = '# Desktop Audit Report\n\n';
-report += `Viewport: 1920×1080\n\n`;
+// Generate report
+let report = '# Audit Report\n\n';
+report += `Captured at two viewports.\n\n`;
 
-for (const { name, elements } of results) {
-  report += `## ${name}\n\n`;
-  report += `Total elements: ${elements.length}\n\n`;
+for (const { viewport, pages } of allResults) {
+  report += `## ${viewport}\n\n`;
+  for (const { name, elements } of pages) {
+    report += `### ${name}\n\n`;
+    report += `Elements: ${elements.length}\n\n`;
 
-  // Find sections / large blocks
-  const sections = elements.filter(e =>
-    e.cls.includes('hero') || e.cls.includes('section') || e.cls.includes('header') ||
-    e.cls.includes('footer') || e.cls.includes('grid') || e.cls.includes('inner') ||
-    e.cls.includes('formats') || e.cls.includes('formats')
-  );
-  for (const s of sections) {
-    report += `- \`.${s.cls}\` → ${s.rect.w}×${s.rect.h} at (${s.rect.l},${s.rect.t})\n`;
-  }
-
-  // Find cards / items
-  const cards = elements.filter(e =>
-    e.cls.includes('fmt-card') || e.cls.includes('dblock') || e.cls.includes('coll-block') ||
-    e.cls.includes('cart-item') || e.cls.includes('sale-row') || e.cls.includes('process__step')
-  );
-  if (cards.length) {
-    report += `\n### Cards (${cards.length})\n\n`;
-    for (const c of cards) {
-      report += `- \`.${c.cls.slice(0, 60)}\` → ${c.rect.w}×${c.rect.h} font:${c.font}\n`;
+    const sections = elements.filter(e =>
+      e.cls.includes('hero') || e.cls.includes('section') || e.cls.includes('header') ||
+      e.cls.includes('footer') || e.cls.includes('grid') || e.cls.includes('inner') ||
+      e.cls.includes('formats')
+    );
+    for (const s of sections) {
+      report += `- \`.${s.cls}\` → ${s.rect.w}×${s.rect.h}\n`;
     }
-  }
 
-  report += '\n---\n\n';
+    const cards = elements.filter(e =>
+      e.cls.includes('fmt-card') || e.cls.includes('dblock') || e.cls.includes('coll-block') ||
+      e.cls.includes('cart-item') || e.cls.includes('cat-entry') || e.cls.includes('sale-row')
+    );
+    if (cards.length) {
+      report += `\nCards (${cards.length}):\n`;
+      for (const c of cards.slice(0, 10)) {
+        report += `- \`.${c.cls.slice(0, 50)}\` → ${c.rect.w}×${c.rect.h}\n`;
+      }
+      if (cards.length > 10) report += `  … and ${cards.length - 10} more\n`;
+    }
+
+    report += '\n---\n\n';
+  }
 }
 
 writeFileSync('audit-screenshots/report.md', report);

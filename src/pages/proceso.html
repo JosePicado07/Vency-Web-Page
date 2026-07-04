@@ -1,0 +1,417 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cómo se hace · Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Descubrí cómo Vency Atelier crea sus fragancias: obtención de materias primas, mezcla artesanal, maceración y embotellado. El proceso olfativo en Heredia, Costa Rica.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vency Atelier">
+  <meta property="og:title" content="Cómo se hace · Vency Atelier · Heredia, Costa Rica">
+  <meta property="og:description" content="El proceso artesanal detrás de cada fragancia Vency: materias primas, mezcla, maceración y embotellado en Heredia, Costa Rica.">
+  <meta property="og:image" content="https://vencyatelier.com/assets/images/proceso-mezcla.png">
+  <meta property="og:url" content="https://vencyatelier.com/proceso">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=70">
+  <style>
+    .proceso-header {
+      padding: calc(var(--nav-h) + var(--space-xl)) var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border);
+    }
+    .proceso-header__inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .proceso-header__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin: 0.75rem 0 0;
+    }
+    .proceso-header__intro {
+      margin-top: var(--space-md);
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+      line-height: 1.7;
+      color: var(--ink-subdued);
+      max-width: 60ch;
+    }
+    .proceso-body {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: var(--space-lg) var(--space-md) var(--space-xl);
+    }
+    .proceso-step {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+      padding: var(--space-lg) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .proceso-step:first-of-type {
+      padding-top: 0;
+    }
+    .proceso-step:last-of-type {
+      border-bottom: none;
+    }
+    .proceso-step__media {
+      border-radius: 0;
+      overflow: hidden;
+      background: var(--atelier-stone);
+    }
+    .proceso-step__media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+    }
+    .proceso-step__content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .proceso-step__number {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--warm-ochre);
+    }
+    .proceso-step__heading {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--volcanic-ink);
+    }
+    .proceso-step__text {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(0.9rem, 1.4vw, 1rem);
+      line-height: 1.75;
+      color: var(--ink-subdued);
+      max-width: 65ch;
+    }
+    .proceso-step__text p + p {
+      margin-top: 1em;
+    }
+    .proceso-cta {
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .proceso-cta__label {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .proceso-cta__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    @media (min-width: 640px) {
+      .proceso-step {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+      }
+      .proceso-step--media-right .proceso-step__media {
+        order: 1;
+      }
+    }
+  </style>
+</head>
+<body class="page-proceso">
+
+  <a class="skip-nav" href="#proceso-content">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <main id="proceso-content" tabindex="-1">
+
+    <header class="proceso-header">
+      <div class="proceso-header__inner">
+        <span class="label sage-label animate-in">CÓMO SE HACE · VENCY ATELIER</span>
+        <h1 class="proceso-header__title animate-in" style="--delay:80ms">
+          El proceso.
+        </h1>
+        <p class="proceso-header__intro animate-in" style="--delay:140ms">
+          Cada fragancia de Vency Atelier nace de un proceso artesanal que combina
+          selección rigurosa de materias primas, mezcla manual en pequeños lotes,
+          paciencia durante la maceración y un embotellado cuidado al detalle.
+          Esto es lo que pasa antes de que un perfume llegue a tus manos.
+        </p>
+      </div>
+    </header>
+
+    <div class="proceso-body">
+
+      <!-- STEP 1: OBTENCIÓN -->
+      <section class="proceso-step animate-in">
+        <div class="proceso-step__media">
+          <img decoding="async"
+               src="../assets/images/proceso-ingredientes.png"
+               alt="Materias primas y esencias utilizadas en Vency Atelier"
+               loading="lazy"
+               width="840"
+               height="560">
+        </div>
+        <div class="proceso-step__content">
+          <span class="proceso-step__number">Paso uno</span>
+          <h2 class="proceso-step__heading">Obtención de materias primas</h2>
+          <div class="proceso-step__text">
+            <p>
+              Todo empieza con los ingredientes. En Vency Atelier trabajamos con
+              proveedores independientes que comparten nuestra visión de calidad:
+              casas francesas con trayectoria centenaria, destilerías italianas
+              especializadas en cítricos y pequeños productores de absolutos
+              botánicos de regiones como Kerala, Marruecos y Paraguay.
+            </p>
+            <p>
+              Cada aceite esencial, absoluto o reconstitución molecular llega con
+              su ficha de trazabilidad y su boletín GC-MS. No usamos rellenos
+              sintéticos de bajo costo ni aromas genéricos. La materia prima es
+              la columna vertebral de una fragancia; si la base no es firme, el
+              perfume nunca va a funcionar.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 2: MEZCLA -->
+      <section class="proceso-step proceso-step--media-right animate-in" style="--delay:80ms">
+        <div class="proceso-step__media">
+          <img decoding="async"
+               src="../assets/images/proceso-mezcla.png"
+               alt="Proceso de mezcla artesanal de fragancias en Vency Atelier"
+               loading="lazy"
+               width="840"
+               height="560">
+        </div>
+        <div class="proceso-step__content">
+          <span class="proceso-step__number">Paso dos</span>
+          <h2 class="proceso-step__heading">Mezcla en lotes pequeños</h2>
+          <div class="proceso-step__text">
+            <p>
+              Una vez seleccionadas las materias primas, comienza el trabajo de
+              composición. No usamos máquinas automatizadas ni líneas de
+              producción industrial: cada lote se mezcla a mano en el atelier
+              de Heredia, en cantidades que rara vez superan los dos litros.
+            </p>
+            <p>
+              El perfumista pesa cada nota en una balanza de precisión, añadiendo
+              los componentes en el orden que dicta la estructura olfativa:
+              primero las notas de fondo, luego el corazón y por último la salida.
+              Este orden no es arbitrario. Cada incorporación cambia la química
+              del conjunto; una variación de décimas de gramo puede inclinar la
+              fragancia hacia lo polvoso, lo metálico o lo amaderado.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3: MACERACIÓN -->
+      <section class="proceso-step animate-in" style="--delay:80ms">
+        <div class="proceso-step__media">
+          <img decoding="async"
+               src="../assets/images/proceso-maceracion.png"
+               alt="Maceración de fragancias en el atelier de Vency Atelier"
+               loading="lazy"
+               width="840"
+               height="560">
+        </div>
+        <div class="proceso-step__content">
+          <span class="proceso-step__number">Paso tres</span>
+          <h2 class="proceso-step__heading">Maceración y reposo</h2>
+          <div class="proceso-step__text">
+            <p>
+              Una vez mezclado, el perfume no está listo. Al contrario: empieza
+              la etapa más larga y la más misteriosa. El concentrado se transfiere
+              a un tanque de vidrio ámbar y se deja reposar en oscuridad, a
+              temperatura controlada, durante un mínimo de cuatro semanas.
+            </p>
+            <p>
+              Durante la maceración, las moléculas de cada nota se buscan,
+              se entrelazan y se asientan. Los alcoholes se suavizan. Los cítricos
+              pierden su agresividad inicial. Los maderables se vuelven más
+              profundos. El perfumista va oliendo el avance cada semana, tomando
+              notas, decidiendo si el blend necesita más tiempo o si ya alcanzó
+              su punto de equilibrio. No hay atajos. El tiempo es parte de la
+              fórmula.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4: EMBOTELLADO -->
+      <section class="proceso-step proceso-step--media-right animate-in" style="--delay:80ms">
+        <div class="proceso-step__media">
+          <img decoding="async"
+               src="../assets/images/proceso-embotellado.png"
+               alt="Embotellado artesanal de fragancias Vency Atelier"
+               loading="lazy"
+               width="840"
+               height="560">
+        </div>
+        <div class="proceso-step__content">
+          <span class="proceso-step__number">Paso cuatro</span>
+          <h2 class="proceso-step__heading">Embotellado y etiquetado</h2>
+          <div class="proceso-step__text">
+            <p>
+              Cuando la maceración ha terminado, el perfume se filtra y se
+              envasa a mano, frasco por frasco. Cada botella se llena con
+              pipeta graduada, se sella con tapón de aluminio y se etiqueta
+              con el nombre de la fragancia, el lote y la fecha de embotellado.
+            </p>
+            <p>
+              Los lotes van numerados para garantizar trazabilidad: si un lote
+              no pasa el control olfativo del perfumista, no llega al catálogo.
+              Para quienes quieren probar antes de comprar, ofrecemos decants
+              de 10 ml como puerta de entrada. El frasco completo es el
+              destino; el decant es el primer encuentro.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <div class="proceso-cta animate-in">
+        <p class="proceso-cta__label">Descubrí las fragancias</p>
+        <div class="proceso-cta__actions">
+          <a href="catalogo.html" class="btn btn--primary">Ver el catálogo</a>
+          <a href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Quiero%20saber%20m%C3%A1s%20sobre%20el%20proceso." class="btn btn--outline" target="_blank" rel="noopener">Consultar por WhatsApp</a>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="perfumista.html" class="footer__link">El Perfumista</a>
+        <a href="guia.html" class="footer__link">Guía</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script defer src="../scripts/nav.js?v=57"></script>
+  <script defer src="../scripts/scroll.js?v=51"></script>
+
+  <!-- -- SHARED OVERLAYS ---------------------------------------- -->
+
+  <!-- Search -->
+  <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true" aria-label="Buscar fragancias">
+    <div class="search-overlay__header">
+      <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado…" autocomplete="off" aria-label="Buscar fragancias">
+      <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar búsqueda">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="search-overlay__body">
+      <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
+      <div class="search-overlay__results js-search-results"></div>
+      <div class="search-overlay__categories js-search-categories">
+        <a href="catalogo.html?category=original" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Vency</span>
+        </a>
+        <a href="catalogo.html" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Catálogo completo</span>
+        </a>
+        <a href="perfumista.html" class="search-cat">
+          <span class="search-cat__label">ATELIER</span>
+          <span class="search-cat__name">El Perfumista</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart overlay + drawer -->
+  <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+      <div>
+        <div class="cart-drawer__title">Tu carrito</div>
+        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+      </div>
+      <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body js-cart-body"></div>
+    <div class="cart-drawer__upsell js-cart-upsell"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total js-cart-total-wrap">
+        <span class="cart-drawer__total-label">Total</span>
+        <span class="cart-drawer__total-amount js-cart-total">₡0</span>
+      </div>
+      <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
+    </div>
+  </div>
+
+  <script src="../scripts/fragrance-data.js?v=52" defer></script>
+  <script src="../scripts/search.js?v=52" defer></script>
+  <script src="../scripts/cart-drawer.js?v=10" defer></script>
+</body>
+</html>

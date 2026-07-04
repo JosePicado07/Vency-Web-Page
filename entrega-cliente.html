@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vency Atelier · Guía de Entrega</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700;900&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:       oklch(18% 0.04 180);
+      --parchment: oklch(95% 0.007 90);
+      --ochre:     oklch(55% 0.10 55);
+      --sage:      oklch(48% 0.10 145);
+      --stone:     oklch(75% 0.005 80);
+      --muted:     oklch(50% 0.008 90);
+      --border:    oklch(85% 0.005 90);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      font-size: 10.5pt;
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2.5rem;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .cover__top { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .cover__brand {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cover__divider {
+      width: 2.5rem;
+      height: 2px;
+      background: var(--ochre);
+      margin: 1.5rem 0;
+    }
+
+    .cover__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: 3.2rem;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .cover__sub {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 1.25rem;
+      max-width: 42ch;
+      line-height: 1.55;
+    }
+
+    .cover__meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .cover__meta-row {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    .cover__meta-label {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      min-width: 6rem;
+    }
+
+    .cover__meta-value { color: var(--ink); }
+
+    /* ── Sections ── */
+    .section {
+      margin-bottom: 3.5rem;
+      page-break-inside: avoid;
+    }
+
+    .section-num {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 1.6rem;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .section-intro {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      max-width: 65ch;
+    }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 1.25rem; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .step__num {
+      width: 2rem;
+      height: 2rem;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .step__body { display: flex; flex-direction: column; gap: 0.35rem; }
+
+    .step__title {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .step__desc {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .step__url {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--sage);
+      letter-spacing: 0.02em;
+      text-decoration: none;
+    }
+
+    /* ── Checklist ── */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      margin-top: 0.75rem;
+    }
+
+    .check {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      font-size: 0.88rem;
+    }
+
+    .check__box {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--stone);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .check__text { color: var(--ink); line-height: 1.45; }
+    .check__text span { color: var(--muted); font-size: 0.82rem; }
+
+    /* ── Info boxes ── */
+    .info-box {
+      background: oklch(92% 0.008 90);
+      border-top: 2px solid var(--ochre);
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+
+    .info-box__title {
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 0.4rem;
+    }
+
+    /* ── Table ── */
+    .handoff-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.87rem;
+      margin-top: 1rem;
+    }
+
+    .handoff-table th {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .handoff-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    .handoff-table td:first-child { font-weight: 600; }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: 2px;
+    }
+
+    .tag--dev  { background: oklch(88% 0.06 180); color: oklch(30% 0.08 180); }
+    .tag--cli  { background: oklch(90% 0.06 55);  color: oklch(35% 0.10 55);  }
+    .tag--both { background: oklch(90% 0.04 145); color: oklch(30% 0.08 145); }
+
+    /* ── Admin guide ── */
+    .screen-block {
+      border: 1.5px solid var(--border);
+      padding: 1rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 0.87rem;
+    }
+
+    .screen-block__title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.6rem;
+      color: var(--ink);
+    }
+
+    .screen-block__body { color: var(--muted); line-height: 1.55; }
+    .screen-block__body strong { color: var(--ink); font-weight: 600; }
+
+    /* ── Timeline ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 1rem; }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 6.5rem 1fr;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .timeline-item:last-child { border-bottom: none; }
+
+    .timeline-day {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      padding-top: 0.05rem;
+    }
+
+    .timeline-tasks { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .timeline-task {
+      font-size: 0.88rem;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .timeline-task span { color: var(--muted); font-size: 0.82rem; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white; }
+
+      .cover {
+        min-height: auto;
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .section { page-break-inside: avoid; }
+
+      .no-print { display: none; }
+
+      a { color: inherit; text-decoration: none; }
+    }
+
+    /* ── Print button ── */
+    .print-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1.75rem;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .print-btn:hover { background: oklch(25% 0.04 180); }
+  </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Imprimir / Exportar PDF</button>
+
+<div class="page">
+
+  <!-- PORTADA -->
+  <div class="cover">
+    <div class="cover__top">
+      <span class="cover__brand">Vency Atelier · Documentación de entrega</span>
+      <div class="cover__divider"></div>
+      <h1 class="cover__title">Guía de<br>entrega del<br>proyecto.</h1>
+      <p class="cover__sub">Todo lo que necesitás para tomar control del sitio web, el panel de ventas, los pagos con tarjeta y el registro de pedidos.</p>
+    </div>
+    <div class="cover__meta">
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Proyecto</span>
+        <span class="cover__meta-value">Vency Atelier · Sitio web + Panel de ventas</span>
+      </div>
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Versión</span>
+        <span class="cover__meta-value">1.0 · Julio 2026</span>
+      </div>
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Sistemas</span>
+        <span class="cover__meta-value">Cloudflare Pages · Google Sheets · Stripe · Dominio</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1: QUÉ SE ENTREGA -->
+  <div class="section">
+    <span class="section-num">01 · Resumen</span>
+    <h2 class="section-title">¿Qué se entrega?</h2>
+    <p class="section-intro">El proyecto tiene cuatro sistemas que trabajan juntos. Esta guía explica cada uno, qué necesitás hacer con él y quién es responsable de cada paso.</p>
+
+    <table class="handoff-table">
+      <thead>
+        <tr>
+          <th>Sistema</th>
+          <th>Para qué sirve</th>
+          <th>Quién actúa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dominio</td>
+          <td>La dirección del sitio (ej. vencyatelier.com). Se compra una vez por año (~$11 USD).</td>
+          <td><span class="tag tag--cli">Cliente</span></td>
+        </tr>
+        <tr>
+          <td>Cloudflare Pages</td>
+          <td>Hospeda el sitio web. Cada cambio al código se publica automáticamente.</td>
+          <td><span class="tag tag--both">Ambos</span></td>
+        </tr>
+        <tr>
+          <td>Google Sheets + Script</td>
+          <td>Registra cada pedido que llega por WhatsApp. El panel de vendedor lee y escribe en este Sheet.</td>
+          <td><span class="tag tag--cli">Cliente</span></td>
+        </tr>
+        <tr>
+          <td>Panel de vendedor</td>
+          <td>App web para crear pedidos en persona, ver resumen del mes y gestionar ventas.</td>
+          <td><span class="tag tag--cli">Cliente</span></td>
+        </tr>
+        <tr>
+          <td>Stripe</td>
+          <td>Procesa pagos con tarjeta de crédito/débito. El dinero llega directo a tu cuenta bancaria.</td>
+          <td><span class="tag tag--cli">Cliente</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECCIÓN 2: LO QUE NECESITÁS TENER LISTO -->
+  <div class="section">
+    <span class="section-num">02 · Antes de empezar</span>
+    <h2 class="section-title">Información que necesitás tener a mano</h2>
+    <p class="section-intro">Antes de seguir los pasos, reuní estos datos. Los vas a necesitar en los formularios de registro.</p>
+
+    <div class="checklist">
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Cuenta de Gmail</strong> <span>— la que usarás para Google Sheets. Si ya tenés una, adelante.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Nombre legal completo</strong> <span>— tal como aparece en tu cédula de identidad. Para Stripe.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Número de cédula</strong> <span>— cédula física (persona física) o cédula jurídica (empresa). Para Stripe.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>IBAN bancario costarricense</strong> <span>— empieza con CR y tiene 22 dígitos. Es donde Stripe depositará el dinero. Lo encontrás en tu app del banco o en una papeleta de estado de cuenta.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Número de teléfono</strong> <span>— para verificación de Stripe.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Contraseña para el panel de vendedor</strong> <span>— elegís una clave que solo vos conozcas. La configuramos juntos al final.</span></div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box__title">Sobre el IBAN</div>
+      Para encontrar tu IBAN en el BAC: Mis Productos → tu cuenta → Información de cuenta → IBAN.<br>
+      En el BCR: Perfil → Datos de la cuenta. También podés pedírselo al ejecutivo de cuenta.
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: CLOUDFLARE -->
+  <div class="section">
+    <span class="section-num">03 · Sistema 1</span>
+    <h2 class="section-title">Cloudflare Pages — el sitio web</h2>
+    <p class="section-intro">Cloudflare es quien hospeda el sitio. Necesitás tener acceso a ese proyecto para poder agregar las keys de Stripe más adelante.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">Crear cuenta en Cloudflare</div>
+          <div class="step__desc">Entrá a <a class="step__url" href="https://cloudflare.com">cloudflare.com</a> → Sign Up. Usá el mismo Gmail que usarás para todo el proyecto.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Compartir acceso con el desarrollador</div>
+          <div class="step__desc">En el panel de Cloudflare: Manage Account → Members → Invite Member. Ingresá el email del desarrollador y asignale rol <strong>Administrator</strong>. Esto le permite publicar cambios y agregar variables de entorno sin que vos tengas que intervenir cada vez.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Transferir el proyecto Pages</div>
+          <div class="step__desc">El desarrollador mueve el proyecto de su cuenta a la tuya desde GitHub. Solo necesita que le confirmés el acceso del paso anterior.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: DOMINIO -->
+  <div class="section">
+    <span class="section-num">04 · Sistema 2</span>
+    <h2 class="section-title">Dominio — la dirección del sitio</h2>
+    <p class="section-intro">El dominio es la dirección que los clientes escriben para llegar al sitio (ej. vencyatelier.com). Necesitás comprarlo y apuntarlo a Cloudflare para que todo funcione.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">Elegir dónde comprarlo</div>
+          <div class="step__desc">La opción más simple es comprarlo directo en <strong>Cloudflare Registrar</strong> (registrar.cloudflare.com) — precio de costo, sin margen, y ya queda apuntado automáticamente a tu sitio en Pages. Cuesta aproximadamente $10–$12 USD por año para un dominio .com.</div>
+          <a class="step__url" href="https://www.cloudflare.com/products/registrar/">cloudflare.com/products/registrar</a>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Verificar que el nombre está disponible</div>
+          <div class="step__desc">En Cloudflare Registrar buscás el nombre que querés (ej. vencyatelier.com). Si aparece como disponible, lo comprás ahí mismo con tarjeta.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Conectarlo al sitio</div>
+          <div class="step__desc">Si lo compraste en Cloudflare Registrar, el desarrollador lo vincula al proyecto Pages en 2 minutos desde el panel. Si lo compraste en otro lado (GoDaddy, Namecheap, etc.), también se puede conectar — solo tarda un poco más por el cambio de nameservers.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box__title">¿Y el SSL (https://) ?</div>
+      Cloudflare lo activa automáticamente y gratis. No hay que pagar ni configurar nada adicional para que el sitio tenga el candado de seguridad en el navegador.
+    </div>
+  </div>
+
+  <!-- SECCIÓN 5: GOOGLE SHEETS -->
+  <div class="section">
+    <span class="section-num">05 · Sistema 3</span>
+    <h2 class="section-title">Google Sheets — registro de pedidos</h2>
+    <p class="section-intro">Cada vez que alguien confirma un pedido por WhatsApp, el sitio anota automáticamente en un Google Sheet: número de pedido, items, total, método de pago y canal. El panel de vendedor también lee este Sheet.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">El desarrollador crea una copia del Sheet en tu cuenta</div>
+          <div class="step__desc">Le das acceso a tu Gmail y él copia el archivo con todas las fórmulas y el script ya configurados. Esto tarda menos de 5 minutos.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Se genera una nueva URL del script</div>
+          <div class="step__desc">Cada copia del script genera su propia URL segura. El desarrollador actualiza el código del sitio con esa nueva URL para que los pedidos lleguen a tu Sheet y no al suyo.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Confirmás que llegan los pedidos</div>
+          <div class="step__desc">Hacés una compra de prueba desde el sitio y verificás que aparece el registro en tu Sheet. El desarrollador está disponible para este paso.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box__title">¿Qué ves en el Sheet?</div>
+      Una fila por pedido con: fecha, número de referencia (ej. VA2563), lista de items, total en colones, método de pago (SINPE o tarjeta), tipo de entrega (SINPE / Recoger / Stripe) y canal (Web / Admin).
+    </div>
+  </div>
+
+  <!-- SECCIÓN 6: STRIPE -->
+  <div class="section">
+    <span class="section-num">06 · Sistema 4</span>
+    <h2 class="section-title">Stripe — pagos con tarjeta</h2>
+    <p class="section-intro">Stripe es el procesador de pagos. Cuando un cliente elige "Pagar con tarjeta" en el carrito, va a una página segura de Stripe, paga, y el dinero llega a tu cuenta bancaria (menos la comisión de Stripe: ~2.9% + ₡156 por transacción).</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">Crear cuenta en Stripe</div>
+          <div class="step__desc">Entrá a <a class="step__url" href="https://stripe.com">stripe.com</a> → Start now. Usá tu email personal o de negocio. Stripe soporta Costa Rica.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Completar la activación de la cuenta</div>
+          <div class="step__desc">Stripe pide verificar tu identidad antes de procesar pagos reales. Necesitás: nombre legal, cédula, número de teléfono, dirección y cuenta bancaria (IBAN). El proceso está en inglés pero es directo: Settings → Business → Complete your profile.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Copiarle las llaves al desarrollador</div>
+          <div class="step__desc">En Stripe: Developers → API Keys. Hay dos llaves: <strong>Publishable key</strong> (empieza con pk_live_) y <strong>Secret key</strong> (empieza con sk_live_). Mandále la <strong>Secret key</strong> al desarrollador por WhatsApp — él la agrega en Cloudflare como variable de entorno segura. No la publiques en ningún lado.</div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step__num">4</div>
+        <div class="step__body">
+          <div class="step__title">El desarrollador activa el modo live</div>
+          <div class="step__desc">Agrega la Secret key en Cloudflare Pages → Settings → Environment Variables → STRIPE_SECRET_KEY. Desde ese momento los pagos son reales.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <div class="info-box__title">¿Cuándo llega el dinero?</div>
+      Stripe hace depósitos a tu cuenta bancaria cada 2 días hábiles por defecto. Podés configurar depósitos diarios o semanales desde Settings → Payouts. El primer depósito puede tardar hasta 7 días mientras verifican la cuenta.
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <div style="font-family:'Manrope',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.75rem;">Ejemplos con precios de Vency Atelier</div>
+      <p style="font-size:0.85rem; color:var(--muted); margin-bottom:1rem; line-height:1.5;">La comisión de Stripe es <strong style="color:var(--ink);">2.9% + ₡156</strong> por cada transacción (el ₡156 equivale a $0.30 USD). Se descuenta automáticamente antes de depositarte.</p>
+
+      <table class="handoff-table">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Precio cobrado</th>
+            <th>Comisión Stripe</th>
+            <th style="color:var(--sage);">Lo que recibís</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1 Decant 10 ml</td>
+            <td>₡5 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡145 + ₡156 = ₡301</td>
+            <td style="font-weight:700; color:var(--sage);">₡4 699</td>
+          </tr>
+          <tr>
+            <td>Set de 3 Decants</td>
+            <td>₡12 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡348 + ₡156 = ₡504</td>
+            <td style="font-weight:700; color:var(--sage);">₡11 496</td>
+          </tr>
+          <tr>
+            <td>Frasco 30 ml</td>
+            <td>₡12 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡348 + ₡156 = ₡504</td>
+            <td style="font-weight:700; color:var(--sage);">₡11 496</td>
+          </tr>
+          <tr>
+            <td>Frasco 100 ml</td>
+            <td>₡20 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡580 + ₡156 = ₡736</td>
+            <td style="font-weight:700; color:var(--sage);">₡19 264</td>
+          </tr>
+          <tr>
+            <td>Set + Frasco 30 ml</td>
+            <td>₡24 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡696 + ₡156 = ₡852</td>
+            <td style="font-weight:700; color:var(--sage);">₡23 148</td>
+          </tr>
+          <tr>
+            <td>2 Frascos 100 ml</td>
+            <td>₡40 000</td>
+            <td style="color:var(--muted); font-size:0.82rem;">₡1 160 + ₡156 = ₡1 316</td>
+            <td style="font-weight:700; color:var(--sage);">₡38 684</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box" style="margin-top:0.85rem;">
+        <div class="info-box__title">Con SINPE no hay comisión</div>
+        Cuando el cliente paga por SINPE Móvil, vos recibís el monto exacto sin descuento. La comisión de Stripe solo aplica cuando el cliente elige "Pagar con tarjeta". Por eso el botón principal del carrito sigue siendo WhatsApp + SINPE.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 7: PANEL DE VENDEDOR -->
+  <div class="section">
+    <span class="section-num">07 · Sistema 5</span>
+    <h2 class="section-title">Panel de vendedor — cómo usarlo</h2>
+    <p class="section-intro">El panel de vendedor es una app web optimizada para teléfono. Sirve para crear pedidos en el local, ver el resumen de ventas del mes y registrar pagos en efectivo o SINPE.</p>
+
+    <div class="screen-block">
+      <div class="screen-block__title">Acceso</div>
+      <div class="screen-block__body">
+        URL: <strong>vencyatelier.com/pages/admin</strong><br>
+        Ingresás con la clave que elegiste. Podés guardar el ícono en la pantalla de inicio de tu teléfono (el navegador te lo sugiere o lo hacés desde el menú → "Agregar a pantalla de inicio").
+      </div>
+    </div>
+
+    <div class="screen-block">
+      <div class="screen-block__title">Crear un pedido en el local</div>
+      <div class="screen-block__body">
+        1. Abrís el panel y entrás con tu clave.<br>
+        2. Buscás el perfume por nombre o categoría.<br>
+        3. Lo agregás al pedido con el formato (decant 10 ml, frasco 30 ml, frasco 100 ml).<br>
+        4. Elegís método de pago: <strong>SINPE</strong> o <strong>Efectivo</strong>.<br>
+        5. Tocás <strong>Confirmar pedido</strong> — queda registrado en el Sheet automáticamente con número de referencia.
+      </div>
+    </div>
+
+    <div class="screen-block">
+      <div class="screen-block__title">Ver resumen de ventas</div>
+      <div class="screen-block__body">
+        En la pantalla principal del panel hay un resumen del mes: total de pedidos, monto total, desglose por canal (Web / Admin) y por método de pago. Podés navegar entre meses con las flechas.
+      </div>
+    </div>
+
+    <div class="screen-block">
+      <div class="screen-block__title">Cambiar la contraseña</div>
+      <div class="screen-block__body">
+        La contraseña se guarda en el Google Sheet. Para cambiarla: abrís el Sheet → pestaña <strong>Config</strong> → celda <strong>B2</strong> → escribís la nueva clave → guardás. En el próximo inicio de sesión del panel usás la nueva clave.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 8: TIMELINE -->
+  <div class="section">
+    <span class="section-num">08 · Plan de trabajo</span>
+    <h2 class="section-title">Orden de los pasos</h2>
+    <p class="section-intro">Este es el orden recomendado para hacer la entrega sin bloqueos. Algunos pasos los hacés vos, otros el desarrollador, y algunos los hacemos juntos.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-day">Día 1</div>
+        <div class="timeline-tasks">
+          <div class="timeline-task">Creás cuenta en Cloudflare <span>— 5 min</span></div>
+          <div class="timeline-task">Invitás al desarrollador como administrador <span>— 2 min</span></div>
+          <div class="timeline-task">Confirmás el Gmail que usarás para el Sheet <span>— inmediato</span></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-day">Día 1–2<br>(desarrollador)</div>
+        <div class="timeline-tasks">
+          <div class="timeline-task">Mueve el proyecto Pages a tu cuenta de Cloudflare</div>
+          <div class="timeline-task">Copia el Google Sheet a tu Gmail</div>
+          <div class="timeline-task">Actualiza el código con la nueva URL del script</div>
+          <div class="timeline-task">Publica la nueva versión</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-day">Día 2</div>
+        <div class="timeline-tasks">
+          <div class="timeline-task">Creás cuenta en Stripe <span>— 10 min</span></div>
+          <div class="timeline-task">Completás la verificación de identidad <span>— 15–20 min</span></div>
+          <div class="timeline-task">Le mandás la Secret key al desarrollador por WhatsApp <span>— 2 min</span></div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-day">Día 2–3<br>(desarrollador)</div>
+        <div class="timeline-tasks">
+          <div class="timeline-task">Agrega la Secret key en Cloudflare → modo live activo</div>
+          <div class="timeline-task">Configura tu contraseña del panel de vendedor en el Sheet</div>
+          <div class="timeline-task">Hace prueba de pago con tarjeta real (monto mínimo)</div>
+        </div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-day">Día 3</div>
+        <div class="timeline-tasks">
+          <div class="timeline-task">Hacés prueba completa del flujo: carrito → tarjeta → Stripe → confirmar que llega al Sheet</div>
+          <div class="timeline-task">Probás el panel de vendedor con tu clave nueva</div>
+          <div class="timeline-task">Entrega completa ✓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 9: REFERENCIA RÁPIDA -->
+  <div class="section">
+    <span class="section-num">09 · Referencia rápida</span>
+    <h2 class="section-title">URLs y datos importantes</h2>
+
+    <table class="handoff-table">
+      <thead>
+        <tr>
+          <th>Qué</th>
+          <th>Dónde</th>
+          <th>Nota</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dominio</td>
+          <td>cloudflare.com/products/registrar</td>
+          <td>~$11 USD/año · renovación anual automática</td>
+        </tr>
+        <tr>
+          <td>Sitio web</td>
+          <td>vencyatelier.com (a confirmar)</td>
+          <td>Se activa al conectar el dominio</td>
+        </tr>
+        <tr>
+          <td>Panel de vendedor</td>
+          <td>vencyatelier.com/pages/admin</td>
+          <td>Guardalo en pantalla de inicio</td>
+        </tr>
+        <tr>
+          <td>Google Sheet (pedidos)</td>
+          <td>En tu Google Drive después de la migración</td>
+          <td>Nombre: "Vency Atelier · Pedidos"</td>
+        </tr>
+        <tr>
+          <td>Cloudflare Panel</td>
+          <td>dash.cloudflare.com</td>
+          <td>Login con tu email</td>
+        </tr>
+        <tr>
+          <td>Stripe Panel</td>
+          <td>dashboard.stripe.com</td>
+          <td>Ver pagos, depósitos y disputas</td>
+        </tr>
+        <tr>
+          <td>Comisión Stripe</td>
+          <td>2.9% + ₡156 por transacción</td>
+          <td>Se descuenta antes del depósito</td>
+        </tr>
+        <tr>
+          <td>WhatsApp de ventas</td>
+          <td>+506 7277-3156</td>
+          <td>Ya configurado en el sitio</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CIERRE -->
+  <div style="margin-top: 4rem; padding-top: 1.5rem; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <div style="font-family:'Manrope',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.35rem;">Dudas o soporte</div>
+      <div style="font-size:0.88rem; color:var(--ink);">Escribile al desarrollador por WhatsApp ante cualquier duda durante el proceso de entrega.</div>
+    </div>
+    <div style="font-family:'Bitter',serif; font-weight:900; font-size:1.4rem; color:var(--ink); opacity:0.15; letter-spacing:-0.01em;">VENCY ATELIER</div>
+  </div>
+
+</div>
+</body>
+</html>

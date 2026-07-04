@@ -31,6 +31,8 @@
     } catch (e) { /* corrupt — ignore */ }
   })();
 
+  var _syncing = false;
+
   function persistCart() {
     try {
       localStorage.setItem(CART_KEY, JSON.stringify({
@@ -38,7 +40,18 @@
         bottles:   bottles,
         ref:       currentOrderRef
       }));
+      if (!_syncing) window.dispatchEvent(new CustomEvent('vency-cart-update'));
     } catch (e) { /* quota or disabled — silent */ }
+  }
+
+  function syncFromStorage() {
+    try {
+      var raw = localStorage.getItem(CART_KEY);
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      if (Array.isArray(data.selection)) selection = data.selection;
+      if (Array.isArray(data.bottles))   bottles   = data.bottles;
+    } catch (e) {}
   }
 
   function clearCart() {
@@ -87,6 +100,14 @@
   var waBtn        = panel ? panel.querySelector('.js-dc-wa-btn') : null;
 
   if (!tray || !panel) return;
+
+  /* Sync tray when another script (catalogo.js, cart-drawer.js) touches the cart */
+  window.addEventListener('vency-cart-update', function () {
+    _syncing = true;
+    syncFromStorage();
+    updateUI();
+    _syncing = false;
+  });
 
   /* ---- Helpers ---- */
   function countFor(id) {
@@ -182,6 +203,16 @@
   }
 
   /* ---- UI sync ---- */
+  var cachedBlocks = null;
+  function getFragranceBlocks() {
+    if (!cachedBlocks) cachedBlocks = document.querySelectorAll('[data-fragrance-id]');
+    return cachedBlocks;
+  }
+
+  function invalidateBlocksCache() {
+    cachedBlocks = null;
+  }
+
   function updateUI() {
     persistCart();
     updateBlocks();
@@ -191,12 +222,14 @@
     var hasTray = selection.length > 0 || bottles.length > 0;
     document.body.classList.toggle('has-tray', hasTray);
     if (hasTray) {
-      document.documentElement.style.setProperty('--tray-h', tray.offsetHeight + 'px');
+      requestAnimationFrame(function () {
+        document.documentElement.style.setProperty('--tray-h', tray.offsetHeight + 'px');
+      });
     }
   }
 
   function updateBlocks() {
-    document.querySelectorAll('[data-fragrance-id]').forEach(function (block) {
+    getFragranceBlocks().forEach(function (block) {
       if (block.dataset.soldOut === 'true') return;
       var id    = block.dataset.fragranceId;
       var name  = block.dataset.fragranceName;
@@ -269,8 +302,8 @@
         trayBottles.innerHTML = prefix + bottles.map(function (b, i) {
           var qty = b.qty || 1;
           return '<span class="dc-tray__bottle-chip">'
-            + esc(b.name) + ' ' + BOTTLE_LABEL[b.fmt] + (qty > 1 ? ' ×' + qty : '')
-            + ' <button class="dc-tray__bottle-remove js-remove-bottle" data-bottle-index="' + i + '" aria-label="Quitar ' + esc(b.name) + '">×</button>'
+            + '<span class="dc-tray__bottle-text">' + esc(b.name) + ' ' + BOTTLE_LABEL[b.fmt] + (qty > 1 ? ' ×' + qty : '') + '</span>'
+            + '<button class="dc-tray__bottle-remove js-remove-bottle" data-bottle-index="' + i + '" aria-label="Quitar ' + esc(b.name) + '">×</button>'
             + '</span>';
         }).join(' · ');
         trayBottles.hidden = false;
@@ -442,6 +475,36 @@
     }
   }
 
+  /* ---- Decant intro popup (shown once, then never again) ---- */
+  var OPEN_KEY = 'decant_intro_seen';
+  var popupEl  = document.querySelector('.js-decant-popup');
+  var popupCta = document.querySelector('.js-decant-popup-close');
+  var pendingDecant = null;
+
+  function showDecantIntro(id, name) {
+    if (!popupEl || !popupCta) { handleClick(id, name); return; }
+    pendingDecant = { id: id, name: name };
+    popupEl.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDecantIntro() {
+    if (!popupEl) return;
+    popupEl.hidden = true;
+    document.body.style.overflow = '';
+    try { localStorage.setItem(OPEN_KEY, '1'); } catch (e) {}
+    if (pendingDecant) {
+      handleClick(pendingDecant.id, pendingDecant.name);
+      pendingDecant = null;
+    }
+  }
+
+  if (popupCta) {
+    popupCta.addEventListener('click', closeDecantIntro);
+    var popupBackdrop = document.querySelector('.decant-popup__backdrop');
+    if (popupBackdrop) popupBackdrop.addEventListener('click', closeDecantIntro);
+  }
+
   /* ---- Wire up decant triggers + bottle buy buttons ---- */
   document.querySelectorAll('[data-fragrance-id]').forEach(function (block) {
     if (block.dataset.soldOut === 'true') return;
@@ -452,7 +515,13 @@
     if (trigger) {
       trigger.addEventListener('click', function () {
         if (trigger.disabled || block.dataset.soldOut === 'true') return;
-        handleClick(id, name);
+        var seen = false;
+        try { seen = !!localStorage.getItem(OPEN_KEY); } catch (e) {}
+        if (seen) {
+          handleClick(id, name);
+        } else {
+          showDecantIntro(id, name);
+        }
       });
     }
 

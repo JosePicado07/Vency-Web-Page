@@ -619,7 +619,7 @@
     }
     salesEmptyEl.hidden = true;
     salesListEl.hidden  = false;
-    var pagoClass = { 'SINPE': 'sinpe', 'Efectivo': 'efectivo' };
+    var pagoClass = { 'SINPE': 'sinpe', 'Efectivo': 'efectivo', 'Tarjeta': 'tarjeta' };
     sales.forEach(function (s, idx) {
       var isPending  = s.estado === 'pendiente';
       var isOverflow = idx >= SALES_PREVIEW;

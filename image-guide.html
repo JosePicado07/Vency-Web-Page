@@ -1,0 +1,311 @@
+<title>Proporciones de imagen — Catálogo Vency</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #F7F5F1;
+    color: #1C1A17;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .page {
+    max-width: 680px;
+    width: 100%;
+  }
+
+  /* Header */
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #9C8B6E;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: normal;
+    color: #1C1A17;
+    margin-bottom: 10px;
+    text-wrap: balance;
+  }
+
+  .intro {
+    font-size: 14px;
+    color: #6B6460;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    max-width: 480px;
+  }
+
+  /* Cards */
+  .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 500px) {
+    .cards { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #E0DDD7;
+    border-radius: 6px;
+    padding: 28px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card-tag {
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #A8865A;
+    font-weight: 600;
+  }
+
+  .card h2 {
+    font-family: Georgia, serif;
+    font-size: 26px;
+    font-weight: normal;
+    color: #1C1A17;
+    line-height: 1;
+  }
+
+  .card-sub {
+    font-size: 12px;
+    color: #9C9490;
+    letter-spacing: .04em;
+  }
+
+  /* Frame diagram */
+  .diagram {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 130px;
+  }
+
+  .frame-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .frame {
+    background: #F2EFE9;
+    border: 2px solid #1C1A17;
+    border-radius: 3px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  /* Person silhouette */
+  .person {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .person__head {
+    border-radius: 50%;
+    background: #A8865A;
+    flex-shrink: 0;
+  }
+  .person__body {
+    background: #A8865A;
+    border-radius: 3px 3px 0 0;
+    flex-shrink: 0;
+  }
+
+  /* Bottle silhouette */
+  .bottle {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .bottle__neck {
+    background: #A8865A;
+    border-radius: 2px 2px 0 0;
+  }
+  .bottle__body {
+    background: #A8865A;
+    border-radius: 4px;
+  }
+  .bottle__base {
+    background: #8B6E42;
+    border-radius: 0 0 2px 2px;
+  }
+
+  .frame-size {
+    font-size: 11px;
+    color: #9C9490;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  /* Description list */
+  .specs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .spec {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .spec-label {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #B0A89E;
+    font-weight: 600;
+  }
+
+  .spec-value {
+    font-size: 13px;
+    color: #3D3A35;
+    line-height: 1.45;
+  }
+
+  /* Warning note */
+  .note {
+    background: #FBF6EE;
+    border: 1px solid #E8D9C0;
+    border-left: 3px solid #A8865A;
+    border-radius: 4px;
+    padding: 14px 16px;
+    font-size: 12.5px;
+    color: #6B6460;
+    line-height: 1.55;
+  }
+
+  .note strong {
+    color: #A8865A;
+  }
+
+  footer {
+    margin-top: 36px;
+    font-size: 11px;
+    color: #C0BBB5;
+    text-align: center;
+  }
+</style>
+
+<div class="page">
+
+  <p class="eyebrow">Vency Atelier · Catálogo</p>
+  <h1>Proporciones de imagen para el catálogo</h1>
+  <p class="intro">El sitio tiene dos tipos de productos, cada uno con su propio formato. Enviar las fotos en la proporción correcta evita recortes inesperados.</p>
+
+  <div class="cards">
+
+    <!-- 3:4 Fragancias -->
+    <div class="card">
+      <div>
+        <p class="card-tag">Fragancias · Decants</p>
+        <h2>3 : 4</h2>
+        <p class="card-sub">Retrato vertical</p>
+      </div>
+
+      <div class="diagram">
+        <div class="frame-wrap">
+          <div class="frame" style="width:75px; height:100px;">
+            <div class="person">
+              <div class="person__head" style="width:16px;height:16px;"></div>
+              <div class="person__body" style="width:22px;height:62px;"></div>
+            </div>
+          </div>
+          <span class="frame-size">750 × 1000 px<br>mínimo</span>
+        </div>
+      </div>
+
+      <div class="specs">
+        <div class="spec">
+          <span class="spec-label">Fondo</span>
+          <span class="spec-value">Cualquier color sólido — el sitio recorta a este encuadre</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Sujeto</span>
+          <span class="spec-value">El frasco o la presentación ocupa al menos el 70% del alto</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Encuadre</span>
+          <span class="spec-value">Centrado. El sitio hace zoom al hacer hover — dejar un pequeño margen en los bordes</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1:1 Frascos -->
+    <div class="card">
+      <div>
+        <p class="card-tag">Frascos · Botellas</p>
+        <h2>1 : 1</h2>
+        <p class="card-sub">Cuadrado con fondo transparente</p>
+      </div>
+
+      <div class="diagram">
+        <div class="frame-wrap">
+          <div class="frame" style="width:100px; height:100px; background: repeating-conic-gradient(#E8E4DE 0% 25%, #F7F5F1 0% 50%) 0 0 / 12px 12px;">
+            <div class="bottle">
+              <div class="bottle__neck" style="width:10px;height:14px;"></div>
+              <div class="bottle__body" style="width:28px;height:52px;"></div>
+              <div class="bottle__base" style="width:32px;height:5px;"></div>
+            </div>
+          </div>
+          <span class="frame-size">1000 × 1000 px<br>mínimo · PNG</span>
+        </div>
+      </div>
+
+      <div class="specs">
+        <div class="spec">
+          <span class="spec-label">Fondo</span>
+          <span class="spec-value">Transparente obligatorio — formato PNG</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Sujeto</span>
+          <span class="spec-value">El frasco centrado, márgenes iguales en los cuatro lados</span>
+        </div>
+        <div class="spec">
+          <span class="spec-label">Encuadre</span>
+          <span class="spec-value">El sitio muestra la imagen con padding — no recorta. El frasco crece al hacer hover</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>Para frascos:</strong> el fondo a cuadros en el diagrama indica transparencia — el PNG debe entregarse sin fondo, no sobre blanco. Si el fotógrafo entrega JPEG, hay que recortar el fondo en Photoshop o <a href="https://remove.bg" style="color:#A8865A;">remove.bg</a> antes de subir al sitio.
+  </div>
+
+  <footer>Vency Atelier · Guía interna de imágenes · catálogo web</footer>
+
+</div>

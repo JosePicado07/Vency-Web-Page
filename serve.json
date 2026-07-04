@@ -1,0 +1,13 @@
+{
+  "cleanUrls": false,
+  "redirects": [
+    { "source": "/",            "destination": "/pages/index.html",      "type": 301 },
+    { "source": "/catalogo",    "destination": "/pages/catalogo.html",   "type": 301 },
+    { "source": "/coleccion",   "destination": "/pages/coleccion.html",  "type": 301 },
+    { "source": "/faq",         "destination": "/pages/faq.html",        "type": 301 },
+    { "source": "/guia",        "destination": "/pages/guia.html",       "type": 301 },
+    { "source": "/perfumista",  "destination": "/pages/perfumista.html", "type": 301 },
+    { "source": "/carrito",     "destination": "/pages/carrito.html",    "type": 301 },
+    { "source": "/legal",       "destination": "/pages/legal.html",      "type": 301 }
+  ]
+}

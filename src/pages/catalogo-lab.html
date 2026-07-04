@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio · Catálogo experimental · Vency Atelier</title>
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Sandbox: catálogo con configuración de frasco. No es producción.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=70">
+  <link rel="stylesheet" href="../styles/catalogo.css?v=59">
+  <link rel="stylesheet" href="../styles/catalog.css?v=51">
+  <link rel="stylesheet" href="../styles/format-rail.css?v=51">
+  <link rel="stylesheet" href="../styles/decants.css?v=51">
+  <link rel="stylesheet" href="../styles/coleccion.css?v=51">
+  <link rel="stylesheet" href="../styles/catalogo-lab.css?v=1">
+</head>
+<body class="page-catalogo page-catalogo-lab">
+
+  <a class="skip-nav" href="#cat-listing">Ir al catálogo experimental</a>
+
+  <!-- LAB BANNER -->
+  <div class="lab-banner" role="status">
+    <span class="lab-banner__tag">LABORATORIO · BORRADOR</span>
+    <span class="lab-banner__msg">Estás en una versión experimental. Las opciones de configuración son ideas en prueba; no se envían a producción.</span>
+    <a class="lab-banner__back" href="catalogo.html">? Volver al catálogo</a>
+  </div>
+
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <header class="cat-header">
+      <div class="cat-header__inner">
+        <span class="label ochre-label">LABORATORIO · CATÁLOGO EXPERIMENTAL</span>
+        <div class="cat-header__title-row">
+          <h1 class="cat-header__title">Configurá<br>tu frasco.</h1>
+          <div class="cat-header__meta">
+            <span class="cat-header__count js-cat-count label label--faint"></span>
+          </div>
+        </div>
+
+        <p class="cat-header__howto">
+          Tocá una fragancia para elegir formato, frasco, tapa y etiqueta. Esta es una versión de prueba.
+        </p>
+
+        <div class="cat-header__filter" aria-label="Filtrar catálogo">
+          <div class="cat-filters__inner">
+            <button class="cat-filters__toggle js-filter-toggle" aria-expanded="false" aria-controls="cat-filter-panel">
+              Filtrar
+              <span class="cat-filters__badge js-filter-badge" hidden></span>
+            </button>
+            <label class="sr-only" for="cat-search">Buscar fragancia o marca</label>
+            <input class="cat-search-input cat-filters__search" type="search" id="cat-search"
+              placeholder="Buscar fragancia o marca…" autocomplete="off" spellcheck="false">
+            <button class="cat-filters__clear js-filter-clear" hidden aria-label="Quitar todos los filtros">Limpiar</button>
+          </div>
+
+          <div class="cat-filter-panel" id="cat-filter-panel" hidden>
+            <div class="cat-filter-panel__inner">
+              <div class="cat-filter-group" role="group" aria-label="Categoría">
+                <span class="label cat-filter-group__label">CATEGORÍA</span>
+                <div class="cat-filter-group__pills">
+                  <button class="cat-pill is-active"  aria-pressed="true"  data-filter="cat" data-value="todos">Todos</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="vency">Creaciones propias</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="disenador">Diseñador</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="nicho">Nicho</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="cat" data-value="ultra-nicho">Ultra Nicho</button>
+                </div>
+              </div>
+              <div class="cat-filter-group" role="group" aria-label="Género">
+                <span class="label cat-filter-group__label">GÉNERO</span>
+                <div class="cat-filter-group__pills">
+                  <button class="cat-pill is-active" aria-pressed="true"  data-filter="gender" data-value="todos">Todos</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="hombre">Hombre</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="mujer">Mujer</button>
+                  <button class="cat-pill"            aria-pressed="false" data-filter="gender" data-value="unisex">Unisex</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- VENCY ORIGINALS -->
+    <section class="cat-section cat-section--vency" id="cat-section-vency" data-cat="vency">
+      <div class="cat-section__header">
+        <h2 class="cat-section__title">Vency Atelier · Originales + Icon Series</h2>
+      </div>
+      <div class="cat-brand">
+        <div id="vency-compact-entries"></div>
+      </div>
+    </section>
+
+    <!-- EXTERNAL CATALOG · rendered by catalogo.js -->
+    <div id="cat-content" aria-live="polite"></div>
+
+    <!-- EMPTY -->
+    <div class="cat-empty" hidden>
+      <p class="cat-empty__msg">Nada coincide con esa búsqueda.</p>
+      <p class="cat-empty__hint">Prueba otro filtro.</p>
+    </div>
+
+  </main>
+
+  <!-- ---------------------------------------------------------
+       LAB MODAL · Configuration sheet (formato / frasco / tapa / etiqueta)
+       --------------------------------------------------------- -->
+  <div class="lab-overlay js-lab-overlay" role="dialog" aria-modal="true" aria-labelledby="js-lab-name" hidden>
+    <div class="lab-modal js-lab-modal" tabindex="-1">
+
+      <button class="lab-modal__close js-lab-close" type="button" aria-label="Cerrar">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="lab-modal__head">
+        <span class="lab-modal__id-label">CONFIGURÁ TU FRASCO</span>
+        <h2 class="lab-modal__name" id="js-lab-name"></h2>
+      </div>
+
+      <!-- Step indicator -->
+      <ol class="lab-modal__steps" aria-label="Progreso">
+        <li class="lab-step is-active" data-step="1"><span class="lab-step__num">1</span><span class="lab-step__label">Formato</span></li>
+        <li class="lab-step" data-step="2"><span class="lab-step__num">2</span><span class="lab-step__label">Frasco</span></li>
+        <li class="lab-step" data-step="3"><span class="lab-step__num">3</span><span class="lab-step__label">Tapa</span></li>
+        <li class="lab-step" data-step="4"><span class="lab-step__num">4</span><span class="lab-step__label">Etiqueta</span></li>
+      </ol>
+
+      <!-- Composition preview -->
+      <div class="lab-modal__preview" aria-hidden="true">
+        <svg class="lab-preview" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+          <!-- Cap layer (swapped by JS) -->
+          <g class="lab-preview__cap js-lab-preview-cap"></g>
+          <!-- Bottle layer (swapped by JS) -->
+          <g class="lab-preview__bottle js-lab-preview-bottle"></g>
+          <!-- Sticker text overlay (typed by user) -->
+          <foreignObject class="js-lab-preview-sticker" x="48" y="160" width="104" height="48">
+            <div xmlns="http://www.w3.org/1999/xhtml" class="lab-preview__sticker">
+              <span class="lab-preview__sticker-brand">VENCY</span>
+              <span class="lab-preview__sticker-text js-lab-preview-text">Citrus Enigma</span>
+            </div>
+          </foreignObject>
+        </svg>
+      </div>
+
+      <!-- Step panels (only one visible at a time, JS-driven) -->
+      <div class="lab-modal__panels">
+
+        <!-- STEP 1 · FORMATO -->
+        <fieldset class="lab-panel js-lab-panel is-active" data-panel="1">
+          <legend class="lab-panel__title">Elegí el formato</legend>
+          <ul class="lab-choices lab-choices--list" role="radiogroup" aria-label="Formato">
+            <li class="lab-choice">
+              <input type="radio" name="lab-format" id="lab-fmt-decant" value="decant" data-price="5000">
+              <label for="lab-fmt-decant" class="lab-choice__label">
+                <span class="lab-choice__indicator" aria-hidden="true"></span>
+                <span class="lab-choice__main">
+                  <span class="lab-choice__name">Decant 10 ml</span>
+                  <span class="lab-choice__sub">Para descubrir y llevar contigo</span>
+                </span>
+                <span class="lab-choice__price">₡5.000</span>
+              </label>
+            </li>
+            <li class="lab-choice">
+              <input type="radio" name="lab-format" id="lab-fmt-30" value="30ml" data-price="12000">
+              <label for="lab-fmt-30" class="lab-choice__label">
+                <span class="lab-choice__indicator" aria-hidden="true"></span>
+                <span class="lab-choice__main">
+                  <span class="lab-choice__name">Frasco 30 ml</span>
+                  <span class="lab-choice__sub">Para conocerlo bien</span>
+                </span>
+                <span class="lab-choice__price">₡12.000</span>
+              </label>
+            </li>
+            <li class="lab-choice">
+              <input type="radio" name="lab-format" id="lab-fmt-100" value="100ml" data-price="20000">
+              <label for="lab-fmt-100" class="lab-choice__label">
+                <span class="lab-choice__indicator" aria-hidden="true"></span>
+                <span class="lab-choice__main">
+                  <span class="lab-choice__name">Frasco 100 ml</span>
+                  <span class="lab-choice__sub">Para quedarte con él</span>
+                </span>
+                <span class="lab-choice__price">₡20.000</span>
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+
+        <!-- STEP 2 · FRASCO (3 silhouettes) -->
+        <fieldset class="lab-panel js-lab-panel" data-panel="2" hidden>
+          <legend class="lab-panel__title">Elegí la silueta del frasco</legend>
+          <ul class="lab-choices lab-choices--grid lab-choices--3" role="radiogroup" aria-label="Frasco">
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-bottle" id="lab-bot-classic" value="classic">
+              <label for="lab-bot-classic" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 110">
+                    <rect x="22" y="14" width="36" height="86" rx="3" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Clásico</span>
+                <span class="lab-choice__sub">Rectangular, hombros suaves</span>
+              </label>
+            </li>
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-bottle" id="lab-bot-round" value="round">
+              <label for="lab-bot-round" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 110">
+                    <path d="M40 14 C 60 14 60 40 60 56 L 60 84 C 60 96 52 100 40 100 C 28 100 20 96 20 84 L 20 56 C 20 40 20 14 40 14 Z" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Redondo</span>
+                <span class="lab-choice__sub">Curva continua, sin aristas</span>
+              </label>
+            </li>
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-bottle" id="lab-bot-facet" value="facet">
+              <label for="lab-bot-facet" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 110">
+                    <path d="M28 14 L 52 14 L 60 28 L 60 92 L 52 100 L 28 100 L 20 92 L 20 28 Z" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Facetado</span>
+                <span class="lab-choice__sub">Aristas, prisma vertical</span>
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+
+        <!-- STEP 3 · TAPA -->
+        <fieldset class="lab-panel js-lab-panel" data-panel="3" hidden>
+          <legend class="lab-panel__title">Elegí la tapa</legend>
+          <ul class="lab-choices lab-choices--grid lab-choices--3" role="radiogroup" aria-label="Tapa">
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-cap" id="lab-cap-flat" value="flat">
+              <label for="lab-cap-flat" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 60">
+                    <rect x="18" y="22" width="44" height="22" rx="2" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Plana</span>
+                <span class="lab-choice__sub">Lacada, baja</span>
+              </label>
+            </li>
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-cap" id="lab-cap-dome" value="dome">
+              <label for="lab-cap-dome" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 60">
+                    <path d="M18 44 L 18 28 Q 18 12 40 12 Q 62 12 62 28 L 62 44 Z" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Cúpula</span>
+                <span class="lab-choice__sub">Curvada, suave</span>
+              </label>
+            </li>
+            <li class="lab-choice lab-choice--visual">
+              <input type="radio" name="lab-cap" id="lab-cap-cyl" value="cylinder">
+              <label for="lab-cap-cyl" class="lab-choice__label lab-choice__label--visual">
+                <span class="lab-choice__visual" aria-hidden="true">
+                  <svg viewBox="0 0 80 60">
+                    <rect x="22" y="6" width="36" height="38" rx="2" fill="currentColor" opacity="0.85"/>
+                  </svg>
+                </span>
+                <span class="lab-choice__name">Cilíndrica</span>
+                <span class="lab-choice__sub">Alta, geométrica</span>
+              </label>
+            </li>
+          </ul>
+        </fieldset>
+
+        <!-- STEP 4 · ETIQUETA -->
+        <fieldset class="lab-panel js-lab-panel" data-panel="4" hidden>
+          <legend class="lab-panel__title">Una línea para la etiqueta</legend>
+          <p class="lab-panel__hint">Hasta 24 caracteres. Se imprime debajo del nombre de la fragancia.</p>
+          <label class="lab-input">
+            <span class="sr-only">Texto para la etiqueta</span>
+            <input
+              type="text"
+              class="lab-input__field js-lab-sticker-input"
+              maxlength="24"
+              placeholder="Ej. Para Jose · 27.06"
+              autocomplete="off"
+              autocapitalize="sentences"
+              spellcheck="false"
+            >
+            <span class="lab-input__counter">
+              <span class="js-lab-sticker-count">0</span>/24
+            </span>
+          </label>
+        </fieldset>
+
+      </div>
+
+      <!-- Footer: nav + confirm -->
+      <div class="lab-modal__foot">
+        <button class="lab-modal__back js-lab-back" type="button" disabled>? Atrás</button>
+        <button class="lab-modal__next js-lab-next" type="button" disabled>Siguiente ?</button>
+        <button class="lab-modal__confirm js-lab-confirm" type="button" hidden>Añadir al carrito</button>
+      </div>
+
+      <!-- Sugerencia (secondary action — always visible) -->
+      <p class="lab-modal__sugerencia">
+        ¿No estás seguro?
+        <a class="js-lab-sugerencia" href="https://wa.me/50672773156" target="_blank" rel="noopener noreferrer">
+          Pedile a Anthonny una sugerencia ?
+        </a>
+      </p>
+
+    </div>
+  </div>
+
+  <!-- CART OVERLAY + DRAWER (shared with prod) -->
+  <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+      <div>
+        <div class="cart-drawer__title">Tu carrito</div>
+        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+      </div>
+      <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="20" height="20"><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2"/><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body js-cart-body"></div>
+    <div class="cart-drawer__upsell js-cart-upsell"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total"><span>Total</span><span class="js-cart-total">₡0</span></div>
+      <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
+    </div>
+  </div>
+
+  <script defer src="../scripts/fragrance-data.js?v=52"></script>
+  <script defer src="../scripts/nav.js?v=57"></script>
+  <script defer src="../scripts/scroll.js?v=51"></script>
+  <script defer src="../scripts/catalogo-data.js?v=51"></script>
+  <script defer src="../scripts/catalogo.js?v=67"></script>
+  <script defer src="../scripts/cart-drawer.js?v=10"></script>
+  <script defer src="../scripts/catalogo-lab.js?v=1"></script>
+</body>
+</html>
+

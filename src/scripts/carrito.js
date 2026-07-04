@@ -63,7 +63,7 @@
   // ─── Selectors ─────────────────────────────────────────────────────────
   function isEmpty()       { return state.selection.length === 0 && state.bottles.length === 0; }
   function decantCount()   { return state.selection.length; }
-  function decantPrice()   { return decantCount() === 3 ? SET_PRICE : decantCount() * DECANT_PRICE; }
+  function decantPrice()   { var n = decantCount(); return Math.floor(n / 3) * SET_PRICE + (n % 3) * DECANT_PRICE; }
   function bottlesPrice()  { return state.bottles.reduce(function (s, b) { return s + b.price * (b.qty || 1); }, 0); }
   function total()         { return decantPrice() + bottlesPrice(); }
 
@@ -102,7 +102,6 @@
   }
 
   function addDecant(id, name) {
-    if (state.selection.length >= 3) return;
     state.selection.push({ id: id, name: name });
     save();
   }
@@ -137,20 +136,33 @@
 
   // ─── Render ────────────────────────────────────────────────────────────
   function renderItems() {
+    var focusId = null, focusFmt = null, focusCls = null;
+    var ae = document.activeElement;
+    if (ae && itemsEl.contains(ae)) {
+      var focusRow = ae.closest('.carrito__item');
+      if (focusRow) {
+        focusId  = focusRow.dataset.id;
+        focusFmt = focusRow.dataset.fmt;
+        focusCls = ae.classList.contains('js-qty-dec')    ? 'js-qty-dec'
+                 : ae.classList.contains('js-qty-inc')    ? 'js-qty-inc'
+                 : ae.classList.contains('js-qty-remove') ? 'js-qty-remove'
+                 : null;
+      }
+    }
+
     var lines = [];
 
     // Decants
     var grouped = selectionGrouped();
     if (grouped.length > 0) {
-      var setHeader = decantCount() === 3
-        ? '<span class="carrito__item-meta">Set de 3 decants · ahorrás ₡3.000</span>'
-        : (decantCount() < 3
-            ? '<span class="carrito__item-meta">' + (3 - decantCount()) + ' más para set (₡12.000 los 3)</span>'
-            : '');
+      var _n = decantCount(), _rem = _n % 3, _sets = Math.floor(_n / 3);
+      var setHeader = _rem === 0
+        ? '<span class="carrito__item-meta">Set' + (_sets > 1 ? 's ' + _sets : '') + ' completo' + (_sets > 1 ? 's' : '') + ' · ahorrás ' + colones(_sets * 3000) + '</span>'
+        : '<span class="carrito__item-meta">' + (3 - _rem) + ' más para ' + (_sets > 0 ? 'otro ' : 'el ') + 'set (₡12.000 los 3)</span>';
       lines.push(
         '<div class="carrito__group">' +
           '<div class="carrito__group-head">' +
-            '<span class="label ochre-label">DECANTS · 10 ML</span>' +
+            '<h3 class="label ochre-label carrito__group-label">DECANTS · 10 ML</h3>' +
             setHeader +
           '</div>' +
           grouped.map(function (g) {
@@ -160,9 +172,9 @@
                 '<p class="carrito__item-price">' + colones(DECANT_PRICE) + ' c/u</p>' +
               '</div>' +
               '<div class="carrito__qty">' +
-                '<button class="carrito__qty-btn js-qty-dec" type="button" aria-label="Quitar uno">−</button>' +
+                '<button class="carrito__qty-btn js-qty-dec" type="button" aria-label="Quitar uno de ' + esc(g.name) + '">−</button>' +
                 '<span class="carrito__qty-val">' + g.qty + '</span>' +
-                '<button class="carrito__qty-btn js-qty-inc" type="button" aria-label="Agregar uno"' + (decantCount() >= 3 ? ' disabled' : '') + '>+</button>' +
+                '<button class="carrito__qty-btn js-qty-inc" type="button" aria-label="Agregar uno de ' + esc(g.name) + '">+</button>' +
                 '<button class="carrito__qty-rm js-qty-remove" type="button" aria-label="Quitar ' + esc(g.name) + '">×</button>' +
               '</div>' +
             '</div>';
@@ -175,7 +187,7 @@
     if (state.bottles.length > 0) {
       lines.push(
         '<div class="carrito__group">' +
-          '<div class="carrito__group-head"><span class="label ochre-label">FRASCOS</span></div>' +
+          '<div class="carrito__group-head"><h3 class="label ochre-label carrito__group-label">FRASCOS</h3></div>' +
           state.bottles.map(function (b) {
             var qty = b.qty || 1;
             return '<div class="carrito__item" data-id="' + esc(b.id) + '" data-fmt="' + esc(b.fmt) + '">' +
@@ -184,9 +196,9 @@
                 '<p class="carrito__item-price">Frasco ' + esc(BOTTLE_LABEL[b.fmt] || b.fmt) + ' · ' + colones(b.price) + ' c/u</p>' +
               '</div>' +
               '<div class="carrito__qty">' +
-                '<button class="carrito__qty-btn js-qty-dec" type="button" aria-label="Quitar uno">−</button>' +
+                '<button class="carrito__qty-btn js-qty-dec" type="button" aria-label="Quitar uno de ' + esc(b.name) + '">−</button>' +
                 '<span class="carrito__qty-val">' + qty + '</span>' +
-                '<button class="carrito__qty-btn js-qty-inc" type="button" aria-label="Agregar uno">+</button>' +
+                '<button class="carrito__qty-btn js-qty-inc" type="button" aria-label="Agregar uno de ' + esc(b.name) + '">+</button>' +
                 '<button class="carrito__qty-rm js-qty-remove" type="button" aria-label="Quitar ' + esc(b.name) + '">×</button>' +
               '</div>' +
             '</div>';
@@ -196,6 +208,14 @@
     }
 
     itemsEl.innerHTML = lines.join('');
+
+    if (focusId && focusCls) {
+      var restoreRow = itemsEl.querySelector('[data-id="' + focusId + '"][data-fmt="' + focusFmt + '"]');
+      if (restoreRow) {
+        var restoreBtn = restoreRow.querySelector('.' + focusCls);
+        if (restoreBtn) restoreBtn.focus();
+      }
+    }
   }
 
   function render() {
@@ -207,7 +227,21 @@
       if (cartEl)  cartEl.hidden  = true;
       if (sentEl)  sentEl.hidden  = false;
       if (sentRefEl)  sentRefEl.textContent = state.pending.ref;
-      if (sentResend && state.pending.waHref) sentResend.href = state.pending.waHref;
+      var _isStripe = state.pending.type === 'stripe';
+      var _subEl = sentEl && sentEl.querySelector('.carrito-sent__sub');
+      if (_subEl) {
+        _subEl.textContent = _isStripe
+          ? 'Tu pago fue procesado. Tony preparará tu pedido en breve.'
+          : 'Tony recibió tu mensaje en WhatsApp. Si pagaste por SINPE, recordá enviar el comprobante a ese mismo chat.';
+      }
+      if (sentResend) {
+        sentResend.style.display = _isStripe ? 'none' : '';
+        if (!_isStripe && state.pending.waHref) sentResend.href = state.pending.waHref;
+      }
+      setTimeout(function () {
+        var focusTarget = sentEl && sentEl.querySelector('[tabindex="-1"], a, button');
+        if (focusTarget) focusTarget.focus();
+      }, 60);
       return;
     }
     if (sentEl) sentEl.hidden = true;
@@ -224,14 +258,15 @@
 
     // Set-nudge
     if (nudgeEl) {
-      if (decantCount() > 0 && decantCount() < 3) {
-        nudgeEl.hidden = false;
-        nudgeEl.innerHTML = 'Añadí ' + (3 - decantCount()) + ' más para armar un set por <strong>' + colones(SET_PRICE) + '</strong> y ahorrar ' + colones(3 * DECANT_PRICE - SET_PRICE) + '.';
-      } else if (decantCount() === 3) {
-        nudgeEl.hidden = false;
-        nudgeEl.innerHTML = 'Set completo · ahorrás <strong>' + colones(3 * DECANT_PRICE - SET_PRICE) + '</strong>.';
-      } else {
+      var _dn = decantCount(), _rem2 = _dn % 3, _sets2 = Math.floor(_dn / 3);
+      if (_dn === 0) {
         nudgeEl.hidden = true;
+      } else if (_rem2 === 0) {
+        nudgeEl.hidden = false;
+        nudgeEl.innerHTML = (_sets2 > 1 ? _sets2 + ' sets completos' : 'Set completo') + ' · ahorrás <strong>' + colones(_sets2 * 3000) + '</strong>.';
+      } else {
+        nudgeEl.hidden = false;
+        nudgeEl.innerHTML = 'Añadí ' + (3 - _rem2) + ' más para ' + (_sets2 > 0 ? 'otro' : 'el') + ' set por <strong>' + colones(SET_PRICE) + '</strong>.';
       }
     }
 
@@ -250,8 +285,9 @@
 
     // WhatsApp link + confirm text
     var items = [];
-    if (decantCount() === 3) {
-      items.push('Set de 3 Decants (10 ml): ' + grouped_wa());
+    var _dc = decantCount();
+    if (_dc > 0 && _dc % 3 === 0) {
+      items.push('Set' + (_dc > 3 ? 's ' + Math.floor(_dc / 3) : '') + ' de Decants (10 ml): ' + grouped_wa());
     } else {
       selectionGrouped().forEach(function (g) {
         items.push(g.name + ' · Decant 10 ml' + (g.qty > 1 ? ' ×' + g.qty : ''));
@@ -330,6 +366,7 @@
     if (existing) existing.remove();
 
     var t = document.createElement('div');
+    t.setAttribute('role', 'alert');
     t.className = 'vency-toast vency-toast--undo';
     t.innerHTML =
       '<span>Carrito vaciado.</span>' +
@@ -373,7 +410,8 @@
       if (isEmpty()) return;
       var delivery = (document.querySelector('.js-delivery-radio:checked') || {}).value || 'sinpe';
       var items = [];
-      if (decantCount() === 3) items.push('Set de 3 Decants (10 ml): ' + grouped_wa());
+      var _dc2 = decantCount();
+      if (_dc2 > 0 && _dc2 % 3 === 0) items.push('Set' + (_dc2 > 3 ? 's ' + Math.floor(_dc2 / 3) : '') + ' de Decants (10 ml): ' + grouped_wa());
       else selectionGrouped().forEach(function (g) {
         items.push(g.name + ' · Decant 10 ml' + (g.qty > 1 ? ' ×' + g.qty : ''));
       });
@@ -426,7 +464,107 @@
     }
   });
 
+  // ─── Stripe card payment ───────────────────────────────────────────────
+  var stripeBtn = document.getElementById('js-cart-stripe');
+  if (stripeBtn) {
+    stripeBtn.addEventListener('click', function () {
+      if (isEmpty()) return;
+
+      // Build a flat line_items list for the serverless function
+      var lineItems = [];
+      var grouped = selectionGrouped();
+      var _dc = decantCount();
+
+      if (_dc > 0) {
+        // Price follows the set logic: floor(n/3)*12000 + (n%3)*5000
+        // Split into sets + loose so Stripe shows meaningful names
+        var sets = Math.floor(_dc / 3);
+        var loose = _dc % 3;
+        if (sets > 0) lineItems.push({ name: 'Set de Decants 10 ml ×3', price: SET_PRICE, qty: sets });
+        if (loose > 0) {
+          grouped.slice(sets * 3).forEach(function (g) {
+            lineItems.push({ name: g.name + ' · Decant 10 ml', price: DECANT_PRICE, qty: g.qty });
+          });
+          // Fallback: if grouping doesn't align, just add loose decants
+          if (lineItems.length === sets) {
+            lineItems.push({ name: 'Decant 10 ml', price: DECANT_PRICE, qty: loose });
+          }
+        }
+      }
+
+      state.bottles.forEach(function (b) {
+        lineItems.push({
+          name: b.name + ' · Frasco ' + (BOTTLE_LABEL[b.fmt] || b.fmt),
+          price: b.price,
+          qty:   b.qty || 1,
+        });
+      });
+
+      stripeBtn.disabled = true;
+      stripeBtn.textContent = 'Redirigiendo…';
+
+      fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: lineItems, ref: state.ref || generateRef() }),
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data.url) {
+            window.location.href = data.url;
+          } else {
+            alert('No se pudo iniciar el pago: ' + (data.error || 'error desconocido'));
+            stripeBtn.disabled = false;
+            stripeBtn.textContent = 'Pagar con tarjeta';
+          }
+        })
+        .catch(function () {
+          alert('Error de conexión. Intentá de nuevo.');
+          stripeBtn.disabled = false;
+          stripeBtn.textContent = 'Pagar con tarjeta';
+        });
+    });
+  }
+
+  // ─── Stripe return ─────────────────────────────────────────────────────
+  // Fires when Stripe redirects back with ?paid=1&ref=VA-XXXX after a
+  // successful card payment. Logs the order to the Sheet (first and only time),
+  // then shows the confirmation card and clears the cart.
+  function handleStripeReturn() {
+    var sp = new URLSearchParams(window.location.search);
+    if (sp.get('paid') !== '1') return;
+    var ref = sp.get('ref') || state.ref || generateRef();
+
+    if (SHEET_URL && !isEmpty()) {
+      var _dc = decantCount();
+      var items = [];
+      if (_dc > 0 && _dc % 3 === 0) items.push('Set de Decants (10 ml): ' + grouped_wa());
+      else selectionGrouped().forEach(function (g) {
+        items.push(g.name + ' · Decant 10 ml' + (g.qty > 1 ? ' ×' + g.qty : ''));
+      });
+      state.bottles.forEach(function (b) {
+        var qty = b.qty || 1;
+        items.push(b.name + ' · Frasco ' + (BOTTLE_LABEL[b.fmt] || b.fmt) + (qty > 1 ? ' ×' + qty : ''));
+      });
+      fetch(SHEET_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          ref: ref, items: items.join(' | '), total: total(),
+          pago: 'Tarjeta', entrega: 'Stripe', canal: 'Web', cliente: ''
+        })
+      }).catch(function () {});
+    }
+
+    state.ref = ref;
+    state.pending = { ref: ref, sentAt: Date.now(), waHref: '', type: 'stripe' };
+    state.selection.length = 0;
+    state.bottles.length   = 0;
+    save();
+    history.replaceState(null, '', window.location.pathname);
+  }
+
   // ─── Init ──────────────────────────────────────────────────────────────
   load();
+  handleStripeReturn();
   render();
 })();
