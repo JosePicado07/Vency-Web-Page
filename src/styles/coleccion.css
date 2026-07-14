@@ -265,6 +265,7 @@
   max-width: 100%;
   display: block;
   transition: opacity 0.18s ease-out;
+  mix-blend-mode: multiply;
 }
 .fmt-modal__img-badge {
   position: absolute;
