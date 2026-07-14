@@ -1203,6 +1203,7 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   object-fit: cover;
   display: block;
   transition: transform 0.6s var(--ease-expo);
+  mix-blend-mode: multiply;
 }
 
 .cat-entry__card:hover .cat-entry__img { transform: scale(1.04); }
