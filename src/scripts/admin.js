@@ -3,11 +3,11 @@
 
   var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
   var TOKEN_KEY     = 'vency_seller_token';
-  var SET_PRICE     = 12000;
-  var SINGLE_DECANT = 5000;
-  // ponytail: placeholder bottle prices — update when Tony confirms rates per category
-  var B30_PRICE  = { 'disenador': 12000, 'nicho': 18000, 'ultra-nicho': 25000 };
-  var B100_PRICE = { 'disenador': 25000, 'nicho': 35000, 'ultra-nicho': 50000 };
+  var _P        = window.VENCY_PRICES;
+  var SET_PRICE     = _P.set3;
+  var SINGLE_DECANT = _P.decant;
+  var B30_PRICE     = _P.b30;
+  var B100_PRICE    = _P.b100;
   var CAL_GREEN = 50000;   /* ₡1.5M / 30 days — good day */
   var CAL_MILD  = 35000;   /* mid-point */
   var CAL_RED   = 20000;   /* ₡0.6M / 30 days — bad day */
@@ -50,6 +50,7 @@
   var activeMode         = 'vender';
   var catalog            = [];
   var filteredCatalog    = [];
+  var activeFilter       = 'todos';
   var fragPage           = 0;
   var fragObserver       = null;
   var inventory          = {};
@@ -106,8 +107,8 @@
   var modePanelInv    = document.getElementById('js-mode-inventario');
 
   /* ── Helpers ── */
-  function colones(n) { return '₡' + Number(n).toLocaleString('es-CR'); }
-  function generateRef() { return 'VA' + String(Math.floor(1000 + Math.random() * 9000)); }
+  var colones     = window.fmtCRC;
+  var generateRef = window.generateRef;
 
   function cartTotal() {
     var decantAmt = selection.length === 3
@@ -290,12 +291,7 @@
      External entries inherit their image from vencyInterpretation when set;
      onerror in buildFragRow falls back to the default bottle. */
   function buildCatalog() {
-    function toWebp400(pngPath) {
-      if (!pngPath) return null;
-      // ../assets/images/originals/citrus-enigma.png
-      // -> ../assets/images/originals/_webp/citrus-enigma-400.webp
-      return pngPath.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp');
-    }
+    var toWebp400 = window.toWebp400;
     var vency = (window.VENCY_CATALOG || []).map(function (f) {
       return {
         _type: 'vency',
@@ -308,16 +304,16 @@
     });
     var ext = (window.VENCY_FULL_CATALOG || []).map(function (f, i) {
       var interpId = f.vencyInterpretation && f.vencyInterpretation.id;
+      var img = interpId
+        ? '../assets/images/inspirations/_webp/' + interpId + '-400.webp'
+        : toWebp400(f.image);
       return {
         _type: 'decant',
         id: 'ext-' + i,
         name: f.name,
         brand: f.brand || '',
         cat: f.cat,
-        // Designer/Niche entries reuse their Icon Series interpretation photo
-        // (e.g. Bleu de Chanel -> Fresh Signature). Entries without an interp
-        // link fall back to the stock bottle.
-        image: interpId ? '../assets/images/inspirations/_webp/' + interpId + '-400.webp' : null
+        image: img
       };
     });
     catalog = vency.concat(ext);
@@ -326,6 +322,21 @@
   function invKey(frag, fmt) {
     if (frag._type === 'vency') return frag.id + ':' + fmt;
     return (frag.brand || '') + '|' + frag.name + ':' + fmt;
+  }
+
+  function updateCatFilterCounts(el) {
+    var counts = { todos: catalog.length, vency: 0, disenador: 0, nicho: 0, 'ultra-nicho': 0 };
+    catalog.forEach(function (f) {
+      if (f._type === 'vency') counts.vency++;
+      else if (f.cat) counts[f.cat] = (counts[f.cat] || 0) + 1;
+    });
+    el.querySelectorAll('.admin-cat-btn').forEach(function (btn) {
+      var n = counts[btn.dataset.filter];
+      if (n === undefined) return;
+      var span = btn.querySelector('.admin-cat-count');
+      if (!span) { span = document.createElement('span'); span.className = 'admin-cat-count'; btn.appendChild(span); }
+      span.textContent = n;
+    });
   }
 
   /* ── Token gate ── */
@@ -368,6 +379,23 @@
     setInterval(loadMetrics, 60000);
     if (salesToggleBtn) salesToggleBtn.addEventListener('click', toggleSalesSection);
     if (salesShowmoreBtn) salesShowmoreBtn.addEventListener('click', showAllSales);
+
+    /* Category filter chips */
+    var catFiltersEl = document.getElementById('js-cat-filters');
+    if (catFiltersEl) {
+      updateCatFilterCounts(catFiltersEl);
+      catFiltersEl.addEventListener('click', function (e) {
+        var btn = e.target.closest('.admin-cat-btn');
+        if (!btn) return;
+        activeFilter = btn.dataset.filter;
+        catFiltersEl.querySelectorAll('.admin-cat-btn').forEach(function (b) {
+          b.classList.toggle('admin-cat-btn--active', b === btn);
+          b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+        });
+        if (activeMode === 'vender') renderFragList(searchInput.value);
+        else renderInvList(searchInput.value);
+      });
+    }
 
     if (salesListEl) salesListEl.addEventListener('click', function (e) {
       var moreBtn = e.target.closest('.sale-row__more');
@@ -802,7 +830,7 @@
     .then(function (d) {
       inventory = d || {};
       invHintEl.hidden = true;
-      syncFragBtns();
+      renderFragList(searchInput.value);
       syncInvDisplay();
       renderInvList(searchInput.value);
     })
@@ -854,8 +882,7 @@
           btn.dataset.invkey);
       return;
     }
-    // Click on the image / name area also adds a decant — saves a precision tap.
-    // Excludes the 30ml/100ml footer so those stay independent.
+    // Tap on image / name still shortcuts to decant — but not if footer button row was tapped
     var card = e.target.closest('.dblock--admin');
     if (!card || e.target.closest('.dblock__footer')) return;
     var decantBtn = card.querySelector('.js-decant-btn');
@@ -871,14 +898,10 @@
       var dk       = invKey(frag, 'decant');
       var bk30     = invKey(frag, '30ml');
       var bk100    = invKey(frag, '100ml');
-      var vb30Price  = 12000;
-      var vb100Price = 20000;
+      var vb30Price  = _P.b30.vency;
+      var vb100Price = _P.b100.vency;
       var color = frag.characterColor || 'oklch(28% 0.04 180)';
       var light = isLightColor(color);
-      // Compute soldOut dynamically from current inventory
-      var isSoldOut = (!inventory[dk] || !inventory[dk].oil_ml) &&
-                      (!inventory[bk30] || !inventory[bk30].oil_ml) &&
-                      (!inventory[bk100] || !inventory[bk100].oil_ml);
 
       el.className = 'dblock dblock--admin' + (light ? ' dblock--admin-light' : '');
       el.style.cssText = '--dblock-color:' + color;
@@ -890,18 +913,14 @@
         '<div class="dblock__top">' +
           imgHtml +
           '<div class="dblock__content"><h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3></div>' +
-          '<button class="dblock__trigger js-decant-btn"' +
-            (isSoldOut ? ' disabled' : '') +
-            ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '"' +
-            ' type="button" aria-label="' + escapeHtml_(frag.name) + (isSoldOut ? ' \xb7 Agotado"' : '"') + '>' +
-          '</button>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="30ml" data-price="' + vb30Price + '" data-invkey="' + escapeHtml_(bk30) + '" type="button">30ML</button>' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + escapeHtml_(bk100) + '" type="button">100ML</button>' +
+          '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn"' +
+            ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '"' +
+            ' type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 Decant" aria-pressed="false">DECANT</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="30ml" data-price="' + vb30Price + '" data-invkey="' + escapeHtml_(bk30) + '" type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 30ML" aria-pressed="false">30ML</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + escapeHtml_(bk100) + '" type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 100ML" aria-pressed="false">100ML</button>' +
         '</div>';
-
-      if (isSoldOut) el.classList.add('dblock--soldout');
 
     } else {
       var b30Price  = B30_PRICE[frag.cat]  || B30_PRICE['disenador'];
@@ -923,11 +942,11 @@
             (frag.brand ? '<span class="dblock__brand">' + escapeHtml_(frag.brand) + '</span>' : '') +
             '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>' +
           '</div>' +
-          '<button class="dblock__trigger js-decant-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(fullName) + '" data-invkey="' + escapeHtml_(dKey) + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 Decant"></button>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="30ml" data-price="' + b30Price + '" data-invkey="' + b30Key + '" type="button">30ML</button>' +
-          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="100ml" data-price="' + b100Price + '" data-invkey="' + b100Key + '" type="button">100ML</button>' +
+          '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(fullName) + '" data-invkey="' + escapeHtml_(dKey) + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 Decant" aria-pressed="false">DECANT</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="30ml" data-price="' + b30Price + '" data-invkey="' + b30Key + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 30ML" aria-pressed="false">30ML</button>' +
+          '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="100ml" data-price="' + b100Price + '" data-invkey="' + b100Key + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 100ML" aria-pressed="false">100ML</button>' +
         '</div>';
     }
 
@@ -948,9 +967,16 @@
     }
   }
 
+  function catMatch(f) {
+    if (activeFilter === 'todos') return true;
+    if (activeFilter === 'vency') return f._type === 'vency';
+    return f._type === 'decant' && f.cat === activeFilter;
+  }
+
   function renderFragList(query) {
     var q = (query || '').trim().toLowerCase();
     filteredCatalog = catalog.filter(function (f) {
+      if (!catMatch(f)) return false;
       if (!q) return true;
       var t = f.name.toLowerCase() + (f.brand ? ' ' + f.brand.toLowerCase() : '');
       return t.indexOf(q) !== -1;
@@ -1007,7 +1033,7 @@
     var idx = bottles.findIndex(function (b) { return b.id === id && b.fmt === fmt; });
     if (idx !== -1) { bottles.splice(idx, 1); }
     else {
-      var price = priceOverride !== undefined ? priceOverride : 12000;
+      var price = priceOverride !== undefined ? priceOverride : _P.b30.vency;
       bottles.push({ id: id, name: name, fmt: fmt, price: price, invKey: ik, pct: defaultPct(id) });
     }
     syncCart();
@@ -1071,6 +1097,11 @@
       var inCart = selection.some(function (s) { return s.id === id; });
       card.classList.toggle('dblock--selected', inCart);
       card.classList.toggle('dblock--dimmed', selection.length === 3 && !inCart);
+      var decantRailBtn = card.querySelector('.admin-fmt-btn.js-decant-btn');
+      if (decantRailBtn) {
+        decantRailBtn.classList.toggle('admin-fmt-btn--active', inCart);
+        decantRailBtn.setAttribute('aria-pressed', inCart ? 'true' : 'false');
+      }
 
       if (!card.classList.contains('dblock--soldout')) {
         var entry = inventory[id];
@@ -1081,6 +1112,7 @@
       card.querySelectorAll('.js-bottle-btn').forEach(function (btn) {
         var inB   = bottles.some(function (b) { return b.id === id && b.fmt === btn.dataset.fmt; });
         btn.classList.toggle('admin-fmt-btn--active', inB);
+        btn.setAttribute('aria-pressed', inB ? 'true' : 'false');
         var entry = inventory[id];
         if (entry && entry.pct > 0) {
           var cap    = computeCapacity(entry.oil_ml || 0, entry.pct);
@@ -1363,6 +1395,7 @@
   function renderInvList(query) {
     var q = (query || '').trim().toLowerCase();
     invFilteredCatalog = catalog.filter(function (f) {
+      if (!catMatch(f)) return false;
       if (!q) return true;
       var t = f.name.toLowerCase() + (f.brand ? ' ' + f.brand.toLowerCase() : '');
       return t.indexOf(q) !== -1;

@@ -1328,14 +1328,12 @@ body.fmt--100ml .dc-tray__slots { display: none !important; }/* 30ml / 100ml jou
   flex-direction: column;
   transition:
     border-color 0.25s var(--ease-expo),
-    background-color 0.25s var(--ease-expo),
-    box-shadow 0.25s var(--ease-expo);
+    background-color 0.25s var(--ease-expo);
 }
 
 .cat-entry__card:hover {
   border-color: var(--warm-ochre);
   background: var(--botanical-parchment);
-  box-shadow: 0 2px 0 0 color-mix(in oklch, var(--warm-ochre) 18%, transparent);
 }
 
 .cat-entry__img-wrap {

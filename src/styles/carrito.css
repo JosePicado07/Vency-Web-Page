@@ -75,6 +75,11 @@
 
 /* ── Cart body ───────────────────────────────────────────── */
 
+/* display:flex overrides UA [hidden]{display:none} — restore it explicitly */
+.carrito[hidden],
+.carrito-empty[hidden],
+.carrito-sent[hidden] { display: none; }
+
 .carrito {
   display: flex;
   flex-direction: column;
@@ -118,6 +123,17 @@
 }
 
 .carrito__item:first-child { border-top: none; }
+
+.carrito__item-thumb {
+  width: 52px;
+  height: 68px;
+  object-fit: contain;
+  object-position: center bottom;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: oklch(92% 0.006 90);
+  mix-blend-mode: multiply;
+}
 
 .carrito__item-info {
   flex: 1;
@@ -241,6 +257,22 @@
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   color: var(--volcanic-ink);
   letter-spacing: -0.01em;
+}
+
+.carrito__total-value--sm {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.carrito__total-row--shipping {
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.carrito__total-row--shipping .carrito__total-label {
+  color: var(--ink-muted);
 }
 
 .carrito__set-nudge {

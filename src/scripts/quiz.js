@@ -127,9 +127,7 @@
     return out;
   }
 
-  function esc(s) {
-    return (window.escHtml || function (x) { return x; })(s);
-  }
+  var esc = window.escHtml;
 
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -214,11 +212,14 @@
       + '</div>';
   }
 
+  var _scrollY = 0;
+
   function openQuiz() {
     currentStep = 0;
     answers = {};
     overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
+    _scrollY = window.scrollY;
+    document.body.style.cssText += ';overflow:hidden;position:fixed;top:-' + _scrollY + 'px;width:100%';
     renderStep();
     setTimeout(function () {
       var first = bodyEl.querySelector('.js-quiz-opt, .js-quiz-back');
@@ -229,6 +230,10 @@
   function closeQuiz() {
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top      = '';
+    document.body.style.width    = '';
+    window.scrollTo(0, _scrollY);
     var trigger = document.querySelector('.js-quiz-trigger');
     if (trigger) trigger.focus();
   }

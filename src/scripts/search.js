@@ -102,9 +102,7 @@
     overlay.classList.add('has-results');
   }));
 
-  var escHtml = window.escHtml || function (s) {
-    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  };
+  var escHtml = window.escHtml;
 
   var searchBtn = document.querySelector('.js-search-btn');
   if (searchBtn) searchBtn.addEventListener('click', openSearch);

@@ -265,7 +265,31 @@
 
   <script defer src="../scripts/nav.js"></script>
   <script defer src="../scripts/scroll.js"></script>
-  <script defer src="../scripts/scrollspy.js"></script>
+  <script defer>
+    (function () {
+      var navLinks = document.querySelectorAll('.frag-nav__link');
+      if (!navLinks.length) return;
+      var entries = [];
+      navLinks.forEach(function (link) {
+        var id = link.getAttribute('href').replace('#', '');
+        var section = document.getElementById(id);
+        if (section) entries.push({ link: link, section: section });
+      });
+      if (!entries.length) return;
+      function setActive(activeEntry) {
+        entries.forEach(function (e) { e.link.classList.toggle('frag-nav__link--active', e === activeEntry); });
+      }
+      var navEl = document.querySelector('.nav');
+      var navH  = navEl ? navEl.getBoundingClientRect().height || 72 : 72;
+      function onScroll() {
+        var active = null;
+        entries.forEach(function (e) { if (e.section.getBoundingClientRect().top <= navH + 40) active = e; });
+        setActive(active);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+  </script>
   <script src="../scripts/fragrance-data.js" defer></script>
   <script src="../scripts/search.js" defer></script>
   <script src="../scripts/cart-drawer.js" defer></script>

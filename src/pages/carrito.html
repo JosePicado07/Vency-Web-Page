@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/styles.css?v=72">
-  <link rel="stylesheet" href="../styles/carrito.css?v=5">
+  <link rel="stylesheet" href="../styles/carrito.css?v=9">
 </head>
 <body class="page-carrito">
 
@@ -87,11 +87,16 @@
       <div class="carrito__items" id="js-cart-items" aria-label="Productos en tu carrito"></div>
 
       <div class="carrito__totals">
+        <div class="carrito__total-row carrito__total-row--shipping" id="js-shipping-row" hidden>
+          <span class="carrito__total-label">Envío</span>
+          <span class="carrito__total-value carrito__total-value--sm" id="js-shipping-amount">₡2.500</span>
+        </div>
         <div class="carrito__total-row carrito__total-row--grand">
           <span class="carrito__total-label">Total</span>
           <span class="carrito__total-value" id="js-cart-total" aria-live="polite" aria-atomic="true">₡0</span>
         </div>
         <p class="carrito__set-nudge" id="js-cart-nudge" hidden></p>
+        <p class="carrito__set-nudge" id="js-ship-nudge" hidden></p>
       </div>
 
       <div class="delivery-group" role="group" aria-label="Método de entrega">
@@ -235,9 +240,10 @@
 
   <script src="../scripts/search.js?v=52" defer></script>
   <script src="../scripts/cart-drawer.js?v=10" defer></script>
-  <script src="../scripts/fragrance-data.js?v=52" defer></script>
+  <script src="../scripts/fragrance-data.js?v=54" defer></script>
+  <script src="../scripts/catalogo-data.js?v=53" defer></script>
   <script src="../scripts/nav.js?v=57" defer></script>
-  <script src="../scripts/carrito.js?v=8" defer></script>
+  <script src="../scripts/carrito.js?v=14" defer></script>
 
 </body>
 </html>

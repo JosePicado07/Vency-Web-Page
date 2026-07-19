@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../styles/admin.min.css?v=54">
+  <link rel="stylesheet" href="../styles/admin.min.css?v=57">
 </head>
 <body>
 
@@ -152,6 +152,15 @@
              placeholder="Buscar fragancia..." autocomplete="off" autocapitalize="none">
     </div>
 
+    <!-- Category filters -->
+    <div class="admin-cat-filters" id="js-cat-filters" role="group" aria-label="Filtrar por categoría">
+      <button class="admin-cat-btn admin-cat-btn--active" data-filter="todos" type="button" aria-pressed="true">Todo</button>
+      <button class="admin-cat-btn" data-filter="vency" type="button" aria-pressed="false">Vency</button>
+      <button class="admin-cat-btn" data-filter="disenador" type="button" aria-pressed="false">Diseñador</button>
+      <button class="admin-cat-btn" data-filter="nicho" type="button" aria-pressed="false">Nicho</button>
+      <button class="admin-cat-btn" data-filter="ultra-nicho" type="button" aria-pressed="false">Ultra Nicho</button>
+    </div>
+
     <!-- VENDER panel -->
     <div id="js-mode-vender" role="tabpanel" aria-labelledby="js-mode-tab-vender">
       <div class="dblock-grid" id="js-frag-list"></div>
@@ -223,9 +232,9 @@
     </svg>
   </button>
 
-  <script src="../scripts/fragrance-data.js?v=51"></script>
-  <script src="../scripts/catalogo-data.js?v=51"></script>
-  <script src="../scripts/admin.js?v=5"></script>
+  <script src="../scripts/fragrance-data.js?v=54"></script>
+  <script src="../scripts/catalogo-data.js?v=53"></script>
+  <script src="../scripts/admin.js?v=9"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js', { scope: './admin.html' });

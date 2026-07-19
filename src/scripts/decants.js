@@ -61,30 +61,15 @@
     persistCart();
   }
 
-  var BOTTLE_PRICE  = { '30ml': 12000, '100ml': 20000 };
-  var BOTTLE_LABEL  = { '30ml': '30 ml', '100ml': '100 ml' };
-  var SET_PRICE     = 12000;
-  var DECANT_PRICE  = 5000;
+  var _P           = window.VENCY_PRICES;
+  var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
+  var BOTTLE_LABEL = { '30ml': '30 ml', '100ml': '100 ml' };
+  var SET_PRICE    = _P.set3;
+  var DECANT_PRICE = _P.decant;
 
-  function generateRef() {
-    return 'VA' + (Math.floor(Math.random() * 9000) + 1000);
-  }
-
-  function colones(n) { return '₡' + Number(n).toLocaleString('es-CR'); }
-
-  var esc = window.escHtml;
-
-  function showToast(msg) {
-    var t = document.createElement('div');
-    t.className = 'vency-toast';
-    t.textContent = msg;
-    document.body.appendChild(t);
-    requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
-    setTimeout(function () {
-      t.classList.remove('vency-toast--in');
-      setTimeout(function () { if (t.parentNode) t.parentNode.removeChild(t); }, 300);
-    }, 2500);
-  }
+  var generateRef = window.generateRef;
+  var colones     = window.fmtCRC;
+  var esc         = window.escHtml;
 
   /* ---- DOM ---- */
   var tray         = document.getElementById('dc-tray');
@@ -92,7 +77,9 @@
   var traySlots    = tray ? Array.prototype.slice.call(tray.querySelectorAll('.dc-tray__slot')) : [];
   var trayBottles  = tray ? tray.querySelector('.js-tray-bottles') : null;
   var trayPrice    = tray ? tray.querySelector('.js-dc-tray-price') : null;
+  var trayShipNudge = tray ? tray.querySelector('.js-tray-ship-nudge') : null;
   var orderBtn     = tray ? tray.querySelector('.js-dc-order-btn') : null;
+  var FREE_SHIP_THRESHOLD = _P.freeShipping;
   var panel        = document.getElementById('dc-order-panel');
   var summaryEl    = panel ? panel.querySelector('.js-dc-order-summary') : null;
   var priceEl      = panel ? panel.querySelector('.js-dc-order-price') : null;
@@ -156,7 +143,7 @@
       var replaced = selection[selection.length - 1];
       selection.pop();
       selection.push({ id: id, name: name });
-      showToast('Se reemplazó ' + replaced.name);
+      window.makeToast(window.escHtml('Se reemplazó ' + replaced.name));
     }
     updateUI();
   }
@@ -333,6 +320,20 @@
         trayHint.hidden = false;
       } else {
         trayHint.hidden = true;
+      }
+    }
+
+    /* shipping nudge */
+    if (trayShipNudge) {
+      var _ct = cartTotal();
+      if (_ct <= 0) {
+        trayShipNudge.hidden = true;
+      } else if (_ct >= FREE_SHIP_THRESHOLD) {
+        trayShipNudge.innerHTML = '🚚 Envío gratis incluido en este pedido.';
+        trayShipNudge.hidden = false;
+      } else {
+        trayShipNudge.innerHTML = 'Agregá <strong>' + colones(FREE_SHIP_THRESHOLD - _ct) + '</strong> más y tenés envío gratis.';
+        trayShipNudge.hidden = false;
       }
     }
 
@@ -601,7 +602,7 @@
     getBottleQty:  getBottleQty,
     setDecantQty:  setDecantQty,
     getDecantQty:  countFor,
-    showToast:     showToast,
+    showToast:     window.makeToast,
     // Read-only snapshots for /carrito.html (it doesn't load decants.js):
     getState:      function () { return { selection: selection.slice(), bottles: bottles.slice(), ref: currentOrderRef }; },
     clear:         clearCart

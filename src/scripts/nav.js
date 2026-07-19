@@ -54,6 +54,11 @@
       var isOpen = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!isOpen));
       m.classList.toggle('is-open');
+      /* scroll quiz link into view on mobile so full menu + quiz are visible */
+      if (m.id === 'hero-shop-menu' && m.classList.contains('is-open')) {
+        var quiz = document.querySelector('.hero__quiz-link');
+        if (quiz) quiz.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
       /* drive submenu height exactly; then re-measure nav links if mobile nav is open */
       if (m.classList.contains('nav__submenu')) {
         m.style.height = !isOpen ? m.scrollHeight + 'px' : '0';
@@ -94,7 +99,7 @@
       var heroBtn = document.querySelector('.js-hero-shop-toggle');
       if (heroBtn) heroBtn.setAttribute('aria-expanded', 'false');
     }
-    if (e.target.closest('.nav__link[href], .nav__sublink')) {
+    if (nav.classList.contains('is-open') && e.target.closest('.nav__link[href], .nav__sublink')) {
       closeMenu();
     }
   });
@@ -187,6 +192,6 @@
     window.addEventListener('vency-cart-update', refreshCart);
 
 
-    cartLink.addEventListener('click', closeMenu);
+    cartLink.addEventListener('click', function () { if (nav.classList.contains('is-open')) closeMenu(); });
   }
 })();

@@ -17,9 +17,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles/styles.css?v=70">
   <link rel="stylesheet" href="../styles/catalogo.css?v=60">
-  <link rel="stylesheet" href="../styles/catalog.css?v=51">
+  <link rel="stylesheet" href="../styles/catalog-entry.css?v=51">
   <link rel="stylesheet" href="../styles/format-rail.css?v=51">
-  <link rel="stylesheet" href="../styles/decants.css?v=51">
+  <link rel="stylesheet" href="../styles/decants.css?v=52">
   <link rel="stylesheet" href="../styles/coleccion.css?v=60">
 </head>
 <body class="page-catalogo">
@@ -82,7 +82,7 @@
         </div>
 
         <p class="cat-header__howto animate-in" style="--delay:160ms">
-          Decants desde ₡5.000 · Frascos desde ₡12.000 · Pedís por WhatsApp · Enviamos a todo el país
+          Decants desde ₡5.500 · Frascos desde ₡12.500 · Pedís por WhatsApp · Enviamos a todo el país
         </p>
 
         <!-- FILTER ROW · lives inside the header band -->
@@ -283,7 +283,7 @@
             <span class="fmt-option__label">Decant 10ml</span>
             <span class="fmt-option__desc">Para descubrir y llevar contigo</span>
           </span>
-          <span class="fmt-option__price">₡5.000</span>
+          <span class="fmt-option__price" id="js-fmt-price-decant">₡5.500</span>
         </label>
         <label class="fmt-option">
           <input type="radio" name="fmt-choice" value="30ml">
@@ -292,7 +292,7 @@
             <span class="fmt-option__label">Frasco 30ml</span>
             <span class="fmt-option__desc">Para conocerlo bien</span>
           </span>
-          <span class="fmt-option__price">₡12.000</span>
+          <span class="fmt-option__price" id="js-fmt-price-30ml">₡12.500</span>
         </label>
         <label class="fmt-option">
           <input type="radio" name="fmt-choice" value="100ml">
@@ -301,7 +301,7 @@
             <span class="fmt-option__label">Frasco 100ml</span>
             <span class="fmt-option__desc">Para quedarte con él</span>
           </span>
-          <span class="fmt-option__price">₡20.000</span>
+          <span class="fmt-option__price" id="js-fmt-price-100ml">₡21.000</span>
         </label>
       </div>
       <button class="fmt-modal__confirm js-fmt-confirm" type="button" disabled>Añadir al carrito</button>
@@ -311,13 +311,14 @@
   <!-- FIXED SELECTION TRAY -->
   <div class="dc-tray" id="dc-tray" role="region" aria-label="Set en composición" aria-live="polite">
     <div class="dc-tray__inner">
-      <div class="dc-tray__slots" aria-hidden="true">
-        <div class="dc-tray__slot" data-slot="0"><span class="dc-tray__slot-name">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
-        <div class="dc-tray__slot" data-slot="1"><span class="dc-tray__slot-name">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
-        <div class="dc-tray__slot" data-slot="2"><span class="dc-tray__slot-name">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" hidden>×</button></div>
+      <div class="dc-tray__slots">
+        <div class="dc-tray__slot" data-slot="0"><span class="dc-tray__slot-name" aria-hidden="true">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" aria-label="Quitar fragancia 1" hidden>×</button></div>
+        <div class="dc-tray__slot" data-slot="1"><span class="dc-tray__slot-name" aria-hidden="true">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" aria-label="Quitar fragancia 2" hidden>×</button></div>
+        <div class="dc-tray__slot" data-slot="2"><span class="dc-tray__slot-name" aria-hidden="true">·</span><button class="dc-tray__slot-remove js-remove-decant" type="button" aria-label="Quitar fragancia 3" hidden>×</button></div>
       </div>
       <span class="dc-tray__bottles js-tray-bottles" hidden></span>
       <div class="dc-tray__hint js-tray-hint" hidden></div>
+      <div class="dc-tray__ship-nudge js-tray-ship-nudge" hidden></div>
       <div class="dc-tray__action">
         <span class="dc-tray__price js-dc-tray-price" aria-hidden="true"></span>
         <button
@@ -363,12 +364,12 @@
     </svg>
   </button>
 
-  <script defer src="../scripts/fragrance-data.js?v=52"></script>
+  <script defer src="../scripts/fragrance-data.js?v=54"></script>
   <script defer src="../scripts/nav.js?v=57"></script>
   <script defer src="../scripts/scroll.js?v=51"></script>
   <script defer src="../scripts/catalogo-data.js?v=53"></script>
-  <script defer src="../scripts/catalogo.js?v=75"></script>
-  <script defer src="../scripts/decants.js?v=54"></script>
+  <script defer src="../scripts/catalogo.js?v=77"></script>
+  <script defer src="../scripts/decants.js?v=56"></script>
 
   <!-- -- SHARED OVERLAYS ---------------------------------------- -->
 
@@ -423,7 +424,6 @@
     </div>
   </div>
 
-  <script src="../scripts/fragrance-data.js?v=52" defer></script>
   <script src="../scripts/search.js?v=52" defer></script>
   <script src="../scripts/cart-drawer.js?v=10" defer></script>
 </body>

@@ -11,16 +11,32 @@
   var WA_NUMBER = '50672773156';
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
 
-  var SET_PRICE    = 12000;
-  var DECANT_PRICE = 5000;
-  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
+  var _P           = window.VENCY_PRICES;
+  var SET_PRICE    = _P.set3;
+  var DECANT_PRICE = _P.decant;
+  var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
   var BOTTLE_LABEL = { '30ml': '30 ml', '100ml': '100 ml' };
+  var SHIPPING_FEE        = _P.shipping;
+  var FREE_SHIP_THRESHOLD = _P.freeShipping;
 
-  var esc = window.escHtml || function (s) {
-    return String(s).replace(/[&<>"']/g, function (c) {
-      return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c];
-    });
-  };
+  var esc = window.escHtml;
+
+  // Build id → webp thumbnail map from both catalogs
+  var toWebp400 = window.toWebp400;
+  var slug_     = window.slugify;
+  var imgMap = {};
+  (window.VENCY_CATALOG || []).forEach(function (f) { if (f.id && f.image) imgMap[f.id] = toWebp400(f.image); });
+  (window.VENCY_FULL_CATALOG || []).forEach(function (f) {
+    if (!f.image) return;
+    imgMap[slug_((f.brand || '') + '-' + f.name)] = toWebp400(f.image);
+  });
+
+  function thumbHtml(id) {
+    var src = imgMap[id];
+    if (!src) return '';
+    return '<img class="carrito__item-thumb" src="' + esc(src) + '" alt="" loading="lazy"' +
+      ' onerror="this.style.display=\'none\'">';
+  }
 
   // ─── State ─────────────────────────────────────────────────────────────
   // pending = { ref, sentAt, waHref } when the user has tapped WhatsApp.
@@ -54,18 +70,18 @@
     })); } catch (e) {}
   }
 
-  function generateRef() {
-    return 'VA' + (Math.floor(Math.random() * 9000) + 1000);
-  }
-
-  function colones(n) { return '₡' + Number(n).toLocaleString('es-CR'); }
+  var generateRef = window.generateRef;
+  var colones     = window.fmtCRC;
 
   // ─── Selectors ─────────────────────────────────────────────────────────
   function isEmpty()       { return state.selection.length === 0 && state.bottles.length === 0; }
   function decantCount()   { return state.selection.length; }
   function decantPrice()   { var n = decantCount(); return Math.floor(n / 3) * SET_PRICE + (n % 3) * DECANT_PRICE; }
   function bottlesPrice()  { return state.bottles.reduce(function (s, b) { return s + b.price * (b.qty || 1); }, 0); }
-  function total()         { return decantPrice() + bottlesPrice(); }
+  function subtotal()      { return decantPrice() + bottlesPrice(); }
+  function isDelivery()    { var r = document.querySelector('.js-delivery-radio:checked'); return !r || r.value !== 'local'; }
+  function shippingFee()   { return isDelivery() && subtotal() < FREE_SHIP_THRESHOLD ? SHIPPING_FEE : 0; }
+  function total()         { return subtotal() + shippingFee(); }
 
   function selectionGrouped() {
     var counts = {}, order = [];
@@ -115,11 +131,15 @@
   }
 
   // ─── DOM ───────────────────────────────────────────────────────────────
-  var emptyEl    = document.getElementById('js-cart-empty');
-  var cartEl     = document.getElementById('js-cart');
-  var itemsEl    = document.getElementById('js-cart-items');
-  var totalEl    = document.getElementById('js-cart-total');
-  var nudgeEl    = document.getElementById('js-cart-nudge');
+  var emptyEl       = document.getElementById('js-cart-empty');
+  var cartEl        = document.getElementById('js-cart');
+  var itemsEl       = document.getElementById('js-cart-items');
+  var totalEl       = document.getElementById('js-cart-total');
+  var nudgeEl       = document.getElementById('js-cart-nudge');
+  var shippingRowEl = document.getElementById('js-shipping-row');
+  var shippingAmtEl = document.getElementById('js-shipping-amount');
+  var shipNudgeEl   = document.getElementById('js-ship-nudge');
+  if (shippingAmtEl) shippingAmtEl.textContent = colones(SHIPPING_FEE);
   var pickupNote = document.querySelector('.js-pickup-note');
   var methodsEl  = document.getElementById('js-methods');
   var sinpeAmt   = document.querySelector('.js-sinpe-amount');
@@ -167,6 +187,7 @@
           '</div>' +
           grouped.map(function (g) {
             return '<div class="carrito__item" data-id="' + esc(g.id) + '" data-fmt="decant">' +
+              thumbHtml(g.id) +
               '<div class="carrito__item-info">' +
                 '<p class="carrito__item-name">' + esc(g.name) + '</p>' +
                 '<p class="carrito__item-price">' + colones(DECANT_PRICE) + ' c/u</p>' +
@@ -191,6 +212,7 @@
           state.bottles.map(function (b) {
             var qty = b.qty || 1;
             return '<div class="carrito__item" data-id="' + esc(b.id) + '" data-fmt="' + esc(b.fmt) + '">' +
+              thumbHtml(b.id) +
               '<div class="carrito__item-info">' +
                 '<p class="carrito__item-name">' + esc(b.name) + '</p>' +
                 '<p class="carrito__item-price">Frasco ' + esc(BOTTLE_LABEL[b.fmt] || b.fmt) + ' · ' + colones(b.price) + ' c/u</p>' +
@@ -252,7 +274,10 @@
     if (empty) return;
 
     renderItems();
-    var grand = total();
+    var _sub  = subtotal();
+    var _ship = shippingFee();
+    var grand = _sub + _ship;
+    if (shippingRowEl) shippingRowEl.hidden = (_ship === 0);
     totalEl.textContent = colones(grand);
     if (sinpeAmt) sinpeAmt.textContent = colones(grand);
 
@@ -267,6 +292,19 @@
       } else {
         nudgeEl.hidden = false;
         nudgeEl.innerHTML = 'Añadí ' + (3 - _rem2) + ' más para ' + (_sets2 > 0 ? 'otro' : 'el') + ' set por <strong>' + colones(SET_PRICE) + '</strong>.';
+      }
+    }
+
+    // Shipping nudge
+    if (shipNudgeEl) {
+      if (!isDelivery()) {
+        shipNudgeEl.hidden = true;
+      } else if (_sub >= FREE_SHIP_THRESHOLD) {
+        shipNudgeEl.hidden = false;
+        shipNudgeEl.textContent = 'Envío gratis incluido en este pedido.';
+      } else {
+        shipNudgeEl.hidden = false;
+        shipNudgeEl.innerHTML = 'Añadí <strong>' + colones(FREE_SHIP_THRESHOLD - _sub) + '</strong> más para envío gratis.';
       }
     }
 
@@ -302,6 +340,7 @@
     var msg  = '*Pedido ' + state.ref + ' · Vency Atelier*\n\n'
              + 'Hola! Quisiera ordenar:\n'
              + items.map(function (x) { return '• ' + x; }).join('\n')
+             + (_ship > 0 ? '\n• Envío a domicilio · ' + colones(_ship) : '')
              + '\n\nTotal: ' + colones(grand) + '\n'
              + tail;
 
@@ -465,6 +504,12 @@
   });
 
   // ─── Stripe card payment ───────────────────────────────────────────────
+  function showStripeError(msg) {
+    var existing = document.querySelector('.vency-toast--stripe-err');
+    if (existing) existing.remove();
+    window.makeToast('<span>' + esc(msg) + '</span>', 'vency-toast--undo vency-toast--stripe-err', 6000);
+  }
+
   var stripeBtn = document.getElementById('js-cart-stripe');
   if (stripeBtn) {
     stripeBtn.addEventListener('click', function () {
@@ -500,6 +545,9 @@
         });
       });
 
+      var _stripeShip = shippingFee();
+      if (_stripeShip > 0) lineItems.push({ name: 'Envío a domicilio', price: _stripeShip, qty: 1 });
+
       stripeBtn.disabled = true;
       stripeBtn.textContent = 'Redirigiendo…';
 
@@ -513,15 +561,15 @@
           if (data.url) {
             window.location.href = data.url;
           } else {
-            alert('No se pudo iniciar el pago: ' + (data.error || 'error desconocido'));
             stripeBtn.disabled = false;
             stripeBtn.textContent = 'Pagar con tarjeta';
+            showStripeError('No se pudo iniciar el pago: ' + (data.error || 'error desconocido'));
           }
         })
         .catch(function () {
-          alert('Error de conexión. Intentá de nuevo.');
           stripeBtn.disabled = false;
           stripeBtn.textContent = 'Pagar con tarjeta';
+          showStripeError('Error de conexión. Intentá de nuevo.');
         });
     });
   }

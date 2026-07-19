@@ -29,7 +29,7 @@
       height: auto;
       aspect-ratio: 4/5;
       object-fit: cover;
-      border-radius: 2px;
+      border-radius: 0;
       margin-bottom: var(--space-lg);
       background: var(--border);
     }
@@ -184,6 +184,119 @@
       font-size: 0.8rem;
       color: var(--ink-muted);
       font-style: normal;
+    }
+
+    /* ── Desktop (≥ 768px) ──────────────────────────────── */
+    @media (min-width: 768px) {
+      /* Split hero: image left, title right */
+      .perfumista-hero {
+        max-width: 1140px;
+        padding-left: var(--space-xl);
+        padding-right: var(--space-xl);
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        grid-template-rows: auto 1fr auto;
+        column-gap: clamp(var(--space-lg), 5vw, var(--space-xl));
+        align-items: end;
+      }
+      .perfumista-hero > .label {
+        grid-column: 1 / -1;
+        margin-bottom: var(--space-md);
+      }
+      .perfumista-hero__image {
+        grid-column: 1;
+        grid-row: 2 / 4;
+        max-width: 100%;
+        margin-bottom: 0;
+        aspect-ratio: 3/4;
+      }
+      .perfumista-hero__title {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: end;
+        font-size: clamp(4rem, 8vw, 7.5rem);
+        margin-bottom: var(--space-sm);
+      }
+      .perfumista-hero__subtitle {
+        grid-column: 2;
+        grid-row: 3;
+        align-self: start;
+        padding-bottom: var(--space-sm);
+      }
+
+      /* Body text: easier to read at desktop scale */
+      .perfumista-section__body {
+        font-size: 1.05rem;
+        line-height: 1.8;
+      }
+      .perfumista-section__heading {
+        font-size: clamp(1.7rem, 2.8vw, 2.4rem);
+      }
+
+      /* Wider sections */
+      .perfumista-section {
+        max-width: 720px;
+      }
+      .perfumista-section--bleed {
+        max-width: 960px;
+      }
+      .perfumista-divider {
+        max-width: 720px;
+      }
+      .perfumista-cta {
+        max-width: 720px;
+      }
+
+      /* Process: 4 columns */
+      .perfumista-process {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      /* Quote: wider and more weight */
+      .perfumista-quote {
+        padding: var(--space-xl) var(--space-md);
+      }
+      .perfumista-quote__inner {
+        max-width: 800px;
+      }
+      .perfumista-quote__text {
+        font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+        line-height: 1.45;
+      }
+    }
+
+    /* ── Wide desktop label sidebar (≥ 1024px) ─────────── */
+    @media (min-width: 1024px) {
+      .perfumista-section {
+        max-width: 860px;
+        display: grid;
+        grid-template-columns: 110px 1fr;
+        column-gap: var(--space-lg);
+      }
+      /* label pins to column 1, spans all rows so it stays top-aligned */
+      .perfumista-section__label {
+        grid-column: 1;
+        grid-row: 1 / 10;
+        margin-bottom: 0;
+        padding-top: 0.3rem;
+        text-align: right;
+      }
+      /* heading and body flow naturally in column 2 */
+      .perfumista-section__heading,
+      .perfumista-section__body {
+        grid-column: 2;
+        margin-top: 0;
+      }
+      /* bleed section: same columns + process grid in col 2 */
+      .perfumista-section--bleed {
+        max-width: 1060px;
+      }
+      .perfumista-section--bleed .perfumista-process {
+        grid-column: 2;
+      }
+      .perfumista-divider {
+        max-width: 860px;
+      }
     }
   </style>
 </head>
@@ -434,7 +547,7 @@
     </div>
   </div>
 
-  <script src="../scripts/fragrance-data.js?v=52" defer></script>
+  <script src="../scripts/fragrance-data.js?v=54" defer></script>
   <script src="../scripts/search.js?v=52" defer></script>
   <script src="../scripts/cart-drawer.js?v=10" defer></script>
 </body>

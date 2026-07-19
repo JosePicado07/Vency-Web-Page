@@ -32,44 +32,34 @@
   /* ── Format selector modal (mirror of Colección) ──────────────────
      Same HTML/CSS as coleccion.html — driven by the same cart logic.
      openFmtModal(frag) where frag = { id, name, image }. */
-  var CART_KEY     = 'vency_cart_v1';
-  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
-  var FMT_IMAGES   = {
-    decant: '../assets/images/formats/decant-vial.webp',
-    '30ml':  '../assets/images/formats/frasco-30ml.webp',
-    '100ml': '../assets/images/formats/frasco-100ml.webp'
-  };
+  var _fmtTrigger  = null;
+  var FMT_IMAGES   = window.VENCY_FMT_IMAGES;
   Object.keys(FMT_IMAGES).forEach(function (k) {
     var pre = new Image(); pre.src = FMT_IMAGES[k];
   });
-
-  function fmtAddToCart(frag, fmt) {
-    if (!frag) return;
-    try {
-      var raw = localStorage.getItem(CART_KEY);
-      var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
-      if (fmt === 'decant') {
-        cart.selection.push({ id: frag.id, name: frag.name });
-      } else {
-        var existingBottle = null;
-        for (var bi = 0; bi < cart.bottles.length; bi++) {
-          if (cart.bottles[bi].id === frag.id && cart.bottles[bi].fmt === fmt) { existingBottle = cart.bottles[bi]; break; }
-        }
-        if (existingBottle) {
-          existingBottle.qty = (existingBottle.qty || 1) + 1;
-        } else {
-          cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
-        }
-      }
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      window.dispatchEvent(new CustomEvent('vency-cart-update'));
-    } catch (e) {}
-  }
 
   var fmtOverlay  = document.querySelector('.js-fmt-overlay');
   var fmtModal    = fmtOverlay && fmtOverlay.querySelector('.js-fmt-modal');
   var fmtClose    = fmtModal && fmtModal.querySelector('.js-fmt-close');
   var fmtImg      = fmtModal && fmtModal.querySelector('.js-fmt-img');
+  var _fmtImgTimer = null;
+  var _fmtTransitionHandler = null;
+  var _preloadCache = {};
+  var _upgradeImg = null;
+
+  function to400Src(p) {
+    return p ? p.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g|avif)$/i, '$1_webp/$2-400.webp') : '';
+  }
+  function to800Src(p) {
+    return p ? p.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g|avif)$/i, '$1_webp/$2-800.webp') : '';
+  }
+  function preload800(imagePath) {
+    var src = to800Src(imagePath);
+    if (!src || _preloadCache[src]) return;
+    var img = new Image();
+    img.src = src;
+    _preloadCache[src] = img;
+  }
   var fmtImgBadge = fmtModal && fmtModal.querySelector('.js-fmt-img-badge');
   var fmtName     = fmtModal && fmtModal.querySelector('.js-fmt-name');
   var fmtInspo    = fmtModal && fmtModal.querySelector('.js-fmt-inspo');
@@ -86,7 +76,20 @@
       if (e.target === fmtOverlay) closeFmtModal();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && fmtOverlay.classList.contains('is-open')) closeFmtModal();
+      if (!fmtOverlay.classList.contains('is-open')) return;
+      if (e.key === 'Escape') { closeFmtModal(); return; }
+      if (e.key === 'Tab') {
+        var focusable = Array.prototype.slice.call(
+          fmtModal.querySelectorAll('button:not([disabled]),[href],input,[tabindex]:not([tabindex="-1"])')
+        ).filter(function (el) { return !el.closest('[hidden]'); });
+        if (!focusable.length) return;
+        var first = focusable[0], last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     });
     fmtOptions.addEventListener('change', function (e) {
       fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) {
@@ -94,29 +97,61 @@
       });
       fmtConfirm.disabled = false;
       fmtConfirm.textContent = 'Añadir al carrito';
+      /* Cancel any pending 800px upgrade — format image takes over. */
+      if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
       var checked = fmtOptions.querySelector('input:checked');
       var img = fmtModal && fmtModal.querySelector('.js-fmt-img');
       if (checked && img && FMT_IMAGES[checked.value]) {
+        var newSrc = FMT_IMAGES[checked.value];
+        clearTimeout(_fmtImgTimer);
         img.style.opacity = '0';
-        setTimeout(function () {
-          img.src = FMT_IMAGES[checked.value];
-          img.style.opacity = '1';
-        }, 200);
+        requestAnimationFrame(function () {
+          img.src = newSrc;
+          requestAnimationFrame(function () { img.style.opacity = '1'; });
+        });
       }
     });
     fmtConfirm.addEventListener('click', function () {
       if (!fmtFrag) return;
       var selected = fmtOptions.querySelector('input:checked');
       if (!selected) return;
-      fmtAddToCart(fmtFrag, selected.value);
+      window.VencyCart.addItem(fmtFrag, selected.value);
       closeFmtModal();
     });
   }
 
   function openFmtModal(frag) {
     if (!fmtOverlay || !fmtModal || !fmtImg || !fmtName || !fmtOptions) return;
+    /* Cancel any in-flight timers / upgrade from a previous open. */
+    clearTimeout(_fmtImgTimer);
+    if (_fmtTransitionHandler) {
+      fmtImg.removeEventListener('transitionend', _fmtTransitionHandler);
+      _fmtTransitionHandler = null;
+    }
+    if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
+    fmtImg.onload = fmtImg.onerror = null;
     fmtFrag = frag;
-    fmtImg.src = frag.image || '../assets/images/_webp/default-bottle-400.webp';
+
+    var src400 = frag.image ? to400Src(frag.image) : '../assets/images/_webp/default-bottle-400.webp';
+    var src800 = frag.image ? to800Src(frag.image) : '../assets/images/_webp/default-bottle-400.webp';
+
+    /* Show 400px immediately — guaranteed cached since the card already displayed it. */
+    fmtImg.src = src400;
+    fmtImg.style.opacity = '1';
+
+    /* Upgrade to 800px: instant if preloaded, otherwise load in background and swap silently. */
+    var cached800 = _preloadCache[src800] && _preloadCache[src800].complete && _preloadCache[src800].naturalWidth > 0;
+    if (cached800) {
+      fmtImg.src = src800;
+    } else {
+      _upgradeImg = new Image();
+      _upgradeImg.onload = function () {
+        if (fmtFrag === frag) fmtImg.src = src800;
+        _upgradeImg = null;
+      };
+      _upgradeImg.onerror = function () { _upgradeImg = null; };
+      _upgradeImg.src = src800;
+    }
     fmtImg.alt = frag.name || '';
     fmtName.textContent = frag.name || '';
     if (fmtHistory) {
@@ -144,24 +179,46 @@
     fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
     fmtConfirm.disabled = true;
     fmtConfirm.textContent = 'Elegí un formato';
+    _fmtTrigger = document.activeElement;
     fmtOverlay.classList.add('is-open');
+    if (fmtClose) fmtClose.focus();
   }
 
   function closeFmtModal() {
     if (!fmtOverlay) return;
+    if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
     fmtOverlay.classList.remove('is-open');
     fmtFrag = null;
+    if (_fmtTrigger) { _fmtTrigger.focus(); _fmtTrigger = null; }
   }
 
   var countEl   = document.querySelector('.js-cat-count');
   var emptyEl   = document.querySelector('.cat-empty');
 
   /* ── Helpers ─────────────────────────────────────────── */
-  function slug(str) {
-    return str.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  var slug    = window.slugify;
+  var escHtml = window.escHtml;
+
+  /* First 12 rendered images load eagerly (above fold); rest are lazy. */
+  var _imgIdx = 0;
+  function imgLoadAttrs() {
+    var i = _imgIdx++;
+    return i < 12
+      ? 'loading="eager" fetchpriority="' + (i < 4 ? 'high' : 'auto') + '"'
+      : 'loading="lazy"';
   }
 
-  var escHtml = window.escHtml;
+  /* Build srcset for responsive image serving:
+     200w → mobile 2-col (~175px), 400w → tablet/desktop 4-col (~350px).
+     sizes: 50vw on phones, 25vw on 640px+ screens.
+     Accepts either a -400.webp path or a .png/.jpg path. */
+  function imgSrcset(src) {
+    var src400 = /-400\.webp$/.test(src)
+      ? src
+      : src.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g|avif)$/i, '$1_webp/$2-400.webp');
+    var src200 = src400.replace(/-400\.webp$/, '-200.webp');
+    return 'srcset="' + src200 + ' 200w, ' + src400 + ' 400w" sizes="(min-width: 640px) 25vw, 50vw"';
+  }
 
   function debounce(fn, ms) {
     var t;
@@ -198,19 +255,19 @@
           '<span class="fmt-rail__set-mark" aria-hidden="true"></span>' +
           '<span class="fmt-rail__set-main">' +
             '<span class="fmt-rail__set-title">Añadir al set</span>' +
-            '<span class="fmt-rail__set-meta">Decant 10 ml · ₡5.000</span>' +
+            '<span class="fmt-rail__set-meta">Decant 10 ml · ' + window.fmtCRC(window.VENCY_PRICES.decant) + '</span>' +
             '<span class="fmt-rail__hint js-set-hint" hidden></span>' +
           '</span>' +
         '</button>' +
         '<div class="fmt-rail__buy">' +
           '<span class="fmt-rail__buy-label">o frasco completo</span>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" aria-pressed="false" aria-label="Comprar frasco 30 ml de ' + ariaName + ' por ₡12.000">' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" aria-pressed="false" aria-label="Comprar frasco 30 ml de ' + ariaName + ' por ' + window.fmtCRC(window.VENCY_PRICES.b30.vency) + '">' +
             '<span class="fmt-rail__label">Frasco · 30 ML</span>' +
-            '<span class="fmt-rail__price">₡12.000</span>' +
+            '<span class="fmt-rail__price">' + window.fmtCRC(window.VENCY_PRICES.b30.vency) + '</span>' +
           '</button>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" aria-pressed="false" aria-label="Comprar frasco 100 ml de ' + ariaName + ' por ₡20.000">' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" aria-pressed="false" aria-label="Comprar frasco 100 ml de ' + ariaName + ' por ' + window.fmtCRC(window.VENCY_PRICES.b100.vency) + '">' +
             '<span class="fmt-rail__label">Frasco · 100 ML</span>' +
-            '<span class="fmt-rail__price">₡20.000</span>' +
+            '<span class="fmt-rail__price">' + window.fmtCRC(window.VENCY_PRICES.b100.vency) + '</span>' +
           '</button>' +
         '</div>' +
       '</div>';
@@ -285,9 +342,10 @@
           '<button class="cat-entry__card cat-entry__see" type="button"' +
             ' aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">' +
             '<span class="cat-entry__img-wrap">' +
-              '<img class="cat-entry__img" src="' + thumbSrc + '" alt="" loading="lazy"' +
+              '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
                 ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
               (soldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
+              '<span class="cat-entry__img-badge">' + (isIcon ? 'INSPIRACIÓN ELEVADA' : 'CREACIÓN PROPIA') + '</span>' +
             '</span>' +
             '<span class="cat-entry__info">' +
               '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
@@ -430,7 +488,7 @@
             '<button class="cat-entry__card cat-entry__see" type="button"' +
               ' aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">' +
               '<span class="cat-entry__img-wrap">' +
-                '<img class="cat-entry__img" src="' + extThumbSrc + '" alt="" loading="lazy"' +
+                '<img class="cat-entry__img" src="' + extThumbSrc + '" ' + imgSrcset(extThumbSrc) + ' alt="' + escHtml(displayName) + '" ' + imgLoadAttrs() +
                   ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
                 (itemSoldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
                 '<span class="cat-entry__img-badge">INSPIRADO EN</span>' +
@@ -637,6 +695,20 @@
   // Wire card clicks → open the format modal. (Was previously inside
   // wireFragPanel, which got stripped in the dead-code cleanup. The
   // modal driver itself is at the top of this file.)
+  /* Preload 800px as cards scroll into view — so upgrade is instant by tap time. */
+  if ('IntersectionObserver' in window) {
+    var _preloadObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        preload800(entry.target.dataset.fragranceImg || '');
+        _preloadObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: '300px' });
+    document.querySelectorAll('[data-fragrance-img]').forEach(function (el) {
+      _preloadObserver.observe(el);
+    });
+  }
+
   document.addEventListener('click', function (e) {
     var btn = e.target.closest('.cat-entry__see');
     if (!btn) return;

@@ -454,7 +454,7 @@
       narrative: 'Especiado y elegante. La reserva que no está en el menú.',
       image: '../assets/images/inspirations/private-reserve.png',
       characterColor: 'oklch(38% 0.08 155)',
-      inspiration: { name: 'X for Men', brand: 'Clive Christian', image: null },
+      inspiration: { name: 'X for Men', brand: 'Clive Christian', image: '../assets/images/inspirations/private-reserve.png' },
       featured: false
     },
     {
@@ -605,5 +605,66 @@
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
+  };
+
+  /* ── Single source of truth for all prices & shipping ── */
+  root.VENCY_PRICES = {
+    decant:      5500,
+    set3:        12500,
+    b30:  { vency: 12500, disenador: 12500, nicho: 19000, 'ultra-nicho': 26500 },
+    b100: { vency: 21000, disenador: 26500, nicho: 37000, 'ultra-nicho': 52500 },
+    shipping:    2500,
+    freeShipping: 25000,
+  };
+
+  root.fmtCRC      = function (n) { return '₡' + Number(n).toLocaleString('es-CR'); };
+  root.generateRef = function () { return 'VA' + (Math.floor(Math.random() * 9000) + 1000); };
+  root.toWebp400   = function (path) {
+    if (!path) return '';
+    return path.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g|avif)$/i, '$1_webp/$2-400.webp');
+  };
+  root.slugify   = function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
+  root.makeToast = function (html, cls, duration) {
+    var t = document.createElement('div');
+    t.setAttribute('role', 'alert');
+    t.className = 'vency-toast' + (cls ? ' ' + cls : '');
+    t.innerHTML = html;
+    document.body.appendChild(t);
+    requestAnimationFrame(function () { t.classList.add('vency-toast--in'); });
+    setTimeout(function () {
+      t.classList.remove('vency-toast--in');
+      setTimeout(function () { if (t.parentNode) t.remove(); }, 300);
+    }, duration || 2500);
+    return t;
+  };
+
+  root.VENCY_FMT_IMAGES = {
+    decant: '../assets/images/formats/decant-vial.webp',
+    '30ml':  '../assets/images/formats/frasco-30ml.webp',
+    '100ml': '../assets/images/formats/frasco-100ml.webp'
+  };
+
+  root.VencyCart = {
+    KEY: 'vency_cart_v1',
+    PRICE: { '30ml': root.VENCY_PRICES.b30.vency, '100ml': root.VENCY_PRICES.b100.vency },
+    addItem: function (frag, fmt) {
+      if (!frag) return;
+      try {
+        var raw  = localStorage.getItem(this.KEY);
+        var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
+        if (fmt === 'decant') {
+          cart.selection.push({ id: frag.id, name: frag.name });
+        } else {
+          var found = null;
+          for (var i = 0; i < cart.bottles.length; i++) {
+            if (cart.bottles[i].id === frag.id && cart.bottles[i].fmt === fmt) { found = cart.bottles[i]; break; }
+          }
+          if (found) { found.qty = (found.qty || 1) + 1; }
+          else { cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: this.PRICE[fmt], qty: 1 }); }
+        }
+        localStorage.setItem(this.KEY, JSON.stringify(cart));
+        window.dispatchEvent(new CustomEvent('vency-cart-update'));
+      } catch (e) {}
+    }
   };
 })(window);

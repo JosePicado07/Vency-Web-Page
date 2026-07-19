@@ -28,39 +28,10 @@
   var escHtml = window.escHtml;
 
   /* ── Cart helpers ────────────────────────────────────────────────── */
-  var CART_KEY  = 'vency_cart_v1';
-  var BOTTLE_PRICE = { '30ml': 12000, '100ml': 20000 };
-  var FMT_IMAGES = {
-    decant: '../assets/images/formats/decant-vial.webp',
-    '30ml':  '../assets/images/formats/frasco-30ml.webp',
-    '100ml': '../assets/images/formats/frasco-100ml.webp'
-  };
+  var FMT_IMAGES = window.VENCY_FMT_IMAGES;
   Object.keys(FMT_IMAGES).forEach(function (k) {
     var pre = new Image(); pre.src = FMT_IMAGES[k];
   });
-
-  function addToCart(frag, fmt) {
-    if (!frag) return;
-    try {
-      var raw = localStorage.getItem(CART_KEY);
-      var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
-      if (fmt === 'decant') {
-        cart.selection.push({ id: frag.id, name: frag.name });
-      } else {
-        var existingBottle = null;
-        for (var bi = 0; bi < cart.bottles.length; bi++) {
-          if (cart.bottles[bi].id === frag.id && cart.bottles[bi].fmt === fmt) { existingBottle = cart.bottles[bi]; break; }
-        }
-        if (existingBottle) {
-          existingBottle.qty = (existingBottle.qty || 1) + 1;
-        } else {
-          cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
-        }
-      }
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      window.dispatchEvent(new CustomEvent('vency-cart-update'));
-    } catch (e) {}
-  }
 
   /* ── Format modal ────────────────────────────────────────────────── */
   var fmtOverlay  = document.querySelector('.js-fmt-overlay');
@@ -75,6 +46,25 @@
   var fmtOptions  = fmtModal && fmtModal.querySelector('.js-fmt-options');
   var fmtConfirm  = fmtModal && fmtModal.querySelector('.js-fmt-confirm');
   var fmtFrag    = null;
+  var _fmtTrigger = null;
+  var _fmtImgTimer = null;
+  var _fmtTransitionHandler = null;
+  var _preloadCache = {};
+  var _upgradeImg = null;
+
+  function to400Src(p) {
+    return p ? p.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp') : '';
+  }
+  function to800Src(p) {
+    return p ? p.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-800.webp') : '';
+  }
+  function preload800(imagePath) {
+    var src = to800Src(imagePath);
+    if (!src || _preloadCache[src]) return;
+    var img = new Image();
+    img.src = src;
+    _preloadCache[src] = img;
+  }
 
   if (fmtOverlay && fmtModal) {
     fmtClose.addEventListener('click', closeFmtModal);
@@ -82,7 +72,20 @@
       if (e.target === fmtOverlay) closeFmtModal();
     });
     document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && fmtOverlay.classList.contains('is-open')) closeFmtModal();
+      if (!fmtOverlay.classList.contains('is-open')) return;
+      if (e.key === 'Escape') { closeFmtModal(); return; }
+      if (e.key === 'Tab') {
+        var focusable = Array.prototype.slice.call(
+          fmtModal.querySelectorAll('button:not([disabled]),[href],input,[tabindex]:not([tabindex="-1"])')
+        ).filter(function (el) { return !el.closest('[hidden]'); });
+        if (!focusable.length) return;
+        var first = focusable[0], last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+          if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+        }
+      }
     });
 
     fmtOptions.addEventListener('change', function (e) {
@@ -91,14 +94,17 @@
       });
       fmtConfirm.disabled = false;
       fmtConfirm.textContent = 'Añadir al carrito';
+      if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
       var checked = fmtOptions.querySelector('input:checked');
       var img = fmtModal && fmtModal.querySelector('.js-fmt-img');
       if (checked && img && FMT_IMAGES[checked.value]) {
+        var newSrc = FMT_IMAGES[checked.value];
+        clearTimeout(_fmtImgTimer);
         img.style.opacity = '0';
-        setTimeout(function () {
-          img.src = FMT_IMAGES[checked.value];
-          img.style.opacity = '1';
-        }, 200);
+        requestAnimationFrame(function () {
+          img.src = newSrc;
+          requestAnimationFrame(function () { img.style.opacity = '1'; });
+        });
       }
     });
 
@@ -107,7 +113,7 @@
       var selected = fmtOptions.querySelector('input:checked');
       if (!selected) return;
       var fmt = selected.value;
-      addToCart(fmtFrag, fmt);
+      window.VencyCart.addItem(fmtFrag, fmt);
       closeFmtModal();
 
       var lastPill = document.querySelector('[data-fmt-last="' + fmtFrag.id + '-' + fmt + '"]');
@@ -121,8 +127,37 @@
 
   function openFmtModal(frag) {
     if (!fmtOverlay || !fmtModal || !fmtImg || !fmtName || !fmtOptions) return;
+    clearTimeout(_fmtImgTimer);
+    if (_fmtTransitionHandler) {
+      fmtImg.removeEventListener('transitionend', _fmtTransitionHandler);
+      _fmtTransitionHandler = null;
+    }
+    fmtImg.onload = fmtImg.onerror = null;
     fmtFrag = frag;
-    fmtImg.src = frag.image;
+
+    if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
+    fmtImg.onload = fmtImg.onerror = null;
+
+    var src400 = frag.image ? to400Src(frag.image) : '';
+    var src800 = frag.image ? to800Src(frag.image) : '';
+
+    fmtImg.src = src400;
+    fmtImg.style.opacity = '1';
+
+    if (src800) {
+      var cached800 = _preloadCache[src800] && _preloadCache[src800].complete && _preloadCache[src800].naturalWidth > 0;
+      if (cached800) {
+        fmtImg.src = src800;
+      } else {
+        _upgradeImg = new Image();
+        _upgradeImg.onload = function () {
+          if (fmtFrag === frag) fmtImg.src = src800;
+          _upgradeImg = null;
+        };
+        _upgradeImg.onerror = function () { _upgradeImg = null; };
+        _upgradeImg.src = src800;
+      }
+    }
     fmtImg.alt = frag.name;
     fmtName.textContent = frag.name;
     if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspiration;
@@ -175,13 +210,17 @@
       if (descEl) descEl.textContent = descriptions[val] || '';
     });
 
+    _fmtTrigger = document.activeElement;
     fmtOverlay.classList.add('is-open');
+    if (fmtClose) fmtClose.focus();
   }
 
   function closeFmtModal() {
     if (!fmtOverlay) return;
+    if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
     fmtOverlay.classList.remove('is-open');
     fmtFrag = null;
+    if (_fmtTrigger) { _fmtTrigger.focus(); _fmtTrigger = null; }
   }
 
   function renderEntry(frag) {
@@ -255,6 +294,17 @@
     + '</article>';
   }
 
+  var _preloadObserver = ('IntersectionObserver' in window)
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var frag = ordered.find(function (f) { return f.id === entry.target.id; });
+          if (frag && frag.image) preload800(frag.image);
+          _preloadObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: '300px' })
+    : null;
+
   function appendBatch() {
     var gridEl = document.getElementById('catalog-grid');
     if (!gridEl) return;
@@ -264,6 +314,7 @@
       var el = gridEl.lastElementChild;
       el.style.setProperty('--entry-delay', (batchIdx * 55) + 'ms');
       observeEntry(el);
+      if (_preloadObserver) _preloadObserver.observe(el);
     });
     rendered += next.length;
     if (sentinel) sentinel.hidden = (rendered >= ordered.length);
@@ -307,8 +358,30 @@
       }, 80);
     }
 
-    /* ── Event delegation: "Añadir" opens format modal ──────── */
+    /* Preload modal image on hover/touch so it's cached before the user clicks. */
     var grid = document.getElementById('catalog-grid');
+    if (grid) {
+      grid.addEventListener('mouseover', function (e) {
+        var entry = e.target.closest('[data-fragrance-id]');
+        if (entry) {
+          var id = entry.getAttribute('data-fragrance-id');
+          for (var i = 0; i < ordered.length; i++) {
+            if (ordered[i].id === id) { preloadModalImg(ordered[i].image || ''); break; }
+          }
+        }
+      });
+      grid.addEventListener('touchstart', function (e) {
+        var entry = e.target.closest('[data-fragrance-id]');
+        if (entry) {
+          var id = entry.getAttribute('data-fragrance-id');
+          for (var i = 0; i < ordered.length; i++) {
+            if (ordered[i].id === id) { preloadModalImg(ordered[i].image || ''); break; }
+          }
+        }
+      }, { passive: true });
+    }
+
+    /* ── Event delegation: "Añadir" opens format modal ──────── */
     if (grid) {
       grid.addEventListener('click', function (e) {
         var btn = e.target.closest('.catalog-entry__order-btn');

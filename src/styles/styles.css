@@ -902,20 +902,42 @@ a {
   font-family: 'Manrope', sans-serif;
   font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
   color: var(--ink-muted);
   text-decoration: none;
-  transition: color 0.25s var(--ease-expo);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.35rem;
+  border: 1px solid color-mix(in oklch, var(--volcanic-ink) 22%, transparent);
+  border-radius: 2rem;
+  transition: color 0.3s var(--ease-expo), border-color 0.3s var(--ease-expo), background 0.3s var(--ease-expo);
   white-space: nowrap;
 }
-.hero__quiz-link:hover,
-.hero__quiz-link:focus-visible {
+.hero__quiz-link::after {
+  content: '→';
+  display: inline-block;
+  opacity: 0.4;
+  transition: transform 0.3s var(--ease-expo), opacity 0.3s var(--ease-expo);
+}
+.hero__quiz-link:hover {
   color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+  background: color-mix(in oklch, var(--warm-ochre) 6%, transparent);
   outline: none;
 }
 .hero__quiz-link:focus-visible {
+  color: var(--warm-ochre);
+  border-color: var(--warm-ochre);
+  background: color-mix(in oklch, var(--warm-ochre) 6%, transparent);
   outline: 2px solid var(--warm-ochre);
   outline-offset: 3px;
+}
+.hero__quiz-link:hover::after,
+.hero__quiz-link:focus-visible::after {
+  transform: translateX(4px);
+  opacity: 1;
 }
 
 /* ── Hero shop dropdown ──────────────────────────────────────── */
@@ -931,7 +953,8 @@ a {
 }
 .hero__shop-menu {
   position: absolute;
-  top: 100%;
+  bottom: calc(100% + 0.25rem);
+  top: auto;
   left: 0;
   min-width: 190px;
   background: var(--botanical-parchment);
@@ -939,7 +962,7 @@ a {
   padding: 0.5rem 0;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-4px);
+  transform: translateY(4px);
   transition:
     opacity    0.25s var(--ease-expo),
     transform  0.25s var(--ease-expo),
@@ -1526,7 +1549,7 @@ a.coll-block:hover .coll-block__cta {
     display: flex;
     justify-content: flex-start;
   }
-}@media (min-width: 1024px) {
+
   .sessions__mark {
     display: flex;
     flex-direction: column;
@@ -1545,7 +1568,9 @@ a.coll-block:hover .coll-block__cta {
     color: var(--botanical-parchment);
     letter-spacing: -0.06em;
   }
-}/* ============================================================
+}
+
+/* ============================================================
    CÓMO SE HACE
    ============================================================ */
 .process {
@@ -2181,7 +2206,25 @@ a.coll-block:hover .coll-block__cta {
     min-height: unset;
   }
 
-  /* Dropdown expands inline on mobile so it never hides behind the image */
+  /* Stack trigger + quiz link vertically, no side-by-side wrapping */
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .hero__shop-trigger {
+    width: 100%;
+  }
+  .hero__shop-trigger .btn--primary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Dropdown: full-width inline panel, premium rows */
   .hero__shop-menu {
     position: static;
     opacity: 1;
@@ -2189,12 +2232,44 @@ a.coll-block:hover .coll-block__cta {
     transform: none;
     transition: none;
     display: none;
-    border: 1px solid var(--border);
-    margin-top: 0.25rem;
+    min-width: 0;
+    margin-top: 0;
+    padding: 0;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in oklch, var(--volcanic-ink) 3%, var(--botanical-parchment));
   }
   .hero__shop-menu.is-open {
     display: block;
-    transform: none;
+  }
+  .hero__shop-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.95rem 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-top: 1px solid var(--border);
+    white-space: normal;
+  }
+  .hero__shop-link::after {
+    content: '';
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-top: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    flex-shrink: 0;
+    opacity: 0.45;
+    margin-left: 0.75rem;
+  }
+
+  /* Quiz link goes below the dropdown, full-width pill */
+  .hero__quiz-link {
+    justify-content: center;
+    margin-top: 0.75rem;
   }
 
   /* Cap the portrait image so it doesn't eat the entire viewport */

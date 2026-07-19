@@ -282,8 +282,6 @@
   border-radius: 50%;
   border: 1.5px solid oklch(30% 0.04 180 / 0.3);
   background: color-mix(in oklch, var(--botanical-parchment) 55%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   color: var(--volcanic-ink);
   font-family: 'Manrope', sans-serif;
   font-weight: 600;
@@ -293,6 +291,9 @@
   justify-content: center;
   pointer-events: none;
   transition: background 0.22s, border-color 0.22s, color 0.22s, transform 0.2s var(--ease-expo);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dblock__badge { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 }
 
 .dblock__badge--inv {
@@ -580,6 +581,17 @@
   text-align: center;
   margin: 0;
   flex: 0 0 auto;
+}
+
+.dc-tray__ship-nudge {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--warm-ochre);
+  text-align: center;
+  margin: 0;
+  flex: 0 0 auto;
+  line-height: 1.3;
 }
 
 /* clear decants link inside hint */

@@ -171,12 +171,13 @@
   align-items: flex-end;
   justify-content: center;
   background: oklch(18% 0.01 60 / 0.55);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.35s var(--ease-expo);
   padding: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .fmt-overlay { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
 }
 .fmt-overlay.is-open { opacity: 1; pointer-events: auto; }
 
@@ -252,17 +253,18 @@
 }
 .fmt-modal__img-wrap {
   position: relative;
-  width: fit-content;
-  max-width: 100%;
+  width: 100%;
+  max-width: 260px;
+  height: clamp(200px, 48vw, 280px);
   overflow: hidden;
   background: color-mix(in oklch, var(--atelier-stone) 28%, var(--botanical-parchment));
-  border-radius: 3px;
+  border-radius: 0;
   margin-bottom: 1rem;
 }
 .fmt-modal__img {
-  height: clamp(190px, 46vw, 260px);
-  width: auto;
-  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
   transition: opacity 0.18s ease-out;
   mix-blend-mode: multiply;
@@ -281,7 +283,7 @@
   text-transform: uppercase;
   text-align: center;
   padding: 0.22rem 0.2rem;
-  border-radius: 0 0 3px 3px;
+  border-radius: 0;
   display: block;
 }
 /* display:block above overrides UA [hidden]{display:none} — re-enforce it */
