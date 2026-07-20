@@ -4,8 +4,8 @@
   var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var _P        = window.VENCY_PRICES;
-  var SET_PRICE     = _P.set3;
-  var SINGLE_DECANT = _P.decant;
+  var SET_PRICE     = _P.set3.vency;
+  var SINGLE_DECANT = _P.decant.vency;
   var B30_PRICE     = _P.b30;
   var B100_PRICE    = _P.b100;
   var CAL_GREEN = 50000;   /* ₡1.5M / 30 days — good day */

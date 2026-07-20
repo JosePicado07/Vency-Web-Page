@@ -182,7 +182,7 @@
     var elD   = document.getElementById('js-fmt-price-decant');
     var el30  = document.getElementById('js-fmt-price-30ml');
     var el100 = document.getElementById('js-fmt-price-100ml');
-    if (elD)   elD.textContent   = window.fmtCRC(_P.decant);
+    if (elD)   elD.textContent   = window.fmtCRC(_P.decant[tier] || _P.decant.vency);
     if (el30)  el30.textContent  = window.fmtCRC(p30);
     if (el100) el100.textContent = window.fmtCRC(p100);
     fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
@@ -269,7 +269,7 @@
           '<span class="fmt-rail__set-mark" aria-hidden="true"></span>' +
           '<span class="fmt-rail__set-main">' +
             '<span class="fmt-rail__set-title">Añadir al set</span>' +
-            '<span class="fmt-rail__set-meta">Decant 10 ml · ' + window.fmtCRC(_P.decant) + '</span>' +
+            '<span class="fmt-rail__set-meta">Decant 10 ml · ' + window.fmtCRC(_P.decant[tier] || _P.decant.vency) + '</span>' +
             '<span class="fmt-rail__hint js-set-hint" hidden></span>' +
           '</span>' +
         '</button>' +

@@ -609,10 +609,10 @@
 
   /* ── Single source of truth for all prices & shipping ── */
   root.VENCY_PRICES = {
-    decant: 6000,
-    set3:   14900,
-    b30:  { vency: 14900, disenador: 12900, nicho: 14900, 'ultra-nicho': 14900 },
-    b100: { vency: 26900, disenador: 23900, nicho: 26900, 'ultra-nicho': 26900 },
+    decant: { vency: 6000, disenador: 5000, nicho: 6000, 'ultra-nicho': 6000 },
+    set3:   { vency: 14900, disenador: 12900, nicho: 14900, 'ultra-nicho': 14900 },
+    b30:    { vency: 14900, disenador: 12900, nicho: 14900, 'ultra-nicho': 14900 },
+    b100:   { vency: 26900, disenador: 23900, nicho: 26900, 'ultra-nicho': 26900 },
     shipping:    2500,
     freeShipping: 25000,
   };

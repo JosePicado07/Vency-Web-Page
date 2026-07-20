@@ -64,8 +64,8 @@
   var _P           = window.VENCY_PRICES;
   var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
   var BOTTLE_LABEL = { '30ml': '30 ml', '100ml': '100 ml' };
-  var SET_PRICE    = _P.set3;
-  var DECANT_PRICE = _P.decant;
+  var SET_PRICE    = _P.set3.vency;
+  var DECANT_PRICE = _P.decant.vency;
 
   var generateRef = window.generateRef;
   var colones     = window.fmtCRC;
