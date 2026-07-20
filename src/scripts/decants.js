@@ -158,10 +158,10 @@
     updateUI();
   }
 
-  function handleBottleClick(id, name, fmt) {
+  function handleBottleClick(id, name, fmt, price) {
     var idx = bottleIndex(id, fmt);
     if (idx >= 0) bottles.splice(idx, 1);
-    else bottles.push({ id: id, name: name, fmt: fmt, price: BOTTLE_PRICE[fmt], qty: 1 });
+    else bottles.push({ id: id, name: name, fmt: fmt, price: price || BOTTLE_PRICE[fmt], qty: 1 });
     updateUI();
   }
 
@@ -529,7 +529,7 @@
     block.querySelectorAll('.fmt-rail__buy-btn[data-fmt]').forEach(function (btn) {
       btn.addEventListener('click', function () {
         if (btn.disabled) return;
-        handleBottleClick(id, name, btn.dataset.fmt);
+        handleBottleClick(id, name, btn.dataset.fmt, btn.dataset.price ? +btn.dataset.price : undefined);
       });
     });
   });

@@ -175,6 +175,16 @@
       if (frag.notes) { fmtNotes.textContent = frag.notes; fmtNotes.hidden = false; }
       else { fmtNotes.hidden = true; }
     }
+    var _P   = window.VENCY_PRICES;
+    var tier = frag.cat || 'vency';
+    var p30  = _P.b30[tier]  || _P.b30.vency;
+    var p100 = _P.b100[tier] || _P.b100.vency;
+    var elD   = document.getElementById('js-fmt-price-decant');
+    var el30  = document.getElementById('js-fmt-price-30ml');
+    var el100 = document.getElementById('js-fmt-price-100ml');
+    if (elD)   elD.textContent   = window.fmtCRC(_P.decant);
+    if (el30)  el30.textContent  = window.fmtCRC(p30);
+    if (el100) el100.textContent = window.fmtCRC(p100);
     fmtOptions.querySelectorAll('input').forEach(function (r) { r.checked = false; });
     fmtOptions.querySelectorAll('.fmt-option').forEach(function (o) { o.classList.remove('is-selected'); });
     fmtConfirm.disabled = true;
@@ -249,25 +259,29 @@
 
   /* Format rail: set toggle (left) + buy-bottle zone (right).
      Two distinct zones so "add to set" and "buy a frasco" don't collide. */
-  function buildRail(dataName, ariaName, isInv) {
+  function buildRail(dataName, ariaName, isInv, cat) {
+    var _P   = window.VENCY_PRICES;
+    var tier = cat || 'vency';
+    var p30  = _P.b30[tier]  || _P.b30.vency;
+    var p100 = _P.b100[tier] || _P.b100.vency;
     return '<div class="fmt-rail' + (isInv ? ' fmt-rail--inv' : '') + '" data-fragrance-name="' + dataName + '">' +
         '<button class="fmt-rail__set dblock__trigger" aria-pressed="false" aria-label="Agregar ' + ariaName + ' al Set de 3 Decants">' +
           '<span class="fmt-rail__set-mark" aria-hidden="true"></span>' +
           '<span class="fmt-rail__set-main">' +
             '<span class="fmt-rail__set-title">Añadir al set</span>' +
-            '<span class="fmt-rail__set-meta">Decant 10 ml · ' + window.fmtCRC(window.VENCY_PRICES.decant) + '</span>' +
+            '<span class="fmt-rail__set-meta">Decant 10 ml · ' + window.fmtCRC(_P.decant) + '</span>' +
             '<span class="fmt-rail__hint js-set-hint" hidden></span>' +
           '</span>' +
         '</button>' +
         '<div class="fmt-rail__buy">' +
           '<span class="fmt-rail__buy-label">o frasco completo</span>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" aria-pressed="false" aria-label="Comprar frasco 30 ml de ' + ariaName + ' por ' + window.fmtCRC(window.VENCY_PRICES.b30.vency) + '">' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="30ml" data-price="' + p30 + '" aria-pressed="false" aria-label="Comprar frasco 30 ml de ' + ariaName + ' por ' + window.fmtCRC(p30) + '">' +
             '<span class="fmt-rail__label">Frasco · 30 ML</span>' +
-            '<span class="fmt-rail__price">' + window.fmtCRC(window.VENCY_PRICES.b30.vency) + '</span>' +
+            '<span class="fmt-rail__price">' + window.fmtCRC(p30) + '</span>' +
           '</button>' +
-          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" aria-pressed="false" aria-label="Comprar frasco 100 ml de ' + ariaName + ' por ' + window.fmtCRC(window.VENCY_PRICES.b100.vency) + '">' +
+          '<button class="fmt-rail__btn fmt-rail__buy-btn" data-fmt="100ml" data-price="' + p100 + '" aria-pressed="false" aria-label="Comprar frasco 100 ml de ' + ariaName + ' por ' + window.fmtCRC(p100) + '">' +
             '<span class="fmt-rail__label">Frasco · 100 ML</span>' +
-            '<span class="fmt-rail__price">' + window.fmtCRC(window.VENCY_PRICES.b100.vency) + '</span>' +
+            '<span class="fmt-rail__price">' + window.fmtCRC(p100) + '</span>' +
           '</button>' +
         '</div>' +
       '</div>';
@@ -314,7 +328,7 @@
                  && (!inventory[bk100] || !inventory[bk100].oil_ml);
       var railHtmlVency = soldOut
         ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
-        : buildRail(fname, fname, false);
+        : buildRail(fname, fname, false, 'vency');
 
       var thumbSrc = frag.image
         ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
@@ -479,7 +493,7 @@
           if (itemSoldOut) li.dataset.soldOut = 'true';
           var railHtml = itemSoldOut
             ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
-            : buildRail(fragranceName, escHtml(item.name), isInv);
+            : buildRail(fragranceName, escHtml(item.name), isInv, sec.cat);
 
           // Card layout: image + name + provenance. Click anywhere on the card
           // opens the detail panel where notes/history/buy live. Match the
@@ -717,6 +731,7 @@
       openFmtModal({
         id:     card.dataset.fragranceId,
         name:   card.dataset.fragranceName,
+        cat:    card.dataset.fragranceCat || 'vency',
         image:  card.dataset.fragranceImg,
         href:   card.dataset.fragranceHref || null,
         inspo:  card.dataset.fragranceInspo || null,
