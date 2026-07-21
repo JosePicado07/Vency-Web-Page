@@ -328,9 +328,8 @@
                  || (tracked && (!inventory[dk] || !inventory[dk].oil_ml)
                              && (!inventory[bk30] || !inventory[bk30].oil_ml)
                              && (!inventory[bk100] || !inventory[bk100].oil_ml));
-      var railHtmlVency = soldOut
-        ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
-        : buildRail(fname, fname, false, 'vency');
+      if (soldOut) return;
+      var railHtmlVency = buildRail(fname, fname, false, 'vency');
 
       var thumbSrc = frag.image
         ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
@@ -354,13 +353,12 @@
           (inspoText ? ' data-fragrance-inspo="' + inspoText + '"' : '') +
           ' data-search="' + escHtml(searchStr) + '"' +
           ' data-ocasion="' + ocasion + '"' +
-          (soldOut ? ' data-sold-out="true"' : '') + '>' +
+          '>' +
           '<button class="cat-entry__card cat-entry__see" type="button"' +
             ' aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">' +
             '<span class="cat-entry__img-wrap">' +
               '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
                 ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
-              (soldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
               '<span class="cat-entry__img-badge">' + (isIcon ? 'INSPIRACIÓN ELEVADA' : 'CREACIÓN PROPIA') + '</span>' +
             '</span>' +
             '<span class="cat-entry__info">' +
@@ -478,8 +476,6 @@
               ? '../assets/images/inspirations/_webp/' + interp.id + '-400.webp'
               : '../assets/images/_webp/default-bottle-400.webp');
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
-          if (item.soldOut) li.dataset.soldOut = 'true';
-
           var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
 
           var notesHtml = item.notes
@@ -490,11 +486,8 @@
             ? '<p class="cat-entry__inspo">' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</p>'
             : '';
 
-          var itemSoldOut = !!item.soldOut || isItemSoldOut(li.dataset.fragranceId);
-          if (itemSoldOut) li.dataset.soldOut = 'true';
-          var railHtml = itemSoldOut
-            ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
-            : buildRail(fragranceName, escHtml(item.name), isInv, sec.cat);
+          if (!!item.soldOut || isItemSoldOut(li.dataset.fragranceId)) return;
+          var railHtml = buildRail(fragranceName, escHtml(item.name), isInv, sec.cat);
 
           // Card layout: image + name + provenance. Click anywhere on the card
           // opens the detail panel where notes/history/buy live. Match the
@@ -505,7 +498,6 @@
               '<span class="cat-entry__img-wrap">' +
                 '<img class="cat-entry__img" src="' + extThumbSrc + '" ' + imgSrcset(extThumbSrc) + ' alt="' + escHtml(displayName) + '" ' + imgLoadAttrs() +
                   ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
-                (itemSoldOut ? '<span class="cat-entry__sold-out">Agotado</span>' : '') +
                 '<span class="cat-entry__img-badge">INSPIRADO EN</span>' +
               '</span>' +
               '<span class="cat-entry__info">' +
