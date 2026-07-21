@@ -15,6 +15,10 @@
   var SALES_PREVIEW    = 5;
   var LOW_OIL_ML       = 30;
   var topFragranceName = null;
+  var AVAIL_KEY = 'vency_avail_v1';
+  function getAvailMap() { try { return JSON.parse(localStorage.getItem(AVAIL_KEY)) || {}; } catch(e) { return {}; } }
+  function getAvail(id) { return getAvailMap()[id] !== false; }
+  function setAvail(id, val) { var m = getAvailMap(); if (val) delete m[id]; else m[id] = false; localStorage.setItem(AVAIL_KEY, JSON.stringify(m)); }
   var CONC_PRESETS     = [
     { label: 'EDC',    pct: 3  },
     { label: 'EDT',    pct: 10 },
@@ -905,6 +909,8 @@
 
       el.className = 'dblock dblock--admin' + (light ? ' dblock--admin-light' : '');
       el.style.cssText = '--dblock-color:' + color;
+      el.dataset.fragId = frag.id;
+      if (!getAvail(frag.id)) el.classList.add('dblock--soldout');
 
       var imgSrc = frag.image || '../assets/images/_webp/default-bottle-400.webp';
       var imgHtml = '<div class="dblock__img-wrap"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
@@ -935,6 +941,8 @@
       var extImgHtml = '<div class="dblock__img-wrap"><img src="' + extImgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
 
       el.className = 'dblock dblock--admin ' + catCls;
+      el.dataset.fragId = frag.id;
+      if (!getAvail(frag.id)) el.classList.add('dblock--soldout');
       el.innerHTML =
         '<div class="dblock__top">' +
           extImgHtml +
@@ -1312,6 +1320,17 @@
   /* ── Inventory section ── */
 
   invListEl.addEventListener('click', function (e) {
+    var avBtn = e.target.closest('.js-inv-avail');
+    if (avBtn) {
+      var avId   = avBtn.dataset.id;
+      var newVal = !getAvail(avId);
+      setAvail(avId, newVal);
+      avBtn.setAttribute('aria-pressed', String(newVal));
+      avBtn.textContent = newVal ? 'Disponible' : 'No disponible';
+      var sellCard = fragList && fragList.querySelector('[data-frag-id="' + avId + '"]');
+      if (sellCard) sellCard.classList.toggle('dblock--soldout', !newVal);
+      return;
+    }
     var btn = e.target.closest('.js-inv-oil-adj');
     if (!btn) return;
     var id       = btn.dataset.id;
@@ -1350,6 +1369,7 @@
     var searchName = frag.name.toLowerCase();
     var entry = inventory[searchName] || inventory[id] || { oil_ml: 0 };
     var oil   = entry.oil_ml || 0;
+    var avail = getAvail(id);
 
     var nameHtml = frag.brand
       ? '<span class="dblock__brand">' + frag.brand + '</span><h3 class="dblock__name">' + frag.name + '</h3>'
@@ -1374,7 +1394,10 @@
           '<button class="inv-adj inv-adj--minus js-inv-oil-adj" data-id="' + id + '" data-delta="-10" type="button" aria-label="Quitar 10 ml">−</button>' +
           '<button class="inv-adj inv-adj--plus js-inv-oil-adj" data-id="' + id + '" data-delta="10" type="button" aria-label="Agregar 10 ml">+</button>' +
         '</div>' +
-      '</div>';
+      '</div>' +
+      '<button class="inv-avail-btn js-inv-avail" data-id="' + id + '" aria-pressed="' + avail + '" type="button">' +
+        (avail ? 'Disponible' : 'No disponible') +
+      '</button>';
 
     return el;
   }
