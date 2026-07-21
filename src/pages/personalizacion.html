@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fragancia Personalizada · Vency Atelier · Heredia, Costa Rica</title>
+  <meta name="description" content="Creá tu fragancia única con Vency Atelier. Analizamos tu perfume favorito con GC-MS y lo reformulamos con las notas que vos querés.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vency Atelier">
+  <meta property="og:title" content="Fragancia Personalizada · Vency Atelier">
+  <meta property="og:description" content="Tu perfume favorito, reformulado exactamente como lo imaginás. GC-MS + artesanía local.">
+  <meta property="og:image" content="https://vencyatelier.com/assets/images/hero-botanica.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/styles.css?v=70">
+  <style>
+    /* ── Layout ── */
+    .pers-hero {
+      padding: calc(var(--nav-h) + var(--space-xl)) var(--space-md) var(--space-lg);
+      border-bottom: 1px solid var(--border);
+    }
+    .pers-hero__inner { max-width: 700px; margin: 0 auto; }
+    .pers-hero__eyebrow {
+      font-family: 'Manrope', sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--sage-mineral);
+      margin-bottom: .75rem;
+    }
+    .pers-hero__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(2.4rem, 6vw, 5rem);
+      line-height: .95;
+      letter-spacing: -.02em;
+      color: var(--volcanic-ink);
+      margin: 0 0 1.5rem;
+    }
+    .pers-hero__lead {
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      color: var(--ink-muted);
+      max-width: 56ch;
+      line-height: 1.65;
+      margin: 0 0 2rem;
+    }
+    .pers-gcms {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      background: oklch(92% .012 145 / .35);
+      border: 1px solid oklch(72% .06 145 / .3);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      max-width: 540px;
+    }
+    .pers-gcms__icon { flex-shrink: 0; margin-top: .1rem; color: var(--sage-mineral); }
+    .pers-gcms__text {
+      font-family: 'Manrope', sans-serif;
+      font-size: .82rem;
+      color: var(--ink-muted);
+      line-height: 1.55;
+    }
+    .pers-gcms__text strong { color: var(--volcanic-ink); }
+
+    /* ── Steps ── */
+    .pers-steps {
+      padding: var(--space-lg) var(--space-md);
+      border-bottom: 1px solid var(--border);
+    }
+    .pers-steps__inner { max-width: 700px; margin: 0 auto; }
+    .pers-steps__title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      color: var(--volcanic-ink);
+      margin: 0 0 1.5rem;
+    }
+    .pers-steps__list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1.25rem;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .pers-step {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+    .pers-step__num {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: 2rem;
+      color: oklch(82% .06 145);
+      line-height: 1;
+    }
+    .pers-step__label {
+      font-family: 'Manrope', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--volcanic-ink);
+    }
+    .pers-step__desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: .82rem;
+      color: var(--ink-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Form ── */
+    .pers-form-section {
+      padding: var(--space-lg) var(--space-md) var(--space-xl);
+    }
+    .pers-form-section__inner { max-width: 560px; margin: 0 auto; }
+    .pers-form-title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.2rem, 2.5vw, 1.7rem);
+      color: var(--volcanic-ink);
+      margin: 0 0 1.75rem;
+    }
+    .pers-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .pers-field { display: flex; flex-direction: column; gap: .4rem; }
+    .pers-field label {
+      font-family: 'Manrope', sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+    .pers-field label .req { color: var(--warm-ochre); margin-left: .15em; }
+    .pers-field input,
+    .pers-field select,
+    .pers-field textarea {
+      font-family: 'Manrope', sans-serif;
+      font-size: 1rem;
+      color: var(--volcanic-ink);
+      background: var(--botanical-parchment);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: .7rem .9rem;
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color .15s;
+      -webkit-appearance: none;
+    }
+    .pers-field input:focus,
+    .pers-field select:focus,
+    .pers-field textarea:focus {
+      outline: none;
+      border-color: var(--sage-mineral);
+      box-shadow: 0 0 0 3px oklch(48% .1 145 / .12);
+    }
+    .pers-field textarea { resize: vertical; min-height: 80px; }
+    .pers-field__hint {
+      font-family: 'Manrope', sans-serif;
+      font-size: .75rem;
+      color: var(--ink-subdued);
+    }
+
+    .pers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 480px) { .pers-row { grid-template-columns: 1fr; } }
+
+    .pers-submit {
+      margin-top: .5rem;
+      padding: .85rem 1.5rem;
+      background: var(--warm-ochre);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .15s, opacity .15s;
+      width: 100%;
+    }
+    .pers-submit:hover { background: var(--warm-ochre-dark); }
+    .pers-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+    .pers-error {
+      font-family: 'Manrope', sans-serif;
+      font-size: .82rem;
+      color: var(--state-error);
+      background: oklch(95% .02 25 / .6);
+      border: 1px solid oklch(70% .08 25 / .4);
+      border-radius: 6px;
+      padding: .6rem .9rem;
+      display: none;
+    }
+    .pers-error.is-visible { display: block; }
+
+    /* ── Success ── */
+    .pers-success {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 1.25rem;
+      padding: var(--space-xl) var(--space-md);
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .pers-success.is-visible { display: flex; }
+    .pers-success__check {
+      width: 56px;
+      height: 56px;
+      background: oklch(38% .12 145);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .pers-success__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      color: var(--volcanic-ink);
+      margin: 0;
+      line-height: 1.1;
+    }
+    .pers-success__body {
+      font-family: 'Manrope', sans-serif;
+      font-size: .95rem;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+      max-width: 38ch;
+    }
+    .pers-success__wa {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .8rem 1.4rem;
+      background: #25D366;
+      color: #fff;
+      border-radius: 8px;
+      font-family: 'Manrope', sans-serif;
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .04em;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .pers-success__wa:hover { background: #1ebe5d; }
+    .pers-success__note {
+      font-family: 'Manrope', sans-serif;
+      font-size: .78rem;
+      color: var(--ink-subdued);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <a class="skip-nav" href="#pers-main">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="personalizacion.html" class="nav__link nav__link--active" aria-current="page">Personalizar</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <main id="pers-main" tabindex="-1">
+
+    <!-- Hero -->
+    <header class="pers-hero">
+      <div class="pers-hero__inner">
+        <p class="pers-hero__eyebrow animate-in">FRAGANCIA PERSONALIZADA · VENCY ATELIER</p>
+        <h1 class="pers-hero__title animate-in" style="--delay:70ms">
+          Tu perfume,<br>exactamente<br>como lo imaginás.
+        </h1>
+        <p class="pers-hero__lead animate-in" style="--delay:130ms">
+          Tomamos tu fragancia favorita como punto de partida y la reformulamos con las notas que vos querés potenciar o agregar. Sin intermediarios, hecha a mano en Heredia.
+        </p>
+        <div class="pers-gcms animate-in" style="--delay:180ms">
+          <svg class="pers-gcms__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
+          </svg>
+          <p class="pers-gcms__text">
+            <strong>Tecnología GC-MS</strong> — Cromatógrafo de gases acoplado a espectrometría de masas. Identificamos las moléculas exactas de tu fragancia base para reproducirla con fidelidad y luego ajustarla a tu gusto.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Process steps -->
+    <section class="pers-steps" aria-label="El proceso">
+      <div class="pers-steps__inner">
+        <h2 class="pers-steps__title">¿Cómo funciona?</h2>
+        <ol class="pers-steps__list">
+          <li class="pers-step">
+            <span class="pers-step__num" aria-hidden="true">01</span>
+            <span class="pers-step__label">Tu visión</span>
+            <span class="pers-step__desc">Nos contás qué fragancia querés de base y qué notas agregar o potenciar.</span>
+          </li>
+          <li class="pers-step">
+            <span class="pers-step__num" aria-hidden="true">02</span>
+            <span class="pers-step__label">Análisis GC-MS</span>
+            <span class="pers-step__desc">Descomponemos el perfume original en sus moléculas para entender su estructura exacta.</span>
+          </li>
+          <li class="pers-step">
+            <span class="pers-step__num" aria-hidden="true">03</span>
+            <span class="pers-step__label">Formulación</span>
+            <span class="pers-step__desc">Recreamos la base e integramos las notas que pediste con proporciones artesanales.</span>
+          </li>
+          <li class="pers-step">
+            <span class="pers-step__num" aria-hidden="true">04</span>
+            <span class="pers-step__label">Tu fragancia</span>
+            <span class="pers-step__desc">Recibís una fórmula única, en el formato que prefieras. Solo tuya.</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Form -->
+    <section class="pers-form-section" aria-label="Formulario de personalización">
+      <div class="pers-form-section__inner">
+
+        <div id="pers-form-wrap">
+          <h2 class="pers-form-title">Contanos tu idea</h2>
+          <form class="pers-form" id="pers-form" novalidate>
+
+            <div class="pers-row">
+              <div class="pers-field">
+                <label for="pers-nombre">Nombre</label>
+                <input type="text" id="pers-nombre" name="nombre" autocomplete="given-name" placeholder="Tu nombre">
+              </div>
+              <div class="pers-field">
+                <label for="pers-email">Correo <span class="req" aria-hidden="true">*</span></label>
+                <input type="email" id="pers-email" name="email" autocomplete="email" placeholder="tu@correo.com" required>
+              </div>
+            </div>
+
+            <div class="pers-field">
+              <label for="pers-fragancia">Fragancia de inspiración <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="pers-fragancia" name="fragancia" placeholder="Ej: Givenchy Play, Dior Sauvage…" required>
+              <span class="pers-field__hint">Si no sabés el nombre exacto, describila como podás.</span>
+            </div>
+
+            <div class="pers-field">
+              <label for="pers-notas">¿Qué nota querés agregar o potenciar? <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="pers-notas" name="notas" placeholder="Ej: café, madera ahumada, vainilla más intensa…" required>
+            </div>
+
+            <div class="pers-row">
+              <div class="pers-field">
+                <label for="pers-intensidad">Intensidad de la nota</label>
+                <select id="pers-intensidad" name="intensidad">
+                  <option value="">— Elegir —</option>
+                  <option value="Sutil (se nota al acercarse)">Sutil</option>
+                  <option value="Moderada (se nota al saludar)">Moderada</option>
+                  <option value="Marcada (protagonista)">Marcada</option>
+                </select>
+              </div>
+              <div class="pers-field">
+                <label for="pers-ocasion">Ocasión principal</label>
+                <select id="pers-ocasion" name="ocasion">
+                  <option value="">— Elegir —</option>
+                  <option value="Uso diario">Uso diario</option>
+                  <option value="Noche / salidas">Noche / salidas</option>
+                  <option value="Trabajo">Trabajo</option>
+                  <option value="Ocasión especial">Ocasión especial</option>
+                  <option value="Versátil">Versátil</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pers-field">
+              <label for="pers-mensaje">Algo más que quieras contarnos</label>
+              <textarea id="pers-mensaje" name="mensaje" placeholder="Cualquier detalle que nos ayude a entender tu visión…"></textarea>
+            </div>
+
+            <div class="pers-error" id="pers-error" role="alert" aria-live="polite"></div>
+
+            <button type="submit" class="pers-submit" id="pers-submit">
+              Enviar solicitud
+            </button>
+
+          </form>
+        </div>
+
+        <!-- Success state -->
+        <div class="pers-success" id="pers-success" aria-live="polite">
+          <div class="pers-success__check" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 class="pers-success__title">¡Solicitud enviada!</h2>
+          <p class="pers-success__body">
+            Recibimos tu idea. Vency te va a escribir por WhatsApp para coordinar los detalles, la fórmula y el precio.
+          </p>
+          <a href="#" class="pers-success__wa" id="pers-wa-btn" target="_blank" rel="noopener noreferrer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.117 1.526 5.845L.057 23.428a.75.75 0 0 0 .916.916l5.583-1.469A11.948 11.948 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.682-.513-5.21-1.408l-.374-.22-3.876 1.019 1.019-3.876-.22-.374A9.957 9.957 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+            Escribir por WhatsApp
+          </a>
+          <p class="pers-success__note">Si configuramos email, también te enviamos una copia a tu correo.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">Perfumería artesanal · Heredia, Costa Rica</p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="perfumista.html" class="footer__link">El Perfumista</a>
+        <a href="personalizacion.html" class="footer__link">Personalizar</a>
+        <a href="guia.html" class="footer__link">Guía</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">© 2025 Vency Atelier. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Global nav scripts (search, cart drawer, shop toggle) -->
+  <div class="search-overlay js-search-overlay" aria-hidden="true">
+    <div class="search-modal" role="dialog" aria-modal="true" aria-label="Buscar">
+      <form class="search-form js-search-form" role="search">
+        <input class="search-input js-search-input" type="search" placeholder="Buscar fragancia…" autocomplete="off" aria-label="Buscar fragancia">
+        <button type="submit" class="search-submit" aria-label="Buscar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button type="button" class="search-close js-search-close" aria-label="Cerrar búsqueda">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </form>
+      <div class="search-results js-search-results"></div>
+    </div>
+  </div>
+
+  <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+      <div>
+        <div class="cart-drawer__title">Tu carrito</div>
+        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+      </div>
+      <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body js-cart-body"></div>
+    <div class="cart-drawer__upsell js-cart-upsell"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total js-cart-total-wrap">
+        <span class="cart-drawer__total-label">Total</span>
+        <span class="cart-drawer__total-amount js-cart-total">₡0</span>
+      </div>
+      <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
+    </div>
+  </div>
+
+  <script src="../scripts/fragrance-data.js?v=56" defer></script>
+  <script defer>
+    (function () {
+      'use strict';
+      var form     = document.getElementById('pers-form');
+      var wrap     = document.getElementById('pers-form-wrap');
+      var success  = document.getElementById('pers-success');
+      var errorEl  = document.getElementById('pers-error');
+      var submitEl = document.getElementById('pers-submit');
+      var waBtn    = document.getElementById('pers-wa-btn');
+      var esc      = window.escHtml || function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); };
+
+      function showError(msg) {
+        errorEl.textContent = msg;
+        errorEl.classList.add('is-visible');
+      }
+      function clearError() { errorEl.classList.remove('is-visible'); }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        clearError();
+
+        var email     = form.elements.email.value.trim();
+        var fragancia = form.elements.fragancia.value.trim();
+        var notas     = form.elements.notas.value.trim();
+
+        if (!email)     { showError('El correo es requerido.'); form.elements.email.focus(); return; }
+        if (!fragancia) { showError('Indicá la fragancia de inspiración.'); form.elements.fragancia.focus(); return; }
+        if (!notas)     { showError('Contanos qué nota querés agregar o potenciar.'); form.elements.notas.focus(); return; }
+
+        submitEl.disabled = true;
+        submitEl.textContent = 'Enviando…';
+
+        var payload = {
+          nombre:     form.elements.nombre.value.trim(),
+          email:      email,
+          fragancia:  fragancia,
+          notas:      notas,
+          intensidad: form.elements.intensidad.value,
+          ocasion:    form.elements.ocasion.value,
+          mensaje:    form.elements.mensaje.value.trim(),
+        };
+
+        fetch('/api/personalizacion', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (d.ok) {
+            if (d.waUrl) waBtn.href = d.waUrl;
+            wrap.hidden = true;
+            success.classList.add('is-visible');
+            success.focus();
+          } else {
+            showError(d.error || 'Hubo un problema. Intentá de nuevo.');
+            submitEl.disabled = false;
+            submitEl.textContent = 'Enviar solicitud';
+          }
+        })
+        .catch(function () {
+          showError('Sin conexión. Revisá tu internet e intentá de nuevo.');
+          submitEl.disabled = false;
+          submitEl.textContent = 'Enviar solicitud';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
