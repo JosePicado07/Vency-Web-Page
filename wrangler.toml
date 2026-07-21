@@ -1,3 +1,7 @@
 name = "vency-web-page"
 pages_build_output_dir = "src"
 compatibility_date = "2024-01-01"
+
+[[kv_namespaces]]
+binding = "VENCY_CATALOG"
+id = "0bd63abeb0724bcaa13945a578e65562"

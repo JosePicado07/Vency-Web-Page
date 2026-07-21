@@ -1329,6 +1329,11 @@
       avBtn.textContent = newVal ? 'Disponible' : 'No disponible';
       var sellCard = fragList && fragList.querySelector('[data-frag-id="' + avId + '"]');
       if (sellCard) sellCard.classList.toggle('dblock--soldout', !newVal);
+      fetch('/api/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: avId, available: newVal })
+      }).catch(function () {});
       return;
     }
     var btn = e.target.closest('.js-inv-oil-adj');

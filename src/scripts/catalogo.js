@@ -2,6 +2,7 @@
   'use strict';
 
   var catalog   = window.VENCY_FULL_CATALOG || [];
+  var _unavailable = new Set();
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos', vencyCat: 'todos' };
 
   // Parse ?category=X from URL and apply initial filter
@@ -299,7 +300,6 @@
     var inventoryStr = localStorage.getItem('vency_inventory');
     var inventory = inventoryStr ? JSON.parse(inventoryStr) : null;
     var hasInventory = inventory && Object.keys(inventory).length > 0;
-    var availMap = (function () { try { return JSON.parse(localStorage.getItem('vency_avail_v1')) || {}; } catch(e) { return {}; } })();
 
     /* Same row template as the designer/nicho catalog (.cat-entry),
        with a small badge to mark Vency originals vs Icon Series. */
@@ -324,7 +324,7 @@
       // Only sold-out when admin tracks this id (any key present) AND all formats are zero.
       // Untracked = unknown = assume in-stock.
       var tracked = hasInventory && ((dk in inventory) || (bk30 in inventory) || (bk100 in inventory));
-      var soldOut = availMap[frag.id] === false
+      var soldOut = _unavailable.has(frag.id)
                  || (tracked && (!inventory[dk] || !inventory[dk].oil_ml)
                              && (!inventory[bk30] || !inventory[bk30].oil_ml)
                              && (!inventory[bk100] || !inventory[bk100].oil_ml));
@@ -397,9 +397,8 @@
     var invStr = localStorage.getItem('vency_inventory');
     var inv = invStr ? JSON.parse(invStr) : null;
     var hasInv = inv && Object.keys(inv).length > 0;
-    var availMap2 = (function () { try { return JSON.parse(localStorage.getItem('vency_avail_v1')) || {}; } catch(e) { return {}; } })();
     function isItemSoldOut(id) {
-      if (availMap2[id] === false) return true;
+      if (_unavailable.has(id)) return true;
       if (!hasInv) return false;
       var dk = id + ':decant', bk30 = id + ':30ml', bk100 = id + ':100ml';
       var tracked = (dk in inv) || (bk30 in inv) || (bk100 in inv);
@@ -690,14 +689,22 @@
   }
 
   /* ── Init ────────────────────────────────────────────── */
-  buildVencySection();
-  buildSections();
-  syncPillsToFilters();
-  wireFilterToggle();
-  wirePills();
-  wireClearBtn();
-  wireSearch();
-  render();
+  function initCatalog() {
+    buildVencySection();
+    buildSections();
+    syncPillsToFilters();
+    wireFilterToggle();
+    wirePills();
+    wireClearBtn();
+    wireSearch();
+    render();
+  }
+
+  fetch('/api/availability')
+    .then(function (r) { return r.json(); })
+    .then(function (d) { _unavailable = new Set(d.unavailable || []); })
+    .catch(function () {})
+    .then(initCatalog);
 
   // Wire card clicks → open the format modal. (Was previously inside
   // wireFragPanel, which got stripped in the dead-code cleanup. The
