@@ -299,6 +299,7 @@
     var inventoryStr = localStorage.getItem('vency_inventory');
     var inventory = inventoryStr ? JSON.parse(inventoryStr) : null;
     var hasInventory = inventory && Object.keys(inventory).length > 0;
+    var availMap = (function () { try { return JSON.parse(localStorage.getItem('vency_avail_v1')) || {}; } catch(e) { return {}; } })();
 
     /* Same row template as the designer/nicho catalog (.cat-entry),
        with a small badge to mark Vency originals vs Icon Series. */
@@ -323,9 +324,10 @@
       // Only sold-out when admin tracks this id (any key present) AND all formats are zero.
       // Untracked = unknown = assume in-stock.
       var tracked = hasInventory && ((dk in inventory) || (bk30 in inventory) || (bk100 in inventory));
-      var soldOut = tracked && (!inventory[dk] || !inventory[dk].oil_ml)
-                 && (!inventory[bk30] || !inventory[bk30].oil_ml)
-                 && (!inventory[bk100] || !inventory[bk100].oil_ml);
+      var soldOut = availMap[frag.id] === false
+                 || (tracked && (!inventory[dk] || !inventory[dk].oil_ml)
+                             && (!inventory[bk30] || !inventory[bk30].oil_ml)
+                             && (!inventory[bk100] || !inventory[bk100].oil_ml));
       var railHtmlVency = soldOut
         ? '<div class="fmt-rail fmt-rail--sold-out"><span class="fmt-rail__sold-label">AGOTADO</span></div>'
         : buildRail(fname, fname, false, 'vency');
@@ -397,11 +399,10 @@
     var invStr = localStorage.getItem('vency_inventory');
     var inv = invStr ? JSON.parse(invStr) : null;
     var hasInv = inv && Object.keys(inv).length > 0;
+    var availMap2 = (function () { try { return JSON.parse(localStorage.getItem('vency_avail_v1')) || {}; } catch(e) { return {}; } })();
     function isItemSoldOut(id) {
+      if (availMap2[id] === false) return true;
       if (!hasInv) return false;
-      // Only mark sold-out when admin actually tracks this id (any key present)
-      // AND every tracked format is zero. Untracked items (e.g. designer brands
-      // that aren't in admin) stay in-stock — missing data is not sold-out.
       var dk = id + ':decant', bk30 = id + ':30ml', bk100 = id + ':100ml';
       var tracked = (dk in inv) || (bk30 in inv) || (bk100 in inv);
       if (!tracked) return false;
