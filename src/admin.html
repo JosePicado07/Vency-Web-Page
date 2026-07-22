@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/admin.min.css?v=58">
+  <link rel="stylesheet" href="styles/catalog-request.css?v=1">
 </head>
 <body>
 
@@ -143,6 +144,9 @@
       <button class="mode-tab" id="js-mode-tab-inventario"
               data-mode="inventario" role="tab" aria-selected="false" type="button"
               aria-controls="js-mode-inventario">Inventario</button>
+      <button class="mode-tab" id="js-mode-tab-solicitudes"
+              data-mode="solicitudes" role="tab" aria-selected="false" type="button"
+              aria-controls="js-mode-solicitudes">Solicitudes</button>
     </div>
 
     <!-- Shared search -->
@@ -174,6 +178,15 @@
       <div class="dblock-grid" id="js-inv-list"></div>
       <p class="dblock-empty" id="js-inv-empty" hidden>Sin resultados.</p>
       <div class="grid-sentinel" id="js-inv-sentinel" aria-hidden="true"></div>
+    </div>
+
+    <!-- Solicitudes panel -->
+    <div id="js-mode-solicitudes" role="tabpanel" aria-labelledby="js-mode-tab-solicitudes" hidden>
+      <div class="solicitudes" id="js-solicitudes">
+        <p class="admin-hint" id="js-sol-hint">Cargando solicitudes…</p>
+        <div id="js-sol-list"></div>
+        <p class="dblock-empty" id="js-sol-empty" hidden>Sin solicitudes pendientes.</p>
+      </div>
     </div>
 
   </div>

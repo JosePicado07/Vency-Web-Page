@@ -1,0 +1,233 @@
+/* ── Solicitar fragancia section ─────────────────────────── */
+.cat-request {
+  padding: 4rem 1.5rem;
+  background: var(--color-surface, #faf8f5);
+  border-top: 1px solid var(--color-border, rgba(0,0,0,.08));
+  text-align: center;
+}
+
+.cat-request__inner {
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.cat-request__title {
+  font-family: var(--font-display, 'Bitter', serif);
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  color: var(--color-ink, #1c1a17);
+  margin: 0;
+}
+
+.cat-request__sub {
+  color: var(--color-ink-muted, #5a5650);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.cat-request__btn {
+  margin-top: 0.5rem;
+}
+
+/* ── Request modal overlay ───────────────────────────────── */
+.req-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 26, 23, 0.6);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.req-overlay[hidden] {
+  display: none;
+}
+
+.req-modal {
+  background: var(--color-surface, #faf8f5);
+  border-radius: 12px;
+  padding: 2rem 1.75rem;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90dvh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 40px rgba(0,0,0,.18);
+}
+
+.req-modal__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-ink-muted, #5a5650);
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.req-modal__title {
+  font-family: var(--font-display, 'Bitter', serif);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--color-ink, #1c1a17);
+  margin: 0 0 0.25rem;
+}
+
+.req-modal__sub {
+  color: var(--color-ink-muted, #5a5650);
+  font-size: 0.875rem;
+  margin: 0 0 1.5rem;
+}
+
+/* ── Form ──────────────────────────────────────────────────── */
+.req-form { display: flex; flex-direction: column; gap: 1rem; }
+
+.req-form__row { display: flex; flex-direction: column; gap: 0.35rem; }
+
+.req-form__row--2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.req-form__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--color-ink-muted, #5a5650);
+}
+
+.req-form__optional {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.req-form__input,
+.req-form__select,
+.req-form__textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border, rgba(0,0,0,.15));
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 0.9375rem;
+  color: var(--color-ink, #1c1a17);
+  background: #fff;
+  box-sizing: border-box;
+  transition: border-color .15s;
+}
+
+.req-form__input:focus,
+.req-form__select:focus,
+.req-form__textarea:focus {
+  outline: none;
+  border-color: var(--color-ochre, #b8732e);
+}
+
+.req-form__textarea { resize: vertical; min-height: 4rem; }
+
+.req-form__actions { margin-top: 0.5rem; }
+
+.req-form__submit { width: 100%; justify-content: center; }
+
+.req-form__status {
+  font-size: 0.875rem;
+  text-align: center;
+  padding: 0.5rem 0;
+}
+
+/* dark mode */
+@media (prefers-color-scheme: dark) {
+  .req-modal { background: #1c1a17; }
+  .req-form__input,
+  .req-form__select,
+  .req-form__textarea { background: #2a2724; color: #f0ebe3; border-color: rgba(255,255,255,.12); }
+}
+
+/* ── Admin solicitudes panel ─────────────────────────────── */
+.sol-card {
+  background: var(--admin-surface, #1e2b25);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.sol-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.sol-card__brand { font-weight: 700; }
+.sol-card__sep   { opacity: .4; }
+.sol-card__name  { flex: 1 1 auto; }
+
+.sol-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+}
+
+.sol-badge--pending  { background: rgba(184,115,46,.25); color: #e8a860; }
+.sol-badge--approved { background: rgba(80,180,100,.2);  color: #6ec87e; }
+.sol-badge--rejected { background: rgba(180,80,80,.2);   color: #e88080; }
+
+.sol-card__meta {
+  font-size: 0.8rem;
+  opacity: .55;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.sol-card__notes {
+  font-size: 0.85rem;
+  opacity: .75;
+  margin: 0.4rem 0 0.6rem;
+  font-style: italic;
+}
+
+.sol-card__actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+
+.sol-btn {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+
+.sol-btn:disabled { opacity: .5; cursor: default; }
+
+.sol-btn--approve {
+  background: rgba(80,180,100,.25);
+  color: #6ec87e;
+}
+
+.sol-btn--approve:hover:not(:disabled) { background: rgba(80,180,100,.4); }
+
+.sol-btn--reject {
+  background: rgba(180,80,80,.18);
+  color: #e88080;
+}
+
+.sol-btn--reject:hover:not(:disabled) { background: rgba(180,80,80,.32); }

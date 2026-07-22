@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="styles/catalog-entry.css?v=51">
   <link rel="stylesheet" href="styles/format-rail.css?v=51">
   <link rel="stylesheet" href="styles/decants.css?v=52">
+  <link rel="stylesheet" href="styles/catalog-request.css?v=1">
   <link rel="stylesheet" href="styles/coleccion.css?v=60">
 </head>
 <body class="page-catalogo">
@@ -335,6 +336,72 @@
     </div>
   </div>
 
+  <!-- SOLICITAR FRAGANCIA ───────────────────────────────── -->
+  <section class="cat-request" aria-label="Solicitar una fragancia">
+    <div class="cat-request__inner">
+      <span class="label ochre-label">¿NO LA ENCONTRÁS?</span>
+      <h2 class="cat-request__title">Solicitá tu fragancia</h2>
+      <p class="cat-request__sub">Si no encontrás el perfume que buscás, pedínoslo. Lo agregamos al catálogo y lo tenemos para vos.</p>
+      <button class="btn btn--outline cat-request__btn js-cat-req-open" type="button">
+        Solicitar fragancia
+      </button>
+    </div>
+  </section>
+
+  <!-- REQUEST MODAL -->
+  <div class="req-overlay js-req-overlay" role="dialog" aria-modal="true" aria-label="Solicitar fragancia" hidden>
+    <div class="req-modal js-req-modal">
+      <button class="req-modal__close js-req-close" type="button" aria-label="Cerrar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <h3 class="req-modal__title">Solicitar fragancia</h3>
+      <p class="req-modal__sub">Completá los datos y la agregamos al catálogo.</p>
+
+      <form class="req-form js-req-form" novalidate>
+        <div class="req-form__row">
+          <label class="req-form__label" for="req-brand">Marca <span aria-hidden="true">*</span></label>
+          <input class="req-form__input" id="req-brand" name="brand" type="text"
+                 placeholder="Ej: Guerlain, Tom Ford…" autocomplete="off" required>
+        </div>
+        <div class="req-form__row">
+          <label class="req-form__label" for="req-name">Nombre del perfume <span aria-hidden="true">*</span></label>
+          <input class="req-form__input" id="req-name" name="name" type="text"
+                 placeholder="Ej: Mon Guerlain, Black Orchid…" autocomplete="off" required>
+        </div>
+        <div class="req-form__row req-form__row--2col">
+          <div>
+            <label class="req-form__label" for="req-cat">Categoría <span aria-hidden="true">*</span></label>
+            <select class="req-form__select" id="req-cat" name="cat" required>
+              <option value="">Seleccioná…</option>
+              <option value="disenador">Diseñador</option>
+              <option value="nicho">Nicho</option>
+              <option value="ultra-nicho">Ultra Nicho</option>
+            </select>
+          </div>
+          <div>
+            <label class="req-form__label" for="req-gender">Género</label>
+            <select class="req-form__select" id="req-gender" name="gender">
+              <option value="unisex">Unisex</option>
+              <option value="hombre">Hombre</option>
+              <option value="mujer">Mujer</option>
+            </select>
+          </div>
+        </div>
+        <div class="req-form__row">
+          <label class="req-form__label" for="req-notes">Notas adicionales <span class="req-form__optional">(opcional)</span></label>
+          <textarea class="req-form__textarea" id="req-notes" name="notes" rows="2"
+                    placeholder="Concentración, año, cualquier detalle…"></textarea>
+        </div>
+
+        <div class="req-form__actions">
+          <button class="btn btn--primary req-form__submit js-req-submit" type="submit">Enviar solicitud</button>
+        </div>
+
+        <p class="req-form__status js-req-status" role="alert" hidden></p>
+      </form>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <footer class="footer">
     <div class="footer__inner">
@@ -372,6 +439,7 @@
   <script defer src="scripts/catalogo-data.js?v=53"></script>
   <script defer src="scripts/catalogo.js?v=82"></script>
   <script defer src="scripts/decants.js?v=58"></script>
+  <script defer src="scripts/catalog-request.js?v=1"></script>
 
   <!-- -- SHARED OVERLAYS ---------------------------------------- -->
 

@@ -700,6 +700,13 @@
     render();
   }
 
+  // Expose rebuild so catalog-request.js can merge dynamic entries after the fact
+  window.__vencyRebuildCatalog = function () {
+    catalog = window.VENCY_FULL_CATALOG || [];
+    buildSections();
+    render();
+  };
+
   fetch('/api/availability')
     .then(function (r) { return r.json(); })
     .then(function (d) { _unavailable = new Set(d.unavailable || []); })

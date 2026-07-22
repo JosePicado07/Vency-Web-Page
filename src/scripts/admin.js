@@ -107,8 +107,9 @@
   var registerBtn   = document.getElementById('js-register');
   var noteEl        = document.getElementById('js-nota');
   var toastEl       = document.getElementById('js-toast');
-  var modePanelVender = document.getElementById('js-mode-vender');
-  var modePanelInv    = document.getElementById('js-mode-inventario');
+  var modePanelVender       = document.getElementById('js-mode-vender');
+  var modePanelInv          = document.getElementById('js-mode-inventario');
+  var modePanelSolicitudes  = document.getElementById('js-mode-solicitudes');
 
   /* ── Helpers ── */
   var colones     = window.fmtCRC;
@@ -569,11 +570,13 @@
           t.classList.toggle('mode-tab--active', t === tab);
           t.setAttribute('aria-selected', String(t === tab));
         });
-        modePanelVender.hidden = activeMode !== 'vender';
-        modePanelInv.hidden    = activeMode !== 'inventario';
+        modePanelVender.hidden      = activeMode !== 'vender';
+        modePanelInv.hidden         = activeMode !== 'inventario';
+        modePanelSolicitudes.hidden = activeMode !== 'solicitudes';
         searchInput.value = '';
-        if (activeMode === 'vender') renderFragList('');
-        else renderInvList('');
+        if (activeMode === 'vender')      renderFragList('');
+        else if (activeMode === 'inventario') renderInvList('');
+        else if (activeMode === 'solicitudes') loadSolicitudes();
       });
     });
   }
@@ -1487,6 +1490,118 @@
       searchInput.focus();
     }
   });
+
+  /* ── Solicitudes ── */
+  var _solLoaded = false;
+
+  function loadSolicitudes() {
+    var hint    = document.getElementById('js-sol-hint');
+    var list    = document.getElementById('js-sol-list');
+    var empty   = document.getElementById('js-sol-empty');
+
+    hint.hidden = false;
+    list.innerHTML = '';
+    empty.hidden = true;
+
+    fetch('/api/catalog-request?all=1&tok=' + encodeURIComponent(token))
+      .then(function (r) { return r.json(); })
+      .then(function (entries) {
+        hint.hidden = true;
+        var pending = entries.filter(function (e) { return e.status === 'pending'; });
+        var approved = entries.filter(function (e) { return e.status === 'approved'; });
+        var all = pending.concat(approved).concat(entries.filter(function(e){ return e.status === 'rejected'; }));
+
+        if (!all.length) { empty.hidden = false; return; }
+
+        list.innerHTML = all.map(function (e) {
+          var statusLabel = e.status === 'pending' ? 'Pendiente' : e.status === 'approved' ? 'Aprobado' : 'Rechazado';
+          var statusClass = e.status === 'pending' ? 'sol-badge--pending' : e.status === 'approved' ? 'sol-badge--approved' : 'sol-badge--rejected';
+          return '<div class="sol-card" data-id="' + e.id + '" data-status="' + e.status + '">'
+            + '<div class="sol-card__head">'
+            + '<span class="sol-card__brand">' + escHtml(e.brand) + '</span>'
+            + '<span class="sol-card__sep">–</span>'
+            + '<span class="sol-card__name">' + escHtml(e.name) + '</span>'
+            + '<span class="sol-badge ' + statusClass + '">' + statusLabel + '</span>'
+            + '</div>'
+            + '<div class="sol-card__meta">'
+            + '<span>' + (e.cat || '') + '</span>'
+            + '<span>' + (e.gender || '') + '</span>'
+            + '<span>' + (e.fecha || '') + '</span>'
+            + '</div>'
+            + (e.notes ? '<p class="sol-card__notes">' + escHtml(e.notes) + '</p>' : '')
+            + (e.status === 'pending'
+                ? '<div class="sol-card__actions">'
+                    + '<button class="sol-btn sol-btn--approve js-sol-approve" data-id="' + e.id + '" data-brand="' + escAttr(e.brand) + '" data-name="' + escAttr(e.name) + '" data-cat="' + escAttr(e.cat) + '" data-gender="' + escAttr(e.gender || 'unisex') + '" type="button">Aprobar</button>'
+                    + '<button class="sol-btn sol-btn--reject js-sol-reject" data-id="' + e.id + '" type="button">Rechazar</button>'
+                  + '</div>'
+                : '')
+            + '</div>';
+        }).join('');
+
+        // Wire approve buttons
+        list.querySelectorAll('.js-sol-approve').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id     = btn.dataset.id;
+            var brand  = btn.dataset.brand;
+            var name   = btn.dataset.name;
+            var cat    = btn.dataset.cat;
+            var gender = btn.dataset.gender;
+            btn.disabled = true;
+            btn.textContent = 'Aprobando…';
+
+            // 1. Mark as approved in KV
+            var kvPatch = fetch('/api/catalog-request', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: id, status: 'approved', tok: token }),
+            });
+
+            // 2. Seed inventory in GAS
+            var gasSeed = fetch(EXEC_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({ token: token, action: 'addCatalogEntry', brand: brand, name: name, cat: cat, gender: gender }),
+            });
+
+            Promise.all([kvPatch, gasSeed]).then(function () {
+              loadSolicitudes();
+            }).catch(function () {
+              btn.disabled = false;
+              btn.textContent = 'Aprobar';
+              showToast('Error al aprobar. Intentá de nuevo.');
+            });
+          });
+        });
+
+        // Wire reject buttons
+        list.querySelectorAll('.js-sol-reject').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.dataset.id;
+            btn.disabled = true;
+            fetch('/api/catalog-request', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: id, status: 'rejected', tok: token }),
+            }).then(function () { loadSolicitudes(); })
+              .catch(function () {
+                btn.disabled = false;
+                showToast('Error al rechazar.');
+              });
+          });
+        });
+      })
+      .catch(function () {
+        hint.textContent = 'Error al cargar solicitudes.';
+      });
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function escAttr(s) {
+    return String(s).replace(/"/g,'&quot;');
+  }
 
   /* ── Init ── */
   (function init() {
