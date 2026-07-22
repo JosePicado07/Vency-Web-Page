@@ -326,7 +326,8 @@
     /* shipping nudge */
     if (trayShipNudge) {
       var _ct = cartTotal();
-      if (_ct <= 0) {
+      var _isPickup = getSelectedDelivery() === 'local';
+      if (_ct <= 0 || _isPickup) {
         trayShipNudge.hidden = true;
       } else if (_ct >= FREE_SHIP_THRESHOLD) {
         trayShipNudge.innerHTML = '🚚 Envío gratis incluido en este pedido.';

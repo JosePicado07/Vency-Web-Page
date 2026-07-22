@@ -317,14 +317,16 @@
         characterColor: f.characterColor || null
       };
     });
-    var ext = (window.VENCY_FULL_CATALOG || []).map(function (f, i) {
+    var ext = (window.VENCY_FULL_CATALOG || []).map(function (f) {
       var interpId = f.vencyInterpretation && f.vencyInterpretation.id;
       var img = interpId
         ? 'assets/images/inspirations/_webp/' + interpId + '-400.webp'
         : toWebp400(f.image);
+      var slugify = window.slugify || function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
+      var id = interpId || slugify((f.brand || '') + '-' + f.name);
       return {
         _type: 'decant',
-        id: 'ext-' + i,
+        id: id,
         name: f.name,
         brand: f.brand || '',
         cat: f.cat,

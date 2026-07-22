@@ -86,6 +86,7 @@ export async function onRequestPost(context) {
         body: JSON.stringify({
           from: 'Vency Atelier <onboarding@resend.dev>',
           to: [email],
+          reply_to: vencyEmail,
           subject: 'Tu solicitud de personalización · Vency Atelier',
           html: customerHtml,
         }),
