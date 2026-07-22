@@ -1,13 +1,2 @@
-# Cloudflare Pages redirects
-# Publish directory: src/
-
-/catalogo           /catalogo.html          301
-/coleccion          /coleccion.html         301
-/faq                /faq.html               301
-/guia               /guia.html              301
-/perfumista         /perfumista.html        301
-/carrito            /carrito.html           301
-/legal              /legal.html             301
-/proceso            /proceso.html           301
-/personalizacion    /personalizacion.html   301
-/admin              /admin.html             301
+# Cloudflare Pages handles pretty URLs automatically.
+# No manual .html redirects needed — they conflict with the built-in feature.
