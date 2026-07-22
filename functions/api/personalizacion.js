@@ -84,7 +84,7 @@ export async function onRequestPost(context) {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Vency Atelier <onboarding@resend.dev>',
+          from: 'Vency Atelier <noreply@vencyatelier.com>',
           to: [email],
           reply_to: vencyEmail,
           subject: 'Tu solicitud de personalización · Vency Atelier',
@@ -95,7 +95,7 @@ export async function onRequestPost(context) {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Web Vency <onboarding@resend.dev>',
+          from: 'Vency Atelier <noreply@vencyatelier.com>',
           to: [vencyEmail],
           reply_to: email,
           subject: '🌿 Personalización: ' + fragancia + ' · ' + notas,
