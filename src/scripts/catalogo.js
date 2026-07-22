@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   'use strict';
 
   var catalog   = window.VENCY_FULL_CATALOG || [];
@@ -133,8 +133,8 @@
     fmtImg.onload = fmtImg.onerror = null;
     fmtFrag = frag;
 
-    var src400 = frag.image ? to400Src(frag.image) : '../assets/images/_webp/default-bottle-400.webp';
-    var src800 = frag.image ? to800Src(frag.image) : '../assets/images/_webp/default-bottle-400.webp';
+    var src400 = frag.image ? to400Src(frag.image) : 'assets/images/_webp/default-bottle-400.webp';
+    var src800 = frag.image ? to800Src(frag.image) : 'assets/images/_webp/default-bottle-400.webp';
 
     /* Show 400px immediately — guaranteed cached since the card already displayed it. */
     fmtImg.src = src400;
@@ -333,7 +333,7 @@
 
       var thumbSrc = frag.image
         ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
-        : '../assets/images/_webp/default-bottle-400.webp';
+        : 'assets/images/_webp/default-bottle-400.webp';
 
       var historiaHref = 'coleccion.html#' + frag.id;
       var inspoText = (isIcon && frag.inspiration)
@@ -348,7 +348,7 @@
           ' data-fragrance-cat="vency"' +
           ' data-fragrance-vency-cat="' + frag.category + '"' +
           ' data-fragrance-notes="' + escHtml(notes) + '"' +
-          ' data-fragrance-img="' + escHtml(frag.image || '../assets/images/default-bottle.jpg') + '"' +
+          ' data-fragrance-img="' + escHtml(frag.image || 'assets/images/default-bottle.jpg') + '"' +
           ' data-fragrance-href="' + escHtml(historiaHref) + '"' +
           (inspoText ? ' data-fragrance-inspo="' + inspoText + '"' : '') +
           ' data-search="' + escHtml(searchStr) + '"' +
@@ -358,7 +358,7 @@
             ' aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">' +
             '<span class="cat-entry__img-wrap">' +
               '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
-                ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
+                ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
               '<span class="cat-entry__img-badge">' + (isIcon ? 'INSPIRACIÓN ELEVADA' : 'CREACIÓN PROPIA') + '</span>' +
             '</span>' +
             '<span class="cat-entry__info">' +
@@ -468,12 +468,12 @@
           li.dataset.fragranceNotes  = dotIdx !== -1 ? rawNotes.slice(0, dotIdx) : rawNotes;
           li.dataset.fragrancePhrase = dotIdx !== -1 ? rawNotes.slice(dotIdx + 2) : '';
           /* Modal opens with the original fragrance photo; format swap takes over on option select. */
-          li.dataset.fragranceImg = item.image || '../assets/images/default-bottle.jpg';
+          li.dataset.fragranceImg = item.image || 'assets/images/default-bottle.jpg';
           /* Card thumbnail: use item.image when provided (original bottle photo), else default. */
           var extThumbSrc = item.image
             || (interp
-              ? '../assets/images/inspirations/_webp/' + interp.id + '-400.webp'
-              : '../assets/images/_webp/default-bottle-400.webp');
+              ? 'assets/images/inspirations/_webp/' + interp.id + '-400.webp'
+              : 'assets/images/_webp/default-bottle-400.webp');
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
           var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
 
@@ -496,7 +496,7 @@
               ' aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">' +
               '<span class="cat-entry__img-wrap">' +
                 '<img class="cat-entry__img" src="' + extThumbSrc + '" ' + imgSrcset(extThumbSrc) + ' alt="' + escHtml(displayName) + '" ' + imgLoadAttrs() +
-                  ' onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';">' +
+                  ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
                 '<span class="cat-entry__img-badge">INSPIRADO EN</span>' +
               '</span>' +
               '<span class="cat-entry__info">' +

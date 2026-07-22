@@ -29,8 +29,8 @@ export async function onRequestPost(context) {
   // Build Stripe line_items as form-encoded (Stripe REST API format)
   const params = new URLSearchParams();
   params.append('mode', 'payment');
-  params.append('success_url', `${origin}/pages/carrito.html?paid=1&ref=${encodeURIComponent(ref || '')}`);
-  params.append('cancel_url', `${origin}/pages/carrito.html`);
+  params.append('success_url', `${origin}/carrito?paid=1&ref=${encodeURIComponent(ref || '')}`);
+  params.append('cancel_url', `${origin}/carrito`);
   if (ref) params.append('metadata[ref]', ref);
 
   items.forEach((item, i) => {

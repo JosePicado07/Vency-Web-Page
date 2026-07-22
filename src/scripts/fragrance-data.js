@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Vency Atelier — Shared fragrance catalog data
  * Add new entries here to grow the catalog; both coleccion and decants consume this.
  */
@@ -16,7 +16,7 @@
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       narrative: 'La promesa de algo que nunca fue completamente dulce.',
-      image: '../assets/images/originals/citrus-enigma.png',
+      image: 'assets/images/originals/citrus-enigma.png',
       characterColor: 'oklch(72% 0.09 135)',
       inspiration: null,
       featured: false
@@ -30,7 +30,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Un perfume que sabe exactamente lo que es.',
-      image: '../assets/images/originals/vency-rouge.png',
+      image: 'assets/images/originals/vency-rouge.png',
       characterColor: 'oklch(38% 0.10 8)',
       inspiration: null,
       featured: true
@@ -44,7 +44,7 @@
       ocasion: ['diario', 'fin-de-semana'],
       ocasionLabels: ['Diario', 'Fin de semana'],
       narrative: 'Carmesí no como color sino como estado.',
-      image: '../assets/images/originals/infusion-carmesi.png',
+      image: 'assets/images/originals/infusion-carmesi.png',
       characterColor: 'oklch(36% 0.10 350)',
       inspiration: null,
       featured: false
@@ -60,7 +60,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'La versión que no pide permiso.',
-      image: '../assets/images/inspirations/absolu-authority.png',
+      image: 'assets/images/inspirations/absolu-authority.png',
       characterColor: 'oklch(24% 0.05 50)',
       inspiration: { name: 'Aventus Absolu', brand: 'Creed', image: null },
       featured: false
@@ -74,7 +74,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'El rastro que queda cuando alguien que valía la pena se va.',
-      image: '../assets/images/inspirations/after-effect.png',
+      image: 'assets/images/inspirations/after-effect.png',
       characterColor: 'oklch(42% 0.08 45)',
       inspiration: { name: 'Side Effect', brand: 'Initio', image: null },
       featured: false
@@ -88,7 +88,7 @@
       ocasion: ['diario', 'fin-de-semana'],
       ocasionLabels: ['Diario', 'Fin de semana'],
       narrative: 'Una mañana de domingo que no quisiste que terminara.',
-      image: '../assets/images/inspirations/apple-whisper.png',
+      image: 'assets/images/inspirations/apple-whisper.png',
       characterColor: 'oklch(72% 0.08 55)',
       inspiration: { name: 'Layton', brand: 'Parfums de Marly', image: null },
       featured: false
@@ -102,7 +102,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Lujo tropical. El tipo de oro que no pesa.',
-      image: '../assets/images/inspirations/aurum-mirage.png',
+      image: 'assets/images/inspirations/aurum-mirage.png',
       characterColor: 'oklch(68% 0.10 75)',
       inspiration: { name: 'Lamar', brand: 'Kajal', image: null },
       featured: false
@@ -116,7 +116,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'La cereza madura que no necesita que la pidan.',
-      image: '../assets/images/inspirations/cherry-desire.png',
+      image: 'assets/images/inspirations/cherry-desire.png',
       characterColor: 'oklch(38% 0.12 15)',
       inspiration: { name: 'Carmina', brand: 'Creed', image: null },
       featured: false
@@ -130,7 +130,7 @@
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       narrative: 'Cítrico de lujo. La nota que no para de resonar.',
-      image: '../assets/images/inspirations/citrus-melody.png',
+      image: 'assets/images/inspirations/citrus-melody.png',
       characterColor: 'oklch(75% 0.12 85)',
       inspiration: { name: 'Symphony', brand: 'Louis Vuitton', image: null },
       featured: false
@@ -144,7 +144,7 @@
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       narrative: 'Cítrico puro elevado a categoría de lujo.',
-      image: '../assets/images/inspirations/citrus-nirvana.png',
+      image: 'assets/images/inspirations/citrus-nirvana.png',
       characterColor: 'oklch(72% 0.10 95)',
       inspiration: { name: 'Elysium', brand: 'Roja', image: null },
       featured: false
@@ -158,7 +158,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Lo que pasa cuando el azafrán y la vainilla deciden ser uno.',
-      image: '../assets/images/inspirations/crush-effect.png',
+      image: 'assets/images/inspirations/crush-effect.png',
       characterColor: 'oklch(60% 0.10 58)',
       inspiration: { name: 'Instant Crush', brand: 'Mancera', image: null },
       featured: false
@@ -172,7 +172,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Oscuro, sofisticado. El tipo de pecado que nadie lamenta.',
-      image: '../assets/images/inspirations/dark-sinner.png',
+      image: 'assets/images/inspirations/dark-sinner.png',
       characterColor: 'oklch(26% 0.04 30)',
       inspiration: { name: 'Fetish', brand: 'Roja', image: null },
       featured: false
@@ -186,7 +186,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Floral y afrutado. El sueño del que no querés despertar.',
-      image: '../assets/images/inspirations/dream-trap.png',
+      image: 'assets/images/inspirations/dream-trap.png',
       characterColor: 'oklch(58% 0.10 330)',
       inspiration: { name: 'Attrape-Rêves', brand: 'Louis Vuitton', image: null },
       featured: false
@@ -200,7 +200,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'La distancia que se siente, pero no se teme.',
-      image: '../assets/images/inspirations/endless-horizon.png',
+      image: 'assets/images/inspirations/endless-horizon.png',
       characterColor: 'oklch(62% 0.08 230)',
       inspiration: { name: "L'Immensité", brand: 'Louis Vuitton', image: null },
       featured: false
@@ -214,7 +214,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Fruta exótica chocando contra oud. Una tensión adictiva.',
-      image: '../assets/images/inspirations/exotic-contrast.png',
+      image: 'assets/images/inspirations/exotic-contrast.png',
       characterColor: 'oklch(48% 0.10 42)',
       inspiration: { name: 'Oud Maracujá', brand: 'Maison Crivelli', image: null },
       featured: false
@@ -228,7 +228,7 @@
       ocasion: ['noche', 'invierno'],
       ocasionLabels: ['Noche', 'Invierno'],
       narrative: 'El olor del fuego antes de que alguien lo apague.',
-      image: '../assets/images/inspirations/fireside-memory.png',
+      image: 'assets/images/inspirations/fireside-memory.png',
       characterColor: 'oklch(32% 0.05 30)',
       inspiration: { name: 'By the Fireplace', brand: 'Maison Margiela', image: null },
       featured: false
@@ -242,7 +242,7 @@
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       narrative: 'El mar desde lejos, limpio como el principio de algo.',
-      image: '../assets/images/inspirations/fresh-coast.png',
+      image: 'assets/images/inspirations/fresh-coast.png',
       characterColor: 'oklch(65% 0.08 215)',
       inspiration: { name: 'Pacific Chill', brand: 'Louis Vuitton', image: null },
       featured: false
@@ -256,7 +256,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'La misma habitación, pero alguien ha entrado.',
-      image: '../assets/images/inspirations/fresh-signature.png',
+      image: 'assets/images/inspirations/fresh-signature.png',
       characterColor: 'oklch(52% 0.05 240)',
       inspiration: { name: 'Bleu de Chanel', brand: 'Chanel', image: null },
       featured: false
@@ -270,7 +270,7 @@
       ocasion: ['diario', 'verano'],
       ocasionLabels: ['Diario', 'Verano'],
       narrative: 'Mango tropical que explota y no pide disculpas.',
-      image: '../assets/images/inspirations/golden-citrine.png',
+      image: 'assets/images/inspirations/golden-citrine.png',
       characterColor: 'oklch(72% 0.12 75)',
       inspiration: { name: 'God of Fire', brand: 'Stéphane Humbert Lucas 777', image: null },
       featured: false
@@ -284,7 +284,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Tabaco y miel. Un lujo que se hereda, no se compra.',
-      image: '../assets/images/inspirations/golden-heritage.png',
+      image: 'assets/images/inspirations/golden-heritage.png',
       characterColor: 'oklch(65% 0.10 68)',
       inspiration: { name: 'Naxos', brand: 'Xerjoff', image: null },
       featured: false
@@ -298,7 +298,7 @@
       ocasion: ['formal', 'diario'],
       ocasionLabels: ['Formal', 'Diario'],
       narrative: 'La campiña en el traje de alguien que no lo parece.',
-      image: '../assets/images/inspirations/green-profile.png',
+      image: 'assets/images/inspirations/green-profile.png',
       characterColor: 'oklch(50% 0.10 145)',
       inspiration: { name: 'Green Irish Tweed', brand: 'Creed', image: null },
       featured: false
@@ -312,7 +312,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Potencia pura. Lo salvaje que lleva traje.',
-      image: '../assets/images/inspirations/inner-wild.png',
+      image: 'assets/images/inspirations/inner-wild.png',
       characterColor: 'oklch(38% 0.06 45)',
       inspiration: { name: 'Centaurus', brand: 'Creed', image: null },
       featured: false
@@ -326,7 +326,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'El escenario vacío que todavía huele a actuación.',
-      image: '../assets/images/inspirations/jagger-index.png',
+      image: 'assets/images/inspirations/jagger-index.png',
       characterColor: 'oklch(28% 0.04 25)',
       inspiration: { name: 'Smoking Hot', brand: 'By Kilian', image: null },
       featured: false
@@ -340,7 +340,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'La última hora de luz antes de que el día decida terminar.',
-      image: '../assets/images/inspirations/last-light.png',
+      image: 'assets/images/inspirations/last-light.png',
       characterColor: 'oklch(58% 0.09 62)',
       inspiration: { name: 'Grand Soir', brand: 'Maison Francis Kurkdjian', image: null },
       featured: false
@@ -354,7 +354,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'Limpio, brillante y adictivo. La luminosidad como estado permanente.',
-      image: '../assets/images/inspirations/luminous-dream.png',
+      image: 'assets/images/inspirations/luminous-dream.png',
       characterColor: 'oklch(72% 0.06 210)',
       inspiration: { name: 'Imagination', brand: 'Louis Vuitton', image: null },
       featured: false
@@ -368,7 +368,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Café cremoso. La seducción que no necesita horario.',
-      image: '../assets/images/inspirations/midnight-coffee.png',
+      image: 'assets/images/inspirations/midnight-coffee.png',
       characterColor: 'oklch(28% 0.04 35)',
       inspiration: { name: 'Amore Café', brand: 'Mancera', image: null },
       featured: false
@@ -382,7 +382,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'Lo que queda en el aire después de que alguien notable se ha ido.',
-      image: '../assets/images/inspirations/neutral-state.png',
+      image: 'assets/images/inspirations/neutral-state.png',
       characterColor: 'oklch(80% 0.004 80)',
       inspiration: { name: 'Rehab', brand: 'Initio', image: null },
       featured: false
@@ -396,7 +396,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'El bar a la medianoche cuando la música es lo único real.',
-      image: '../assets/images/inspirations/night-light.png',
+      image: 'assets/images/inspirations/night-light.png',
       characterColor: 'oklch(30% 0.04 40)',
       inspiration: { name: 'Replica: Jazz Club', brand: 'Maison Margiela', image: null },
       featured: false
@@ -410,7 +410,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'El ritual del viajero que lleva su tierra consigo.',
-      image: '../assets/images/inspirations/nomad-ritual.png',
+      image: 'assets/images/inspirations/nomad-ritual.png',
       characterColor: 'oklch(26% 0.05 35)',
       inspiration: { name: 'Ombre Nomade', brand: 'Louis Vuitton', image: null },
       featured: false
@@ -424,7 +424,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Gourmand oscuro. La proporción exacta entre placer y peligro.',
-      image: '../assets/images/inspirations/phantom-ratio.png',
+      image: 'assets/images/inspirations/phantom-ratio.png',
       characterColor: 'oklch(22% 0.03 15)',
       inspiration: { name: 'Black Phantom', brand: 'By Kilian', image: null },
       featured: false
@@ -438,7 +438,7 @@
       ocasion: ['formal', 'diario'],
       ocasionLabels: ['Formal', 'Diario'],
       narrative: 'La primera impresión que no necesita segunda.',
-      image: '../assets/images/inspirations/prime-authority.png',
+      image: 'assets/images/inspirations/prime-authority.png',
       characterColor: 'oklch(35% 0.06 48)',
       inspiration: { name: 'Aventus', brand: 'Creed', image: null },
       featured: false
@@ -452,9 +452,9 @@
       ocasion: ['formal', 'diario'],
       ocasionLabels: ['Formal', 'Diario'],
       narrative: 'Especiado y elegante. La reserva que no está en el menú.',
-      image: '../assets/images/inspirations/private-reserve.png',
+      image: 'assets/images/inspirations/private-reserve.png',
       characterColor: 'oklch(38% 0.08 155)',
-      inspiration: { name: 'X for Men', brand: 'Clive Christian', image: '../assets/images/inspirations/private-reserve.png' },
+      inspiration: { name: 'X for Men', brand: 'Clive Christian', image: 'assets/images/inspirations/private-reserve.png' },
       featured: false
     },
     {
@@ -466,7 +466,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'La seda que se siente antes de verse.',
-      image: '../assets/images/inspirations/queen-essence.png',
+      image: 'assets/images/inspirations/queen-essence.png',
       characterColor: 'oklch(65% 0.06 75)',
       inspiration: { name: 'Queen of Silk', brand: 'Creed', image: null },
       featured: false
@@ -480,7 +480,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'La rosa que convierte la habitación en su propio perfume.',
-      image: '../assets/images/inspirations/rose-desire.png',
+      image: 'assets/images/inspirations/rose-desire.png',
       characterColor: 'oklch(68% 0.10 355)',
       inspiration: { name: 'Delina', brand: 'Parfums de Marly', image: null },
       featured: false
@@ -494,7 +494,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Dulce, mineral y etéreo. El elixir que todo el mundo reconoce.',
-      image: '../assets/images/inspirations/rouge-elixir.png',
+      image: 'assets/images/inspirations/rouge-elixir.png',
       characterColor: 'oklch(52% 0.10 22)',
       inspiration: { name: 'Baccarat Rouge 540', brand: 'Maison Francis Kurkdjian', image: null },
       featured: false
@@ -508,7 +508,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'Oud de lujo moderno. La tradición reescrita.',
-      image: '../assets/images/inspirations/sacred-oud.png',
+      image: 'assets/images/inspirations/sacred-oud.png',
       characterColor: 'oklch(28% 0.06 40)',
       inspiration: { name: 'Oud for Greatness', brand: 'Initio', image: null },
       featured: false
@@ -522,7 +522,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'Sándalo seco y ahumado. El código que todos reconocen.',
-      image: '../assets/images/inspirations/santal-code.png',
+      image: 'assets/images/inspirations/santal-code.png',
       characterColor: 'oklch(62% 0.07 62)',
       inspiration: { name: 'Santal 33', brand: 'Le Labo', image: null },
       featured: false
@@ -536,7 +536,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'El calor de algo que no tiene prisa en irse.',
-      image: '../assets/images/inspirations/santal-embrace.png',
+      image: 'assets/images/inspirations/santal-embrace.png',
       characterColor: 'oklch(62% 0.06 58)',
       inspiration: { name: 'Santal Pao Rosa', brand: 'Guerlain', image: null },
       featured: false
@@ -550,7 +550,7 @@
       ocasion: ['noche', 'formal'],
       ocasionLabels: ['Noche', 'Formal'],
       narrative: 'El cuero que no pide disculpas.',
-      image: '../assets/images/inspirations/shadow-leather.png',
+      image: 'assets/images/inspirations/shadow-leather.png',
       characterColor: 'oklch(28% 0.04 30)',
       inspiration: { name: 'Ombre Leather', brand: 'Tom Ford', image: null },
       featured: false
@@ -564,7 +564,7 @@
       ocasion: ['diario', 'formal'],
       ocasionLabels: ['Diario', 'Formal'],
       narrative: 'Cremoso y elegante. El velo que todo lo suaviza.',
-      image: '../assets/images/inspirations/silver-veil.png',
+      image: 'assets/images/inspirations/silver-veil.png',
       characterColor: 'oklch(78% 0.04 72)',
       inspiration: { name: 'Pegasus', brand: 'Parfums de Marly', image: null },
       featured: false
@@ -578,7 +578,7 @@
       ocasion: ['noche', 'fin-de-semana'],
       ocasionLabels: ['Noche', 'Fin de semana'],
       narrative: 'Cítrico y tabaco. La combinación que no debería funcionar y no para.',
-      image: '../assets/images/inspirations/smoky-mandarin.png',
+      image: 'assets/images/inspirations/smoky-mandarin.png',
       characterColor: 'oklch(55% 0.12 48)',
       inspiration: { name: 'Tobacco Mandarin', brand: 'Byredo', image: null },
       featured: false
@@ -592,7 +592,7 @@
       ocasion: ['diario', 'fin-de-semana'],
       ocasionLabels: ['Diario', 'Fin de semana'],
       narrative: 'Vainilla seca y sofisticada. La piel como segundo perfume.',
-      image: '../assets/images/inspirations/vanille-skin.png',
+      image: 'assets/images/inspirations/vanille-skin.png',
       characterColor: 'oklch(78% 0.06 72)',
       inspiration: { name: 'Vanilla Powder', brand: 'Matière Première', image: null },
       featured: false
@@ -614,7 +614,7 @@
     b30:    { vency: 14900, disenador: 12900, nicho: 14900, 'ultra-nicho': 14900 },
     b100:   { vency: 26900, disenador: 23900, nicho: 26900, 'ultra-nicho': 26900 },
     shipping:    2500,
-    freeShipping: 25000,
+    freeShipping: 30000,
   };
 
   root.fmtCRC      = function (n) { return '₡' + Number(n).toLocaleString('es-CR'); };
@@ -639,9 +639,9 @@
   };
 
   root.VENCY_FMT_IMAGES = {
-    decant: '../assets/images/formats/decant-vial.webp',
-    '30ml':  '../assets/images/formats/frasco-30ml.webp',
-    '100ml': '../assets/images/formats/frasco-100ml.webp'
+    decant: 'assets/images/formats/decant-vial.webp',
+    '30ml':  'assets/images/formats/frasco-30ml.webp',
+    '100ml': 'assets/images/formats/frasco-100ml.webp'
   };
 
   root.VencyCart = {

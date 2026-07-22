@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   'use strict';
 
   var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
@@ -309,7 +309,7 @@
     var ext = (window.VENCY_FULL_CATALOG || []).map(function (f, i) {
       var interpId = f.vencyInterpretation && f.vencyInterpretation.id;
       var img = interpId
-        ? '../assets/images/inspirations/_webp/' + interpId + '-400.webp'
+        ? 'assets/images/inspirations/_webp/' + interpId + '-400.webp'
         : toWebp400(f.image);
       return {
         _type: 'decant',
@@ -912,8 +912,8 @@
       el.dataset.fragId = frag.id;
       if (!getAvail(frag.id)) el.classList.add('dblock--soldout');
 
-      var imgSrc = frag.image || '../assets/images/_webp/default-bottle-400.webp';
-      var imgHtml = '<div class="dblock__img-wrap"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
+      var imgSrc = frag.image || 'assets/images/_webp/default-bottle-400.webp';
+      var imgHtml = '<div class="dblock__img-wrap"><img src="' + imgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';"></div>';
 
       el.innerHTML =
         '<div class="dblock__top">' +
@@ -937,8 +937,8 @@
       var b100Key   = invKey(frag, '100ml');
       var catCls    = 'dblock--ext-' + (frag.cat || 'disenador');
 
-      var extImgSrc = frag.image || '../assets/images/_webp/default-bottle-400.webp';
-      var extImgHtml = '<div class="dblock__img-wrap"><img src="' + extImgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'../assets/images/default-bottle.jpg\';"></div>';
+      var extImgSrc = frag.image || 'assets/images/_webp/default-bottle-400.webp';
+      var extImgHtml = '<div class="dblock__img-wrap"><img src="' + extImgSrc + '" alt="" loading="lazy" onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';"></div>';
 
       el.className = 'dblock dblock--admin ' + catCls;
       el.dataset.fragId = frag.id;

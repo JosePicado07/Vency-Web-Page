@@ -1,11 +1,13 @@
 # Cloudflare Pages redirects
 # Publish directory: src/
 
-/catalogo           /pages/catalogo.html    301
-/coleccion          /pages/coleccion.html   301
-/faq                /pages/faq.html         301
-/guia               /pages/guia.html        301
-/perfumista         /pages/perfumista.html  301
-/carrito            /pages/carrito.html     301
-/legal              /pages/legal.html       301
-/proceso            /pages/proceso.html     301
+/catalogo           /catalogo.html          301
+/coleccion          /coleccion.html         301
+/faq                /faq.html               301
+/guia               /guia.html              301
+/perfumista         /perfumista.html        301
+/carrito            /carrito.html           301
+/legal              /legal.html             301
+/proceso            /proceso.html           301
+/personalizacion    /personalizacion.html   301
+/admin              /admin.html             301
