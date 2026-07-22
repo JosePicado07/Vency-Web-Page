@@ -309,12 +309,12 @@
       var badgeText = isIcon ? 'ICON' : 'VENCY';
       var badgeClass = isIcon ? 'cat-badge--icon' : 'cat-badge--original';
       var notes     = frag.noteLabels.join(' · ');
-      var searchStr = (frag.name + ' ' + frag.notes.join(' ')).toLowerCase();
+      var searchStr = (frag.name + ' ' + (frag.inspiration ? frag.inspiration.name + ' ' + frag.inspiration.brand : '') + ' ' + frag.notes.join(' ')).toLowerCase();
       var ocasion   = frag.ocasion.join(' ');
-      var fname     = escHtml(frag.name);
+      var fname     = escHtml(isIcon && frag.inspiration ? frag.inspiration.name : frag.name);
 
       var inspoLine = (isIcon && frag.inspiration)
-        ? '<span class="vency-compact__ref">· ' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</span> '
+        ? '<span class="vency-compact__ref">· ' + escHtml(frag.inspiration.brand) + '</span> '
         : '';
 
       // Calculate soldOut dynamically from current inventory
@@ -337,7 +337,7 @@
 
       var historiaHref = 'coleccion.html#' + frag.id;
       var inspoText = (isIcon && frag.inspiration)
-        ? escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand)
+        ? escHtml(frag.inspiration.brand)
         : '';
 
       html +=
@@ -365,7 +365,7 @@
               '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
               '<span class="cat-entry__name">' + fname + '</span>' +
               (isIcon && frag.inspiration
-                ? '<span class="cat-entry__inspo">' + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand) + '</span>'
+                ? '<span class="cat-entry__inspo">' + escHtml(frag.inspiration.brand) + '</span>'
                 : '') +
             '</span>' +
           '</button>' +

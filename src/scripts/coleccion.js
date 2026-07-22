@@ -158,12 +158,13 @@
         _upgradeImg.src = src800;
       }
     }
+    var isIconFrag = frag.category === 'icon-series';
     fmtImg.alt = frag.name;
-    fmtName.textContent = frag.name;
+    fmtName.textContent = (isIconFrag && frag.inspiration) ? frag.inspiration.name : frag.name;
     if (fmtImgBadge) fmtImgBadge.hidden = !frag.inspiration;
     if (fmtInspo) {
       if (frag.inspiration) {
-        fmtInspo.textContent = frag.inspiration.name + ' · ' + frag.inspiration.brand;
+        fmtInspo.textContent = isIconFrag ? frag.inspiration.brand : frag.inspiration.name + ' · ' + frag.inspiration.brand;
         fmtInspo.hidden = false;
       } else { fmtInspo.hidden = true; }
     }
@@ -228,9 +229,7 @@
     var hasInspoImg = isIcon && frag.inspiration && frag.inspiration.image;
 
     var inspirationLine = isIcon && frag.inspiration
-      ? '<p class="catalog-entry__inspo">'
-          + escHtml(frag.inspiration.name) + ' · ' + escHtml(frag.inspiration.brand)
-        + '</p>'
+      ? '<p class="catalog-entry__inspo">' + escHtml(frag.inspiration.brand) + '</p>'
       : '';
 
     var imageHtml = hasInspoImg
@@ -271,7 +270,7 @@
             + '<span class="catalog-entry__badge ' + badgeClass + '">' + badgeText + '</span>'
             + (soldOut ? '<span class="catalog-entry__badge catalog-entry__badge--sold-out">AGOTADO</span>' : '')
           + '</div>'
-          + '<h2 class="catalog-entry__name">' + escHtml(frag.name) + '</h2>'
+          + '<h2 class="catalog-entry__name">' + escHtml(isIcon && frag.inspiration ? frag.inspiration.name : frag.name) + '</h2>'
           + inspirationLine
           + '<p class="catalog-entry__narrative">' + escHtml(frag.narrative) + '</p>'
           + '<div class="catalog-entry__meta">'
