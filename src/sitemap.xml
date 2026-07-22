@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://vencyatelier.com/</loc><priority>1.0</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://vencyatelier.com/catalogo</loc><priority>0.9</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://vencyatelier.com/perfumista</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vencyatelier.com/personalizacion</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vencyatelier.com/guia</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vencyatelier.com/coleccion</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vencyatelier.com/proceso</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://vencyatelier.com/faq</loc><priority>0.6</priority><changefreq>monthly</changefreq></url>
+</urlset>
