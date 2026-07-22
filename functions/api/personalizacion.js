@@ -16,14 +16,25 @@ export async function onRequestPost(context) {
     return Response.json({ error: 'Invalid JSON' }, { status: 400 });
   }
 
-  const { nombre, email, fragancia, notas, intensidad, ocasion, mensaje } = body;
+  const { nombre, email, telefono, fragancia, notas, intensidad, ocasion, mensaje } = body;
   if (!email || !fragancia || !notas) {
     return Response.json({ error: 'Faltan campos requeridos' }, { status: 400 });
   }
 
   const nombreDisplay = nombre || email;
+
+  // URL for Vency to open a chat with the CLIENT
+  const clientPhone = telefono ? telefono.replace(/\D/g, '') : null;
+  const clientWaUrl = clientPhone
+    ? 'https://wa.me/' + clientPhone + '?text=' + encodeURIComponent(
+        'Hola' + (nombre ? ' ' + nombre : '') + '! Soy Vency Atelier. Recibí tu solicitud de personalización y con gusto te ayudo. ¿Cuándo podemos coordinar?'
+      )
+    : null;
+
+  // URL for the customer to contact Vency
   const waText = encodeURIComponent(
     'Hola Vency Atelier! Hice una solicitud de personalización:\n\n'
+    + (telefono   ? '📱 WhatsApp: '     + telefono   + '\n' : '')
     + '🌿 Fragancia base: ' + fragancia + '\n'
     + '✨ Notas a potenciar: ' + notas + '\n'
     + (intensidad ? '💧 Intensidad: ' + intensidad + '\n' : '')
@@ -34,7 +45,7 @@ export async function onRequestPost(context) {
   const waUrl = 'https://wa.me/50672773156?text=' + waText;
 
   const resendKey  = context.env.RESEND_API_KEY;
-  const vencyEmail = context.env.VENCY_EMAIL || 'hola@vencyatelier.com';
+  const vencyEmail = context.env.VENCY_EMAIL || 'vencyatelier@gmail.com';
 
   if (resendKey) {
     const customerHtml =
@@ -55,12 +66,17 @@ export async function onRequestPost(context) {
       '<div style="font-family:sans-serif;max-width:520px;margin:0 auto">'
       + '<h2>Nueva solicitud de personalización</h2>'
       + '<p><strong>De:</strong> ' + nombreDisplay + ' &lt;' + email + '&gt;</p>'
+      + (telefono ? '<p><strong>WhatsApp:</strong> ' + telefono + '</p>' : '')
       + '<p><strong>Fragancia base:</strong> ' + fragancia + '</p>'
       + '<p><strong>Notas:</strong> ' + notas + '</p>'
       + (intensidad ? '<p><strong>Intensidad:</strong> ' + intensidad + '</p>' : '')
       + (ocasion    ? '<p><strong>Ocasión:</strong> '    + ocasion    + '</p>' : '')
       + (mensaje    ? '<p><strong>Nota adicional:</strong> ' + mensaje + '</p>' : '')
-      + '<hr><a href="' + waUrl.replace(/&/g, '&amp;') + '" style="display:inline-block;padding:.6rem 1.2rem;background:#25D366;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">Abrir en WhatsApp</a>'
+      + '<hr>'
+      + (clientWaUrl
+          ? '<a href="' + clientWaUrl.replace(/&/g, '&amp;') + '" style="display:inline-block;padding:.6rem 1.2rem;background:#25D366;color:#fff;border-radius:6px;text-decoration:none;font-weight:600">Escribir al cliente por WhatsApp</a>'
+          : ''
+        )
       + '</div>';
 
     await Promise.allSettled([
@@ -68,7 +84,7 @@ export async function onRequestPost(context) {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Vency Atelier <noreply@vencyatelier.com>',
+          from: 'Vency Atelier <onboarding@resend.dev>',
           to: [email],
           subject: 'Tu solicitud de personalización · Vency Atelier',
           html: customerHtml,
@@ -78,7 +94,7 @@ export async function onRequestPost(context) {
         method: 'POST',
         headers: { 'Authorization': 'Bearer ' + resendKey, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Web Vency <noreply@vencyatelier.com>',
+          from: 'Web Vency <onboarding@resend.dev>',
           to: [vencyEmail],
           reply_to: email,
           subject: '🌿 Personalización: ' + fragancia + ' · ' + notas,

@@ -110,7 +110,123 @@
     .quiz-result__restart:hover { color: var(--warm-ochre); }
     .quiz-result__restart:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) { .js-quiz-body, .quiz-modal, .quiz-overlay { transition: none; } }
+
+    /* ── Personalización promo ─────────────────────────────── */
+    .pers-promo {
+      padding: var(--space-xl) var(--space-md);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: oklch(19% .035 145 / .06);
+    }
+    .pers-promo__inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    @media (max-width: 660px) {
+      .pers-promo__inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .pers-promo__title {
+      font-family: 'Bitter', serif; font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: .92; letter-spacing: -.025em;
+      color: var(--volcanic-ink); margin: .6rem 0 1.1rem;
+    }
+    .pers-promo__body {
+      font-family: 'Manrope', sans-serif;
+      font-size: .95rem; line-height: 1.7;
+      color: var(--ink-muted); margin: 0 0 1.75rem; max-width: 46ch;
+    }
+    .pers-promo__steps {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .pers-promo__step {
+      display: flex; align-items: baseline; gap: .75rem;
+      padding: .9rem 0; border-bottom: 1px solid var(--border);
+    }
+    .pers-promo__step:first-child { border-top: 1px solid var(--border); }
+    .pers-promo__step-num {
+      font-family: 'Bitter', serif; font-weight: 900;
+      font-size: 1.5rem; line-height: 1; letter-spacing: -.03em;
+      color: oklch(86% .008 90); flex-shrink: 0;
+    }
+    .pers-promo__step-label {
+      font-family: 'Manrope', sans-serif;
+      font-size: .88rem; font-weight: 600;
+      color: var(--volcanic-ink);
+    }
+    .pers-promo__step-divider { display: none; }
   </style>
+  <style>
+    /* ── Dispenser section ────────────────────────────────── */
+    .dispensador {
+      background: var(--volcanic-ink);
+      padding: var(--space-xl) var(--space-md);
+    }
+    .dispensador__inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 220px;
+      gap: 3rem; align-items: center;
+    }
+    .dispensador__kicker {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-size: .7rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--warm-ochre); margin: 0 0 1rem;
+    }
+    .dispensador__title {
+      font-family: 'Bitter', serif; font-weight: 900;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: .9; letter-spacing: -.025em;
+      color: var(--botanical-parchment); margin: 0 0 1.5rem;
+    }
+    .dispensador__body {
+      font-family: 'Manrope', sans-serif;
+      font-size: .98rem; line-height: 1.72;
+      color: oklch(80% .006 80); margin: 0 0 2rem; max-width: 52ch;
+    }
+    .dispensador__facts {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2rem;
+      border-top: 1px solid oklch(32% .025 145);
+      padding-top: 1.5rem;
+    }
+    .dispensador__fact-label {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--warm-ochre); margin-bottom: .4rem;
+    }
+    .dispensador__fact-desc {
+      font-family: 'Manrope', sans-serif;
+      font-size: .84rem; color: oklch(68% .006 80);
+      line-height: 1.55; margin: 0;
+    }
+    .dispensador__aside { text-align: right; }
+    .dispensador__big-num {
+      display: block;
+      font-family: 'Bitter', serif; font-weight: 900;
+      font-size: clamp(5rem, 12vw, 9rem);
+      line-height: .85; letter-spacing: -.04em;
+      color: oklch(24% .03 145);
+    }
+    .dispensador__aside-label {
+      display: block;
+      font-family: 'Manrope', sans-serif;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: oklch(42% .04 145); margin-top: .5rem;
+      line-height: 1.5;
+    }
+    @media (max-width: 660px) {
+      .dispensador__inner { grid-template-columns: 1fr; }
+      .dispensador__aside { display: none; }
+      .dispensador__facts { grid-template-columns: 1fr; gap: 1.2rem; }
+    }
+  </style>
+
   <!-- Prefetch catalog page and its assets so navigation feels instant -->
   <link rel="prefetch" href="catalogo.html">
   <link rel="prefetch" href="../styles/catalogo.css?v=60">
@@ -263,6 +379,74 @@
           </p>
         </article>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- PERSONALIZACIÓN -->
+  <section class="pers-promo" aria-labelledby="pers-promo-title">
+    <div class="pers-promo__inner">
+      <div class="pers-promo__content">
+        <span class="label sage-label animate-in" aria-hidden="true">FRAGANCIA A MEDIDA · GC-MS</span>
+        <h2 class="pers-promo__title animate-in" style="--delay:80ms" id="pers-promo-title">
+          Tu fragancia,<br>creada para vos.
+        </h2>
+        <p class="pers-promo__body animate-in" style="--delay:140ms">
+          Vency analiza tu perfume favorito con tecnología de cromatografía de gases y lo reformula con las notas exactas que buscás. Asesoría de pH incluida.
+        </p>
+        <a href="personalizacion.html" class="btn btn--outline animate-in" style="--delay:200ms">
+          Conocer el proceso
+        </a>
+      </div>
+      <div class="pers-promo__steps animate-in" style="--delay:160ms" aria-hidden="true">
+        <div class="pers-promo__step">
+          <span class="pers-promo__step-num">01</span>
+          <span class="pers-promo__step-label">Tu visión</span>
+        </div>
+        <div class="pers-promo__step-divider"></div>
+        <div class="pers-promo__step">
+          <span class="pers-promo__step-num">02</span>
+          <span class="pers-promo__step-label">Análisis GC-MS</span>
+        </div>
+        <div class="pers-promo__step-divider"></div>
+        <div class="pers-promo__step">
+          <span class="pers-promo__step-num">03</span>
+          <span class="pers-promo__step-label">Formulación</span>
+        </div>
+        <div class="pers-promo__step-divider"></div>
+        <div class="pers-promo__step">
+          <span class="pers-promo__step-num">04</span>
+          <span class="pers-promo__step-label">Tu fragancia</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DISPENSADOR -->
+  <section class="dispensador" aria-labelledby="dispensador-title">
+    <div class="dispensador__inner">
+      <div class="dispensador__content">
+        <span class="dispensador__kicker animate-in">Primera en Costa Rica</span>
+        <h2 class="dispensador__title animate-in" style="--delay:80ms" id="dispensador-title">
+          La máquina<br>dispensadora<br>artesanal.
+        </h2>
+        <p class="dispensador__body animate-in" style="--delay:160ms">
+          Vency Atelier es el primer negocio en Costa Rica en operar una máquina dispensadora de fragancias cargada con sus propias creaciones e inspiraciones. Seleccionás, dispensás, llevás. Sin espera, sin mostrador, sin intermediario.
+        </p>
+        <div class="dispensador__facts animate-in" style="--delay:220ms">
+          <div class="dispensador__fact">
+            <span class="dispensador__fact-label">Creaciones propias</span>
+            <p class="dispensador__fact-desc">Composiciones originales de Anthonny Villegas, disponibles al instante desde la máquina.</p>
+          </div>
+          <div class="dispensador__fact">
+            <span class="dispensador__fact-label">Inspiraciones</span>
+            <p class="dispensador__fact-desc">Las referencias que buscás, reformuladas con materias primas selectas y dispensadas de inmediato.</p>
+          </div>
+        </div>
+      </div>
+      <div class="dispensador__aside" aria-hidden="true">
+        <span class="dispensador__big-num">01</span>
+        <span class="dispensador__aside-label">Primera<br>en Costa Rica</span>
       </div>
     </div>
   </section>
@@ -450,6 +634,7 @@
   <script src="../scripts/search.js?v=52" defer></script>
   <script src="../scripts/cart-drawer.js?v=10" defer></script>
   <script src="../scripts/quiz.js?v=7" defer></script>
+  <script src="../scripts/wa-float.js" defer></script>
 </body>
 </html>
 
