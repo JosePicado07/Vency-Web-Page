@@ -126,35 +126,39 @@
   function decantComplete() { return selection.length === 3; }
   function decantPartial()  { return selection.length === 1 || selection.length === 2; }
   function bottlesTotal()   { return bottles.reduce(function (s, b) { return s + b.price * (b.qty || 1); }, 0); }
-  function decantCost()     { return decantComplete() ? SET_PRICE : selection.length * DECANT_PRICE; }
+  function setPrice() {
+    var allDesigner = selection.every(function (s) { return s.cat === 'disenador'; });
+    return allDesigner ? _P.set3.disenador : _P.set3.vency;
+  }
+  function decantCost()     { return decantComplete() ? setPrice() : selection.length * DECANT_PRICE; }
   function cartTotal()      { return decantCost() + bottlesTotal(); }
   function canCheckout()    { return selection.length > 0 || bottles.length > 0; }
 
   /* ---- Selection logic ---- */
-  function handleClick(id, name) {
+  function handleClick(id, name, cat) {
     var count = countFor(id);
     if (count > 0) {
       for (var i = selection.length - 1; i >= 0; i--) {
         if (selection[i].id === id) { selection.splice(i, 1); break; }
       }
     } else if (selection.length < 3) {
-      selection.push({ id: id, name: name });
+      selection.push({ id: id, name: name, cat: cat || '' });
     } else {
       var replaced = selection[selection.length - 1];
       selection.pop();
-      selection.push({ id: id, name: name });
+      selection.push({ id: id, name: name, cat: cat || '' });
       window.makeToast(window.escHtml('Se reemplazó ' + replaced.name));
     }
     updateUI();
   }
 
-  function setDecantQty(id, name, qty) {
+  function setDecantQty(id, name, qty, cat) {
     for (var i = selection.length - 1; i >= 0; i--) {
       if (selection[i].id === id) selection.splice(i, 1);
     }
     var available = 3 - selection.length;
     var toAdd = Math.min(qty, available);
-    for (var j = 0; j < toAdd; j++) selection.push({ id: id, name: name });
+    for (var j = 0; j < toAdd; j++) selection.push({ id: id, name: name, cat: cat || '' });
     updateUI();
   }
 
@@ -483,9 +487,9 @@
   var popupCta = document.querySelector('.js-decant-popup-close');
   var pendingDecant = null;
 
-  function showDecantIntro(id, name) {
-    if (!popupEl || !popupCta) { handleClick(id, name); return; }
-    pendingDecant = { id: id, name: name };
+  function showDecantIntro(id, name, cat) {
+    if (!popupEl || !popupCta) { handleClick(id, name, cat); return; }
+    pendingDecant = { id: id, name: name, cat: cat || '' };
     popupEl.hidden = false;
     document.body.style.overflow = 'hidden';
   }
@@ -496,7 +500,7 @@
     document.body.style.overflow = '';
     try { localStorage.setItem(OPEN_KEY, '1'); } catch (e) {}
     if (pendingDecant) {
-      handleClick(pendingDecant.id, pendingDecant.name);
+      handleClick(pendingDecant.id, pendingDecant.name, pendingDecant.cat);
       pendingDecant = null;
     }
   }
@@ -512,6 +516,7 @@
     if (block.dataset.soldOut === 'true') return;
     var id   = block.dataset.fragranceId;
     var name = block.dataset.fragranceName;
+    var cat  = block.dataset.fragranceCat || block.dataset.cat || '';
 
     var trigger = block.querySelector('.dblock__trigger');
     if (trigger) {
@@ -520,9 +525,9 @@
         var seen = false;
         try { seen = !!localStorage.getItem(OPEN_KEY); } catch (e) {}
         if (seen) {
-          handleClick(id, name);
+          handleClick(id, name, cat);
         } else {
-          showDecantIntro(id, name);
+          showDecantIntro(id, name, cat);
         }
       });
     }
