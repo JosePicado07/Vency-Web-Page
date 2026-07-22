@@ -2384,7 +2384,7 @@ a.coll-block:hover .coll-block__cta {
   position: fixed;
   will-change: opacity, transform;
   right: var(--space-md);
-  bottom: var(--space-md);
+  bottom: calc(1.5rem + 52px + 0.75rem); /* sit above WA float button */
   z-index: 250;
   width: 44px;
   height: 44px;

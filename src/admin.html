@@ -146,7 +146,7 @@
               aria-controls="js-mode-inventario">Inventario</button>
       <button class="mode-tab" id="js-mode-tab-solicitudes"
               data-mode="solicitudes" role="tab" aria-selected="false" type="button"
-              aria-controls="js-mode-solicitudes">Solicitudes</button>
+              aria-controls="js-mode-solicitudes">Catálogo</button>
     </div>
 
     <!-- Shared search -->
@@ -180,13 +180,79 @@
       <div class="grid-sentinel" id="js-inv-sentinel" aria-hidden="true"></div>
     </div>
 
-    <!-- Solicitudes panel -->
+    <!-- Catálogo panel -->
     <div id="js-mode-solicitudes" role="tabpanel" aria-labelledby="js-mode-tab-solicitudes" hidden>
-      <div class="solicitudes" id="js-solicitudes">
-        <p class="admin-hint" id="js-sol-hint">Cargando solicitudes…</p>
+
+      <!-- Add new fragrance form -->
+      <section class="sol-add-section">
+        <h2 class="sol-add-title">Agregar fragancia al catálogo</h2>
+        <form class="sol-add-form" id="js-add-frag-form" novalidate>
+
+          <div class="sol-add-row sol-add-row--2col">
+            <div class="sol-add-field">
+              <label class="sol-add-label" for="add-brand">Marca *</label>
+              <input class="sol-add-input" id="add-brand" name="brand" type="text"
+                     placeholder="Ej: Tom Ford, Creed…" autocomplete="off" required>
+            </div>
+            <div class="sol-add-field">
+              <label class="sol-add-label" for="add-name">Nombre del perfume *</label>
+              <input class="sol-add-input" id="add-name" name="name" type="text"
+                     placeholder="Ej: Black Orchid, Aventus…" autocomplete="off" required>
+            </div>
+          </div>
+
+          <div class="sol-add-row sol-add-row--2col">
+            <div class="sol-add-field">
+              <label class="sol-add-label" for="add-cat">Categoría *</label>
+              <select class="sol-add-input" id="add-cat" name="cat" required>
+                <option value="">Seleccioná…</option>
+                <option value="disenador">Diseñador</option>
+                <option value="nicho">Nicho</option>
+                <option value="ultra-nicho">Ultra Nicho</option>
+              </select>
+            </div>
+            <div class="sol-add-field">
+              <label class="sol-add-label" for="add-gender">Género</label>
+              <select class="sol-add-input" id="add-gender" name="gender">
+                <option value="unisex">Unisex</option>
+                <option value="hombre">Hombre</option>
+                <option value="mujer">Mujer</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="sol-add-row">
+            <label class="sol-add-label" for="add-notes">Descripción / notas olfativas</label>
+            <textarea class="sol-add-input sol-add-textarea" id="add-notes" name="notes" rows="3"
+                      placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
+          </div>
+
+          <div class="sol-add-row">
+            <label class="sol-add-label" for="add-image">Imagen del perfume</label>
+            <div class="sol-add-upload" id="js-upload-zone">
+              <input class="sol-add-upload__input" id="add-image" name="image" type="file"
+                     accept="image/*" aria-label="Subir imagen">
+              <div class="sol-add-upload__preview" id="js-upload-preview">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span class="sol-add-upload__hint">Tocá para elegir una imagen</span>
+              </div>
+            </div>
+          </div>
+
+          <button class="sol-add-submit" id="js-add-frag-submit" type="submit">Agregar al catálogo</button>
+          <p class="sol-add-status" id="js-add-frag-status" role="alert" hidden></p>
+
+        </form>
+      </section>
+
+      <!-- Existing custom entries -->
+      <section class="sol-list-section">
+        <h2 class="sol-add-title">Fragancias agregadas</h2>
+        <p class="admin-hint" id="js-sol-hint" hidden>Cargando…</p>
         <div id="js-sol-list"></div>
-        <p class="dblock-empty" id="js-sol-empty" hidden>Sin solicitudes pendientes.</p>
-      </div>
+        <p class="dblock-empty" id="js-sol-empty" hidden>Aún no agregaste ninguna fragancia personalizada.</p>
+      </section>
+
     </div>
 
   </div>

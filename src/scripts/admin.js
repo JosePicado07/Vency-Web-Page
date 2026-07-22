@@ -1491,13 +1491,16 @@
     }
   });
 
-  /* ── Solicitudes ── */
-  var _solLoaded = false;
+  /* ── Catalog management (admin) ── */
+
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 
   function loadSolicitudes() {
-    var hint    = document.getElementById('js-sol-hint');
-    var list    = document.getElementById('js-sol-list');
-    var empty   = document.getElementById('js-sol-empty');
+    var hint  = document.getElementById('js-sol-hint');
+    var list  = document.getElementById('js-sol-list');
+    var empty = document.getElementById('js-sol-empty');
 
     hint.hidden = false;
     list.innerHTML = '';
@@ -1507,101 +1510,128 @@
       .then(function (r) { return r.json(); })
       .then(function (entries) {
         hint.hidden = true;
-        var pending = entries.filter(function (e) { return e.status === 'pending'; });
-        var approved = entries.filter(function (e) { return e.status === 'approved'; });
-        var all = pending.concat(approved).concat(entries.filter(function(e){ return e.status === 'rejected'; }));
+        if (!entries.length) { empty.hidden = false; return; }
 
-        if (!all.length) { empty.hidden = false; return; }
-
-        list.innerHTML = all.map(function (e) {
-          var statusLabel = e.status === 'pending' ? 'Pendiente' : e.status === 'approved' ? 'Aprobado' : 'Rechazado';
-          var statusClass = e.status === 'pending' ? 'sol-badge--pending' : e.status === 'approved' ? 'sol-badge--approved' : 'sol-badge--rejected';
-          return '<div class="sol-card" data-id="' + e.id + '" data-status="' + e.status + '">'
+        list.innerHTML = entries.map(function (e) {
+          var imgHtml = e.imageId
+            ? '<img class="sol-card__img" src="/api/catalog-image/' + e.imageId + '" alt="' + escHtml(e.brand + ' ' + e.name) + '" loading="lazy">'
+            : '';
+          return '<div class="sol-card" data-id="' + e.id + '">'
+            + imgHtml
+            + '<div class="sol-card__body">'
             + '<div class="sol-card__head">'
             + '<span class="sol-card__brand">' + escHtml(e.brand) + '</span>'
             + '<span class="sol-card__sep">–</span>'
             + '<span class="sol-card__name">' + escHtml(e.name) + '</span>'
-            + '<span class="sol-badge ' + statusClass + '">' + statusLabel + '</span>'
             + '</div>'
             + '<div class="sol-card__meta">'
-            + '<span>' + (e.cat || '') + '</span>'
-            + '<span>' + (e.gender || '') + '</span>'
-            + '<span>' + (e.fecha || '') + '</span>'
+            + '<span>' + escHtml(e.cat || '') + '</span>'
+            + '<span>' + escHtml(e.gender || '') + '</span>'
             + '</div>'
             + (e.notes ? '<p class="sol-card__notes">' + escHtml(e.notes) + '</p>' : '')
-            + (e.status === 'pending'
-                ? '<div class="sol-card__actions">'
-                    + '<button class="sol-btn sol-btn--approve js-sol-approve" data-id="' + e.id + '" data-brand="' + escAttr(e.brand) + '" data-name="' + escAttr(e.name) + '" data-cat="' + escAttr(e.cat) + '" data-gender="' + escAttr(e.gender || 'unisex') + '" type="button">Aprobar</button>'
-                    + '<button class="sol-btn sol-btn--reject js-sol-reject" data-id="' + e.id + '" type="button">Rechazar</button>'
-                  + '</div>'
-                : '')
+            + '</div>'
+            + '<button class="sol-btn sol-btn--reject js-sol-delete" data-id="' + e.id + '" type="button" aria-label="Eliminar fragancia">Eliminar</button>'
             + '</div>';
         }).join('');
 
-        // Wire approve buttons
-        list.querySelectorAll('.js-sol-approve').forEach(function (btn) {
+        list.querySelectorAll('.js-sol-delete').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            var id     = btn.dataset.id;
-            var brand  = btn.dataset.brand;
-            var name   = btn.dataset.name;
-            var cat    = btn.dataset.cat;
-            var gender = btn.dataset.gender;
-            btn.disabled = true;
-            btn.textContent = 'Aprobando…';
-
-            // 1. Mark as approved in KV
-            var kvPatch = fetch('/api/catalog-request', {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: id, status: 'approved', tok: token }),
-            });
-
-            // 2. Seed inventory in GAS
-            var gasSeed = fetch(EXEC_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain' },
-              body: JSON.stringify({ token: token, action: 'addCatalogEntry', brand: brand, name: name, cat: cat, gender: gender }),
-            });
-
-            Promise.all([kvPatch, gasSeed]).then(function () {
-              loadSolicitudes();
-            }).catch(function () {
-              btn.disabled = false;
-              btn.textContent = 'Aprobar';
-              showToast('Error al aprobar. Intentá de nuevo.');
-            });
-          });
-        });
-
-        // Wire reject buttons
-        list.querySelectorAll('.js-sol-reject').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            var id = btn.dataset.id;
+            if (!confirm('¿Eliminar esta fragancia del catálogo?')) return;
             btn.disabled = true;
             fetch('/api/catalog-request', {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: id, status: 'rejected', tok: token }),
-            }).then(function () { loadSolicitudes(); })
-              .catch(function () {
-                btn.disabled = false;
-                showToast('Error al rechazar.');
-              });
+              body: JSON.stringify({ id: btn.dataset.id, action: 'delete', tok: token }),
+            })
+              .then(function () { loadSolicitudes(); })
+              .catch(function () { btn.disabled = false; showToast('Error al eliminar.'); });
           });
         });
       })
-      .catch(function () {
-        hint.textContent = 'Error al cargar solicitudes.';
-      });
+      .catch(function () { hint.textContent = 'Error al cargar.'; hint.hidden = false; });
   }
 
-  function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function setupAddFragForm() {
+    var form      = document.getElementById('js-add-frag-form');
+    var submitBtn = document.getElementById('js-add-frag-submit');
+    var statusEl  = document.getElementById('js-add-frag-status');
+    var fileInput = document.getElementById('add-image');
+    var preview   = document.getElementById('js-upload-preview');
+
+    if (!form) return;
+
+    // Image preview
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files[0];
+      if (!file) return;
+      var url = URL.createObjectURL(file);
+      preview.innerHTML = '<img src="' + url + '" alt="Vista previa" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:contain;">';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      var brand  = form.brand.value.trim();
+      var name   = form.name.value.trim();
+      var cat    = form.cat.value;
+
+      if (!brand || !name || !cat) {
+        statusEl.textContent = 'Completá los campos obligatorios.';
+        statusEl.style.color = '#e88080';
+        statusEl.hidden = false;
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando…';
+      statusEl.hidden = true;
+
+      var fd = new FormData(form);
+      fd.set('tok', token);
+
+      fetch('/api/catalog-request', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          if (res.dupe) {
+            statusEl.textContent = 'Esa fragancia ya está en el catálogo.';
+            statusEl.style.color = '#e8a860';
+            statusEl.hidden = false;
+          } else if (res.ok) {
+            // Seed inventory in GAS
+            fetch(EXEC_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain' },
+              body: JSON.stringify({
+                token: token, action: 'addCatalogEntry',
+                brand: brand, name: name, cat: cat, gender: form.gender.value,
+              }),
+            }).catch(function () {});
+
+            form.reset();
+            preview.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para elegir una imagen</span>';
+            statusEl.textContent = '¡Fragancia agregada! Ya aparece en el catálogo.';
+            statusEl.style.color = '#6ec87e';
+            statusEl.hidden = false;
+            loadSolicitudes();
+          } else {
+            statusEl.textContent = 'Error al guardar. Intentá de nuevo.';
+            statusEl.style.color = '#e88080';
+            statusEl.hidden = false;
+          }
+        })
+        .catch(function () {
+          statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
+          statusEl.style.color = '#e88080';
+          statusEl.hidden = false;
+        })
+        .finally(function () {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Agregar al catálogo';
+        });
+    });
   }
 
-  function escAttr(s) {
-    return String(s).replace(/"/g,'&quot;');
-  }
+  setupAddFragForm();
 
   /* ── Init ── */
   (function init() {
