@@ -1513,6 +1513,9 @@
         if (!entries.length) { empty.hidden = false; return; }
 
         list.innerHTML = entries.map(function (e) {
+          var isArchived = e.status === 'archived';
+          var statusBadge = '<span class="sol-badge-status sol-badge-status--' + (isArchived ? 'archived' : 'approved') + '">'
+            + (isArchived ? 'Archivada' : 'Activa') + '</span>';
           var imgHtml = e.imageId
             ? '<img class="sol-card__img" src="/api/catalog-image/' + e.imageId + '" alt="' + escHtml(e.brand + ' ' + e.name) + '" loading="lazy">'
             : '';
@@ -1523,6 +1526,7 @@
             + '<span class="sol-card__brand">' + escHtml(e.brand) + '</span>'
             + '<span class="sol-card__sep">–</span>'
             + '<span class="sol-card__name">' + escHtml(e.name) + '</span>'
+            + statusBadge
             + '</div>'
             + '<div class="sol-card__meta">'
             + '<span>' + escHtml(e.cat || '') + '</span>'
@@ -1530,21 +1534,28 @@
             + '</div>'
             + (e.notes ? '<p class="sol-card__notes">' + escHtml(e.notes) + '</p>' : '')
             + '</div>'
-            + '<button class="sol-btn sol-btn--reject js-sol-delete" data-id="' + e.id + '" type="button" aria-label="Eliminar fragancia">Eliminar</button>'
+            + '<div class="sol-card__actions">'
+            + (isArchived
+                ? '<button class="sol-btn sol-btn--restore js-sol-action" data-id="' + e.id + '" data-action="restore" type="button">Restaurar</button>'
+                : '<button class="sol-btn sol-btn--archive js-sol-action" data-id="' + e.id + '" data-action="archive" type="button">Archivar</button>'
+              )
+            + '<button class="sol-btn sol-btn--delete js-sol-action" data-id="' + e.id + '" data-action="delete" type="button">Eliminar</button>'
+            + '</div>'
             + '</div>';
         }).join('');
 
-        list.querySelectorAll('.js-sol-delete').forEach(function (btn) {
+        list.querySelectorAll('.js-sol-action').forEach(function (btn) {
           btn.addEventListener('click', function () {
-            if (!confirm('¿Eliminar esta fragancia del catálogo?')) return;
+            var action = btn.dataset.action;
+            if (action === 'delete' && !confirm('¿Eliminar esta fragancia permanentemente?')) return;
             btn.disabled = true;
             fetch('/api/catalog-request', {
               method: 'PATCH',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: btn.dataset.id, action: 'delete', tok: token }),
+              body: JSON.stringify({ id: btn.dataset.id, action: action, tok: token }),
             })
               .then(function () { loadSolicitudes(); })
-              .catch(function () { btn.disabled = false; showToast('Error al eliminar.'); });
+              .catch(function () { btn.disabled = false; showToast('Error. Intentá de nuevo.'); });
           });
         });
       })

@@ -16,7 +16,105 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/admin.min.css?v=58">
-  <link rel="stylesheet" href="styles/catalog-request.css?v=1">
+  <style>
+    /* ── Admin catalog form (dark theme) ── */
+    #js-mode-solicitudes { padding: 0; }
+    .sol-add-section, .sol-list-section {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .sol-add-title {
+      font-size: .75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: #8a9a8e; margin: 0 0 1rem;
+    }
+    .sol-add-form { display: flex; flex-direction: column; gap: .85rem; }
+    .sol-add-row  { display: flex; flex-direction: column; gap: .3rem; }
+    .sol-add-row--2col { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+    .sol-add-field { display: flex; flex-direction: column; gap: .3rem; }
+    .sol-add-label {
+      font-size: .68rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: .06em; color: #7a8a84;
+    }
+    .sol-add-input {
+      width: 100%; box-sizing: border-box;
+      padding: .55rem .75rem;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 6px;
+      color: #e0d8cc; font-family: inherit; font-size: .9rem;
+    }
+    .sol-add-input option { background: #1e2b25; }
+    .sol-add-input:focus { outline: none; border-color: rgba(184,115,46,.65); }
+    .sol-add-textarea { resize: vertical; min-height: 4.5rem; }
+
+    .sol-add-upload {
+      position: relative; border: 1.5px dashed rgba(255,255,255,.18);
+      border-radius: 8px; overflow: hidden; cursor: pointer;
+      min-height: 80px; display: flex; align-items: center; justify-content: center;
+      transition: border-color .15s;
+    }
+    .sol-add-upload:hover { border-color: rgba(184,115,46,.55); }
+    .sol-add-upload__input {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+      width: 100%; height: 100%;
+    }
+    .sol-add-upload__preview {
+      pointer-events: none; display: flex; flex-direction: column;
+      align-items: center; gap: .5rem; padding: 1rem; color: #6a7a74;
+    }
+    .sol-add-upload__hint { font-size: .78rem; }
+
+    .sol-add-submit {
+      padding: .65rem 1rem;
+      background: rgba(184,115,46,.28); color: #e0a060;
+      border: 1px solid rgba(184,115,46,.38);
+      border-radius: 8px; font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: background .15s; width: 100%;
+    }
+    .sol-add-submit:hover:not(:disabled) { background: rgba(184,115,46,.48); }
+    .sol-add-submit:disabled { opacity: .5; cursor: default; }
+    .sol-add-status { font-size: .82rem; text-align: center; padding: .4rem 0; }
+
+    /* Entry cards */
+    .sol-card {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px; padding: .85rem; margin-bottom: .65rem;
+      display: flex; align-items: flex-start; gap: .85rem;
+    }
+    .sol-card__img {
+      width: 56px; height: 56px; object-fit: cover; border-radius: 6px;
+      flex-shrink: 0; background: rgba(255,255,255,.06);
+    }
+    .sol-card__body { flex: 1 1 auto; min-width: 0; }
+    .sol-card__head { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .3rem; }
+    .sol-card__brand { font-weight: 700; font-size: .875rem; color: #e0d8cc; }
+    .sol-card__sep   { opacity: .35; color: #e0d8cc; }
+    .sol-card__name  { font-size: .875rem; color: #c8c0b4; }
+    .sol-badge-status {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .05em; padding: .15rem .45rem; border-radius: 20px;
+    }
+    .sol-badge-status--approved { background: rgba(80,180,100,.2); color: #6ec87e; }
+    .sol-badge-status--archived { background: rgba(120,120,120,.2); color: #909090; }
+    .sol-card__meta { font-size: .75rem; color: #6a7a74; display: flex; gap: .75rem; }
+    .sol-card__notes {
+      font-size: .78rem; color: #8a9a8e; margin: .3rem 0 0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic;
+    }
+    .sol-card__actions { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
+    .sol-btn {
+      padding: .35rem .65rem; border: none; border-radius: 6px;
+      font-size: .75rem; font-weight: 600; cursor: pointer;
+      transition: background .15s; white-space: nowrap;
+    }
+    .sol-btn:disabled { opacity: .5; cursor: default; }
+    .sol-btn--archive  { background: rgba(184,115,46,.2); color: #e0a060; }
+    .sol-btn--archive:hover:not(:disabled)  { background: rgba(184,115,46,.38); }
+    .sol-btn--restore  { background: rgba(80,180,100,.18); color: #6ec87e; }
+    .sol-btn--restore:hover:not(:disabled)  { background: rgba(80,180,100,.35); }
+    .sol-btn--delete   { background: rgba(180,60,60,.18); color: #e08080; }
+    .sol-btn--delete:hover:not(:disabled)   { background: rgba(180,60,60,.35); }
+  </style>
 </head>
 <body>
 
