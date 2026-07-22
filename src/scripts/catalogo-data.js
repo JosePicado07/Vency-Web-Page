@@ -39,7 +39,7 @@
 { brand: 'JEAN PAUL GAULTIER', name: 'Le Male Elixir',           cat: 'disenador', gender: 'hombre', notes: 'Miel, vainilla, tabaco. Muy dulce.', image: 'assets/images/inspirations/le-male-elixir.png' },
 { brand: 'JEAN PAUL GAULTIER', name: 'Ultra Male',               cat: 'disenador', gender: 'hombre', notes: 'Pera, canela, vainilla. Dulce de fiesta.', image: 'assets/images/inspirations/ultra-male.png' },
 { brand: 'JEAN PAUL GAULTIER', name: 'Paradise Garden',          cat: 'disenador', gender: 'hombre', notes: 'Coco, higo, notas verdes. Tropical fresco.', image: 'assets/images/inspirations/paradise-garden.png' },
-{ brand: 'PHILIPP PLEIN',      name: 'No Limit$',                cat: 'disenador', gender: 'hombre', notes: 'Chocolate negro, especias, vainilla. Gourmand intenso.', image: 'assets/images/inspirations/no-limit.avif' },
+{ brand: 'PHILIPP PLEIN',      name: 'No Limit$',                cat: 'disenador', gender: 'hombre', notes: 'Chocolate negro, especias, vainilla. Gourmand intenso.', image: 'assets/images/inspirations/no-limit.png' },
 { brand: 'VALENTINO',          name: 'Born in Roma Uomo',         cat: 'disenador', gender: 'hombre', notes: 'Violeta, salvia, vetiver. Moderno y versátil.', image: 'assets/images/inspirations/born-in-roma-uomo.png' },
 { brand: 'YVES SAINT LAURENT', name: 'Y',                        cat: 'disenador', gender: 'hombre', notes: 'Manzana, salvia, ambroxan. Fresco moderno.', image: 'assets/images/inspirations/y.png' },
 { brand: 'VERSACE',            name: 'Eros Parfum',               cat: 'disenador', gender: 'hombre', notes: 'Menta, vainilla, manzana. Dulce seductor.', image: 'assets/images/inspirations/eros-parfum.png' },
