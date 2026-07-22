@@ -4,8 +4,8 @@
   var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var _P        = window.VENCY_PRICES;
-  var SET_PRICE     = _P.set3.vency;
-  var SINGLE_DECANT = _P.decant.vency;
+  function priceForCat(cat) { return _P.decant[cat] || _P.decant.vency; }
+  function setForCat(cat)   { return _P.set3[cat]   || _P.set3.vency; }
   var B30_PRICE     = _P.b30;
   var B100_PRICE    = _P.b100;
   var CAL_GREEN = 50000;   /* ₡1.5M / 30 days — good day */
@@ -114,26 +114,36 @@
   var colones     = window.fmtCRC;
   var generateRef = window.generateRef;
 
+  function decantTotal() {
+    // Group by cat, apply set pricing within each group
+    var groups = {};
+    selection.forEach(function (s) { var c = s.cat || 'vency'; groups[c] = (groups[c] || 0) + 1; });
+    var tot = 0;
+    Object.keys(groups).forEach(function (c) {
+      var n = groups[c];
+      tot += Math.floor(n / 3) * setForCat(c) + (n % 3) * priceForCat(c);
+    });
+    return tot;
+  }
+
   function cartTotal() {
-    var decantAmt = selection.length === 3
-      ? SET_PRICE
-      : selection.length * SINGLE_DECANT;
-    return decantAmt + bottles.reduce(function (s, b) { return s + b.price; }, 0);
+    return decantTotal() + bottles.reduce(function (s, b) { return s + b.price; }, 0);
   }
 
   function canRegister() { return selection.length > 0 || bottles.length > 0; }
 
   function buildItems() {
     var items = [];
-    if (selection.length === 3) {
+    if (selection.length === 3 && selection.every(function (s) { return (s.cat || 'vency') === (selection[0].cat || 'vency'); })) {
+      var cat = selection[0].cat || 'vency';
       var names = selection.map(function (s) {
         return s.name + (s.pct ? ' (' + s.pct + '%)' : '');
       }).join(', ');
-      items.push({ label: 'Set de 3 Decants (10 ml): ' + names, price: SET_PRICE });
+      items.push({ label: 'Set de 3 Decants (10 ml): ' + names, price: setForCat(cat) });
     } else {
       selection.forEach(function (s) {
         var c = s.pct ? ' \xb7 ' + concLabel(s.pct) + ' (' + s.pct + '%)' : '';
-        items.push({ label: s.name + ' \xb7 Decant 10 ml' + c, price: SINGLE_DECANT });
+        items.push({ label: s.name + ' \xb7 Decant 10 ml' + c, price: priceForCat(s.cat || 'vency') });
       });
     }
     bottles.forEach(function (b) {
@@ -879,7 +889,7 @@
     var btn = e.target.closest('button');
     if (btn) {
       if (btn.classList.contains('js-decant-btn'))
-        toggleDecant(btn.dataset.id, btn.dataset.name, btn.dataset.invkey);
+        toggleDecant(btn.dataset.id, btn.dataset.name, btn.dataset.invkey, btn.dataset.cat);
       if (btn.classList.contains('js-bottle-btn'))
         toggleBottle(btn.dataset.id, btn.dataset.name, btn.dataset.fmt,
           btn.dataset.price ? parseInt(btn.dataset.price, 10) : undefined,
@@ -891,7 +901,7 @@
     if (!card || e.target.closest('.dblock__footer')) return;
     var decantBtn = card.querySelector('.js-decant-btn');
     if (decantBtn && !decantBtn.disabled) {
-      toggleDecant(decantBtn.dataset.id, decantBtn.dataset.name, decantBtn.dataset.invkey);
+      toggleDecant(decantBtn.dataset.id, decantBtn.dataset.name, decantBtn.dataset.invkey, decantBtn.dataset.cat);
     }
   });
 
@@ -922,7 +932,7 @@
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
           '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn"' +
-            ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '"' +
+            ' data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-invkey="' + escapeHtml_(dk) + '" data-cat="vency"' +
             ' type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 Decant" aria-pressed="false">DECANT</button>' +
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="30ml" data-price="' + vb30Price + '" data-invkey="' + escapeHtml_(bk30) + '" type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 30ML" aria-pressed="false">30ML</button>' +
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(frag.name) + '" data-fmt="100ml" data-price="' + vb100Price + '" data-invkey="' + escapeHtml_(bk100) + '" type="button" aria-label="' + escapeHtml_(frag.name) + ' \xb7 100ML" aria-pressed="false">100ML</button>' +
@@ -952,7 +962,7 @@
           '</div>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
-          '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(fullName) + '" data-invkey="' + escapeHtml_(dKey) + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 Decant" aria-pressed="false">DECANT</button>' +
+          '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn" data-id="' + escapeHtml_(frag.id) + '" data-name="' + escapeHtml_(fullName) + '" data-invkey="' + escapeHtml_(dKey) + '" data-cat="' + escapeHtml_(frag.cat || 'disenador') + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 Decant" aria-pressed="false">DECANT</button>' +
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="30ml" data-price="' + b30Price + '" data-invkey="' + b30Key + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 30ML" aria-pressed="false">30ML</button>' +
           '<button class="admin-fmt-btn js-bottle-btn" data-id="' + frag.id + '" data-name="' + fullName + '" data-fmt="100ml" data-price="' + b100Price + '" data-invkey="' + b100Key + '" type="button" aria-label="' + escapeHtml_(fullName) + ' \xb7 100ML" aria-pressed="false">100ML</button>' +
         '</div>';
@@ -1026,11 +1036,11 @@
     return (inventory[id] && inventory[id].pct) || 20;
   }
 
-  function toggleDecant(id, name, ik) {
+  function toggleDecant(id, name, ik, cat) {
     var idx = selection.findIndex(function (s) { return s.id === id; });
     if (idx !== -1) { selection.splice(idx, 1); }
     else {
-      var item = { id: id, name: name, invKey: ik, pct: defaultPct(id) };
+      var item = { id: id, name: name, invKey: ik, cat: cat || 'vency', pct: defaultPct(id) };
       if (selection.length < 3) selection.push(item);
       else selection[2] = item;
     }
@@ -1189,10 +1199,13 @@
     var isSet = selection.length === 3;
 
     if (isSet) {
+      var setCat = selection.every(function (s) { return (s.cat||'vency') === (selection[0].cat||'vency'); })
+        ? (selection[0].cat || 'vency') : null;
+      var setPrice = setCat ? setForCat(setCat) : decantTotal();
       var hdr = document.createElement('div');
       hdr.className = 'admin-panel__set-row';
       hdr.innerHTML = '<span>Set de 3 Decants (10 ml)</span>' +
-        '<span class="admin-panel__line-price">' + colones(SET_PRICE) + '</span>';
+        '<span class="admin-panel__line-price">' + colones(setPrice) + '</span>';
       panelSummary.appendChild(hdr);
     }
 
