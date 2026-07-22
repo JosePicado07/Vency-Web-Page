@@ -12,9 +12,10 @@
   var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
 
   var _P           = window.VENCY_PRICES;
-  var SET_PRICE    = _P.set3.vency;
-  var DECANT_PRICE = _P.decant.vency;
   var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
+  function priceForType(t) { return _P.decant[t] || _P.decant.vency; }
+  function setForType(t)   { return _P.set3[t]   || _P.set3.vency; }
+  function savingsForType(t) { return 3 * priceForType(t) - setForType(t); }
   var BOTTLE_LABEL = { '30ml': '30 ml', '100ml': '100 ml' };
   var SHIPPING_FEE        = _P.shipping;
   var FREE_SHIP_THRESHOLD = _P.freeShipping;
@@ -76,7 +77,16 @@
   // ─── Selectors ─────────────────────────────────────────────────────────
   function isEmpty()       { return state.selection.length === 0 && state.bottles.length === 0; }
   function decantCount()   { return state.selection.length; }
-  function decantPrice()   { var n = decantCount(); return Math.floor(n / 3) * SET_PRICE + (n % 3) * DECANT_PRICE; }
+  function decantPrice() {
+    var groups = {};
+    state.selection.forEach(function (s) { var t = s.type || 'vency'; groups[t] = (groups[t] || 0) + 1; });
+    var tot = 0;
+    Object.keys(groups).forEach(function (t) {
+      var n = groups[t];
+      tot += Math.floor(n / 3) * setForType(t) + (n % 3) * priceForType(t);
+    });
+    return tot;
+  }
   function bottlesPrice()  { return state.bottles.reduce(function (s, b) { return s + b.price * (b.qty || 1); }, 0); }
   function subtotal()      { return decantPrice() + bottlesPrice(); }
   function isDelivery()    { var r = document.querySelector('.js-delivery-radio:checked'); return !r || r.value !== 'local'; }
@@ -89,7 +99,7 @@
       if (counts[s.id] == null) { counts[s.id] = 0; order.push(s); }
       counts[s.id]++;
     });
-    return order.map(function (s) { return { id: s.id, name: s.name, qty: counts[s.id] }; });
+    return order.map(function (s) { return { id: s.id, name: s.name, qty: counts[s.id], type: s.type || 'vency' }; });
   }
 
   // ─── Mutations ─────────────────────────────────────────────────────────
@@ -176,9 +186,15 @@
     var grouped = selectionGrouped();
     if (grouped.length > 0) {
       var _n = decantCount(), _rem = _n % 3, _sets = Math.floor(_n / 3);
+      var _typeGroups = {};
+      state.selection.forEach(function (s) { var t = s.type || 'vency'; _typeGroups[t] = (_typeGroups[t] || 0) + 1; });
+      var _typeKeys = Object.keys(_typeGroups);
+      var _isSingleType = _typeKeys.length === 1;
+      var _totalSavings = 0;
+      _typeKeys.forEach(function (t) { _totalSavings += Math.floor(_typeGroups[t] / 3) * savingsForType(t); });
       var setHeader = _rem === 0
-        ? '<span class="carrito__item-meta">Set' + (_sets > 1 ? 's ' + _sets : '') + ' completo' + (_sets > 1 ? 's' : '') + ' · ahorrás ' + colones(_sets * 3000) + '</span>'
-        : '<span class="carrito__item-meta">' + (3 - _rem) + ' más para ' + (_sets > 0 ? 'otro ' : 'el ') + 'set (₡12.000 los 3)</span>';
+        ? '<span class="carrito__item-meta">Set' + (_sets > 1 ? 's ' + _sets : '') + ' completo' + (_sets > 1 ? 's' : '') + ' · ahorrás ' + colones(_totalSavings) + '</span>'
+        : '<span class="carrito__item-meta">' + (3 - _rem) + ' más para ' + (_sets > 0 ? 'otro ' : 'el ') + 'set' + (_isSingleType ? ' (' + colones(setForType(_typeKeys[0])) + ' los 3)' : '') + '</span>';
       lines.push(
         '<div class="carrito__group">' +
           '<div class="carrito__group-head">' +
@@ -190,7 +206,7 @@
               thumbHtml(g.id) +
               '<div class="carrito__item-info">' +
                 '<p class="carrito__item-name">' + esc(g.name) + '</p>' +
-                '<p class="carrito__item-price">' + colones(DECANT_PRICE) + ' c/u</p>' +
+                '<p class="carrito__item-price">' + colones(priceForType(g.type)) + ' c/u</p>' +
               '</div>' +
               '<div class="carrito__qty">' +
                 '<button class="carrito__qty-btn js-qty-dec" type="button" aria-label="Quitar uno de ' + esc(g.name) + '">−</button>' +
@@ -286,12 +302,20 @@
       var _dn = decantCount(), _rem2 = _dn % 3, _sets2 = Math.floor(_dn / 3);
       if (_dn === 0) {
         nudgeEl.hidden = true;
-      } else if (_rem2 === 0) {
-        nudgeEl.hidden = false;
-        nudgeEl.innerHTML = (_sets2 > 1 ? _sets2 + ' sets completos' : 'Set completo') + ' · ahorrás <strong>' + colones(_sets2 * 3000) + '</strong>.';
       } else {
+        var _nGroups = {};
+        state.selection.forEach(function (s) { var t = s.type || 'vency'; _nGroups[t] = (_nGroups[t] || 0) + 1; });
+        var _nKeys = Object.keys(_nGroups);
+        var _nSingleType = _nKeys.length === 1;
+        var _nSavings = 0;
+        _nKeys.forEach(function (t) { _nSavings += Math.floor(_nGroups[t] / 3) * savingsForType(t); });
         nudgeEl.hidden = false;
-        nudgeEl.innerHTML = 'Añadí ' + (3 - _rem2) + ' más para ' + (_sets2 > 0 ? 'otro' : 'el') + ' set por <strong>' + colones(SET_PRICE) + '</strong>.';
+        if (_rem2 === 0) {
+          nudgeEl.innerHTML = (_sets2 > 1 ? _sets2 + ' sets completos' : 'Set completo') + ' · ahorrás <strong>' + colones(_nSavings) + '</strong>.';
+        } else {
+          var _nudgePrice = _nSingleType ? ' por <strong>' + colones(setForType(_nKeys[0])) + '</strong>' : '';
+          nudgeEl.innerHTML = 'Añadí ' + (3 - _rem2) + ' más para ' + (_sets2 > 0 ? 'otro' : 'el') + ' set' + _nudgePrice + '.';
+        }
       }
     }
 
@@ -521,20 +545,25 @@
       var _dc = decantCount();
 
       if (_dc > 0) {
-        // Price follows the set logic: floor(n/3)*12000 + (n%3)*5000
-        // Split into sets + loose so Stripe shows meaningful names
-        var sets = Math.floor(_dc / 3);
-        var loose = _dc % 3;
-        if (sets > 0) lineItems.push({ name: 'Set de Decants 10 ml ×3', price: SET_PRICE, qty: sets });
-        if (loose > 0) {
-          grouped.slice(sets * 3).forEach(function (g) {
-            lineItems.push({ name: g.name + ' · Decant 10 ml', price: DECANT_PRICE, qty: g.qty });
+        // Group by type; within each type apply set pricing then price loose decants individually
+        var _stripeGroups = {};
+        state.selection.forEach(function (s) {
+          var t = s.type || 'vency';
+          if (!_stripeGroups[t]) _stripeGroups[t] = [];
+          _stripeGroups[t].push(s);
+        });
+        Object.keys(_stripeGroups).forEach(function (t) {
+          var items = _stripeGroups[t];
+          var sets  = Math.floor(items.length / 3);
+          var loose = items.length % 3;
+          if (sets > 0) lineItems.push({ name: 'Set de Decants 10 ml ×3', price: setForType(t), qty: sets });
+          items.slice(sets * 3).forEach(function (s) {
+            lineItems.push({ name: s.name + ' · Decant 10 ml', price: priceForType(t), qty: 1 });
           });
-          // Fallback: if grouping doesn't align, just add loose decants
-          if (lineItems.length === sets) {
-            lineItems.push({ name: 'Decant 10 ml', price: DECANT_PRICE, qty: loose });
+          if (loose > 0 && items.slice(sets * 3).length === 0) {
+            lineItems.push({ name: 'Decant 10 ml', price: priceForType(t), qty: loose });
           }
-        }
+        });
       }
 
       state.bottles.forEach(function (b) {

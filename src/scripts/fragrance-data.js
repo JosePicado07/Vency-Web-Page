@@ -653,7 +653,7 @@
         var raw  = localStorage.getItem(this.KEY);
         var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
         if (fmt === 'decant') {
-          cart.selection.push({ id: frag.id, name: frag.name });
+          cart.selection.push({ id: frag.id, name: frag.name, type: frag.cat || 'vency' });
         } else {
           var found = null;
           for (var i = 0; i < cart.bottles.length; i++) {

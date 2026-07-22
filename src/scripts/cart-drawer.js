@@ -85,22 +85,35 @@
       return;
     }
 
-    var DECANT_PRICE = 5000;
-    var SET_PRICE    = 12000;
+    var _PP = window.VENCY_PRICES || {};
+    function _priceForType(t) { return (_PP.decant && _PP.decant[t]) || (_PP.decant && _PP.decant.vency) || 6000; }
+    function _setForType(t)   { return (_PP.set3   && _PP.set3[t])   || (_PP.set3   && _PP.set3.vency)   || 14900; }
+    function _savingsForType(t) { return 3 * _priceForType(t) - _setForType(t); }
+
     var itemsHtml = '';
     var total = 0;
 
     var cmap = getCatalogMap();
 
+    // Group decants by type for correct set pricing
+    var _dGroups = {};
+    selection.forEach(function (s) { var t = s.type || 'vency'; _dGroups[t] = (_dGroups[t] || 0) + 1; });
+    var _dKeys = Object.keys(_dGroups);
     var decantCount = selection.length;
     var _drem = decantCount % 3, _dsets = Math.floor(decantCount / 3);
-    total += _dsets * SET_PRICE + _drem * DECANT_PRICE;
+    var _dSingleType = _dKeys.length === 1;
+    var _dSavings = 0;
+    _dKeys.forEach(function (t) {
+      var n = _dGroups[t];
+      total += Math.floor(n / 3) * _setForType(t) + (n % 3) * _priceForType(t);
+      _dSavings += Math.floor(n / 3) * _savingsForType(t);
+    });
 
     if (decantCount > 0) {
       var isComplete = _drem === 0;
       var nudge = isComplete
-        ? (_dsets > 1 ? _dsets + ' sets completos' : 'Set completo') + ' · ahorrás ₡' + formatPrice(_dsets * 3000)
-        : 'Añadí ' + (3 - _drem) + ' más y armá ' + (_dsets > 0 ? 'otro' : 'el') + ' set por ₡12.000';
+        ? (_dsets > 1 ? _dsets + ' sets completos' : 'Set completo') + ' · ahorrás ₡' + formatPrice(_dSavings)
+        : 'Añadí ' + (3 - _drem) + ' más y armá ' + (_dsets > 0 ? 'otro' : 'el') + ' set' + (_dSingleType ? ' por ₡' + formatPrice(_setForType(_dKeys[0])) : '');
       itemsHtml += '<p class="cart-drawer__bundle-badge' + (isComplete ? ' cart-drawer__bundle-badge--complete' : '') + '">' + nudge + '</p>';
     }
 
@@ -108,18 +121,19 @@
       var frag = cmap[s.id];
       var name = frag ? frag.name : s.id;
       var img  = frag ? frag.image : '';
+      var itemPrice = _priceForType(s.type || 'vency');
       itemsHtml +=
         '<div class="cart-item">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
             '<div class="cart-item__name">' + escHtml(name) + '</div>' +
             '<div class="cart-item__variant">Decant · 10 ml</div>' +
-            '<div class="cart-item__qty">₡' + formatPrice(DECANT_PRICE) + '</div>' +
+            '<div class="cart-item__qty">₡' + formatPrice(itemPrice) + '</div>' +
             '<button class="cart-item__remove js-cart-remove" type="button"' +
               ' data-remove-type="decant" data-remove-id="' + escHtml(s.id) + '"' +
               ' aria-label="Quitar ' + escHtml(name) + '">Quitar</button>' +
           '</div>' +
-          '<div class="cart-item__price">₡' + formatPrice(DECANT_PRICE) + '</div>' +
+          '<div class="cart-item__price">₡' + formatPrice(itemPrice) + '</div>' +
         '</div>';
     });
 
@@ -211,7 +225,7 @@
     upsell.innerHTML =
       '<div class="cart-drawer__upsell-head">' +
         '<div class="cart-drawer__upsell-label">Completa con</div>' +
-        '<div class="cart-drawer__upsell-meta">Decant 10 ml · ₡5.000 c/u</div>' +
+        '<div class="cart-drawer__upsell-meta">Decant 10 ml · ₡6.000 c/u</div>' +
       '</div>' +
       '<div class="cart-drawer__upsell-wrap">' +
         '<button class="cart-upsell-arrow cart-upsell-arrow--prev" type="button" aria-label="Anterior">' + arrowSvg + '</button>' +
@@ -249,7 +263,7 @@
     try {
       var raw = localStorage.getItem('vency_cart_v1');
       var cart = raw ? JSON.parse(raw) : { selection: [], bottles: [], ref: null, pending: null };
-      cart.selection.push({ id: id, name: name });
+      cart.selection.push({ id: id, name: name, type: 'vency' });
       localStorage.setItem('vency_cart_v1', JSON.stringify(cart));
       window.dispatchEvent(new CustomEvent('vency-cart-update'));
       renderCart();
@@ -314,8 +328,13 @@
     var selection = (cart && cart.selection) || [];
     var bottles   = (cart && cart.bottles) || [];
     var n = selection.length + bottles.reduce(function (s, b) { return s + (b.qty || 1); }, 0);
-    var SET_PRICE = 12000; var DECANT_PRICE = 5000;
-    var decTotal = selection.length === 3 ? SET_PRICE : selection.length * DECANT_PRICE;
+    var _mPP = window.VENCY_PRICES || {};
+    function _mPrice(t) { return (_mPP.decant && _mPP.decant[t]) || (_mPP.decant && _mPP.decant.vency) || 6000; }
+    function _mSet(t)   { return (_mPP.set3   && _mPP.set3[t])   || (_mPP.set3   && _mPP.set3.vency)   || 14900; }
+    var _mGroups = {};
+    selection.forEach(function (s) { var t = s.type||'vency'; _mGroups[t]=(_mGroups[t]||0)+1; });
+    var decTotal = 0;
+    Object.keys(_mGroups).forEach(function (t) { var n=_mGroups[t]; decTotal += Math.floor(n/3)*_mSet(t) + (n%3)*_mPrice(t); });
     var botTotal = bottles.reduce(function (s, b) { return s + (b.price || 0) * (b.qty || 1); }, 0);
     var total = decTotal + botTotal;
     miniTray.classList.toggle('cart-mini-tray--visible', n > 0);
