@@ -288,23 +288,16 @@
       '</div>';
   }
 
-  /* ── Vency compact section (originals + icon series) ── */
-  function buildVencySection() {
-    var container = document.getElementById('vency-compact-entries');
-    if (!container) return;
-    var vencyCatalog = window.VENCY_CATALOG || [];
-    if (!vencyCatalog.length) return;
+  /* ── Shared vency-entry builder ─────────────────────── */
+  function buildVencyEntries(container, fragrances) {
+    if (!container || !fragrances.length) return;
 
-    // Load current inventory from localStorage (synced by admin).
-    // ponytail: empty = "no data" = assume in-stock; admin sync is the only authority for sold-out.
     var inventoryStr = localStorage.getItem('vency_inventory');
     var inventory = inventoryStr ? JSON.parse(inventoryStr) : null;
     var hasInventory = inventory && Object.keys(inventory).length > 0;
 
-    /* Same row template as the designer/nicho catalog (.cat-entry),
-       with a small badge to mark Vency originals vs Icon Series. */
     var html = '<ul class="cat-brand__list">';
-    vencyCatalog.forEach(function (frag) {
+    fragrances.forEach(function (frag) {
       var isIcon    = frag.category === 'icon-series';
       var badgeText = isIcon ? 'ICON' : 'VENCY';
       var badgeClass = isIcon ? 'cat-badge--icon' : 'cat-badge--original';
@@ -381,6 +374,14 @@
     });
   }
 
+  function buildVencySection() {
+    var vencyCatalog = window.VENCY_CATALOG || [];
+    buildVencyEntries(
+      document.getElementById('vency-compact-entries'),
+      vencyCatalog.filter(function (f) { return f.category !== 'icon-series'; })
+    );
+  }
+
   /* ── Build DOM ───────────────────────────────────────── */
   var SECTIONS = [
     { cat: 'disenador',   el: 'disenador',   title: 'Diseñador',   desc: 'Grandes casas de diseño · interpretaciones propias' },
@@ -408,12 +409,28 @@
           && (!inv[bk100]|| !inv[bk100].oil_ml);
     }
 
+    var iconSeries = (window.VENCY_CATALOG || []).filter(function (f) { return f.category === 'icon-series'; });
+
     SECTIONS.forEach(function (sec) {
       var brands = {};
       catalog.forEach(function (item) {
         if (item.cat !== sec.cat) return;
         if (!brands[item.brand]) brands[item.brand] = [];
         brands[item.brand].push(item);
+      });
+
+      /* Merge icon-series entries into their inspiration brand group */
+      iconSeries.forEach(function (frag) {
+        if (frag.cat !== sec.cat) return;
+        var brandKey = frag.inspiration.brand.toUpperCase();
+        /* Try to match an existing brand group (catalog brands are uppercase) */
+        var existingKey = null;
+        Object.keys(brands).forEach(function (b) {
+          if (b.toUpperCase() === brandKey) existingKey = b;
+        });
+        var key = existingKey || frag.inspiration.brand;
+        if (!brands[key]) brands[key] = [];
+        brands[key].push({ _isIcon: true, _frag: frag });
       });
 
       var brandNames = Object.keys(brands);
@@ -447,12 +464,62 @@
 
         brands[brand].forEach(function (item, itemIdx) {
           var li = document.createElement('li');
+          var isInv = sec.cat === 'ultra-nicho';
+
+          /* ── Icon-series entry ── */
+          if (item._isIcon) {
+            var frag = item._frag;
+            var fname = escHtml(frag.inspiration.name);
+            var thumbSrc = frag.image
+              ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
+              : 'assets/images/_webp/default-bottle-400.webp';
+            var historiaHref = 'coleccion.html#' + frag.id;
+            var notes = frag.noteLabels.join(' · ');
+
+            if (_unavailable.has(frag.id)) return;
+
+            li.className = 'cat-entry cat-entry--icon';
+            li.dataset.cat    = sec.cat;
+            li.dataset.gender = frag.gender || 'unisex';
+            li.dataset.fragranceId   = frag.id;
+            li.dataset.fragranceName = frag.inspiration.name;
+            li.dataset.fragranceCat  = 'vency';
+            li.dataset.fragranceVencyCat = 'icon-series';
+            li.dataset.fragranceImg  = frag.image || 'assets/images/default-bottle.jpg';
+            li.dataset.fragranceHref = historiaHref;
+            li.dataset.fragranceInspo = escHtml(frag.inspiration.brand);
+            li.dataset.fragranceNotes = notes;
+            li.dataset.search = (frag.inspiration.name + ' ' + frag.name + ' ' + frag.inspiration.brand + ' ' + frag.notes.join(' ')).toLowerCase();
+            li.dataset.ocasion = frag.ocasion.join(' ');
+
+            var railHtmlIcon = buildRail(fname, fname, false, 'vency');
+            li.innerHTML =
+              '<button class="cat-entry__card cat-entry__see" type="button"' +
+                ' aria-haspopup="dialog" aria-label="Ver ficha de ' + fname + '">' +
+                '<span class="cat-entry__img-wrap">' +
+                  '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
+                    ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
+                  '<span class="cat-entry__img-badge">INSPIRACIÓN ELEVADA</span>' +
+                '</span>' +
+                '<span class="cat-entry__info">' +
+                  '<span class="cat-entry__provenance">ICON SERIES</span>' +
+                  '<span class="cat-entry__name">' + fname + '</span>' +
+                  '<span class="cat-entry__inspo">' + escHtml(frag.inspiration.brand) + '</span>' +
+                '</span>' +
+              '</button>' +
+              railHtmlIcon;
+
+            li.style.setProperty('--entry-delay', (Math.min(itemIdx, 8) * 45) + 'ms');
+            list.appendChild(li);
+            return;
+          }
+
+          /* ── Regular catalog entry ── */
           li.className = 'cat-entry';
           li.dataset.cat    = item.cat;
           li.dataset.gender = item.gender;
 
           var interp = item.vencyInterpretation;
-          var isInv = sec.cat === 'ultra-nicho';
           var genderLabel = {mujer:'Mujer',hombre:'Hombre',unisex:'Unisex'}[item.gender] || item.gender;
 
           var displayName  = interp ? interp.name : item.name;
@@ -461,36 +528,23 @@
           li.dataset.fragranceId   = interp ? interp.id : slug(item.brand + '-' + item.name);
           li.dataset.fragranceName = interp ? interp.name : item.brand + ' · ' + item.name;
           li.dataset.fragranceCat  = sec.cat;
+          var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
           if (historiaHref) li.dataset.fragranceHref = historiaHref;
           li.dataset.fragranceInspo = escHtml(item.name) + ' · ' + escHtml(item.brand);
           var rawNotes = item.notes || '';
           var dotIdx   = rawNotes.indexOf('. ');
           li.dataset.fragranceNotes  = dotIdx !== -1 ? rawNotes.slice(0, dotIdx) : rawNotes;
           li.dataset.fragrancePhrase = dotIdx !== -1 ? rawNotes.slice(dotIdx + 2) : '';
-          /* Modal opens with the original fragrance photo; format swap takes over on option select. */
           li.dataset.fragranceImg = item.image || 'assets/images/default-bottle.jpg';
-          /* Card thumbnail: use item.image when provided (original bottle photo), else default. */
           var extThumbSrc = item.image
             || (interp
               ? 'assets/images/inspirations/_webp/' + interp.id + '-400.webp'
               : 'assets/images/_webp/default-bottle-400.webp');
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
-          var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
-
-          var notesHtml = item.notes
-            ? '<p class="cat-entry__notes"><span class="sr-only">' + escHtml(genderLabel) + ' — </span>' + escHtml(item.notes) + '</p>'
-            : '';
-
-          var inspoHtml = interp
-            ? '<p class="cat-entry__inspo">' + escHtml(item.name) + ' · ' + escHtml(item.brand) + '</p>'
-            : '';
 
           if (!!item.soldOut || isItemSoldOut(li.dataset.fragranceId)) return;
           var railHtml = buildRail(fragranceName, escHtml(item.name), isInv, sec.cat);
 
-          // Card layout: image + name + provenance. Click anywhere on the card
-          // opens the detail panel where notes/history/buy live. Match the
-          // admin Vender section's image-led card grid.
           li.innerHTML =
             '<button class="cat-entry__card cat-entry__see" type="button"' +
               ' aria-haspopup="dialog" aria-label="Ver ficha de ' + escHtml(displayName) + '">' +
@@ -509,7 +563,6 @@
             '</button>' +
             railHtml;
 
-          // Cap cascade at 8 entries — past that, the wait feels like lag not stagger.
           li.style.setProperty('--entry-delay', (Math.min(itemIdx, 8) * 45) + 'ms');
           list.appendChild(li);
         });
@@ -567,13 +620,12 @@
     /* === Vency originals === */
     var vencySection = sections.length ? document.querySelector('.cat-section--vency') : null;
     var vencyVisible = 0;
-    (document.querySelectorAll('.cat-entry--vency[data-search]') || []).forEach(function (entry) {
+    (document.querySelectorAll('#vency-compact-entries .cat-entry--vency[data-search]') || []).forEach(function (entry) {
       var catMatch     = (filters.cat === 'todos' || filters.cat === 'vency');
-      var vencyMatch   = (filters.vencyCat === 'todos' || entry.dataset.fragranceVencyCat === filters.vencyCat);
       var qMatch       = !filters.q || entry.dataset.search.indexOf(filters.q) !== -1;
       var ocasionMatch = (filters.ocasion === 'todos' ||
         (entry.dataset.ocasion && entry.dataset.ocasion.indexOf(filters.ocasion) !== -1));
-      var show = catMatch && vencyMatch && qMatch && ocasionMatch;
+      var show = catMatch && qMatch && ocasionMatch;
       entry.style.display = show ? '' : 'none';
       if (show) vencyVisible++;
     });

@@ -54,7 +54,7 @@
     {
       id: 'absolu-authority',
       name: 'Absolu Authority',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['pina', 'pomelo', 'especias', 'maderas'],
       noteLabels: ['Piña', 'Pomelo', 'Especias', 'Maderas'],
       ocasion: ['noche', 'formal'],
@@ -68,7 +68,7 @@
     {
       id: 'after-effect',
       name: 'After Effect',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['ron', 'tabaco', 'canela', 'vainilla'],
       noteLabels: ['Ron', 'Tabaco', 'Canela', 'Vainilla'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -82,7 +82,7 @@
     {
       id: 'apple-whisper',
       name: 'Apple Whisper',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['manzana', 'vainilla', 'cardamomo', 'maderas'],
       noteLabels: ['Manzana', 'Vainilla', 'Cardamomo', 'Maderas'],
       ocasion: ['diario', 'fin-de-semana'],
@@ -96,7 +96,7 @@
     {
       id: 'aurum-mirage',
       name: 'Aurum Mirage',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['pina', 'rosa', 'vainilla', 'almizcle'],
       noteLabels: ['Piña', 'Rosa', 'Vainilla', 'Almizcle'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -110,7 +110,7 @@
     {
       id: 'cherry-desire',
       name: 'Cherry Desire',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['cereza-negra', 'rosa', 'azafran', 'ambar'],
       noteLabels: ['Cereza negra', 'Rosa', 'Azafrán', 'Ámbar'],
       ocasion: ['noche', 'formal'],
@@ -124,7 +124,7 @@
     {
       id: 'citrus-melody',
       name: 'Citrus Melody',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['citricos', 'jengibre', 'almizcle', 'maderas'],
       noteLabels: ['Cítricos brillantes', 'Jengibre', 'Almizcle', 'Maderas'],
       ocasion: ['diario', 'verano'],
@@ -138,7 +138,7 @@
     {
       id: 'citrus-nirvana',
       name: 'Citrus Nirvana',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['toronja', 'limon', 'vetiver', 'ambar-gris'],
       noteLabels: ['Toronja', 'Limón', 'Vetiver', 'Ámbar gris'],
       ocasion: ['diario', 'verano'],
@@ -152,7 +152,7 @@
     {
       id: 'crush-effect',
       name: 'Crush Effect',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['azafran', 'vainilla', 'ambar', 'jazmin'],
       noteLabels: ['Azafrán', 'Vainilla', 'Ámbar', 'Jazmín'],
       ocasion: ['noche', 'formal'],
@@ -166,7 +166,7 @@
     {
       id: 'dark-sinner',
       name: 'Dark Sinner',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['cuero', 'incienso', 'vetiver', 'ambar'],
       noteLabels: ['Cuero', 'Incienso', 'Vetiver', 'Ámbar'],
       ocasion: ['noche', 'formal'],
@@ -180,7 +180,7 @@
     {
       id: 'dream-trap',
       name: 'Dream Trap',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['lichi', 'rosa', 'cacao', 'pachuli'],
       noteLabels: ['Lichi', 'Rosa', 'Cacao', 'Pachulí'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -194,7 +194,7 @@
     {
       id: 'endless-horizon',
       name: 'Endless Horizon',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['jengibre', 'toronja', 'ambar-gris', 'maderas'],
       noteLabels: ['Jengibre', 'Toronja', 'Ámbar gris', 'Maderas'],
       ocasion: ['diario', 'formal'],
@@ -208,7 +208,7 @@
     {
       id: 'exotic-contrast',
       name: 'Exotic Contrast',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['maracuya', 'oud', 'rosa', 'cuero'],
       noteLabels: ['Maracuyá', 'Oud', 'Rosa', 'Cuero'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -222,7 +222,7 @@
     {
       id: 'fireside-memory',
       name: 'Fireside Memory',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['castana', 'vainilla', 'humo', 'madera'],
       noteLabels: ['Castaña', 'Vainilla', 'Humo', 'Madera'],
       ocasion: ['noche', 'invierno'],
@@ -236,7 +236,7 @@
     {
       id: 'fresh-coast',
       name: 'Fresh Coast',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['limon', 'menta', 'frutas', 'almizcle'],
       noteLabels: ['Limón', 'Menta', 'Frutas', 'Almizcle'],
       ocasion: ['diario', 'verano'],
@@ -250,7 +250,7 @@
     {
       id: 'fresh-signature',
       name: 'Fresh Signature',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'disenador', gender: 'hombre',
       notes: ['pomelo', 'jengibre', 'incienso', 'sandalo'],
       noteLabels: ['Pomelo', 'Jengibre', 'Incienso', 'Sándalo'],
       ocasion: ['diario', 'formal'],
@@ -264,7 +264,7 @@
     {
       id: 'golden-citrine',
       name: 'Golden Citrine',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['mango', 'jengibre', 'limon', 'maderas'],
       noteLabels: ['Mango', 'Jengibre', 'Limón', 'Maderas'],
       ocasion: ['diario', 'verano'],
@@ -278,7 +278,7 @@
     {
       id: 'golden-heritage',
       name: 'Golden Heritage',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['miel', 'tabaco', 'lavanda', 'vainilla'],
       noteLabels: ['Miel', 'Tabaco', 'Lavanda', 'Vainilla'],
       ocasion: ['noche', 'formal'],
@@ -292,7 +292,7 @@
     {
       id: 'green-profile',
       name: 'Green Profile',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['hierba-verde', 'iris', 'sandalo', 'violeta'],
       noteLabels: ['Hierba verde', 'Iris', 'Sándalo', 'Violeta'],
       ocasion: ['formal', 'diario'],
@@ -306,7 +306,7 @@
     {
       id: 'inner-wild',
       name: 'Inner Wild',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['tabaco', 'especias', 'maderas', 'resinas'],
       noteLabels: ['Tabaco', 'Especias', 'Maderas', 'Resinas'],
       ocasion: ['noche', 'formal'],
@@ -320,7 +320,7 @@
     {
       id: 'jagger-index',
       name: 'Jagger Index',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['tabaco', 'manzana', 'vainilla', 'canela'],
       noteLabels: ['Tabaco', 'Manzana', 'Vainilla', 'Canela'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -334,7 +334,7 @@
     {
       id: 'last-light',
       name: 'Last Light',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['vainilla', 'benjui', 'ambar', 'haba-tonka'],
       noteLabels: ['Vainilla', 'Benjuí', 'Ámbar', 'Haba tonka'],
       ocasion: ['noche', 'formal'],
@@ -348,7 +348,7 @@
     {
       id: 'luminous-dream',
       name: 'Luminous Dream',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['te-negro', 'citricos', 'jengibre', 'ambrox'],
       noteLabels: ['Té negro', 'Cítricos', 'Jengibre', 'Ambrox'],
       ocasion: ['diario', 'formal'],
@@ -362,7 +362,7 @@
     {
       id: 'midnight-coffee',
       name: 'Midnight Coffee',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['cafe', 'vainilla', 'rosa', 'sandalo'],
       noteLabels: ['Café', 'Vainilla', 'Rosa', 'Sándalo'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -376,7 +376,7 @@
     {
       id: 'neutral-state',
       name: 'Neutral State',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['lavanda', 'vetiver', 'sandalo', 'almizcle'],
       noteLabels: ['Lavanda', 'Vetiver', 'Sándalo', 'Almizcle'],
       ocasion: ['diario', 'formal'],
@@ -390,7 +390,7 @@
     {
       id: 'night-light',
       name: 'Night Light',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['ron', 'tabaco', 'vainilla', 'cuero'],
       noteLabels: ['Ron', 'Tabaco', 'Vainilla', 'Cuero'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -404,7 +404,7 @@
     {
       id: 'nomad-ritual',
       name: 'Nomad Ritual',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['oud', 'rosa', 'incienso', 'frambuesa'],
       noteLabels: ['Oud', 'Rosa', 'Incienso', 'Frambuesa'],
       ocasion: ['noche', 'formal'],
@@ -418,7 +418,7 @@
     {
       id: 'phantom-ratio',
       name: 'Phantom Ratio',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['ron', 'cafe', 'chocolate-negro', 'caramelo'],
       noteLabels: ['Ron', 'Café', 'Chocolate negro', 'Caramelo'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -432,7 +432,7 @@
     {
       id: 'prime-authority',
       name: 'Prime Authority',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['pina', 'bergamota', 'abedul', 'almizcle'],
       noteLabels: ['Piña', 'Bergamota', 'Abedul ahumado', 'Almizcle'],
       ocasion: ['formal', 'diario'],
@@ -446,7 +446,7 @@
     {
       id: 'private-reserve',
       name: 'Private Reserve',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['ruibarbo', 'cardamomo', 'iris', 'cedro'],
       noteLabels: ['Ruibarbo', 'Cardamomo', 'Iris', 'Cedro'],
       ocasion: ['formal', 'diario'],
@@ -460,7 +460,7 @@
     {
       id: 'queen-essence',
       name: 'Queen Essence',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['osmanthus', 'vainilla', 'azafran', 'almizcle'],
       noteLabels: ['Osmanthus', 'Vainilla', 'Azafrán', 'Almizcle'],
       ocasion: ['noche', 'formal'],
@@ -474,7 +474,7 @@
     {
       id: 'rose-desire',
       name: 'Rose Desire',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['lichi', 'rosa-turca', 'peonia', 'vainilla'],
       noteLabels: ['Lichi', 'Rosa turca', 'Peonía', 'Vainilla'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -488,7 +488,7 @@
     {
       id: 'rouge-elixir',
       name: 'Rouge Elixir',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['azafran', 'jazmin', 'ambar-gris', 'cedro'],
       noteLabels: ['Azafrán', 'Jazmín', 'Ámbar gris', 'Cedro'],
       ocasion: ['noche', 'formal'],
@@ -502,7 +502,7 @@
     {
       id: 'sacred-oud',
       name: 'Sacred Oud',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['oud', 'azafran', 'lavanda', 'almizcle'],
       noteLabels: ['Oud', 'Azafrán', 'Lavanda', 'Almizcle'],
       ocasion: ['noche', 'formal'],
@@ -516,7 +516,7 @@
     {
       id: 'santal-code',
       name: 'Santal Code',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['sandalo', 'cedro', 'cardamomo', 'cuero'],
       noteLabels: ['Sándalo', 'Cedro', 'Cardamomo', 'Cuero'],
       ocasion: ['diario', 'formal'],
@@ -530,7 +530,7 @@
     {
       id: 'santal-embrace',
       name: 'Santal Embrace',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'disenador', gender: 'mujer',
       notes: ['rosa', 'sandalo', 'especias', 'almizcle'],
       noteLabels: ['Rosa', 'Sándalo', 'Especias suaves', 'Almizcle'],
       ocasion: ['diario', 'formal'],
@@ -544,7 +544,7 @@
     {
       id: 'shadow-leather',
       name: 'Shadow Leather',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['cuero', 'cardamomo', 'palo-rosa', 'pachuli'],
       noteLabels: ['Cuero', 'Cardamomo', 'Palo rosa', 'Pachulí'],
       ocasion: ['noche', 'formal'],
@@ -558,7 +558,7 @@
     {
       id: 'silver-veil',
       name: 'Silver Veil',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'hombre',
       notes: ['almendra', 'vainilla', 'heliotropo', 'sandalo'],
       noteLabels: ['Almendra amarga', 'Vainilla', 'Heliotropo', 'Sándalo'],
       ocasion: ['diario', 'formal'],
@@ -572,7 +572,7 @@
     {
       id: 'smoky-mandarin',
       name: 'Smoky Mandarin',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'unisex',
       notes: ['mandarina', 'tabaco', 'cuero', 'maderas'],
       noteLabels: ['Mandarina', 'Tabaco', 'Cuero', 'Maderas'],
       ocasion: ['noche', 'fin-de-semana'],
@@ -586,7 +586,7 @@
     {
       id: 'vanille-skin',
       name: 'Vanille Skin',
-      category: 'icon-series',
+      category: 'icon-series', cat: 'nicho', gender: 'mujer',
       notes: ['vainilla', 'coco', 'almizcle-blanco', 'iris'],
       noteLabels: ['Vainilla', 'Coco', 'Almizcle blanco', 'Iris'],
       ocasion: ['diario', 'fin-de-semana'],
