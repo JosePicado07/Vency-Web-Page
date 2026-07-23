@@ -61,11 +61,7 @@
   opacity: 0.75;
 }
 
-/* Active nav state — current page */
-.nav__link--active {
-  color: var(--volcanic-ink);
-  font-weight: 600;
-}
+/* Active nav state — deferring to styles.css for full treatment */
 
 /* ============================================================
    BOLDER PASS — Ordenar button wider padding site-wide

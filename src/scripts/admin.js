@@ -336,7 +336,17 @@
         image: img
       };
     });
-    catalog = vency.concat(ext);
+    var kv = _kvCatalogEntries.map(function (e) {
+      return {
+        _type: 'decant',
+        id: e.id,
+        name: e.name,
+        brand: e.brand || '',
+        cat: e.cat || 'disenador',
+        image: e.imageId ? '/api/catalog-image/' + e.imageId : 'assets/images/_webp/default-bottle-400.webp'
+      };
+    });
+    catalog = vency.concat(ext).concat(kv);
   }
 
   function invKey(frag, fmt) {
@@ -1522,27 +1532,31 @@
 
         list.innerHTML = entries.map(function (e) {
           var isArchived = e.status === 'archived';
+          var avail = getAvail(e.id);
           var statusBadge = '<span class="sol-badge-status sol-badge-status--' + (isArchived ? 'archived' : 'approved') + '">'
             + (isArchived ? 'Archivada' : 'Activa') + '</span>';
           var imgHtml = e.imageId
             ? '<img class="sol-card__img" src="/api/catalog-image/' + e.imageId + '" alt="' + escHtml(e.brand + ' ' + e.name) + '" loading="lazy">'
-            : '';
-          return '<div class="sol-card" data-id="' + e.id + '">'
+            : '<div class="sol-card__img sol-card__img--placeholder"></div>';
+          return '<div class="sol-card' + (!avail ? ' sol-card--unavailable' : '') + '" data-id="' + e.id + '">'
             + imgHtml
             + '<div class="sol-card__body">'
             + '<div class="sol-card__head">'
             + '<span class="sol-card__brand">' + escHtml(e.brand) + '</span>'
-            + '<span class="sol-card__sep">–</span>'
+            + (e.brand && e.name ? '<span class="sol-card__sep">\xb7</span>' : '')
             + '<span class="sol-card__name">' + escHtml(e.name) + '</span>'
             + statusBadge
             + '</div>'
             + '<div class="sol-card__meta">'
             + '<span>' + escHtml(e.cat || '') + '</span>'
-            + '<span>' + escHtml(e.gender || '') + '</span>'
+            + (e.gender ? '<span>' + escHtml(e.gender) + '</span>' : '')
             + '</div>'
             + (e.notes ? '<p class="sol-card__notes">' + escHtml(e.notes) + '</p>' : '')
             + '</div>'
             + '<div class="sol-card__actions">'
+            + '<button class="sol-avail-btn js-sol-avail" data-id="' + e.id + '" aria-pressed="' + avail + '" type="button">'
+            + (avail ? 'Disponible' : 'No disponible')
+            + '</button>'
             + (isArchived
                 ? '<button class="sol-btn sol-btn--restore js-sol-action" data-id="' + e.id + '" data-action="restore" type="button">Restaurar</button>'
                 : '<button class="sol-btn sol-btn--archive js-sol-action" data-id="' + e.id + '" data-action="archive" type="button">Archivar</button>'
@@ -1551,6 +1565,23 @@
             + '</div>'
             + '</div>';
         }).join('');
+
+        list.querySelectorAll('.js-sol-avail').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.dataset.id;
+            var newVal = !getAvail(id);
+            setAvail(id, newVal);
+            btn.setAttribute('aria-pressed', String(newVal));
+            btn.textContent = newVal ? 'Disponible' : 'No disponible';
+            var card = btn.closest('.sol-card');
+            if (card) card.classList.toggle('sol-card--unavailable', !newVal);
+            fetch('/api/availability', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ id: id, available: newVal })
+            }).catch(function () {});
+          });
+        });
 
         list.querySelectorAll('.js-sol-action').forEach(function (btn) {
           btn.addEventListener('click', function () {
@@ -1562,6 +1593,14 @@
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ id: btn.dataset.id, action: action, tok: token }),
             })
+              .then(function () {
+                return fetch('/api/catalog-request').then(function (r) { return r.json(); }).then(function (entries) {
+                  _kvCatalogEntries = Array.isArray(entries) ? entries : [];
+                  buildCatalog();
+                  renderFragList(searchInput ? searchInput.value : '');
+                  renderInvList(searchInput ? searchInput.value : '');
+                }).catch(function () {});
+              })
               .then(function () { loadSolicitudes(); })
               .catch(function () { btn.disabled = false; showToast('Error. Intentá de nuevo.'); });
           });
@@ -1628,9 +1667,19 @@
 
             form.reset();
             preview.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para elegir una imagen</span>';
-            statusEl.textContent = '¡Fragancia agregada! Ya aparece en el catálogo.';
-            statusEl.style.color = '#6ec87e';
+            statusEl.textContent = '\xa1Fragancia agregada! Ya aparece en el cat\xe1logo.';
+            statusEl.style.color = 'oklch(73% .12 145)';
             statusEl.hidden = false;
+            // Refresh KV entries so Vender/Inventario tabs include the new fragrance
+            fetch('/api/catalog-request')
+              .then(function (r) { return r.json(); })
+              .then(function (entries) {
+                _kvCatalogEntries = Array.isArray(entries) ? entries : [];
+                buildCatalog();
+                renderFragList(searchInput ? searchInput.value : '');
+                renderInvList(searchInput ? searchInput.value : '');
+              })
+              .catch(function () {});
             loadSolicitudes();
           } else {
             statusEl.textContent = 'Error al guardar. Intentá de nuevo.';
@@ -1653,11 +1702,16 @@
   setupAddFragForm();
 
   /* ── Init ── */
-  (function init() {
-    buildCatalog();
-    var saved = getToken();
-    if (saved) showApp(saved);
-    else       showGate();
-  })();
+  var _kvCatalogEntries = [];
+  fetch('/api/catalog-request')
+    .then(function (r) { return r.json(); })
+    .then(function (entries) { _kvCatalogEntries = Array.isArray(entries) ? entries : []; })
+    .catch(function () {})
+    .then(function () {
+      buildCatalog();
+      var saved = getToken();
+      if (saved) showApp(saved);
+      else       showGate();
+    });
 
 })();

@@ -369,6 +369,21 @@ a {
   outline: 2px solid var(--warm-ochre);
   outline-offset: 2px;
 }
+.nav__link--active {
+  color: var(--volcanic-ink);
+  font-weight: 700;
+  position: relative;
+}
+.nav__link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: var(--warm-ochre);
+  border-radius: 1px;
+}
 
 /* Cart link with count badge — only shown when cart has items.
    .nav__link sets display:inline-flex with class-level specificity,

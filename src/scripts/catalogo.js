@@ -3,6 +3,7 @@
 
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var _unavailable = new Set();
+  var _kvEntries = [];
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos', vencyCat: 'todos' };
 
   // Parse ?category=X from URL and apply initial filter
@@ -433,6 +434,19 @@
         brands[key].push({ _isIcon: true, _frag: frag });
       });
 
+      /* Merge KV-added entries (admin-added via Catálogo tab) */
+      _kvEntries.forEach(function (entry) {
+        if (entry.cat !== sec.cat) return;
+        var brandKey = (entry.brand || '').toUpperCase();
+        var existingKey = null;
+        Object.keys(brands).forEach(function (b) {
+          if (b.toUpperCase() === brandKey) existingKey = b;
+        });
+        var key = existingKey || (entry.brand || '');
+        if (!brands[key]) brands[key] = [];
+        brands[key].push({ _isKV: true, _entry: entry });
+      });
+
       var brandNames = Object.keys(brands);
       if (!brandNames.length) return;
 
@@ -465,6 +479,51 @@
         brands[brand].forEach(function (item, itemIdx) {
           var li = document.createElement('li');
           var isInv = sec.cat === 'ultra-nicho';
+
+          /* ── KV-added entry (admin Catálogo tab) ── */
+          if (item._isKV) {
+            var kv = item._entry;
+            if (_unavailable.has(kv.id)) return;
+            var kvImg = kv.imageId
+              ? '/api/catalog-image/' + kv.imageId
+              : 'assets/images/_webp/default-bottle-400.webp';
+            var kvName   = escHtml(kv.name);
+            var kvBrand  = escHtml(kv.brand || '');
+            var kvFullName = kvBrand ? kvBrand + ' \xb7 ' + kvName : kvName;
+            var kvNotes  = (kv.notes || '').replace(/\s*,\s*/g, ' · ');
+
+            li.className = 'cat-entry';
+            li.dataset.cat           = kv.cat;
+            li.dataset.gender        = kv.gender || 'unisex';
+            li.dataset.fragranceId   = kv.id;
+            li.dataset.fragranceName = kvBrand ? kv.brand + ' · ' + kv.name : kv.name;
+            li.dataset.fragranceCat  = kv.cat;
+            li.dataset.fragranceImg  = kv.imageId ? '/api/catalog-image/' + kv.imageId : 'assets/images/default-bottle.jpg';
+            li.dataset.fragranceNotes = kvNotes;
+            li.dataset.fragranceInspo = kvBrand ? kvBrand + ' · ' + kvName : kvName;
+            li.dataset.search = (kv.name + ' ' + (kv.brand || '') + ' ' + (kv.notes || '')).toLowerCase();
+            li.dataset.ocasion = '';
+
+            var kvRail = buildRail(kvFullName, kvName, isInv, sec.cat);
+            li.innerHTML =
+              '<button class="cat-entry__card cat-entry__see" type="button"' +
+                ' aria-haspopup="dialog" aria-label="Ver ficha de ' + kvName + '">' +
+                '<span class="cat-entry__img-wrap">' +
+                  '<img class="cat-entry__img" src="' + kvImg + '" alt="' + kvName + '" loading="lazy"' +
+                    ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
+                '</span>' +
+                '<span class="cat-entry__info">' +
+                  '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
+                  '<span class="cat-entry__name">' + kvName + '</span>' +
+                  (kv.brand ? '<span class="cat-entry__inspo">' + kvBrand + '</span>' : '') +
+                '</span>' +
+              '</button>' +
+              kvRail;
+
+            li.style.setProperty('--entry-delay', (Math.min(itemIdx, 8) * 45) + 'ms');
+            list.appendChild(li);
+            return;
+          }
 
           /* ── Icon-series entry ── */
           if (item._isIcon) {
@@ -759,11 +818,14 @@
     render();
   };
 
-  fetch('/api/availability')
-    .then(function (r) { return r.json(); })
-    .then(function (d) { _unavailable = new Set(d.unavailable || []); })
-    .catch(function () {})
-    .then(initCatalog);
+  Promise.all([
+    fetch('/api/availability').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+    fetch('/api/catalog-request').then(function (r) { return r.json(); }).catch(function () { return []; })
+  ]).then(function (results) {
+    _unavailable = new Set((results[0].unavailable) || []);
+    _kvEntries   = Array.isArray(results[1]) ? results[1] : [];
+    initCatalog();
+  });
 
   // Wire card clicks → open the format modal. (Was previously inside
   // wireFragPanel, which got stripped in the dead-code cleanup. The

@@ -17,103 +17,150 @@
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/admin.min.css?v=58">
   <style>
-    /* ── Admin catalog form (dark theme) ── */
+    /* ── Admin catalog / Catálogo tab ── */
     #js-mode-solicitudes { padding: 0; }
-    .sol-add-section, .sol-list-section {
+    .sol-add-section {
+      padding: 1.5rem 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .sol-list-section {
       padding: 1.25rem 1rem;
-      border-bottom: 1px solid rgba(255,255,255,.07);
     }
     .sol-add-title {
-      font-size: .75rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .07em; color: #8a9a8e; margin: 0 0 1rem;
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .1em; color: oklch(60% .04 160); margin: 0 0 1.1rem;
     }
-    .sol-add-form { display: flex; flex-direction: column; gap: .85rem; }
-    .sol-add-row  { display: flex; flex-direction: column; gap: .3rem; }
+    .sol-add-form { display: flex; flex-direction: column; gap: .9rem; }
+    .sol-add-row  { display: flex; flex-direction: column; gap: .32rem; }
     .sol-add-row--2col { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
-    .sol-add-field { display: flex; flex-direction: column; gap: .3rem; }
+    .sol-add-field { display: flex; flex-direction: column; gap: .32rem; }
     .sol-add-label {
-      font-size: .68rem; font-weight: 600; text-transform: uppercase;
-      letter-spacing: .06em; color: #7a8a84;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: oklch(58% .03 160);
     }
     .sol-add-input {
       width: 100%; box-sizing: border-box;
-      padding: .55rem .75rem;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 6px;
-      color: #e0d8cc; font-family: inherit; font-size: .9rem;
+      padding: .58rem .8rem;
+      background: oklch(100% 0 0 / .06);
+      border: 1.5px solid oklch(100% 0 0 / .12);
+      border-radius: 7px;
+      color: oklch(90% .015 80); font-family: inherit; font-size: .88rem;
+      transition: border-color .15s, background .15s;
     }
     .sol-add-input option { background: #1e2b25; }
-    .sol-add-input:focus { outline: none; border-color: rgba(184,115,46,.65); }
+    .sol-add-input:focus { outline: none; border-color: oklch(60% .14 65 / .7); background: oklch(100% 0 0 / .09); }
     .sol-add-textarea { resize: vertical; min-height: 4.5rem; }
 
     .sol-add-upload {
-      position: relative; border: 1.5px dashed rgba(255,255,255,.18);
-      border-radius: 8px; overflow: hidden; cursor: pointer;
-      min-height: 80px; display: flex; align-items: center; justify-content: center;
-      transition: border-color .15s;
+      position: relative;
+      border: 1.5px dashed oklch(100% 0 0 / .16);
+      border-radius: 9px; overflow: hidden; cursor: pointer;
+      min-height: 96px; display: flex; align-items: center; justify-content: center;
+      background: oklch(100% 0 0 / .02);
+      transition: border-color .15s, background .15s;
     }
-    .sol-add-upload:hover { border-color: rgba(184,115,46,.55); }
+    .sol-add-upload:hover { border-color: oklch(60% .14 65 / .5); background: oklch(100% 0 0 / .04); }
     .sol-add-upload__input {
       position: absolute; inset: 0; opacity: 0; cursor: pointer;
       width: 100%; height: 100%;
     }
     .sol-add-upload__preview {
       pointer-events: none; display: flex; flex-direction: column;
-      align-items: center; gap: .5rem; padding: 1rem; color: #6a7a74;
+      align-items: center; gap: .5rem; padding: 1.1rem; color: oklch(55% .02 160);
     }
-    .sol-add-upload__hint { font-size: .78rem; }
+    .sol-add-upload__hint { font-size: .76rem; }
 
     .sol-add-submit {
-      padding: .65rem 1rem;
-      background: rgba(184,115,46,.28); color: #e0a060;
-      border: 1px solid rgba(184,115,46,.38);
-      border-radius: 8px; font-size: .9rem; font-weight: 600;
-      cursor: pointer; transition: background .15s; width: 100%;
+      padding: .72rem 1rem;
+      background: oklch(44% .14 65 / .5);
+      color: oklch(88% .1 68);
+      border: 1.5px solid oklch(55% .16 65 / .55);
+      border-radius: 8px; font-size: .875rem; font-weight: 700; font-family: inherit;
+      letter-spacing: .025em;
+      cursor: pointer; transition: background .15s, border-color .15s; width: 100%;
     }
-    .sol-add-submit:hover:not(:disabled) { background: rgba(184,115,46,.48); }
-    .sol-add-submit:disabled { opacity: .5; cursor: default; }
-    .sol-add-status { font-size: .82rem; text-align: center; padding: .4rem 0; }
+    .sol-add-submit:hover:not(:disabled) { background: oklch(44% .14 65 / .72); border-color: oklch(55% .16 65 / .75); }
+    .sol-add-submit:disabled { opacity: .45; cursor: default; }
+    .sol-add-status { font-size: .82rem; text-align: center; padding: .45rem .5rem; border-radius: 7px; margin-top: -.2rem; }
 
     /* Entry cards */
     .sol-card {
-      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
-      border-radius: 8px; padding: .85rem; margin-bottom: .65rem;
+      background: oklch(100% 0 0 / .04); border: 1px solid oklch(100% 0 0 / .09);
+      border-radius: 9px; padding: .9rem; margin-bottom: .6rem;
       display: flex; align-items: flex-start; gap: .85rem;
+      transition: border-color .15s;
     }
+    .sol-card:hover { border-color: oklch(100% 0 0 / .14); }
     .sol-card__img {
-      width: 56px; height: 56px; object-fit: cover; border-radius: 6px;
-      flex-shrink: 0; background: rgba(255,255,255,.06);
+      width: 56px; height: 56px; object-fit: cover; border-radius: 7px;
+      flex-shrink: 0; background: oklch(100% 0 0 / .07);
     }
     .sol-card__body { flex: 1 1 auto; min-width: 0; }
     .sol-card__head { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin-bottom: .3rem; }
-    .sol-card__brand { font-weight: 700; font-size: .875rem; color: #e0d8cc; }
-    .sol-card__sep   { opacity: .35; color: #e0d8cc; }
-    .sol-card__name  { font-size: .875rem; color: #c8c0b4; }
+    .sol-card__brand { font-weight: 700; font-size: .875rem; color: oklch(90% .015 80); }
+    .sol-card__sep   { opacity: .3; color: oklch(90% .015 80); }
+    .sol-card__name  { font-size: .875rem; color: oklch(82% .012 80); }
     .sol-badge-status {
-      font-size: .65rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .05em; padding: .15rem .45rem; border-radius: 20px;
+      font-size: .62rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; padding: .15rem .5rem; border-radius: 20px;
     }
-    .sol-badge-status--approved { background: rgba(80,180,100,.2); color: #6ec87e; }
-    .sol-badge-status--archived { background: rgba(120,120,120,.2); color: #909090; }
-    .sol-card__meta { font-size: .75rem; color: #6a7a74; display: flex; gap: .75rem; }
+    .sol-badge-status--approved { background: oklch(73% .12 145 / .18); color: oklch(73% .12 145); }
+    .sol-badge-status--archived { background: oklch(60% 0 0 / .18); color: oklch(60% 0 0); }
+    .sol-card__meta {
+      font-size: .72rem; color: oklch(52% .03 160); display: flex; gap: .6rem;
+      text-transform: uppercase; letter-spacing: .04em;
+    }
     .sol-card__notes {
-      font-size: .78rem; color: #8a9a8e; margin: .3rem 0 0;
+      font-size: .77rem; color: oklch(60% .03 160); margin: .3rem 0 0;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-style: italic;
     }
-    .sol-card__actions { display: flex; flex-direction: column; gap: .4rem; flex-shrink: 0; }
+    .sol-card__actions { display: flex; flex-direction: column; gap: .35rem; flex-shrink: 0; }
     .sol-btn {
-      padding: .35rem .65rem; border: none; border-radius: 6px;
-      font-size: .75rem; font-weight: 600; cursor: pointer;
-      transition: background .15s; white-space: nowrap;
+      padding: .38rem .7rem; border: 1px solid transparent; border-radius: 20px;
+      font-size: .7rem; font-weight: 700; font-family: inherit; letter-spacing: .04em;
+      text-transform: uppercase; cursor: pointer;
+      transition: background .15s, border-color .15s; white-space: nowrap;
     }
-    .sol-btn:disabled { opacity: .5; cursor: default; }
-    .sol-btn--archive  { background: rgba(184,115,46,.2); color: #e0a060; }
-    .sol-btn--archive:hover:not(:disabled)  { background: rgba(184,115,46,.38); }
-    .sol-btn--restore  { background: rgba(80,180,100,.18); color: #6ec87e; }
-    .sol-btn--restore:hover:not(:disabled)  { background: rgba(80,180,100,.35); }
-    .sol-btn--delete   { background: rgba(180,60,60,.18); color: #e08080; }
-    .sol-btn--delete:hover:not(:disabled)   { background: rgba(180,60,60,.35); }
+    .sol-btn:disabled { opacity: .45; cursor: default; }
+    .sol-btn--archive  { background: oklch(44% .12 65 / .22); color: oklch(80% .1 65); border-color: oklch(50% .12 65 / .3); }
+    .sol-btn--archive:hover:not(:disabled)  { background: oklch(44% .12 65 / .4); border-color: oklch(55% .14 65 / .5); }
+    .sol-btn--restore  { background: oklch(65% .12 145 / .18); color: oklch(73% .12 145); border-color: oklch(55% .14 145 / .3); }
+    .sol-btn--restore:hover:not(:disabled)  { background: oklch(65% .12 145 / .35); border-color: oklch(55% .14 145 / .5); }
+    .sol-btn--delete   { background: transparent; color: oklch(68% .1 25); border-color: oklch(45% .1 25 / .35); }
+    .sol-btn--delete:hover:not(:disabled)   { background: oklch(40% .1 25 / .25); border-color: oklch(45% .1 25 / .55); }
+
+    /* Availability toggle for sol-cards */
+    .sol-avail-btn {
+      display: flex; align-items: center; gap: .4rem;
+      padding: .38rem .7rem; border: 1.5px solid; border-radius: 20px;
+      font-size: .7rem; font-weight: 700; font-family: inherit; letter-spacing: .05em;
+      text-transform: uppercase; cursor: pointer; white-space: nowrap;
+      transition: background .2s, border-color .2s;
+    }
+    .sol-avail-btn::before {
+      content: ''; flex-shrink: 0; width: 6px; height: 6px;
+      border-radius: 50%; background: currentColor; opacity: .9;
+    }
+    .sol-avail-btn[aria-pressed="true"] {
+      background: oklch(73% .12 145 / .14); color: oklch(73% .12 145);
+      border-color: oklch(55% .14 145 / .3);
+    }
+    .sol-avail-btn[aria-pressed="false"] {
+      background: oklch(40% .1 25 / .14); color: oklch(68% .08 25);
+      border-color: oklch(45% .1 25 / .3);
+    }
+    .sol-avail-btn[aria-pressed="true"]:hover { background: oklch(73% .12 145 / .28); }
+    .sol-avail-btn[aria-pressed="false"]:hover { background: oklch(40% .1 25 / .28); }
+
+    /* Unavailable card: dim it */
+    .sol-card--unavailable { opacity: .55; }
+    .sol-card--unavailable:hover { opacity: .75; }
+
+    /* Placeholder when no image */
+    .sol-card__img--placeholder {
+      width: 56px; height: 56px; border-radius: 7px; flex-shrink: 0;
+      background: oklch(100% 0 0 / .06);
+    }
   </style>
 </head>
 <body>
