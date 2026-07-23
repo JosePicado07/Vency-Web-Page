@@ -308,10 +308,13 @@
   function buildCatalog() {
     var toWebp400 = window.toWebp400;
     var vency = (window.VENCY_CATALOG || []).map(function (f) {
+      var isIcon = f.category === 'icon-series' && f.inspiration;
       return {
         _type: 'vency',
         id: f.id,
-        name: f.name,
+        name: isIcon ? f.inspiration.name : f.name,
+        brand: isIcon ? f.inspiration.brand : '',
+        isIcon: isIcon,
         soldOut: !!f.soldOut,
         image: toWebp400(f.image),
         characterColor: f.characterColor || null
@@ -933,7 +936,10 @@
       el.innerHTML =
         '<div class="dblock__top">' +
           imgHtml +
-          '<div class="dblock__content"><h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3></div>' +
+          '<div class="dblock__content">' +
+            (frag.isIcon ? '<span class="dblock__brand">INSPIRACIÓN ELEVADA · ' + escapeHtml_(frag.brand) + '</span>' : '') +
+            '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>' +
+          '</div>' +
         '</div>' +
         '<div class="dblock__footer admin-fmt-rail">' +
           '<button class="admin-fmt-btn admin-fmt-btn--decant js-decant-btn"' +
