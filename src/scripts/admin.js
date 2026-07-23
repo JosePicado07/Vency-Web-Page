@@ -1797,8 +1797,16 @@
         solHintEl.hidden = true;
         kvEntries = Array.isArray(kvEntries) ? kvEntries : [];
 
-        // Build unified list: all base items (non-KV) + all KV entries
+        // Build unified list: all base items (non-KV) + non-duplicate KV entries
+        var seen = {};
+        function kvIsSeen(brand, name) {
+          var k = (brand || '').toLowerCase() + '|' + name.toLowerCase();
+          if (seen[k]) return true;
+          seen[k] = true;
+          return false;
+        }
         var baseItems = catalog.filter(function (f) { return !f._isKV; }).map(function (f) {
+          kvIsSeen(f.brand || '', f.name);
           return {
             id:     f.id,
             name:   f.name,
@@ -1810,7 +1818,9 @@
             isIcon: !!f.isIcon
           };
         });
-        var kvItems = kvEntries.map(function (e) {
+        var kvItems = kvEntries.filter(function (e) {
+          return !kvIsSeen(e.brand || '', e.name);
+        }).map(function (e) {
           return {
             id:       e.id,
             name:     e.name,
