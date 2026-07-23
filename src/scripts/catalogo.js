@@ -319,6 +319,7 @@
       // Untracked = unknown = assume in-stock.
       var tracked = hasInventory && ((dk in inventory) || (bk30 in inventory) || (bk100 in inventory));
       var soldOut = _unavailable.has(frag.id)
+                 || _archivedBase.has(frag.id)
                  || (tracked && (!inventory[dk] || !inventory[dk].oil_ml)
                              && (!inventory[bk30] || !inventory[bk30].oil_ml)
                              && (!inventory[bk100] || !inventory[bk100].oil_ml));
@@ -400,7 +401,7 @@
     var inv = invStr ? JSON.parse(invStr) : null;
     var hasInv = inv && Object.keys(inv).length > 0;
     function isItemSoldOut(id) {
-      if (_unavailable.has(id)) return true;
+      if (_unavailable.has(id) || _archivedBase.has(id)) return true;
       if (!hasInv) return false;
       var dk = id + ':decant', bk30 = id + ':30ml', bk100 = id + ':100ml';
       var tracked = (dk in inv) || (bk30 in inv) || (bk100 in inv);
@@ -535,7 +536,7 @@
             var historiaHref = 'coleccion.html#' + frag.id;
             var notes = frag.noteLabels.join(' · ');
 
-            if (_unavailable.has(frag.id)) return;
+            if (_unavailable.has(frag.id) || _archivedBase.has(frag.id)) return;
 
             li.className = 'cat-entry cat-entry--icon';
             li.dataset.cat    = sec.cat;
@@ -818,12 +819,15 @@
     render();
   };
 
+  var _archivedBase = new Set();
   Promise.all([
     fetch('/api/availability').then(function (r) { return r.json(); }).catch(function () { return {}; }),
-    fetch('/api/catalog-request').then(function (r) { return r.json(); }).catch(function () { return []; })
+    fetch('/api/catalog-request').then(function (r) { return r.json(); }).catch(function () { return []; }),
+    fetch('/api/catalog-archive').then(function (r) { return r.json(); }).catch(function () { return {}; })
   ]).then(function (results) {
-    _unavailable = new Set((results[0].unavailable) || []);
-    _kvEntries   = Array.isArray(results[1]) ? results[1] : [];
+    _unavailable  = new Set((results[0].unavailable) || []);
+    _kvEntries    = Array.isArray(results[1]) ? results[1] : [];
+    _archivedBase = new Set((results[2].archived) || []);
     initCatalog();
   });
 

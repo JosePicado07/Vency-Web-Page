@@ -61,6 +61,12 @@
   var invFilteredCatalog = [];
   var invPage            = 0;
   var invObserver        = null;
+  var _archivedBase      = new Set();
+  var solAllItems        = [];
+  var solFilteredList    = [];
+  var solPage            = 0;
+  var solObserver        = null;
+  var showArchivedSol    = false;
   var _panelPrevFocus    = null;
   var calDailyTotals     = {};
   var selectedCalDay     = null;
@@ -110,6 +116,11 @@
   var modePanelVender       = document.getElementById('js-mode-vender');
   var modePanelInv          = document.getElementById('js-mode-inventario');
   var modePanelSolicitudes  = document.getElementById('js-mode-solicitudes');
+  var solListEl             = document.getElementById('js-sol-list');
+  var solSentinel           = document.getElementById('js-sol-sentinel');
+  var solHintEl             = document.getElementById('js-sol-hint');
+  var solEmptyEl            = document.getElementById('js-sol-empty');
+  var showArchivedToggle    = document.getElementById('js-sol-show-archived');
 
   /* ── Helpers ── */
   var colones     = window.fmtCRC;
@@ -339,6 +350,7 @@
     var kv = _kvCatalogEntries.map(function (e) {
       return {
         _type: 'decant',
+        _isKV: true,
         id: e.id,
         name: e.name,
         brand: e.brand || '',
@@ -423,6 +435,7 @@
           b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
         });
         if (activeMode === 'vender') renderFragList(searchInput.value);
+        else if (activeMode === 'solicitudes') renderCatList(searchInput.value);
         else renderInvList(searchInput.value);
       });
     }
@@ -1045,10 +1058,12 @@
 
   searchInput.addEventListener('input', function () {
     if (activeMode === 'vender') renderFragList(this.value);
+    else if (activeMode === 'solicitudes') renderCatList(this.value);
     else renderInvList(this.value);
   });
   searchInput.addEventListener('search', function () {
     if (activeMode === 'vender') renderFragList(this.value);
+    else if (activeMode === 'solicitudes') renderCatList(this.value);
     else renderInvList(this.value);
   });
 
@@ -1515,98 +1530,293 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  function loadSolicitudes() {
-    var hint  = document.getElementById('js-sol-hint');
-    var list  = document.getElementById('js-sol-list');
-    var empty = document.getElementById('js-sol-empty');
+  function buildSolCard(item) {
+    // item fields: id, name, brand, image, cat, _isKV, _kvEntry (raw KV obj),
+    //              isIcon — set for vency icon-series items
+    var isKV       = !!item._isKV;
+    var kvEntry    = item._kvEntry || null;
+    var isArchived = isKV ? (kvEntry && kvEntry.status === 'archived') : _archivedBase.has(item.id);
+    var avail      = getAvail(item.id);
 
-    hint.hidden = false;
-    list.innerHTML = '';
-    empty.hidden = true;
+    var card = document.createElement('div');
+    card.className = 'sol-card'
+      + (!avail ? ' sol-card--unavailable' : '')
+      + (isArchived ? ' sol-card--archived' : '');
+    card.dataset.id = item.id;
+
+    // Image
+    var imgEl;
+    if (isKV && kvEntry && kvEntry.imageId) {
+      imgEl = document.createElement('img');
+      imgEl.className = 'sol-card__img';
+      imgEl.src = '/api/catalog-image/' + kvEntry.imageId;
+      imgEl.alt = (item.brand ? item.brand + ' ' : '') + item.name;
+      imgEl.loading = 'lazy';
+    } else if (item.image && item.image !== 'assets/images/_webp/default-bottle-400.webp') {
+      imgEl = document.createElement('img');
+      imgEl.className = 'sol-card__img';
+      imgEl.src = item.image;
+      imgEl.alt = (item.brand ? item.brand + ' ' : '') + item.name;
+      imgEl.loading = 'lazy';
+    } else {
+      imgEl = document.createElement('div');
+      imgEl.className = 'sol-card__img sol-card__img--placeholder';
+    }
+    card.appendChild(imgEl);
+
+    // Body
+    var body = document.createElement('div');
+    body.className = 'sol-card__body';
+
+    var head = document.createElement('div');
+    head.className = 'sol-card__head';
+    if (item.brand) {
+      var brandEl = document.createElement('span');
+      brandEl.className = 'sol-card__brand';
+      brandEl.textContent = item.brand;
+      head.appendChild(brandEl);
+      var sep = document.createElement('span');
+      sep.className = 'sol-card__sep';
+      sep.textContent = '\xb7';
+      head.appendChild(sep);
+    }
+    var nameEl = document.createElement('span');
+    nameEl.className = 'sol-card__name';
+    nameEl.textContent = item.name;
+    head.appendChild(nameEl);
+
+    var badge = document.createElement('span');
+    badge.className = 'sol-badge-status sol-badge-status--' + (isArchived ? 'archived' : 'approved');
+    badge.textContent = isArchived ? 'Archivada' : 'Activa';
+    head.appendChild(badge);
+    body.appendChild(head);
+
+    var meta = document.createElement('div');
+    meta.className = 'sol-card__meta';
+    var catSpan = document.createElement('span');
+    catSpan.textContent = item.cat || '';
+    meta.appendChild(catSpan);
+    if (isKV && kvEntry && kvEntry.gender) {
+      var genSpan = document.createElement('span');
+      genSpan.textContent = kvEntry.gender;
+      meta.appendChild(genSpan);
+    }
+    if (item.isIcon) {
+      var iconSpan = document.createElement('span');
+      iconSpan.textContent = 'Icon Series';
+      meta.appendChild(iconSpan);
+    }
+    body.appendChild(meta);
+
+    if (isKV && kvEntry && kvEntry.notes) {
+      var notesP = document.createElement('p');
+      notesP.className = 'sol-card__notes';
+      notesP.textContent = kvEntry.notes;
+      body.appendChild(notesP);
+    }
+    card.appendChild(body);
+
+    // Actions
+    var actions = document.createElement('div');
+    actions.className = 'sol-card__actions';
+
+    // Availability toggle
+    var availBtn = document.createElement('button');
+    availBtn.className = 'sol-avail-btn';
+    availBtn.type = 'button';
+    availBtn.setAttribute('aria-pressed', String(avail));
+    availBtn.textContent = avail ? 'Disponible' : 'No disponible';
+    availBtn.addEventListener('click', function () {
+      var newVal = !getAvail(item.id);
+      setAvail(item.id, newVal);
+      availBtn.setAttribute('aria-pressed', String(newVal));
+      availBtn.textContent = newVal ? 'Disponible' : 'No disponible';
+      card.classList.toggle('sol-card--unavailable', !newVal);
+      fetch('/api/availability', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: item.id, available: newVal })
+      }).catch(function () {});
+    });
+    actions.appendChild(availBtn);
+
+    // Archive / Restore
+    if (!isArchived) {
+      var archBtn = document.createElement('button');
+      archBtn.className = 'sol-btn sol-btn--archive';
+      archBtn.type = 'button';
+      archBtn.textContent = 'Archivar';
+      archBtn.addEventListener('click', function () {
+        archBtn.disabled = true;
+        if (isKV) {
+          fetch('/api/catalog-request', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item.id, action: 'archive', tok: token })
+          }).then(function () { _refreshAfterKvAction(); })
+            .catch(function () { archBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+        } else {
+          _archivedBase.add(item.id);
+          fetch('/api/catalog-archive', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item.id, archived: true })
+          }).then(function () { renderCatList(searchInput ? searchInput.value : ''); })
+            .catch(function () { _archivedBase.delete(item.id); archBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+        }
+      });
+      actions.appendChild(archBtn);
+    } else {
+      var restBtn = document.createElement('button');
+      restBtn.className = 'sol-btn sol-btn--restore';
+      restBtn.type = 'button';
+      restBtn.textContent = 'Restaurar';
+      restBtn.addEventListener('click', function () {
+        restBtn.disabled = true;
+        if (isKV) {
+          fetch('/api/catalog-request', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item.id, action: 'restore', tok: token })
+          }).then(function () { _refreshAfterKvAction(); })
+            .catch(function () { restBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+        } else {
+          _archivedBase.delete(item.id);
+          fetch('/api/catalog-archive', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: item.id, archived: false })
+          }).then(function () { renderCatList(searchInput ? searchInput.value : ''); })
+            .catch(function () { _archivedBase.add(item.id); restBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+        }
+      });
+      actions.appendChild(restBtn);
+    }
+
+    // Delete (KV only)
+    if (isKV) {
+      var delBtn = document.createElement('button');
+      delBtn.className = 'sol-btn sol-btn--delete';
+      delBtn.type = 'button';
+      delBtn.textContent = 'Eliminar';
+      delBtn.addEventListener('click', function () {
+        if (!confirm('\xbfEliminar esta fragancia permanentemente?')) return;
+        delBtn.disabled = true;
+        fetch('/api/catalog-request', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: item.id, action: 'delete', tok: token })
+        }).then(function () { _refreshAfterKvAction(); })
+          .catch(function () { delBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+      });
+      actions.appendChild(delBtn);
+    }
+
+    card.appendChild(actions);
+    return card;
+  }
+
+  function _refreshAfterKvAction() {
+    fetch('/api/catalog-request').then(function (r) { return r.json(); }).then(function (entries) {
+      _kvCatalogEntries = Array.isArray(entries) ? entries : [];
+      buildCatalog();
+      renderFragList(searchInput ? searchInput.value : '');
+      renderInvList(searchInput ? searchInput.value : '');
+    }).catch(function () {}).then(function () { loadSolicitudes(); });
+  }
+
+  function appendSolPage() {
+    var start = solPage * PAGE_SIZE;
+    var slice = solFilteredList.slice(start, start + PAGE_SIZE);
+    var frag  = document.createDocumentFragment();
+    slice.forEach(function (item) { frag.appendChild(buildSolCard(item)); });
+    solListEl.appendChild(frag);
+    solPage++;
+    if (solPage * PAGE_SIZE >= solFilteredList.length && solObserver) {
+      solObserver.disconnect();
+      solObserver = null;
+    }
+  }
+
+  function renderCatList(query) {
+    var q = (query || '').trim().toLowerCase();
+    solFilteredList = solAllItems.filter(function (item) {
+      var isArchived = item._isKV
+        ? (item._kvEntry && item._kvEntry.status === 'archived')
+        : _archivedBase.has(item.id);
+      if (isArchived && !showArchivedSol) return false;
+      if (!catMatch(item)) return false;
+      if (!q) return true;
+      var t = item.name.toLowerCase() + (item.brand ? ' ' + item.brand.toLowerCase() : '');
+      return t.indexOf(q) !== -1;
+    });
+
+    solPage = 0;
+    solListEl.innerHTML = '';
+    solEmptyEl.hidden = true;
+
+    if (!solFilteredList.length) {
+      solEmptyEl.hidden = false;
+      return;
+    }
+
+    if (solObserver) { solObserver.disconnect(); solObserver = null; }
+    appendSolPage();
+
+    if (solFilteredList.length > PAGE_SIZE) {
+      solObserver = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) appendSolPage();
+      }, { rootMargin: '120px' });
+      solObserver.observe(solSentinel);
+    }
+  }
+
+  function loadSolicitudes() {
+    solHintEl.hidden = false;
+    solHintEl.textContent = 'Cargando…';
+    solListEl.innerHTML = '';
+    solEmptyEl.hidden = true;
 
     fetch('/api/catalog-request?all=1&tok=' + encodeURIComponent(token))
       .then(function (r) { return r.json(); })
-      .then(function (entries) {
-        hint.hidden = true;
-        if (!entries.length) { empty.hidden = false; return; }
+      .then(function (kvEntries) {
+        solHintEl.hidden = true;
+        kvEntries = Array.isArray(kvEntries) ? kvEntries : [];
 
-        list.innerHTML = entries.map(function (e) {
-          var isArchived = e.status === 'archived';
-          var avail = getAvail(e.id);
-          var statusBadge = '<span class="sol-badge-status sol-badge-status--' + (isArchived ? 'archived' : 'approved') + '">'
-            + (isArchived ? 'Archivada' : 'Activa') + '</span>';
-          var imgHtml = e.imageId
-            ? '<img class="sol-card__img" src="/api/catalog-image/' + e.imageId + '" alt="' + escHtml(e.brand + ' ' + e.name) + '" loading="lazy">'
-            : '<div class="sol-card__img sol-card__img--placeholder"></div>';
-          return '<div class="sol-card' + (!avail ? ' sol-card--unavailable' : '') + '" data-id="' + e.id + '">'
-            + imgHtml
-            + '<div class="sol-card__body">'
-            + '<div class="sol-card__head">'
-            + '<span class="sol-card__brand">' + escHtml(e.brand) + '</span>'
-            + (e.brand && e.name ? '<span class="sol-card__sep">\xb7</span>' : '')
-            + '<span class="sol-card__name">' + escHtml(e.name) + '</span>'
-            + statusBadge
-            + '</div>'
-            + '<div class="sol-card__meta">'
-            + '<span>' + escHtml(e.cat || '') + '</span>'
-            + (e.gender ? '<span>' + escHtml(e.gender) + '</span>' : '')
-            + '</div>'
-            + (e.notes ? '<p class="sol-card__notes">' + escHtml(e.notes) + '</p>' : '')
-            + '</div>'
-            + '<div class="sol-card__actions">'
-            + '<button class="sol-avail-btn js-sol-avail" data-id="' + e.id + '" aria-pressed="' + avail + '" type="button">'
-            + (avail ? 'Disponible' : 'No disponible')
-            + '</button>'
-            + (isArchived
-                ? '<button class="sol-btn sol-btn--restore js-sol-action" data-id="' + e.id + '" data-action="restore" type="button">Restaurar</button>'
-                : '<button class="sol-btn sol-btn--archive js-sol-action" data-id="' + e.id + '" data-action="archive" type="button">Archivar</button>'
-              )
-            + '<button class="sol-btn sol-btn--delete js-sol-action" data-id="' + e.id + '" data-action="delete" type="button">Eliminar</button>'
-            + '</div>'
-            + '</div>';
-        }).join('');
-
-        list.querySelectorAll('.js-sol-avail').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            var id = btn.dataset.id;
-            var newVal = !getAvail(id);
-            setAvail(id, newVal);
-            btn.setAttribute('aria-pressed', String(newVal));
-            btn.textContent = newVal ? 'Disponible' : 'No disponible';
-            var card = btn.closest('.sol-card');
-            if (card) card.classList.toggle('sol-card--unavailable', !newVal);
-            fetch('/api/availability', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: id, available: newVal })
-            }).catch(function () {});
-          });
+        // Build unified list: all base items (non-KV) + all KV entries
+        var baseItems = catalog.filter(function (f) { return !f._isKV; }).map(function (f) {
+          return {
+            id:     f.id,
+            name:   f.name,
+            brand:  f.brand || '',
+            image:  f.image,
+            cat:    f.cat || (f._type === 'vency' ? 'vency' : 'disenador'),
+            _type:  f._type,
+            _isKV:  false,
+            isIcon: !!f.isIcon
+          };
+        });
+        var kvItems = kvEntries.map(function (e) {
+          return {
+            id:       e.id,
+            name:     e.name,
+            brand:    e.brand || '',
+            image:    e.imageId ? '/api/catalog-image/' + e.imageId : '',
+            cat:      e.cat || 'disenador',
+            _type:    'decant',
+            _isKV:    true,
+            _kvEntry: e,
+            isIcon:   false
+          };
         });
 
-        list.querySelectorAll('.js-sol-action').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            var action = btn.dataset.action;
-            if (action === 'delete' && !confirm('¿Eliminar esta fragancia permanentemente?')) return;
-            btn.disabled = true;
-            fetch('/api/catalog-request', {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: btn.dataset.id, action: action, tok: token }),
-            })
-              .then(function () {
-                return fetch('/api/catalog-request').then(function (r) { return r.json(); }).then(function (entries) {
-                  _kvCatalogEntries = Array.isArray(entries) ? entries : [];
-                  buildCatalog();
-                  renderFragList(searchInput ? searchInput.value : '');
-                  renderInvList(searchInput ? searchInput.value : '');
-                }).catch(function () {});
-              })
-              .then(function () { loadSolicitudes(); })
-              .catch(function () { btn.disabled = false; showToast('Error. Intentá de nuevo.'); });
-          });
-        });
+        solAllItems = baseItems.concat(kvItems);
+        renderCatList(searchInput ? searchInput.value : '');
       })
-      .catch(function () { hint.textContent = 'Error al cargar.'; hint.hidden = false; });
+      .catch(function () {
+        solHintEl.textContent = 'Error al cargar.';
+        solHintEl.hidden = false;
+      });
   }
 
   function setupAddFragForm() {
@@ -1699,19 +1909,40 @@
     });
   }
 
+  if (showArchivedToggle) {
+    showArchivedToggle.addEventListener('change', function () {
+      showArchivedSol = showArchivedToggle.checked;
+      renderCatList(searchInput ? searchInput.value : '');
+    });
+  }
+
   setupAddFragForm();
 
   /* ── Init ── */
   var _kvCatalogEntries = [];
-  fetch('/api/catalog-request')
-    .then(function (r) { return r.json(); })
-    .then(function (entries) { _kvCatalogEntries = Array.isArray(entries) ? entries : []; })
-    .catch(function () {})
-    .then(function () {
-      buildCatalog();
-      var saved = getToken();
-      if (saved) showApp(saved);
-      else       showGate();
+  Promise.all([
+    fetch('/api/catalog-request').then(function (r) { return r.json(); }).catch(function () { return []; }),
+    fetch('/api/availability').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+    fetch('/api/catalog-archive').then(function (r) { return r.json(); }).catch(function () { return {}; })
+  ]).then(function (results) {
+    _kvCatalogEntries = Array.isArray(results[0]) ? results[0] : [];
+
+    // Merge server availability truth into localStorage (fixes cross-device drift)
+    var serverUnavail = results[1].unavailable || [];
+    var localMap = getAvailMap();
+    serverUnavail.forEach(function (id) { localMap[id] = false; });
+    // Remove from local any ids the server considers available
+    Object.keys(localMap).forEach(function (id) {
+      if (localMap[id] === false && serverUnavail.indexOf(id) === -1) delete localMap[id];
     });
+    try { localStorage.setItem(AVAIL_KEY, JSON.stringify(localMap)); } catch (e) {}
+
+    _archivedBase = new Set(results[2].archived || []);
+
+    buildCatalog();
+    var saved = getToken();
+    if (saved) showApp(saved);
+    else       showGate();
+  });
 
 })();
