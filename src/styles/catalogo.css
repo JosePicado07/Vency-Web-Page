@@ -319,6 +319,32 @@
   display: none;
 }
 
+.cat-entry--unknown {
+  opacity: 0.65;
+  position: relative;
+}
+.cat-entry--unknown .cat-entry__card::after {
+  content: 'CONSULTAR DISPONIBILIDAD';
+  position: absolute;
+  bottom: 0.35rem;
+  right: 0.5rem;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.52rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: oklch(70% 0.08 70);
+  background: oklch(95% 0.02 80 / 0.85);
+  padding: 0.2rem 0.45rem;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.cat-entry--unknown .fmt-rail__set,
+.cat-entry--unknown .fmt-rail__buy-btn {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 /* Provenance label — below the name as quiet metadata */
 .cat-entry__provenance {
   display: block;

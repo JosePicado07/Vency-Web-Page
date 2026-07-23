@@ -315,14 +315,13 @@
       var dk = frag.id + ':decant';
       var bk30 = frag.id + ':30ml';
       var bk100 = frag.id + ':100ml';
-      // Only sold-out when admin tracks this id (any key present) AND all formats are zero.
-      // Untracked = unknown = assume in-stock.
       var tracked = hasInventory && ((dk in inventory) || (bk30 in inventory) || (bk100 in inventory));
       var soldOut = _unavailable.has(frag.id)
                  || _archivedBase.has(frag.id)
                  || (tracked && (!inventory[dk] || !inventory[dk].oil_ml)
                              && (!inventory[bk30] || !inventory[bk30].oil_ml)
                              && (!inventory[bk100] || !inventory[bk100].oil_ml));
+      var unknownStatus = !hasInventory || !tracked;
       if (soldOut) return;
       var railHtmlVency = buildRail(fname, fname, false, 'vency');
 
@@ -336,7 +335,7 @@
         : '';
 
       html +=
-        '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + '"' +
+        '<li class="cat-entry cat-entry--vency' + (isIcon ? ' cat-entry--icon' : '') + (unknownStatus ? ' cat-entry--unknown' : '') + '"' +
           ' id="' + frag.id + '"' +
           ' data-fragrance-id="' + frag.id + '"' +
           ' data-fragrance-name="' + fname + '"' +
@@ -400,16 +399,18 @@
     var invStr = localStorage.getItem('vency_inventory');
     var inv = invStr ? JSON.parse(invStr) : null;
     var hasInv = inv && Object.keys(inv).length > 0;
-    function isItemSoldOut(id) {
-      if (_unavailable.has(id) || _archivedBase.has(id)) return true;
-      if (!hasInv) return false;
+    function itemStatus(id) {
+      if (_unavailable.has(id) || _archivedBase.has(id)) return 'soldout';
+      if (!hasInv) return 'unknown';
       var dk = id + ':decant', bk30 = id + ':30ml', bk100 = id + ':100ml';
       var tracked = (dk in inv) || (bk30 in inv) || (bk100 in inv);
-      if (!tracked) return false;
-      return (!inv[dk]   || !inv[dk].oil_ml)
-          && (!inv[bk30] || !inv[bk30].oil_ml)
-          && (!inv[bk100]|| !inv[bk100].oil_ml);
+      if (!tracked) return 'unknown';
+      var out = (!inv[dk]   || !inv[dk].oil_ml)
+             && (!inv[bk30] || !inv[bk30].oil_ml)
+             && (!inv[bk100]|| !inv[bk100].oil_ml);
+      return out ? 'soldout' : 'available';
     }
+    function isItemSoldOut(id) { return itemStatus(id) === 'soldout'; }
 
     var iconSeries = (window.VENCY_CATALOG || []).filter(function (f) { return f.category === 'icon-series'; });
 
@@ -484,7 +485,7 @@
           /* ── KV-added entry (admin Catálogo tab) ── */
           if (item._isKV) {
             var kv = item._entry;
-            if (_unavailable.has(kv.id)) return;
+            if (_unavailable.has(kv.id) || isItemSoldOut(kv.id)) return;
             var kvImg = kv.imageId
               ? '/api/catalog-image/' + kv.imageId
               : 'assets/images/_webp/default-bottle-400.webp';
@@ -536,9 +537,10 @@
             var historiaHref = 'coleccion.html#' + frag.id;
             var notes = frag.noteLabels.join(' · ');
 
-            if (_unavailable.has(frag.id) || _archivedBase.has(frag.id)) return;
+            if (_unavailable.has(frag.id) || _archivedBase.has(frag.id) || isItemSoldOut(frag.id)) return;
+            var iconUnknown = !hasInv || !((frag.id + ':decant' in inv) || (frag.id + ':30ml' in inv) || (frag.id + ':100ml' in inv));
 
-            li.className = 'cat-entry cat-entry--icon';
+            li.className = 'cat-entry cat-entry--icon' + (iconUnknown ? ' cat-entry--unknown' : '');
             li.dataset.cat    = sec.cat;
             li.dataset.gender = frag.gender || 'unisex';
             li.dataset.fragranceId   = frag.id;
@@ -602,7 +604,9 @@
               : 'assets/images/_webp/default-bottle-400.webp');
           li.dataset.search        = (item.name + ' ' + item.brand + (interp ? ' ' + interp.name : '')).toLowerCase();
 
-          if (!!item.soldOut || isItemSoldOut(li.dataset.fragranceId)) return;
+          var itemStatusVal = itemStatus(li.dataset.fragranceId);
+          if (!!item.soldOut || itemStatusVal === 'soldout') return;
+          if (itemStatusVal === 'unknown') li.classList.add('cat-entry--unknown');
           var railHtml = buildRail(fragranceName, escHtml(item.name), isInv, sec.cat);
 
           li.innerHTML =

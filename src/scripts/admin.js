@@ -318,13 +318,24 @@
      onerror in buildFragRow falls back to the default bottle. */
   function buildCatalog() {
     var toWebp400 = window.toWebp400;
+    var seen = {};
+    function keyFor(brand, name) { return (brand || '').toLowerCase() + '|' + name.toLowerCase(); }
+    function isSeen(brand, name) {
+      var k = keyFor(brand, name);
+      if (seen[k]) return true;
+      seen[k] = true;
+      return false;
+    }
     var vency = (window.VENCY_CATALOG || []).map(function (f) {
       var isIcon = f.category === 'icon-series' && f.inspiration;
+      var n = isIcon ? f.inspiration.name : f.name;
+      var b = isIcon ? f.inspiration.brand : '';
+      isSeen(b, n);
       return {
         _type: 'vency',
         id: f.id,
-        name: isIcon ? f.inspiration.name : f.name,
-        brand: isIcon ? f.inspiration.brand : '',
+        name: n,
+        brand: b,
         isIcon: isIcon,
         soldOut: !!f.soldOut,
         image: toWebp400(f.image),
@@ -338,6 +349,7 @@
         : toWebp400(f.image);
       var slugify = window.slugify || function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
       var id = interpId || slugify((f.brand || '') + '-' + f.name);
+      isSeen(f.brand || '', f.name);
       return {
         _type: 'decant',
         id: id,
@@ -347,7 +359,9 @@
         image: img
       };
     });
-    var kv = _kvCatalogEntries.map(function (e) {
+    var kv = _kvCatalogEntries.filter(function (e) {
+      return !isSeen(e.brand || '', e.name);
+    }).map(function (e) {
       return {
         _type: 'decant',
         _isKV: true,
@@ -1836,6 +1850,21 @@
       preview.innerHTML = '<img src="' + url + '" alt="Vista previa" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:contain;">';
     });
 
+    function isInStaticCatalog(brand, name) {
+      var b = brand.toLowerCase();
+      var n = name.toLowerCase();
+      return (window.VENCY_FULL_CATALOG || []).some(function (f) {
+        return (f.brand || '').toLowerCase() === b && f.name.toLowerCase() === n;
+      }) || (window.VENCY_CATALOG || []).some(function (f) {
+        if (f.category === 'icon-series' && f.inspiration) {
+          return (f.inspiration.brand || '').toLowerCase() === b && f.inspiration.name.toLowerCase() === n;
+        }
+        return f.name.toLowerCase() === n;
+      }) || _kvCatalogEntries.some(function (e) {
+        return (e.brand || '').toLowerCase() === b && e.name.toLowerCase() === n;
+      });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
@@ -1846,6 +1875,13 @@
       if (!brand || !name || !cat) {
         statusEl.textContent = 'Completá los campos obligatorios.';
         statusEl.style.color = '#e88080';
+        statusEl.hidden = false;
+        return;
+      }
+
+      if (isInStaticCatalog(brand, name)) {
+        statusEl.textContent = 'Esa fragancia ya está en el catálogo.';
+        statusEl.style.color = '#e8a860';
         statusEl.hidden = false;
         return;
       }
@@ -1888,9 +1924,9 @@
                 buildCatalog();
                 renderFragList(searchInput ? searchInput.value : '');
                 renderInvList(searchInput ? searchInput.value : '');
+                loadSolicitudes();
               })
               .catch(function () {});
-            loadSolicitudes();
           } else {
             statusEl.textContent = 'Error al guardar. Intentá de nuevo.';
             statusEl.style.color = '#e88080';
