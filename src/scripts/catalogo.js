@@ -838,6 +838,28 @@
     initCatalog();
   });
 
+  // Gentle polling: refresh availability every 45s so items the admin
+  // marks unavailable mid-session are caught before checkout.
+  setInterval(function () {
+    fetch('/api/availability').then(function (r) { return r.json(); }).then(function (data) {
+      var fresh = new Set(data.unavailable || []);
+      var oldSize = _unavailable.size;
+      _unavailable = fresh;
+      if (fresh.size <= oldSize) return;
+      // Some items became unavailable — check if any are in the current cart
+      var cart;
+      try { cart = JSON.parse(localStorage.getItem('vency_cart_v1')); } catch (e) {}
+      if (!cart) return;
+      var hit = [];
+      (cart.selection || []).forEach(function (s) { if (fresh.has(s.id)) hit.push(s.name); });
+      (cart.bottles || []).forEach(function (b) { if (fresh.has(b.id)) hit.push(b.name); });
+        if (hit.length > 0) {
+        alert('Estos perfumes ya no est\u00e1n disponibles:\n' + hit.join('\n') + '\n\nQu\u00edtalos del carrito para continuar.');
+        try { window.dispatchEvent(new Event('storage')); } catch (e) {}
+      }
+    }).catch(function () {});
+  }, 45000);
+
   // Wire card clicks → open the format modal. (Was previously inside
   // wireFragPanel, which got stripped in the dead-code cleanup. The
   // modal driver itself is at the top of this file.)
