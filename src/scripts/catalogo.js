@@ -439,19 +439,22 @@
 
       /* Merge KV-added entries (admin-added via Catálogo tab) — skip if already in static catalog */
       _kvEntries.forEach(function (entry) {
-        if (entry.cat !== sec.cat) return;
-        var brandKey = (entry.brand || '').toUpperCase();
+        var entryCat = (entry.cat === 'original-blend') ? 'disenador' : (entry.cat || 'disenador');
+        if (entryCat !== sec.cat) return;
+        var brandKey = (entry.brand || '').trim().toUpperCase();
         var existingKey = null;
         Object.keys(brands).forEach(function (b) {
           if (b.toUpperCase() === brandKey) existingKey = b;
         });
-        var key = existingKey || (entry.brand || '').toUpperCase();
+        var key = existingKey || brandKey;
         if (!brands[key]) brands[key] = [];
+        var eName = (entry.name || '').toLowerCase().trim();
         var alreadyInGroup = brands[key].some(function (item) {
-          if (item._isKV || item._isIcon) return false;
-          var n = (item.name || '').toLowerCase();
-          var e = (entry.name || '').toLowerCase();
-          return n === e;
+          if (item._isIcon) return false;
+          var n = item._isKV
+            ? (item._entry.name || '').toLowerCase().trim()
+            : (item.name || '').toLowerCase().trim();
+          return n === eName;
         });
         if (!alreadyInGroup) brands[key].push({ _isKV: true, _entry: entry });
       });
@@ -501,12 +504,13 @@
             var kvFullName = kvBrand ? kvBrand + ' \xb7 ' + kvName : kvName;
             var kvNotes  = (kv.notes || '').replace(/\s*,\s*/g, ' · ');
 
+            li.id = kv.id;
             li.className = 'cat-entry';
-            li.dataset.cat           = kv.cat;
+            li.dataset.cat           = kv.cat && kv.cat !== 'original-blend' ? kv.cat : 'disenador';
             li.dataset.gender        = kv.gender || 'unisex';
             li.dataset.fragranceId   = kv.id;
             li.dataset.fragranceName = kvBrand ? kv.brand + ' · ' + kv.name : kv.name;
-            li.dataset.fragranceCat  = kv.cat;
+            li.dataset.fragranceCat  = kv.cat && kv.cat !== 'original-blend' ? kv.cat : 'disenador';
             li.dataset.fragranceImg  = kv.imageId ? '/api/catalog-image/' + kv.imageId : 'assets/images/default-bottle.jpg';
             li.dataset.fragranceNotes = kvNotes;
             li.dataset.fragranceInspo = kvBrand ? kvBrand + ' · ' + kvName : kvName;
