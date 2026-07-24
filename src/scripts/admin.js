@@ -2002,7 +2002,7 @@
     document.getElementById('sol-edit-name').value  = kv.name || item.name || '';
     document.getElementById('sol-edit-cat').value   = kv.cat || item.cat || '';
     document.getElementById('sol-edit-gender').value = kv.gender || '';
-    document.getElementById('sol-edit-notes').value = kv.notes || '';
+    document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
 
     var currentImg = isKV ? kv.imageId : item.image;
     var prevHtml;
