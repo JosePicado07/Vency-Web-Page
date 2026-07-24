@@ -1383,20 +1383,6 @@
   /* ── Inventory section ── */
 
   invListEl.addEventListener('click', function (e) {
-    var avBtn = e.target.closest('.js-inv-avail');
-    if (avBtn) {
-      var avId   = avBtn.dataset.id;
-      var newVal = !getAvail(avId);
-      setAvail(avId, newVal);
-      avBtn.setAttribute('aria-pressed', String(newVal));
-      avBtn.textContent = newVal ? 'Disponible' : 'No disponible';
-      var sellCard = fragList && fragList.querySelector('[data-frag-id="' + avId + '"]');
-      if (sellCard) sellCard.classList.toggle('dblock--soldout', !newVal);
-      fetch('/api/availability', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: avId, available: newVal })
-      }).catch(function () {});
       return;
     }
     var btn = e.target.closest('.js-inv-oil-adj');
@@ -1437,7 +1423,6 @@
     var searchName = frag.name.toLowerCase();
     var entry = inventory[searchName] || inventory[id] || { oil_ml: 0 };
     var oil   = entry.oil_ml || 0;
-    var avail = getAvail(id);
 
     var nameHtml = frag.brand
       ? '<span class="dblock__brand">' + frag.brand + '</span><h3 class="dblock__name">' + frag.name + '</h3>'
@@ -1462,10 +1447,7 @@
           '<button class="inv-adj inv-adj--minus js-inv-oil-adj" data-id="' + id + '" data-delta="-10" type="button" aria-label="Quitar 10 ml">−</button>' +
           '<button class="inv-adj inv-adj--plus js-inv-oil-adj" data-id="' + id + '" data-delta="10" type="button" aria-label="Agregar 10 ml">+</button>' +
         '</div>' +
-      '</div>' +
-      '<button class="inv-avail-btn js-inv-avail" data-id="' + id + '" aria-pressed="' + avail + '" type="button">' +
-        (avail ? 'Disponible' : 'No disponible') +
-      '</button>';
+      '</div>';
 
     return el;
   }
@@ -1913,10 +1895,15 @@
       submitBtn.textContent = 'Guardando…';
       statusEl.hidden = true;
 
-      var fd = new FormData(form);
-      fd.set('tok', token);
-
-      fetch('/api/catalog-request', { method: 'POST', body: fd })
+      toWebpFile(fileInput.files[0], function (webpFile) {
+        var fd = new FormData(form);
+        // Replace the original file with the webp version if converted
+        if (webpFile && fileInput.files[0] !== webpFile) {
+          fd.delete('image');
+          fd.append('image', webpFile);
+        }
+        fd.set('tok', token);
+        fetch('/api/catalog-request', { method: 'POST', body: fd })
         .then(function (r) { return r.json(); })
         .then(function (res) {
           if (res.dupe) {
@@ -1965,7 +1952,7 @@
           submitBtn.disabled = false;
           submitBtn.textContent = 'Agregar al catálogo';
         });
-    });
+    }); // end toWebpFile callback
   }
 
   if (showArchivedToggle) {
@@ -1973,6 +1960,26 @@
       showArchivedSol = showArchivedToggle.checked;
       renderCatList(searchInput ? searchInput.value : '');
     });
+  }
+
+  /* ── Image → webp helper ── */
+  function toWebpFile(file, cb) {
+    if (!file || file.type === 'image/webp') return cb(file);
+    var img = new Image();
+    var url = URL.createObjectURL(file);
+    img.onload = function () {
+      var c = document.createElement('canvas');
+      c.width = img.naturalWidth; c.height = img.naturalHeight;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      c.toBlob(function (blob) {
+        URL.revokeObjectURL(url);
+        if (!blob) return cb(file);
+        cb(new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), { type: 'image/webp' }));
+      }, 'image/webp', 0.85);
+    };
+    img.onerror = function () { cb(file); };
+    img.src = url;
   }
 
   setupAddFragForm();
@@ -2019,62 +2026,69 @@
       submitBtn.textContent = 'Guardando…';
       statusEl.hidden = true;
 
-      var fd = new FormData(form);
-      fd.set('tok', token);
+      var editImageInput = document.getElementById('sol-edit-image');
+      toWebpFile(editImageInput.files[0], function (webpFile) {
+        var fd = new FormData(form);
+        if (webpFile && editImageInput.files[0] !== webpFile) {
+          fd.delete('image');
+          fd.append('image', webpFile);
+        }
+        fd.set('tok', token);
 
-      // If editing a KV entry → PATCH with action=update
-      // If editing a static entry → POST to create an override KV entry
-      if (isKV) {
-        fd.set('action', 'update');
-        if (!fd.get('cat'))    fd.delete('cat');
-        if (!fd.get('gender')) fd.delete('gender');
-        fetch('/api/catalog-request', { method: 'PATCH', body: fd })
-          .then(function (r) { return r.json(); }).then(function (res) {
-            if (res.ok) {
-              statusEl.textContent = 'Cambios guardados.';
-              statusEl.style.color = 'oklch(73% .12 145)';
-              statusEl.hidden = false;
-              _refreshAfterKvAction();
-              setTimeout(close, 1200);
-            } else {
-              statusEl.textContent = 'Error al guardar.';
+        // If editing a KV entry → PATCH with action=update
+        // If editing a static entry → POST to create an override KV entry
+        if (isKV) {
+          fd.set('action', 'update');
+          if (!fd.get('cat'))    fd.delete('cat');
+          if (!fd.get('gender')) fd.delete('gender');
+          fetch('/api/catalog-request', { method: 'PATCH', body: fd })
+            .then(function (r) { return r.json(); }).then(function (res) {
+              if (res.ok) {
+                statusEl.textContent = 'Cambios guardados.';
+                statusEl.style.color = 'oklch(73% .12 145)';
+                statusEl.hidden = false;
+                _refreshAfterKvAction();
+                setTimeout(close, 1200);
+              } else {
+                statusEl.textContent = 'Error al guardar.';
+                statusEl.style.color = '#e88080';
+                statusEl.hidden = false;
+              }
+            }).catch(function () {
+              statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
               statusEl.style.color = '#e88080';
               statusEl.hidden = false;
-            }
-          }).catch(function () {
-            statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-            statusEl.style.color = '#e88080';
-            statusEl.hidden = false;
-          }).finally(function () {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Guardar cambios';
-          });
-      } else {
-        // POST to create a new KV entry (override)
-        if (!fd.get('cat'))    fd.set('cat', item.cat || 'disenador');
-        if (!fd.get('gender')) fd.set('gender', 'unisex');
-        fetch('/api/catalog-request', { method: 'POST', body: fd })
-          .then(function (r) { return r.json(); }).then(function (res) {
-            if (res.ok) {
-              statusEl.textContent = 'Guardado como edición.';
-              statusEl.style.color = 'oklch(73% .12 145)';
-              statusEl.hidden = false;
-              _refreshAfterKvAction();
-              setTimeout(close, 1200);
-            } else {
-              statusEl.textContent = 'Error al guardar.';
+            }).finally(function () {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Guardar cambios';
+            });
+        } else {
+          // POST to create a new KV entry (override)
+          if (!fd.get('cat'))    fd.set('cat', item.cat || 'disenador');
+          if (!fd.get('gender')) fd.set('gender', 'unisex');
+          fetch('/api/catalog-request', { method: 'POST', body: fd })
+            .then(function (r) { return r.json(); }).then(function (res) {
+              if (res.ok) {
+                statusEl.textContent = 'Guardado como edición.';
+                statusEl.style.color = 'oklch(73% .12 145)';
+                statusEl.hidden = false;
+                _refreshAfterKvAction();
+                setTimeout(close, 1200);
+              } else {
+                statusEl.textContent = 'Error al guardar.';
+                statusEl.style.color = '#e88080';
+                statusEl.hidden = false;
+              }
+            }).catch(function () {
+              statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
               statusEl.style.color = '#e88080';
               statusEl.hidden = false;
-            }
-          }).catch(function () {
-            statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-            statusEl.style.color = '#e88080';
-            statusEl.hidden = false;
-          }).finally(function () {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Guardar cambios';
-          });
-      }
+            }).finally(function () {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Guardar cambios';
+            });
+        }
+      }); // end toWebpFile
     };
   }
 
