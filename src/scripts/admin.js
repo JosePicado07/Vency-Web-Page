@@ -341,7 +341,7 @@
         image: toWebp400(f.image),
         characterColor: f.characterColor || null,
         notes: f.notes || '',
-        cat: f.category || '',
+        cat: (f.category === 'icon-series' && f.cat) ? f.cat : (f.category || ''),
         gender: f.gender || ''
       };
     });
@@ -1536,7 +1536,6 @@
     'nicho': 'Nicho',
     'ultra-nicho': 'Ultra Nicho',
     'original-blend': 'Original Blend',
-    'icon-series': 'Icon Series',
     'vency': 'Vency'
   };
 
