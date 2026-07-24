@@ -152,6 +152,13 @@
     save();
   }
 
+  function removeBlocked() {
+    state.selection = state.selection.filter(function (s) { return !_unavailSet.has(s.id); });
+    state.bottles   = state.bottles.filter(function (b)   { return !_unavailSet.has(b.id); });
+    save();
+    render();
+  }
+
   // ─── DOM ───────────────────────────────────────────────────────────────
   var emptyEl       = document.getElementById('js-cart-empty');
   var cartEl        = document.getElementById('js-cart');
@@ -218,7 +225,7 @@
             return '<div class="carrito__item' + (gBlocked ? ' carrito__item--agotado' : '') + '" data-id="' + esc(g.id) + '" data-fmt="decant">' +
               thumbHtml(g.id) +
               '<div class="carrito__item-info">' +
-                (gBlocked ? '<span class="carrito__agotado-tag">No disponible</span>' : '') +
+                (gBlocked ? '<span class="carrito__agotado-label">No disponible</span>' : '') +
                 '<p class="carrito__item-name">' + esc(g.name) + '</p>' +
                 '<p class="carrito__item-price">' + colones(priceForType(g.type)) + ' c/u</p>' +
               '</div>' +
@@ -245,7 +252,7 @@
             return '<div class="carrito__item' + (bBlocked ? ' carrito__item--agotado' : '') + '" data-id="' + esc(b.id) + '" data-fmt="' + esc(b.fmt) + '">' +
               thumbHtml(b.id) +
               '<div class="carrito__item-info">' +
-                (bBlocked ? '<span class="carrito__agotado-tag">No disponible</span>' : '') +
+                (bBlocked ? '<span class="carrito__agotado-label">No disponible</span>' : '') +
                 '<p class="carrito__item-name">' + esc(b.name) + '</p>' +
                 '<p class="carrito__item-price">Frasco ' + esc(BOTTLE_LABEL[b.fmt] || b.fmt) + ' · ' + colones(b.price) + ' c/u</p>' +
               '</div>' +
@@ -385,8 +392,18 @@
              + tail;
 
     var blocked = hasBlocked();
-    var avWarn = document.getElementById('js-avail-warn');
-    if (avWarn) avWarn.hidden = !blocked;
+    var avPanel = document.getElementById('js-avail-panel');
+    if (avPanel) {
+      if (blocked) {
+        if (avPanel.hidden) {
+          avPanel.hidden = false;
+          setTimeout(function () { avPanel.classList.add('is-visible'); }, 16);
+        }
+      } else {
+        avPanel.classList.remove('is-visible');
+        avPanel.hidden = true;
+      }
+    }
 
     if (waBtn) {
       var waHref = blocked ? '#' : 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
@@ -476,6 +493,11 @@
     });
   }
 
+  var removeBlockedBtn = document.getElementById('js-avail-remove');
+  if (removeBlockedBtn) {
+    removeBlockedBtn.addEventListener('click', removeBlocked);
+  }
+
   if (clearBtn) {
     clearBtn.addEventListener('click', function () {
       if (isEmpty()) return;
@@ -560,7 +582,7 @@
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'visible') {
       load();
-      render();
+      fetchAvail().then(render);
     }
   });
 
