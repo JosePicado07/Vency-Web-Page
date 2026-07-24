@@ -47,11 +47,28 @@
     }
     .sol-add-input:focus { outline: none; border-color: var(--warm-ochre); box-shadow: 0 0 0 3px color-mix(in oklch, var(--warm-ochre) 12%, transparent); }
     .sol-add-textarea { resize: vertical; min-height: 4.5rem; }
+    /* Select wrapper — custom chevron via CSS borders (reliable cross-browser) */
+    .sol-select-wrap {
+      position: relative;
+    }
+    .sol-select-wrap::after {
+      content: '';
+      position: absolute; z-index: 1;
+      top: 50%; right: .85rem;
+      width: 8px; height: 8px;
+      border-right: 2px solid var(--warm-ochre);
+      border-bottom: 2px solid var(--warm-ochre);
+      transform: translateY(-60%) rotate(45deg);
+      pointer-events: none;
+      transition: border-color .2s;
+    }
+    .sol-select-wrap:focus-within::after {
+      border-color: color-mix(in oklch, var(--warm-ochre) 65%, black);
+    }
     select.sol-add-input {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='oklch(55%200.10%2055)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right .75rem center; background-size: 12px 7px;
-      padding-right: 2.25rem; cursor: pointer;
+      -webkit-appearance: none; -moz-appearance: none; appearance: none;
+      padding-right: 2.5rem; cursor: pointer;
+      min-height: 44px;
       transition: border-color .2s, box-shadow .2s, background-color .2s;
     }
     select.sol-add-input:hover {
@@ -71,6 +88,11 @@
     }
     .sol-add-field:focus-within .sol-add-label {
       color: oklch(52% 0.09 55);
+    }
+
+    /* Phone-first: stack 2-col rows on small screens */
+    @media (max-width: 480px) {
+      .sol-add-row--2col { grid-template-columns: 1fr; }
     }
 
     .sol-add-upload {
@@ -447,20 +469,24 @@
           <div class="sol-add-row sol-add-row--2col">
             <div class="sol-add-field">
               <label class="sol-add-label" for="add-cat">Categoría *</label>
-              <select class="sol-add-input" id="add-cat" name="cat" required>
-                <option value="">Seleccioná…</option>
-                <option value="disenador">Diseñador</option>
-                <option value="nicho">Nicho</option>
-                <option value="ultra-nicho">Ultra Nicho</option>
-              </select>
+              <div class="sol-select-wrap">
+                <select class="sol-add-input" id="add-cat" name="cat" required>
+                  <option value="">Seleccioná…</option>
+                  <option value="disenador">Diseñador</option>
+                  <option value="nicho">Nicho</option>
+                  <option value="ultra-nicho">Ultra Nicho</option>
+                </select>
+              </div>
             </div>
             <div class="sol-add-field">
               <label class="sol-add-label" for="add-gender">Género</label>
-              <select class="sol-add-input" id="add-gender" name="gender">
-                <option value="unisex">Unisex</option>
-                <option value="hombre">Hombre</option>
-                <option value="mujer">Mujer</option>
-              </select>
+              <div class="sol-select-wrap">
+                <select class="sol-add-input" id="add-gender" name="gender">
+                  <option value="unisex">Unisex</option>
+                  <option value="hombre">Hombre</option>
+                  <option value="mujer">Mujer</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -581,21 +607,25 @@
         <div class="sol-add-row sol-add-row--2col">
           <div class="sol-add-field">
             <label class="sol-add-label" for="sol-edit-cat">Categoría</label>
-            <select class="sol-add-input" id="sol-edit-cat" name="cat">
-              <option value="">Sin cambios</option>
-              <option value="disenador">Diseñador</option>
-              <option value="nicho">Nicho</option>
-              <option value="ultra-nicho">Ultra Nicho</option>
-            </select>
+            <div class="sol-select-wrap">
+              <select class="sol-add-input" id="sol-edit-cat" name="cat">
+                <option value="">Sin cambios</option>
+                <option value="disenador">Diseñador</option>
+                <option value="nicho">Nicho</option>
+                <option value="ultra-nicho">Ultra Nicho</option>
+              </select>
+            </div>
           </div>
           <div class="sol-add-field">
             <label class="sol-add-label" for="sol-edit-gender">Género</label>
-            <select class="sol-add-input" id="sol-edit-gender" name="gender">
-              <option value="">Sin cambios</option>
-              <option value="unisex">Unisex</option>
-              <option value="hombre">Hombre</option>
-              <option value="mujer">Mujer</option>
-            </select>
+            <div class="sol-select-wrap">
+              <select class="sol-add-input" id="sol-edit-gender" name="gender">
+                <option value="">Sin cambios</option>
+                <option value="unisex">Unisex</option>
+                <option value="hombre">Hombre</option>
+                <option value="mujer">Mujer</option>
+              </select>
+            </div>
           </div>
         </div>
         <div class="sol-add-row">

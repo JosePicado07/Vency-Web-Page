@@ -9,6 +9,9 @@ Thumbs.db
 .vscode/
 .idea/
 
+# Playwright test artifacts
+test-results/
+
 # Logs (including malformed Windows-redirect filenames from earlier sessions)
 *.log
 C:Users*
