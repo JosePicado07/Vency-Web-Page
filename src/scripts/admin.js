@@ -341,7 +341,8 @@
         image: toWebp400(f.image),
         characterColor: f.characterColor || null,
         notes: f.notes || '',
-        cat: f.category || ''
+        cat: f.category || '',
+        gender: f.gender || ''
       };
     });
     var ext = (window.VENCY_FULL_CATALOG || []).map(function (f) {
@@ -373,6 +374,8 @@
         name: e.name,
         brand: e.brand || '',
         cat: e.cat || 'disenador',
+        notes: e.notes || '',
+        gender: e.gender || '',
         image: e.imageId ? '/api/catalog-image/' + e.imageId : 'assets/images/_webp/default-bottle-400.webp'
       };
     });
@@ -1808,6 +1811,8 @@
             brand:    e.brand || '',
             image:    e.imageId ? '/api/catalog-image/' + e.imageId : '',
             cat:      e.cat || 'disenador',
+            notes:    e.notes || '',
+            gender:   e.gender || '',
             _type:    'decant',
             _isKV:    true,
             _kvEntry: e,
@@ -1883,14 +1888,14 @@
 
       if (!brand || !name || !cat) {
         statusEl.textContent = 'Completá los campos obligatorios.';
-        statusEl.style.color = '#e88080';
+        statusEl.style.color = 'var(--state-error)';
         statusEl.hidden = false;
         return;
       }
 
       if (isInStaticCatalog(brand, name)) {
         statusEl.textContent = 'Esa fragancia ya está en el catálogo.';
-        statusEl.style.color = '#e8a860';
+        statusEl.style.color = 'var(--state-pending)';
         statusEl.hidden = false;
         return;
       }
@@ -1912,7 +1917,7 @@
         .then(function (res) {
           if (res.dupe) {
             statusEl.textContent = 'Esa fragancia ya está en el catálogo.';
-            statusEl.style.color = '#e8a860';
+            statusEl.style.color = 'var(--state-pending)';
             statusEl.hidden = false;
           } else if (res.ok) {
             // Seed inventory in GAS
@@ -1943,13 +1948,13 @@
               .catch(function () {});
           } else {
             statusEl.textContent = 'Error al guardar. Intentá de nuevo.';
-            statusEl.style.color = '#e88080';
+            statusEl.style.color = 'var(--state-error)';
             statusEl.hidden = false;
           }
         })
         .catch(function () {
           statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-          statusEl.style.color = '#e88080';
+          statusEl.style.color = 'var(--state-error)';
           statusEl.hidden = false;
         })
         .finally(function () {
@@ -2005,8 +2010,10 @@
     document.getElementById('sol-edit-tok').value   = token || '';
     document.getElementById('sol-edit-brand').value = kv.brand || item.brand || '';
     document.getElementById('sol-edit-name').value  = kv.name || item.name || '';
-    document.getElementById('sol-edit-cat').value   = kv.cat || item.cat || '';
-    document.getElementById('sol-edit-gender').value = kv.gender || item.gender || '';
+    var catSelect = document.querySelector('#js-sol-edit-form .vency-select[data-name="cat"]');
+    var genderSelect = document.querySelector('#js-sol-edit-form .vency-select[data-name="gender"]');
+    if (catSelect && catSelect._setValue) catSelect._setValue(kv.cat || item.cat || '');
+    if (genderSelect && genderSelect._setValue) genderSelect._setValue(kv.gender || item.gender || '');
     document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
 
     var currentImg = isKV ? kv.imageId : item.image;
@@ -2065,12 +2072,12 @@
                 setTimeout(close, 1200);
               } else {
                 statusEl.textContent = 'Error al guardar.';
-                statusEl.style.color = '#e88080';
+                statusEl.style.color = 'var(--state-error)';
                 statusEl.hidden = false;
               }
             }).catch(function () {
               statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-              statusEl.style.color = '#e88080';
+              statusEl.style.color = 'var(--state-error)';
               statusEl.hidden = false;
             }).finally(function () {
               submitBtn.disabled = false;
@@ -2090,12 +2097,12 @@
                 setTimeout(close, 1200);
               } else {
                 statusEl.textContent = 'Error al guardar.';
-                statusEl.style.color = '#e88080';
+                statusEl.style.color = 'var(--state-error)';
                 statusEl.hidden = false;
               }
             }).catch(function () {
               statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-              statusEl.style.color = '#e88080';
+              statusEl.style.color = 'var(--state-error)';
               statusEl.hidden = false;
             }).finally(function () {
               submitBtn.disabled = false;
@@ -2105,6 +2112,71 @@
       }); // end toWebpFile
     };
   }
+
+  /* ── Custom select init ── */
+  function initSelect(root) {
+    var btn     = root.querySelector('.vency-select__btn');
+    var list    = root.querySelector('.vency-select__list');
+    var input   = root.querySelector('.vency-select__input');
+    var label   = btn.querySelector('.vency-select__label');
+    var options = list.querySelectorAll('.vency-select__option');
+
+    function open() {
+      btn.setAttribute('aria-expanded', 'true');
+      list.classList.add('is-open');
+      var sel = list.querySelector('[aria-selected="true"]') || options[0];
+      if (sel) sel.focus();
+    }
+    function close() {
+      btn.setAttribute('aria-expanded', 'false');
+      list.classList.remove('is-open');
+    }
+    function pick(opt) {
+      var val = opt.dataset.value;
+      input.value = val;
+      label.textContent = opt.textContent.replace(/·.*/, '').trim();
+      label.classList.remove('vency-select__label--placeholder');
+      options.forEach(function (o) { o.setAttribute('aria-selected', 'false'); });
+      opt.setAttribute('aria-selected', 'true');
+      close();
+      btn.focus();
+    }
+    root._setValue = function (value) {
+      var match = Array.prototype.slice.call(options).find(function (o) { return o.dataset.value === value; });
+      if (match) pick(match);
+    };
+
+    btn.addEventListener('click', function () {
+      list.classList.contains('is-open') ? close() : open();
+    });
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault(); open();
+      }
+    });
+    options.forEach(function (opt) {
+      opt.addEventListener('click', function () { pick(opt); });
+      opt.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(opt); }
+        if (e.key === 'Escape') { close(); btn.focus(); }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          var next = opt.nextElementSibling;
+          if (next) next.focus();
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          var prev = opt.previousElementSibling;
+          if (prev) prev.focus(); else btn.focus();
+        }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!root.contains(e.target)) close();
+    });
+  }
+
+  document.querySelectorAll('.vency-select').forEach(initSelect);
 
   /* ── Init ── */
   var _kvCatalogEntries = [];

@@ -39,3 +39,5 @@ src/styles/*.min.css
 # Malformed Windows temp log files (created by local dev tools)
 C*Users*.log
 test-stripe.mjs
+
+image.png

@@ -47,45 +47,70 @@
     }
     .sol-add-input:focus { outline: none; border-color: var(--warm-ochre); box-shadow: 0 0 0 3px color-mix(in oklch, var(--warm-ochre) 12%, transparent); }
     .sol-add-textarea { resize: vertical; min-height: 4.5rem; }
-    /* Select wrapper — custom chevron via CSS borders (reliable cross-browser) */
-    .sol-select-wrap {
-      position: relative;
+    /* Custom select (vency-select) from personalizacion.html */
+    .vency-select { position: relative; }
+    .vency-select__btn {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .5rem; width: 100%; padding: .58rem .8rem;
+      font-family: inherit; font-size: .88rem;
+      color: var(--volcanic-ink); background: var(--surface-input);
+      border: 1.5px solid var(--border); border-radius: 7px;
+      cursor: pointer; text-align: left; min-height: 44px;
+      transition: border-color .15s, box-shadow .15s;
     }
-    .sol-select-wrap::after {
-      content: '';
-      position: absolute; z-index: 1;
-      top: 50%; right: .85rem;
-      width: 8px; height: 8px;
-      border-right: 2px solid var(--warm-ochre);
-      border-bottom: 2px solid var(--warm-ochre);
-      transform: translateY(-60%) rotate(45deg);
-      pointer-events: none;
-      transition: border-color .2s;
-    }
-    .sol-select-wrap:focus-within::after {
-      border-color: color-mix(in oklch, var(--warm-ochre) 65%, black);
-    }
-    select.sol-add-input {
-      -webkit-appearance: none; -moz-appearance: none; appearance: none;
-      padding-right: 2.5rem; cursor: pointer;
-      min-height: 44px;
-      transition: border-color .2s, box-shadow .2s, background-color .2s;
-    }
-    select.sol-add-input:hover {
-      border-color: oklch(62% 0.09 55);
-      background-color: oklch(96% 0.005 90);
-    }
-    select.sol-add-input:focus {
+    .vency-select__btn:hover { border-color: oklch(62% 0.09 55); background: oklch(96% 0.005 90); }
+    .vency-select__btn:focus {
+      outline: none;
       border-color: var(--warm-ochre);
-      box-shadow: 0 0 0 2px color-mix(in oklch, var(--warm-ochre) 18%, transparent);
-      background-color: oklch(99% 0.006 90);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--warm-ochre) 12%, transparent);
     }
-    select.sol-add-input option {
-      background: oklch(98% 0.005 90); color: var(--volcanic-ink);
+    .vency-select__btn[aria-expanded="true"] {
+      border-color: var(--warm-ochre);
+      border-bottom-left-radius: 0; border-bottom-right-radius: 0;
     }
-    select.sol-add-input option[value=""] {
-      color: var(--ink-muted);
+    .vency-select__label {
+      flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
+    .vency-select__label--placeholder { color: var(--ink-muted); }
+    .vency-select__chevron {
+      flex-shrink: 0; color: var(--ink-muted);
+      transition: transform .18s cubic-bezier(.16,1,.3,1);
+    }
+    .vency-select__btn[aria-expanded="true"] .vency-select__chevron {
+      transform: rotate(180deg);
+    }
+    .vency-select__list {
+      display: none; position: absolute; top: 100%; left: 0; right: 0; z-index: 50;
+      background: var(--surface-input);
+      border: 1.5px solid var(--warm-ochre); border-top: none;
+      border-bottom-left-radius: 7px; border-bottom-right-radius: 7px;
+      max-height: 220px; overflow-y: auto;
+    }
+    .vency-select__list.is-open { display: block; }
+    .vency-select__option {
+      display: block; width: 100%; padding: .65rem .8rem;
+      font-family: inherit; font-size: .88rem;
+      color: var(--ink-muted); background: none; border: none;
+      text-align: left; cursor: pointer;
+      transition: background .12s, color .12s;
+      border-bottom: 1px solid var(--border);
+    }
+    .vency-select__option:last-child { border-bottom: none; }
+    .vency-select__option:hover,
+    .vency-select__option:focus {
+      background: oklch(94% .008 80); color: var(--volcanic-ink);
+      outline: none;
+    }
+    .vency-select__option[aria-selected="true"] {
+      color: var(--volcanic-ink); font-weight: 600;
+    }
+    .vency-select__option[aria-selected="true"]::after {
+      content: '';
+      display: inline-block; width: 5px; height: 5px;
+      border-radius: 50%; background: var(--warm-ochre);
+      margin-left: .5rem; vertical-align: middle;
+    }
+    .vency-select__input { display: none; }
     .sol-add-field:focus-within .sol-add-label {
       color: oklch(52% 0.09 55);
     }
@@ -196,8 +221,8 @@
     .sol-btn--restore:hover:not(:disabled)  { background: oklch(88% 0.06 145); }
     .sol-btn--delete   { background: transparent; color: var(--state-error); border-color: color-mix(in oklch, var(--state-error) 35%, transparent); }
     .sol-btn--delete:hover:not(:disabled)   { background: var(--state-error-bg); }
-    .sol-btn--edit     { background: transparent; color: oklch(52% 0.06 250); border-color: oklch(78% 0.05 250); }
-    .sol-btn--edit:hover:not(:disabled)     { background: oklch(95% 0.015 250); border-color: oklch(52% 0.06 250); }
+    .sol-btn--edit     { background: transparent; color: var(--warm-ochre-dark); border-color: color-mix(in oklch, var(--warm-ochre) 30%, transparent); }
+    .sol-btn--edit:hover:not(:disabled)     { background: color-mix(in oklch, var(--warm-ochre) 8%, transparent); border-color: var(--warm-ochre); }
     .sol-btn--cancel  { background: transparent; color: var(--ink-muted); border-color: var(--border-subtle); }
     .sol-btn--cancel:hover { background: oklch(95% 0.005 90); }
 
@@ -468,24 +493,33 @@
 
           <div class="sol-add-row sol-add-row--2col">
             <div class="sol-add-field">
-              <label class="sol-add-label" for="add-cat">Categoría *</label>
-              <div class="sol-select-wrap">
-                <select class="sol-add-input" id="add-cat" name="cat" required>
-                  <option value="">Seleccioná…</option>
-                  <option value="disenador">Diseñador</option>
-                  <option value="nicho">Nicho</option>
-                  <option value="ultra-nicho">Ultra Nicho</option>
-                </select>
+              <label class="sol-add-label" id="lbl-add-cat">Categoría *</label>
+              <div class="vency-select" data-name="cat">
+                <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-add-cat">
+                  <span class="vency-select__label vency-select__label--placeholder">Seleccioná…</span>
+                  <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="vency-select__list" role="listbox" aria-labelledby="lbl-add-cat">
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">Diseñador</button>
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="nicho">Nicho</button>
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="ultra-nicho">Ultra Nicho</button>
+                </div>
+                <input type="hidden" class="vency-select__input" name="cat">
               </div>
             </div>
             <div class="sol-add-field">
-              <label class="sol-add-label" for="add-gender">Género</label>
-              <div class="sol-select-wrap">
-                <select class="sol-add-input" id="add-gender" name="gender">
-                  <option value="unisex">Unisex</option>
-                  <option value="hombre">Hombre</option>
-                  <option value="mujer">Mujer</option>
-                </select>
+              <label class="sol-add-label" id="lbl-add-gender">Género</label>
+              <div class="vency-select" data-name="gender">
+                <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-add-gender">
+                  <span class="vency-select__label vency-select__label--placeholder">Elegir</span>
+                  <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="vency-select__list" role="listbox" aria-labelledby="lbl-add-gender">
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="unisex">Unisex</button>
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="hombre">Hombre</button>
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="mujer">Mujer</button>
+                </div>
+                <input type="hidden" class="vency-select__input" name="gender">
               </div>
             </div>
           </div>
@@ -606,25 +640,35 @@
         </div>
         <div class="sol-add-row sol-add-row--2col">
           <div class="sol-add-field">
-            <label class="sol-add-label" for="sol-edit-cat">Categoría</label>
-            <div class="sol-select-wrap">
-              <select class="sol-add-input" id="sol-edit-cat" name="cat">
-                <option value="">Sin cambios</option>
-                <option value="disenador">Diseñador</option>
-                <option value="nicho">Nicho</option>
-                <option value="ultra-nicho">Ultra Nicho</option>
-              </select>
+            <label class="sol-add-label" id="lbl-edit-cat">Categoría</label>
+            <div class="vency-select" data-name="cat">
+              <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-edit-cat">
+                <span class="vency-select__label vency-select__label--placeholder">Sin cambios</span>
+                <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="vency-select__list" role="listbox" aria-labelledby="lbl-edit-cat">
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="">Sin cambios</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">Diseñador</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="nicho">Nicho</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="ultra-nicho">Ultra Nicho</button>
+              </div>
+              <input type="hidden" class="vency-select__input" name="cat">
             </div>
           </div>
           <div class="sol-add-field">
-            <label class="sol-add-label" for="sol-edit-gender">Género</label>
-            <div class="sol-select-wrap">
-              <select class="sol-add-input" id="sol-edit-gender" name="gender">
-                <option value="">Sin cambios</option>
-                <option value="unisex">Unisex</option>
-                <option value="hombre">Hombre</option>
-                <option value="mujer">Mujer</option>
-              </select>
+            <label class="sol-add-label" id="lbl-edit-gender">Género</label>
+            <div class="vency-select" data-name="gender">
+              <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-edit-gender">
+                <span class="vency-select__label vency-select__label--placeholder">Sin cambios</span>
+                <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <div class="vency-select__list" role="listbox" aria-labelledby="lbl-edit-gender">
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="">Sin cambios</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="unisex">Unisex</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="hombre">Hombre</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="mujer">Mujer</button>
+              </div>
+              <input type="hidden" class="vency-select__input" name="gender">
             </div>
           </div>
         </div>
