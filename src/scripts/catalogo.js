@@ -546,6 +546,7 @@
 
             if (_unavailable.has(frag.id) || _archivedBase.has(frag.id)) return;
 
+            li.id = frag.id;
             li.className = 'cat-entry cat-entry--icon';
             li.dataset.cat    = sec.cat;
             li.dataset.gender = frag.gender || 'unisex';

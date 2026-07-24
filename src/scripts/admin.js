@@ -1725,16 +1725,7 @@
       delBtn.className = 'sol-btn sol-btn--delete';
       delBtn.type = 'button';
       delBtn.textContent = 'Eliminar';
-      delBtn.addEventListener('click', function () {
-        if (!confirm('\xbfEliminar esta fragancia permanentemente?')) return;
-        delBtn.disabled = true;
-        fetch('/api/catalog-request', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: item.id, action: 'delete', tok: token })
-        }).then(function () { _refreshAfterKvAction(); })
-          .catch(function () { delBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
-      });
+      delBtn.addEventListener('click', function () { openDeleteModal(item); });
       actions.appendChild(delBtn);
     }
 
@@ -1872,6 +1863,20 @@
     var preview   = document.getElementById('js-upload-preview');
 
     if (!form) return;
+
+    // Collapse toggle (persisted in localStorage)
+    var addHead = document.getElementById('js-add-head');
+    if (addHead) {
+      var addCollapsed = localStorage.getItem('vency_add_collapsed') === '1';
+      form.hidden = addCollapsed;
+      addHead.setAttribute('aria-expanded', String(!addCollapsed));
+      addHead.addEventListener('click', function () {
+        var collapsed = !form.hidden;
+        form.hidden = collapsed;
+        addHead.setAttribute('aria-expanded', String(!collapsed));
+        localStorage.setItem('vency_add_collapsed', collapsed ? '1' : '0');
+      });
+    }
 
     // Image preview
     fileInput.addEventListener('change', function () {
@@ -2145,6 +2150,39 @@
             });
         }
       }); // end toWebpFile
+    };
+  }
+
+  /* ── Delete confirmation modal ── */
+  function openDeleteModal(item) {
+    var modal     = document.getElementById('js-del-modal');
+    var backdrop  = document.getElementById('js-del-modal-backdrop');
+    var desc      = document.getElementById('js-del-desc');
+    var cancelBtn = document.getElementById('js-del-cancel');
+    var confirmBtn = document.getElementById('js-del-confirm');
+
+    desc.innerHTML = 'Estás seguro de eliminar <strong>' + escapeHtml_(item.brand) + ' &mdash; ' + escapeHtml_(item.name) + '</strong>? Esta acción no se puede deshacer.';
+    modal.hidden = false;
+
+    function close() { modal.hidden = true; }
+    backdrop.onclick = close;
+    cancelBtn.onclick = close;
+
+    confirmBtn.onclick = function () {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = 'Eliminando…';
+      fetch('/api/catalog-request', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: item.id, action: 'delete', tok: token })
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (res.ok) { close(); _refreshAfterKvAction(); }
+        else throw new Error();
+      }).catch(function () {
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Eliminar';
+        showToast('Error. Intentá de nuevo.');
+      });
     };
   }
 

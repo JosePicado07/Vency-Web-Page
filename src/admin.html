@@ -24,9 +24,17 @@
       border-bottom: 1px solid var(--border);
     }
     .sol-list-section { padding: 1.25rem 1rem; }
+    .sol-add-head {
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none;
+      margin: 0 0 1.1rem;
+    }
+    .sol-add-head:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; border-radius: 4px; }
+    .sol-add-chevron { flex-shrink: 0; color: var(--ink-muted); transition: transform .2s cubic-bezier(.16,1,.3,1); }
+    .sol-add-head[aria-expanded="false"] .sol-add-chevron { transform: rotate(-90deg); }
     .sol-add-title {
       font-size: .68rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .1em; color: var(--ink-muted); margin: 0 0 1.1rem;
+      letter-spacing: .1em; color: var(--ink-muted); margin: 0;
     }
     .sol-add-form { display: flex; flex-direction: column; gap: .9rem; }
     .sol-add-row  { display: flex; flex-direction: column; gap: .32rem; }
@@ -169,18 +177,17 @@
     }
     .sol-add-stock-hint { font-size: .7rem; color: var(--ink-subdued); margin: 0; }
 
-    /* "Mostrar archivadas" toggle — mobile-first, 44px hit target */
+    /* "Mostrar archivadas" toggle */
     .sol-show-archived-row {
       padding: .75rem 1rem;
       border-bottom: 1px solid var(--border-subtle);
       display: flex; align-items: center; gap: .75rem;
-      min-height: 44px; cursor: pointer;
+      cursor: pointer;
     }
     .sol-show-archived-toggle {
       appearance: none; width: 40px; height: 24px; border-radius: 12px;
       background: var(--border); border: none; cursor: pointer;
       position: relative; transition: background .18s; flex-shrink: 0;
-      min-width: 40px; min-height: 44px; margin: -10px 0;
     }
     .sol-show-archived-toggle::after {
       content: ''; position: absolute; top: 5px; left: 5px;
@@ -281,6 +288,17 @@
       display: flex; gap: .6rem; margin-top: 1.25rem;
     }
     .sol-modal__actions .sol-add-submit { flex: 1; }
+    .sol-modal__sheet .sol-add-textarea { max-height: 160px; overflow-y: auto; resize: none; }
+
+    /* Delete confirmation modal */
+    .sol-del-sheet { max-width: 380px; text-align: center; padding: 2rem 1.5rem; }
+    .sol-del-icon { margin: 0 auto 1rem; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--state-error-bg); color: var(--state-error); }
+    .sol-del-title { font-size: 1.1rem; font-weight: 700; color: var(--volcanic-ink); margin-bottom: .5rem; }
+    .sol-del-desc { font-size: .85rem; color: var(--ink-muted); line-height: 1.5; margin-bottom: 1.5rem; }
+    .sol-del-actions { display: flex; gap: .65rem; }
+    .sol-del-actions .sol-btn, .sol-del-actions .sol-add-submit { flex: 1; min-height: 44px; border-radius: 8px; font-size: .82rem; }
+    .sol-del-confirm { background: var(--state-error); border-color: var(--state-error); }
+    .sol-del-confirm:hover:not(:disabled) { background: oklch(38% 0.15 25); border-color: oklch(38% 0.15 25); }
 
     /* Availability toggle for sol-cards */
     .sol-avail-btn {
@@ -493,7 +511,10 @@
 
       <!-- Add new fragrance form -->
       <section class="sol-add-section">
-        <h2 class="sol-add-title">Agregar fragancia al catálogo</h2>
+        <div class="sol-add-head" id="js-add-head" role="button" tabindex="0" aria-expanded="true">
+          <h2 class="sol-add-title">Agregar fragancia al catálogo</h2>
+          <svg class="sol-add-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
         <form class="sol-add-form" id="js-add-frag-form" novalidate>
 
           <div class="sol-add-row sol-add-row--2col">
@@ -545,8 +566,8 @@
 
           <div class="sol-add-row">
             <label class="sol-add-label" for="add-notes">Descripción / notas olfativas</label>
-            <textarea class="sol-add-input sol-add-textarea" id="add-notes" name="notes" rows="3"
-                      placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
+          <textarea class="sol-add-input sol-add-textarea" id="add-notes" name="notes" rows="3" maxlength="500"
+                    placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
           </div>
 
           <div class="sol-add-row">
@@ -704,7 +725,7 @@
         </div>
         <div class="sol-add-row">
           <label class="sol-add-label" for="sol-edit-notes">Descripción / notas olfativas</label>
-          <textarea class="sol-add-input sol-add-textarea" id="sol-edit-notes" name="notes" rows="3"
+          <textarea class="sol-add-input sol-add-textarea" id="sol-edit-notes" name="notes" rows="3" maxlength="500"
                     placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
         </div>
         <div class="sol-add-row">
@@ -724,6 +745,22 @@
         </div>
         <p class="sol-add-status" id="js-sol-edit-status" role="alert" hidden></p>
       </form>
+    </div>
+  </div>
+
+  <!-- Delete confirmation modal -->
+  <div class="sol-modal" id="js-del-modal" role="alertdialog" aria-modal="true" aria-label="Confirmar eliminación" hidden>
+    <div class="sol-modal__backdrop" id="js-del-modal-backdrop"></div>
+    <div class="sol-modal__sheet sol-del-sheet">
+      <div class="sol-del-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+      </div>
+      <p class="sol-del-title">Eliminar fragancia</p>
+      <p class="sol-del-desc" id="js-del-desc"></p>
+      <div class="sol-del-actions">
+        <button class="sol-btn sol-del-cancel" id="js-del-cancel" type="button">Cancelar</button>
+        <button class="sol-add-submit sol-del-confirm" id="js-del-confirm" type="button">Eliminar</button>
+      </div>
     </div>
   </div>
 
