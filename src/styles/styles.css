@@ -3040,3 +3040,17 @@ a.coll-block:hover .coll-block__cta {
   border: 1px solid var(--volcanic-ink);
 }
 
+/* ── Cart drawer availability ────────────────────────────── */
+.cart-item--agotado { opacity: 0.6; }
+.cart-item--agotado .cart-item__name { text-decoration: line-through; }
+.cart-agotado-tag {
+  display: block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: oklch(52% 0.16 27);
+  margin-top: 0.15rem;
+}
+

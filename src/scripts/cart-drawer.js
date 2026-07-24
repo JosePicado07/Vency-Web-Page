@@ -25,6 +25,7 @@
   }
 
   var _openTrigger = null;
+  var _drawerUnavailSet = new Set();
 
   function openCart(triggerEl) {
     _openTrigger = triggerEl || null;
@@ -33,6 +34,13 @@
     document.body.style.overflow = 'hidden';
     renderCart();
     setTimeout(function () { if (close) close.focus(); }, 60);
+    fetch('/api/availability')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        _drawerUnavailSet = new Set(data.unavailable || []);
+        if (_drawerUnavailSet.size > 0 && drawer.classList.contains('is-open')) renderCart();
+      })
+      .catch(function () {});
   }
 
   function closeCart() {
@@ -122,11 +130,12 @@
       var name = frag ? frag.name : s.id;
       var img  = frag ? frag.image : '';
       var itemPrice = _priceForType(s.type || 'vency');
+      var dBlocked = _drawerUnavailSet.has(s.id);
       itemsHtml +=
-        '<div class="cart-item">' +
+        '<div class="cart-item' + (dBlocked ? ' cart-item--agotado' : '') + '">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
-            '<div class="cart-item__name">' + escHtml(name) + '</div>' +
+            '<div class="cart-item__name">' + escHtml(name) + (dBlocked ? '<span class="cart-agotado-tag">No disponible</span>' : '') + '</div>' +
             '<div class="cart-item__variant">Decant · 10 ml</div>' +
             '<div class="cart-item__qty">₡' + formatPrice(itemPrice) + '</div>' +
             '<button class="cart-item__remove js-cart-remove" type="button"' +
@@ -144,11 +153,12 @@
       var qty = b.qty || 1;
       var unitPrice = b.price || 0;
       total += unitPrice * qty;
+      var bBlocked = _drawerUnavailSet.has(b.id);
       itemsHtml +=
-        '<div class="cart-item">' +
+        '<div class="cart-item' + (bBlocked ? ' cart-item--agotado' : '') + '">' +
           '<img src="' + img + '" alt="" class="cart-item__img" loading="lazy">' +
           '<div class="cart-item__info">' +
-            '<div class="cart-item__name">' + escHtml(name) + '</div>' +
+            '<div class="cart-item__name">' + escHtml(name) + (bBlocked ? '<span class="cart-agotado-tag">No disponible</span>' : '') + '</div>' +
             '<div class="cart-item__variant">Frasco · ' + escHtml(b.fmt || '30ml') + (qty > 1 ? ' · ' + qty + ' uds' : '') + '</div>' +
             '<div class="cart-item__qty">₡' + formatPrice(unitPrice) + (qty > 1 ? ' c/u' : '') + '</div>' +
             '<button class="cart-item__remove js-cart-remove" type="button"' +

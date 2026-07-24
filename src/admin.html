@@ -1,4 +1,4 @@
-ï»¿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -11,13 +11,13 @@
   <meta name="apple-mobile-web-app-title" content="Vency">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon.svg">
-  <title>Vency Atelier Â· Vendedor</title>
+  <title>Vency Atelier · Vendedor</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles/admin.min.css?v=58">
   <style>
-    /* â”€â”€ Admin catalog / CatÃ¡logo tab â€” light theme â”€â”€ */
+    /* -- Admin catalog / Catálogo tab — light theme -- */
     #js-mode-solicitudes { padding: 0; }
     .sol-add-section {
       padding: 1.5rem 1rem 1.25rem;
@@ -337,7 +337,7 @@
       background: oklch(93% 0.008 90);
     }
 
-    /* CatÃ¡logo list section */
+    /* Catálogo list section */
     #js-sol-list { padding: .5rem 1rem 9rem; }
     #js-sol-hint { padding: .5rem 1rem; font-size: .82rem; color: var(--ink-muted); }
     #js-sol-empty { padding: 2rem 1rem; text-align: center; font-size: .84rem; color: var(--ink-muted); }
@@ -351,7 +351,7 @@
     <div class="gate__inner">
       <p class="gate__brand">VENCY ATELIER</p>
       <h1 class="gate__heading">Modo vendedor</h1>
-      <p class="gate__sub">IngresÃ¡ tu clave para continuar.</p>
+      <p class="gate__sub">Ingresá tu clave para continuar.</p>
       <form class="gate__form" id="js-gate-form" novalidate>
         <div class="gate__field">
           <div class="gate__pw-wrap">
@@ -360,7 +360,7 @@
                    placeholder="Clave de vendedor" autocomplete="current-password"
                    autocapitalize="none" spellcheck="false" required>
             <button class="gate__eye" id="js-gate-eye" type="button"
-                    aria-label="Mostrar contraseÃ±a">
+                    aria-label="Mostrar contraseña">
               <svg class="gate__eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
                 <circle cx="12" cy="12" r="3"/>
@@ -370,7 +370,7 @@
         </div>
         <button class="gate__btn" id="js-gate-btn" type="submit">Entrar</button>
       </form>
-      <p class="gate__error" id="js-gate-error" role="alert" hidden>Clave incorrecta. IntentÃ¡ de nuevo.</p>
+      <p class="gate__error" id="js-gate-error" role="alert" hidden>Clave incorrecta. Intentá de nuevo.</p>
     </div>
   </div>
 
@@ -380,7 +380,7 @@
     <header class="app-header">
       <div class="app-header__left">
         <span class="app-header__brand">VENCY ATELIER</span>
-        <span class="app-header__dot" aria-hidden="true">Â·</span>
+        <span class="app-header__dot" aria-hidden="true">·</span>
         <span class="app-header__mode">Vendedor</span>
       </div>
       <button class="app-header__install" id="js-install" type="button" hidden>Instalar</button>
@@ -391,14 +391,14 @@
     <section class="metrics" id="js-metrics" aria-label="Resumen de ventas">
 
       <!-- Period tabs -->
-      <div class="metrics__period-tabs" role="tablist" aria-label="PerÃ­odo">
+      <div class="metrics__period-tabs" role="tablist" aria-label="Período">
         <button class="metrics__period-tab metrics__period-tab--active" id="js-tab-hoy"
                 role="tab" aria-selected="true" data-period="hoy" type="button">Hoy</button>
         <button class="metrics__period-tab" id="js-tab-semana"
                 role="tab" aria-selected="false" data-period="semana" type="button">Semana</button>
         <button class="metrics__period-tab" id="js-tab-mes"
                 role="tab" aria-selected="false" data-period="mes" type="button">Mes</button>
-        <button class="metrics__refresh-btn" id="js-refresh" type="button" aria-label="Actualizar mÃ©tricas">
+        <button class="metrics__refresh-btn" id="js-refresh" type="button" aria-label="Actualizar métricas">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="23 4 23 10 17 10"/>
@@ -407,63 +407,63 @@
         </button>
       </div>
 
-      <!-- Month navigation (solo visible en pestaÃ±a Mes) -->
+      <!-- Month navigation (solo visible en pestaña Mes) -->
       <div class="metrics__month-nav" id="js-month-nav" hidden>
         <button class="metrics__month-btn" id="js-month-prev" type="button" aria-label="Mes anterior">&#8592;</button>
         <span class="metrics__month-label" id="js-month-label"></span>
         <button class="metrics__month-btn" id="js-month-next" type="button" aria-label="Mes siguiente" disabled>&#8594;</button>
       </div>
 
-      <!-- Primary figure: total del perÃ­odo -->
+      <!-- Primary figure: total del período -->
       <div class="metrics__period-total">
         <span class="metrics__period-label" id="js-period-label">HOY</span>
-        <span class="metrics__period-value" id="js-metric-period">Â·</span>
+        <span class="metrics__period-value" id="js-metric-period">·</span>
       </div>
 
       <div class="metrics__splits">
         <div class="metrics__split">
           <span class="metrics__split-label">Web</span>
-          <span class="metrics__split-value" id="js-metric-web">Â·</span>
+          <span class="metrics__split-value" id="js-metric-web">·</span>
           <span class="metrics__split-pending" id="js-metric-web-pending" hidden></span>
         </div>
         <div class="metrics__split">
           <span class="metrics__split-label">Local</span>
-          <span class="metrics__split-value" id="js-metric-local">Â·</span>
+          <span class="metrics__split-value" id="js-metric-local">·</span>
         </div>
         <div class="metrics__split">
           <span class="metrics__split-label">Efectivo</span>
-          <span class="metrics__split-value" id="js-metric-efectivo">Â·</span>
+          <span class="metrics__split-value" id="js-metric-efectivo">·</span>
         </div>
         <div class="metrics__split">
           <span class="metrics__split-label">SINPE</span>
-          <span class="metrics__split-value" id="js-metric-sinpe">Â·</span>
+          <span class="metrics__split-value" id="js-metric-sinpe">·</span>
         </div>
       </div>
 
       <p class="metrics__top" id="js-metric-top"></p>
 
-      <!-- Sales list Â· collapsed by default -->
+      <!-- Sales list · collapsed by default -->
       <div class="sales-section" id="js-sales-section">
         <button class="sales-section__toggle" id="js-sales-toggle" type="button" aria-expanded="false">
           <span class="sales-section__toggle-label" id="js-sales-toggle-label">PEDIDOS</span>
           <svg class="sales-section__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3,5 7,9 11,5"/></svg>
         </button>
         <div class="sales-section__body" id="js-sales-body" hidden>
-          <div class="metrics__sales" id="js-sales-list" aria-label="Ventas del perÃ­odo"></div>
-          <p class="metrics__sales-empty" id="js-sales-empty" hidden>Sin ventas en este perÃ­odo.</p>
+          <div class="metrics__sales" id="js-sales-list" aria-label="Ventas del período"></div>
+          <p class="metrics__sales-empty" id="js-sales-empty" hidden>Sin ventas en este período.</p>
           <button class="sales-section__showmore" id="js-sales-showmore" type="button" hidden></button>
         </div>
       </div>
 
-      <p class="metrics__offline" id="js-metrics-offline" hidden>Sin conexiÃ³n Â· abrÃ­ la hoja directamente.</p>
+      <p class="metrics__offline" id="js-metrics-offline" hidden>Sin conexión · abrí la hoja directamente.</p>
 
     </section>
 
-    <!-- Sales calendar Â· heatmap of daily revenue for the active month -->
+    <!-- Sales calendar · heatmap of daily revenue for the active month -->
     <section class="admin-cal" id="js-admin-cal" hidden aria-label="Calendario de ventas"></section>
 
     <!-- Mode tabs -->
-    <div class="mode-tabs" role="tablist" aria-label="SecciÃ³n">
+    <div class="mode-tabs" role="tablist" aria-label="Sección">
       <button class="mode-tab mode-tab--active" id="js-mode-tab-vender"
               data-mode="vender" role="tab" aria-selected="true" type="button"
               aria-controls="js-mode-vender">Vender</button>
@@ -472,7 +472,7 @@
               aria-controls="js-mode-inventario">Inventario</button>
       <button class="mode-tab" id="js-mode-tab-solicitudes"
               data-mode="solicitudes" role="tab" aria-selected="false" type="button"
-              aria-controls="js-mode-solicitudes">CatÃ¡logo</button>
+              aria-controls="js-mode-solicitudes">Catálogo</button>
     </div>
 
     <!-- Shared search -->
@@ -483,10 +483,10 @@
     </div>
 
     <!-- Category filters -->
-    <div class="admin-cat-filters" id="js-cat-filters" role="group" aria-label="Filtrar por categorÃ­a">
+    <div class="admin-cat-filters" id="js-cat-filters" role="group" aria-label="Filtrar por categoría">
       <button class="admin-cat-btn admin-cat-btn--active" data-filter="todos" type="button" aria-pressed="true">Todo</button>
       <button class="admin-cat-btn" data-filter="vency" type="button" aria-pressed="false">Vency</button>
-      <button class="admin-cat-btn" data-filter="disenador" type="button" aria-pressed="false">DiseÃ±ador</button>
+      <button class="admin-cat-btn" data-filter="disenador" type="button" aria-pressed="false">Diseñador</button>
       <button class="admin-cat-btn" data-filter="nicho" type="button" aria-pressed="false">Nicho</button>
       <button class="admin-cat-btn" data-filter="ultra-nicho" type="button" aria-pressed="false">Ultra Nicho</button>
     </div>
@@ -506,13 +506,13 @@
       <div class="grid-sentinel" id="js-inv-sentinel" aria-hidden="true"></div>
     </div>
 
-    <!-- CatÃ¡logo panel -->
+    <!-- Catálogo panel -->
     <div id="js-mode-solicitudes" role="tabpanel" aria-labelledby="js-mode-tab-solicitudes" hidden>
 
       <!-- Add new fragrance form -->
       <section class="sol-add-section">
         <div class="sol-add-head" id="js-add-head" role="button" tabindex="0" aria-expanded="true">
-          <h2 class="sol-add-title">Agregar fragancia al catÃ¡logo</h2>
+          <h2 class="sol-add-title">Agregar fragancia al catálogo</h2>
           <svg class="sol-add-chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <form class="sol-add-form" id="js-add-frag-form" novalidate>
@@ -521,34 +521,33 @@
             <div class="sol-add-field">
               <label class="sol-add-label" for="add-brand">Marca *</label>
               <input class="sol-add-input" id="add-brand" name="brand" type="text"
-                     placeholder="Ej: Tom Ford, Creedâ€¦" autocomplete="off" required>
+                     placeholder="Ej: Tom Ford, Creed…" autocomplete="off" required>
             </div>
             <div class="sol-add-field">
               <label class="sol-add-label" for="add-name">Nombre del perfume *</label>
               <input class="sol-add-input" id="add-name" name="name" type="text"
-                     placeholder="Ej: Black Orchid, Aventusâ€¦" autocomplete="off" required>
+                     placeholder="Ej: Black Orchid, Aventus…" autocomplete="off" required>
             </div>
           </div>
 
           <div class="sol-add-row sol-add-row--2col">
             <div class="sol-add-field">
-              <label class="sol-add-label" id="lbl-add-cat">CategorÃ­a *</label>
+              <label class="sol-add-label" id="lbl-add-cat">Categoría *</label>
               <div class="vency-select" data-name="cat">
                 <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-add-cat">
-                  <span class="vency-select__label vency-select__label--placeholder">SeleccionÃ¡â€¦</span>
+                  <span class="vency-select__label vency-select__label--placeholder">Seleccioná…</span>
                   <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <div class="vency-select__list" role="listbox" aria-labelledby="lbl-add-cat">
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">DiseÃ±ador</button>
+                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">Diseñador</button>
                   <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="nicho">Nicho</button>
                   <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="ultra-nicho">Ultra Nicho</button>
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="original-blend">Original Blend</button>
                 </div>
                 <input type="hidden" class="vency-select__input" name="cat">
               </div>
             </div>
             <div class="sol-add-field">
-              <label class="sol-add-label" id="lbl-add-gender">GÃ©nero</label>
+              <label class="sol-add-label" id="lbl-add-gender">Género</label>
               <div class="vency-select" data-name="gender">
                 <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-add-gender">
                   <span class="vency-select__label vency-select__label--placeholder">Elegir</span>
@@ -565,9 +564,9 @@
           </div>
 
           <div class="sol-add-row">
-            <label class="sol-add-label" for="add-notes">DescripciÃ³n / notas olfativas</label>
+            <label class="sol-add-label" for="add-notes">Descripción / notas olfativas</label>
           <textarea class="sol-add-input sol-add-textarea" id="add-notes" name="notes" rows="3" maxlength="500"
-                    placeholder="Ej: Bergamota, rosa, pachulÃ­. Oriental floral con un toque ahumado."></textarea>
+                    placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
           </div>
 
           <div class="sol-add-row">
@@ -577,7 +576,7 @@
                      accept="image/*" aria-label="Subir imagen">
               <div class="sol-add-upload__preview" id="js-upload-preview">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                <span class="sol-add-upload__hint">TocÃ¡ para elegir una imagen</span>
+                <span class="sol-add-upload__hint">Tocá para elegir una imagen</span>
               </div>
             </div>
           </div>
@@ -587,11 +586,11 @@
             <div class="sol-add-stock-body">
               <label class="sol-add-label" for="add-oil-ml">Aceite esencial (ml)</label>
               <input class="sol-add-input" id="add-oil-ml" name="oil_ml" type="number" min="0" step="10" placeholder="Ej: 100">
-              <p class="sol-add-stock-hint">Se sincronizarÃ¡ con el inventario automÃ¡ticamente.</p>
+              <p class="sol-add-stock-hint">Se sincronizará con el inventario automáticamente.</p>
             </div>
           </details>
 
-          <button class="sol-add-submit" id="js-add-frag-submit" type="submit">Agregar al catÃ¡logo</button>
+          <button class="sol-add-submit" id="js-add-frag-submit" type="submit">Agregar al catálogo</button>
           <p class="sol-add-status" id="js-add-frag-status" role="alert" hidden></p>
 
         </form>
@@ -603,10 +602,10 @@
                role="switch" aria-label="Mostrar archivadas">
         <label class="sol-show-archived-label" for="js-sol-show-archived">Mostrar archivadas</label>
       </div>
-      <p class="admin-hint" id="js-sol-hint" hidden>Cargandoâ€¦</p>
+      <p class="admin-hint" id="js-sol-hint" hidden>Cargando…</p>
       <div id="js-sol-list"></div>
       <div class="sol-sentinel" id="js-sol-sentinel" aria-hidden="true"></div>
-      <p class="dblock-empty" id="js-sol-empty" hidden>Sin fragancias en el catÃ¡logo.</p>
+      <p class="dblock-empty" id="js-sol-empty" hidden>Sin fragancias en el catálogo.</p>
 
     </div>
 
@@ -637,7 +636,7 @@
       </div>
       <div class="admin-panel__body">
         <div class="admin-panel__summary" id="js-panel-summary"></div>
-        <fieldset class="admin-panel__payment" aria-label="MÃ©todo de pago">
+        <fieldset class="admin-panel__payment" aria-label="Método de pago">
           <label class="pay-opt">
             <input class="pay-opt__radio" type="radio" name="pago" value="Efectivo" checked>
             <span class="pay-opt__label">Efectivo</span>
@@ -679,17 +678,17 @@
           <div class="sol-add-field">
             <label class="sol-add-label" for="sol-edit-brand">Marca</label>
             <input class="sol-add-input" id="sol-edit-brand" name="brand" type="text"
-                   placeholder="Ej: Tom Ford, Creedâ€¦" autocomplete="off">
+                   placeholder="Ej: Tom Ford, Creed…" autocomplete="off">
           </div>
           <div class="sol-add-field">
             <label class="sol-add-label" for="sol-edit-name">Nombre del perfume</label>
             <input class="sol-add-input" id="sol-edit-name" name="name" type="text"
-                   placeholder="Ej: Black Orchid, Aventusâ€¦" autocomplete="off">
+                   placeholder="Ej: Black Orchid, Aventus…" autocomplete="off">
           </div>
         </div>
         <div class="sol-add-row sol-add-row--2col">
           <div class="sol-add-field">
-            <label class="sol-add-label" id="lbl-edit-cat">CategorÃ­a</label>
+            <label class="sol-add-label" id="lbl-edit-cat">Categoría</label>
             <div class="vency-select" data-name="cat">
               <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-edit-cat">
                 <span class="vency-select__label vency-select__label--placeholder">Sin cambios</span>
@@ -697,7 +696,7 @@
               </button>
               <div class="vency-select__list" role="listbox" aria-labelledby="lbl-edit-cat">
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="">Sin cambios</button>
-                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">DiseÃ±ador</button>
+                <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="disenador">Diseñador</button>
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="nicho">Nicho</button>
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="ultra-nicho">Ultra Nicho</button>
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="original-blend">Original Blend</button>
@@ -707,7 +706,7 @@
             </div>
           </div>
           <div class="sol-add-field">
-            <label class="sol-add-label" id="lbl-edit-gender">GÃ©nero</label>
+            <label class="sol-add-label" id="lbl-edit-gender">Género</label>
             <div class="vency-select" data-name="gender">
               <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-edit-gender">
                 <span class="vency-select__label vency-select__label--placeholder">Sin cambios</span>
@@ -724,9 +723,9 @@
           </div>
         </div>
         <div class="sol-add-row">
-          <label class="sol-add-label" for="sol-edit-notes">DescripciÃ³n / notas olfativas</label>
+          <label class="sol-add-label" for="sol-edit-notes">Descripción / notas olfativas</label>
           <textarea class="sol-add-input sol-add-textarea" id="sol-edit-notes" name="notes" rows="3" maxlength="500"
-                    placeholder="Ej: Bergamota, rosa, pachulÃ­. Oriental floral con un toque ahumado."></textarea>
+                    placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
         </div>
         <div class="sol-add-row">
           <label class="sol-add-label" for="sol-edit-image">Nueva imagen (opcional)</label>
@@ -735,7 +734,7 @@
                    accept="image/*" aria-label="Elegir imagen">
             <div class="sol-add-upload__preview" id="js-edit-upload-preview">
               <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span class="sol-add-upload__hint">TocÃ¡ para cambiar la imagen</span>
+              <span class="sol-add-upload__hint">Tocá para cambiar la imagen</span>
             </div>
           </div>
         </div>
@@ -749,7 +748,7 @@
   </div>
 
   <!-- Delete confirmation modal -->
-  <div class="sol-modal" id="js-del-modal" role="alertdialog" aria-modal="true" aria-label="Confirmar eliminaciÃ³n" hidden>
+  <div class="sol-modal" id="js-del-modal" role="alertdialog" aria-modal="true" aria-label="Confirmar eliminación" hidden>
     <div class="sol-modal__backdrop" id="js-del-modal-backdrop"></div>
     <div class="sol-modal__sheet sol-del-sheet">
       <div class="sol-del-icon">

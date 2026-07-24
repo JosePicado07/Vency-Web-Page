@@ -1,30 +1,30 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu carrito · Vency Atelier</title>
-  <meta name="description" content="Revisa tu pedido, ajusta cantidades y confirmá por WhatsApp.">
+  <title>Tu carrito � Vency Atelier</title>
+  <meta name="description" content="Revisa tu pedido, ajusta cantidades y confirm� por WhatsApp.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Vency Atelier">
-  <meta property="og:title" content="Tu carrito · Vency Atelier">
-  <meta property="og:description" content="Revisá tu pedido y confirmá por WhatsApp. Fragancias artesanales de Heredia, Costa Rica.">
+  <meta property="og:title" content="Tu carrito � Vency Atelier">
+  <meta property="og:description" content="Revis� tu pedido y confirm� por WhatsApp. Fragancias artesanales de Heredia, Costa Rica.">
   <meta property="og:image" content="https://vencyatelier.com/assets/images/hero-botanica.png">
   <meta property="og:url" content="https://vencyatelier.com/carrito">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@700;900&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles/styles.css?v=72">
-  <link rel="stylesheet" href="styles/carrito.css?v=9">
+  <link rel="stylesheet" href="styles/styles.css?v=73">
+  <link rel="stylesheet" href="styles/carrito.css?v=10">
 </head>
 <body class="page-carrito">
 
   <a class="skip-nav" href="#main">Ir al contenido principal</a>
 
-  <nav class="nav" aria-label="Navegación principal">
-    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
-    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+  <nav class="nav" aria-label="Navegaci�n principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier � inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir men�">
       <span class="nav__toggle-bar"></span>
       <span class="nav__toggle-bar"></span>
     </button>
@@ -38,14 +38,14 @@
         </button>
         <ul class="nav__submenu" id="shop-submenu" role="list">
           <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
-          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Dise�ador</a></li>
           <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
           <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
           <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
         </ul>
       </li>
       <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
-      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="guia.html" class="nav__link">Gu�a</a></li>
       <li><a href="personalizacion.html" class="nav__link">Personalizar</a></li>
       <li><a href="faq.html" class="nav__link">FAQ</a></li>
     </ul>
@@ -55,26 +55,26 @@
 
     <header class="carrito-header">
       <a class="carrito-header__back" href="catalogo.html">&larr; Seguir comprando</a>
-      <span class="label sage-label">TU PEDIDO · VENCY ATELIER</span>
+      <span class="label sage-label">TU PEDIDO � VENCY ATELIER</span>
       <h1 class="carrito-header__title">Carrito.</h1>
     </header>
 
     <!-- Empty state -->
     <section class="carrito-empty" id="js-cart-empty" hidden>
-      <p class="carrito-empty__line">Tu carrito está vacío.</p>
-      <p class="carrito-empty__sub">Explorá la tienda y agregá una fragancia.</p>
-      <a class="btn btn--primary" href="catalogo.html">Explorar la colección</a>
+      <p class="carrito-empty__line">Tu carrito est� vac�o.</p>
+      <p class="carrito-empty__sub">Explor� la tienda y agreg� una fragancia.</p>
+      <a class="btn btn--primary" href="catalogo.html">Explorar la colecci�n</a>
     </section>
 
     <!-- Post-order confirmation (rendered when the user has tapped WhatsApp) -->
     <section class="carrito-sent" id="js-cart-sent" hidden>
       <p class="carrito-sent__ack">Pedido enviado.</p>
       <p class="carrito-sent__ref">
-        <span class="label">N.° DE PEDIDO</span>
+        <span class="label">N.� DE PEDIDO</span>
         <strong id="js-sent-ref"></strong>
       </p>
       <p class="carrito-sent__sub">
-        Tony recibió tu mensaje en WhatsApp. Si pagaste por SINPE, recordá enviar el comprobante a ese mismo chat.
+        Tony recibi� tu mensaje en WhatsApp. Si pagaste por SINPE, record� enviar el comprobante a ese mismo chat.
       </p>
       <div class="carrito-sent__actions">
         <a class="btn btn--primary" id="js-sent-resend" href="#" target="_blank" rel="noopener noreferrer">Re-enviar por WhatsApp</a>
@@ -89,26 +89,26 @@
 
       <div class="carrito__totals">
         <div class="carrito__total-row carrito__total-row--shipping" id="js-shipping-row" hidden>
-          <span class="carrito__total-label">Envío</span>
-          <span class="carrito__total-value carrito__total-value--sm" id="js-shipping-amount">₡2.500</span>
+          <span class="carrito__total-label">Env�o</span>
+          <span class="carrito__total-value carrito__total-value--sm" id="js-shipping-amount">�2.500</span>
         </div>
         <div class="carrito__total-row carrito__total-row--grand">
           <span class="carrito__total-label">Total</span>
-          <span class="carrito__total-value" id="js-cart-total" aria-live="polite" aria-atomic="true">₡0</span>
+          <span class="carrito__total-value" id="js-cart-total" aria-live="polite" aria-atomic="true">�0</span>
         </div>
         <p class="carrito__set-nudge" id="js-cart-nudge" hidden></p>
         <p class="carrito__set-nudge" id="js-ship-nudge" hidden></p>
       </div>
 
-      <div class="delivery-group" role="group" aria-label="Método de entrega">
+      <div class="delivery-group" role="group" aria-label="M�todo de entrega">
         <span class="label">ENTREGA</span>
         <div class="delivery-opts">
           <label class="delivery-opt">
             <input class="delivery-opt__radio js-delivery-radio" type="radio" name="delivery" value="sinpe" checked>
             <span class="delivery-opt__indicator"></span>
             <span class="delivery-opt__text">
-              <span class="delivery-opt__name">SINPE Móvil</span>
-              <span class="delivery-opt__desc">Transferís y enviás comprobante · +506 7277-3156</span>
+              <span class="delivery-opt__name">SINPE M�vil</span>
+              <span class="delivery-opt__desc">Transfer�s y envi�s comprobante � +506 7277-3156</span>
             </span>
           </label>
           <label class="delivery-opt">
@@ -116,39 +116,42 @@
             <span class="delivery-opt__indicator"></span>
             <span class="delivery-opt__text">
               <span class="delivery-opt__name">Recoger en local</span>
-              <span class="delivery-opt__desc">Heredia · coordinás horario por WhatsApp</span>
+              <span class="delivery-opt__desc">Heredia � coordin�s horario por WhatsApp</span>
             </span>
           </label>
         </div>
       </div>
 
       <div class="order-panel__pickup js-pickup-note" aria-hidden="true">
-        <p class="payment-method__note">Pasá a recoger al atelier en Heredia. El pago se realiza en sitio.</p>
+        <p class="payment-method__note">Pas� a recoger al atelier en Heredia. El pago se realiza en sitio.</p>
       </div>
 
       <div class="order-panel__methods" id="js-methods">
         <div class="payment-method">
-          <span class="label">SINPE MÓVIL</span>
+          <span class="label">SINPE M�VIL</span>
           <p class="payment-method__number">+506 7277-3156</p>
           <ol class="sinpe-steps">
-            <li>Transferí <strong class="js-sinpe-amount">₡0</strong> al <strong>+506 7277-3156</strong></li>
-            <li>Tomá captura del comprobante</li>
-            <li>Volvé y tocá el botón de abajo</li>
+            <li>Transfer� <strong class="js-sinpe-amount">�0</strong> al <strong>+506 7277-3156</strong></li>
+            <li>Tom� captura del comprobante</li>
+            <li>Volv� y toc� el bot�n de abajo</li>
           </ol>
         </div>
       </div>
 
       <div class="carrito__ticket" id="js-cart-ticket" hidden>
-        <span class="carrito__ticket-label">N.° de pedido</span>
+        <span class="carrito__ticket-label">N.� de pedido</span>
         <span class="carrito__ticket-ref" id="js-cart-ref"></span>
-        <span class="carrito__ticket-note">Usá este número al enviar tu comprobante.</span>
+        <span class="carrito__ticket-note">Us� este n�mero al enviar tu comprobante.</span>
       </div>
 
       <div class="carrito__actions">
         <div class="carrito__pay">
           <span class="label carrito__pay-heading">CONFIRMAR PEDIDO</span>
           <p class="carrito__pay-note" id="js-cart-confirm-text">
-            Transferí el monto exacto por SINPE y enviá el comprobante por WhatsApp con tu nombre.
+            Transfer� el monto exacto por SINPE y envi� el comprobante por WhatsApp con tu nombre.
+          </p>
+          <p class="carrito__avail-warn" id="js-avail-warn" role="alert" hidden>
+            Algunos art�culos ya no est�n disponibles. Quit�los para continuar.
           </p>
           <a
             href="#"
@@ -171,12 +174,12 @@
     <div class="footer__inner">
       <p class="footer__wordmark">VENCY ATELIER</p>
       <p class="footer__tagline">
-        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+        <span class="label label--faint">Perfumer�a artesanal � Heredia, Costa Rica</span>
       </p>
-      <nav class="footer__nav" aria-label="Navegación del pie de página">
-        <a href="catalogo.html" class="footer__link">Catálogo</a>
+      <nav class="footer__nav" aria-label="Navegaci�n del pie de p�gina">
+        <a href="catalogo.html" class="footer__link">Cat�logo</a>
         <a href="perfumista.html" class="footer__link">El Perfumista</a>
-        <a href="guia.html" class="footer__link">Guía</a>
+        <a href="guia.html" class="footer__link">Gu�a</a>
         <a href="personalizacion.html" class="footer__link">Personalizar</a>
       </nav>
     </div>
@@ -187,13 +190,13 @@
   <!-- Search -->
   <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true" aria-label="Buscar fragancias">
     <div class="search-overlay__header">
-      <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado…" autocomplete="off" aria-label="Buscar fragancias">
-      <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar búsqueda">
+      <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado�" autocomplete="off" aria-label="Buscar fragancias">
+      <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar b�squeda">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="search-overlay__body">
-      <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
+      <p class="search-overlay__hint js-search-hint">Escrib� al menos un car�cter para empezar a buscar</p>
       <div class="search-overlay__results js-search-results"></div>
       <div class="search-overlay__categories js-search-categories">
         <a href="catalogo.html?category=original" class="search-cat">
@@ -202,7 +205,7 @@
         </a>
         <a href="catalogo.html" class="search-cat">
           <span class="search-cat__label">TIENDA</span>
-          <span class="search-cat__name">Catálogo completo</span>
+          <span class="search-cat__name">Cat�logo completo</span>
         </a>
         <a href="perfumista.html" class="search-cat">
           <span class="search-cat__label">ATELIER</span>
@@ -218,7 +221,7 @@
     <div class="cart-drawer__header">
       <div>
         <div class="cart-drawer__title">Tu carrito</div>
-        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+        <div class="cart-drawer__count js-cart-count">0 art�culos</div>
       </div>
       <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar carrito">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -229,7 +232,7 @@
     <div class="cart-drawer__footer">
       <div class="cart-drawer__total js-cart-total-wrap">
         <span class="cart-drawer__total-label">Total</span>
-        <span class="cart-drawer__total-amount js-cart-total">₡0</span>
+        <span class="cart-drawer__total-amount js-cart-total">�0</span>
       </div>
       <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
     </div>

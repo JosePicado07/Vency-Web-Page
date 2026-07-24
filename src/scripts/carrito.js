@@ -43,6 +43,18 @@
   // pending = { ref, sentAt, waHref } when the user has tapped WhatsApp.
   // While pending, the cart shows a confirmation card instead of the order form.
   var state = { selection: [], bottles: [], ref: null, pending: null };
+  var _unavailSet = new Set();
+
+  function fetchAvail() {
+    return fetch('/api/availability')
+      .then(function (r) { return r.json(); })
+      .then(function (data) { _unavailSet = new Set(data.unavailable || []); })
+      .catch(function () {});
+  }
+  function hasBlocked() {
+    return state.selection.some(function (s) { return _unavailSet.has(s.id); })
+        || state.bottles.some(function (b) { return _unavailSet.has(b.id); });
+  }
   var PENDING_TTL_MS = 24 * 60 * 60 * 1000; // 1 day
 
   function load() {
@@ -202,9 +214,11 @@
             setHeader +
           '</div>' +
           grouped.map(function (g) {
-            return '<div class="carrito__item" data-id="' + esc(g.id) + '" data-fmt="decant">' +
+            var gBlocked = _unavailSet.has(g.id);
+            return '<div class="carrito__item' + (gBlocked ? ' carrito__item--agotado' : '') + '" data-id="' + esc(g.id) + '" data-fmt="decant">' +
               thumbHtml(g.id) +
               '<div class="carrito__item-info">' +
+                (gBlocked ? '<span class="carrito__agotado-tag">No disponible</span>' : '') +
                 '<p class="carrito__item-name">' + esc(g.name) + '</p>' +
                 '<p class="carrito__item-price">' + colones(priceForType(g.type)) + ' c/u</p>' +
               '</div>' +
@@ -227,9 +241,11 @@
           '<div class="carrito__group-head"><h3 class="label ochre-label carrito__group-label">FRASCOS</h3></div>' +
           state.bottles.map(function (b) {
             var qty = b.qty || 1;
-            return '<div class="carrito__item" data-id="' + esc(b.id) + '" data-fmt="' + esc(b.fmt) + '">' +
+            var bBlocked = _unavailSet.has(b.id);
+            return '<div class="carrito__item' + (bBlocked ? ' carrito__item--agotado' : '') + '" data-id="' + esc(b.id) + '" data-fmt="' + esc(b.fmt) + '">' +
               thumbHtml(b.id) +
               '<div class="carrito__item-info">' +
+                (bBlocked ? '<span class="carrito__agotado-tag">No disponible</span>' : '') +
                 '<p class="carrito__item-name">' + esc(b.name) + '</p>' +
                 '<p class="carrito__item-price">Frasco ' + esc(BOTTLE_LABEL[b.fmt] || b.fmt) + ' · ' + colones(b.price) + ' c/u</p>' +
               '</div>' +
@@ -368,8 +384,15 @@
              + '\n\nTotal: ' + colones(grand) + '\n'
              + tail;
 
+    var blocked = hasBlocked();
+    var avWarn = document.getElementById('js-avail-warn');
+    if (avWarn) avWarn.hidden = !blocked;
+
     if (waBtn) {
-      waBtn.href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+      var waHref = blocked ? '#' : 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg);
+      waBtn.href = waHref;
+      waBtn.classList.toggle('is-disabled', blocked);
+      waBtn.setAttribute('aria-disabled', String(blocked));
       var label = isLocal
         ? 'Enviar pedido ' + state.ref + ' por WhatsApp'
         : 'Enviar comprobante ' + state.ref + ' por WhatsApp';
@@ -467,31 +490,23 @@
     });
   }
 
-  // Log order to Sheets + mark pending when the user opens WhatsApp.
-  function checkAvailBeforeSubmit(items) {
-    return fetch('/api/availability')
-      .then(function (r) { return r.json(); })
-      .then(function (data) {
-        var bad = (data.unavailable || []).filter(function (id) {
-          return items.some(function (x) { return x.id === id; });
-        });
-        if (bad.length > 0) {
-          alert('Estos perfumes ya no est\u00e1n disponibles:\n' + bad.join('\n') + '\n\nQu\u00edtalos del carrito para continuar.');
-          return false;
-        }
-        return true;
-      })
-      .catch(function () { return true; });
+  // Final availability gate before checkout (Stripe path).
+  function checkAvailBeforeSubmit() {
+    return fetchAvail().then(function () {
+      if (!hasBlocked()) return true;
+      render();
+      return false;
+    });
   }
 
   if (waBtn) {
     waBtn.addEventListener('click', function (e) {
-      if (isEmpty()) return;
-      var allItems = [];
-      selectionGrouped().forEach(function (g) { allItems.push({ id: g.id }); });
-      state.bottles.forEach(function (b) { allItems.push({ id: b.id }); });
-      checkAvailBeforeSubmit(allItems).then(function (ok) {
-        if (!ok) { e.preventDefault(); return; }
+      e.preventDefault();
+      if (isEmpty() || hasBlocked()) return;
+      var href = waBtn.getAttribute('href');
+      if (!href || href === '#') return;
+      fetchAvail().then(function () {
+        if (hasBlocked()) { render(); return; }
 
         var delivery = (document.querySelector('.js-delivery-radio:checked') || {}).value || 'sinpe';
         var items = [];
@@ -523,9 +538,11 @@
         state.pending = {
           ref:    state.ref,
           sentAt: Date.now(),
-          waHref: waBtn.getAttribute('href') || ''
+          waHref: href
         };
         save();
+        render();
+        window.open(href, '_blank');
       });
     });
   }
@@ -559,10 +576,7 @@
     stripeBtn.addEventListener('click', function () {
       if (isEmpty()) return;
 
-      var allItems = [];
-      selectionGrouped().forEach(function (g) { allItems.push({ id: g.id }); });
-      state.bottles.forEach(function (b) { allItems.push({ id: b.id }); });
-      checkAvailBeforeSubmit(allItems).then(function (ok) {
+      checkAvailBeforeSubmit().then(function (ok) {
         if (!ok) { return; }
 
         var lineItems = [];
@@ -668,5 +682,5 @@
   // ─── Init ──────────────────────────────────────────────────────────────
   load();
   handleStripeReturn();
-  render();
+  fetchAvail().then(render);
 })();

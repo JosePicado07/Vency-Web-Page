@@ -476,3 +476,36 @@
   text-align: center;
   margin: -0.2rem 0 0;
 }
+
+/* ── Availability warning ────────────────────────────────── */
+
+.carrito__item--agotado { opacity: 0.6; }
+.carrito__item--agotado .carrito__item-name { text-decoration: line-through; }
+.carrito__agotado-tag {
+  display: inline-block;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: oklch(52% 0.16 27);
+  background: oklch(52% 0.16 27 / 0.1);
+  padding: 0.1em 0.4em;
+  border-radius: 2px;
+  margin-bottom: 0.2em;
+}
+.carrito__avail-warn {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.83rem;
+  color: oklch(52% 0.16 27);
+  background: oklch(52% 0.16 27 / 0.08);
+  padding: 0.55rem 0.75rem;
+  border-radius: 4px;
+  margin: 0;
+  line-height: 1.45;
+}
+#js-cart-wa.is-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
