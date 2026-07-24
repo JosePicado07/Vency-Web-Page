@@ -394,6 +394,7 @@
   function buildSections() {
     var container = document.getElementById('cat-content');
     if (!container) return;
+    container.innerHTML = '';
 
     // Same inventory bridge as Vency entries — compute sold-out at render time
     // so the state is right on first paint (no late "AGOTADO popping in on scroll").
@@ -435,7 +436,7 @@
         brands[key].push({ _isIcon: true, _frag: frag });
       });
 
-      /* Merge KV-added entries (admin-added via Catálogo tab) */
+      /* Merge KV-added entries (admin-added via Catálogo tab) — skip if already in static catalog */
       _kvEntries.forEach(function (entry) {
         if (entry.cat !== sec.cat) return;
         var brandKey = (entry.brand || '').toUpperCase();
@@ -445,7 +446,13 @@
         });
         var key = existingKey || (entry.brand || '');
         if (!brands[key]) brands[key] = [];
-        brands[key].push({ _isKV: true, _entry: entry });
+        var alreadyInGroup = brands[key].some(function (item) {
+          if (item._isKV || item._isIcon) return false;
+          var n = (item.name || '').toLowerCase();
+          var e = (entry.name || '').toLowerCase();
+          return n === e;
+        });
+        if (!alreadyInGroup) brands[key].push({ _isKV: true, _entry: entry });
       });
 
       var brandNames = Object.keys(brands);

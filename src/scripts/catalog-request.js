@@ -9,7 +9,8 @@
       var existing = window.VENCY_FULL_CATALOG || [];
       entries.forEach(function (e) {
         var alreadyIn = existing.some(function (x) {
-          return x.brand === e.brand && x.name === e.name;
+          return (x.brand || '').toLowerCase() === (e.brand || '').toLowerCase()
+              && x.name.toLowerCase() === e.name.toLowerCase();
         });
         if (!alreadyIn) {
           existing.push({
