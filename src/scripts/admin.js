@@ -456,8 +456,10 @@
           b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
         });
         if (activeMode === 'vender') renderFragList(searchInput.value);
-        else if (activeMode === 'solicitudes') renderCatList(searchInput.value);
-        else renderInvList(searchInput.value);
+        else if (activeMode === 'solicitudes') {
+          if (solHintEl.hidden) renderCatList(searchInput.value);
+          // else: still loading — loadSolicitudes() will call renderCatList with activeFilter when done
+        } else renderInvList(searchInput.value);
       });
     }
 
@@ -610,6 +612,17 @@
   }
 
   /* ── Mode tabs ── */
+  function resetCatFilter() {
+    activeFilter = 'todos';
+    var catEl = document.getElementById('js-cat-filters');
+    if (!catEl) return;
+    catEl.querySelectorAll('.admin-cat-btn').forEach(function (b) {
+      var on = b.dataset.filter === 'todos';
+      b.classList.toggle('admin-cat-btn--active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+  }
+
   function setupModeTabs() {
     var tabs = document.querySelectorAll('.mode-tab');
     Array.prototype.forEach.call(tabs, function (tab) {
@@ -623,6 +636,7 @@
         modePanelInv.hidden         = activeMode !== 'inventario';
         modePanelSolicitudes.hidden = activeMode !== 'solicitudes';
         searchInput.value = '';
+        resetCatFilter();
         if (activeMode === 'vender')      renderFragList('');
         else if (activeMode === 'inventario') renderInvList('');
         else if (activeMode === 'solicitudes') loadSolicitudes();

@@ -342,6 +342,18 @@
     #js-sol-hint { padding: .5rem 1rem; font-size: .82rem; color: var(--ink-muted); }
     #js-sol-empty { padding: 2rem 1rem; text-align: center; font-size: .84rem; color: var(--ink-muted); }
     .sol-sentinel { height: 1px; }
+
+    /* Category filter pills — warm-ochre active state, distinct from volcanic-ink mode tabs */
+    .admin-cat-filters .admin-cat-btn--active {
+      background: var(--warm-ochre);
+      border-color: var(--warm-ochre);
+      color: var(--botanical-parchment);
+    }
+    .admin-cat-filters .admin-cat-btn--active:hover {
+      background: oklch(48% 0.09 55);
+      border-color: oklch(48% 0.09 55);
+    }
+    .admin-cat-filters .admin-cat-btn--active .admin-cat-count { opacity: 0.75; }
   </style>
 </head>
 <body>
@@ -772,7 +784,7 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=12"></script>
+  <script src="scripts/admin.js?v=13"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');
