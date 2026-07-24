@@ -339,7 +339,9 @@
         isIcon: isIcon,
         soldOut: !!f.soldOut,
         image: toWebp400(f.image),
-        characterColor: f.characterColor || null
+        characterColor: f.characterColor || null,
+        notes: f.notes || '',
+        cat: f.category || ''
       };
     });
     var ext = (window.VENCY_FULL_CATALOG || []).map(function (f) {
@@ -356,7 +358,9 @@
         name: f.name,
         brand: f.brand || '',
         cat: f.cat,
-        image: img
+        image: img,
+        notes: f.notes || '',
+        gender: f.gender || ''
       };
     });
     var kv = _kvCatalogEntries.filter(function (e) {
@@ -1815,17 +1819,19 @@
         var baseItems = catalog.filter(function (f) { return !f._isKV; }).filter(function (f) {
           return !markSeen(f.brand || '', f.name);
         }).map(function (f) {
-          return {
-            id:     f.id,
-            name:   f.name,
-            brand:  f.brand || '',
-            image:  f.image,
-            cat:    f.cat || (f._type === 'vency' ? 'vency' : 'disenador'),
-            _type:  f._type,
-            _isKV:  false,
-            isIcon: !!f.isIcon
-          };
-        });
+            return {
+              id:     f.id,
+              name:   f.name,
+              brand:  f.brand || '',
+              image:  f.image,
+              cat:    f.cat || (f._type === 'vency' ? 'vency' : 'disenador'),
+              notes:  f.notes || '',
+              gender: f.gender || '',
+              _type:  f._type,
+              _isKV:  false,
+              isIcon: !!f.isIcon
+            };
+          });
 
         solAllItems = kvItems.concat(baseItems);
         renderCatList(searchInput ? searchInput.value : '');
@@ -2000,12 +2006,12 @@
     document.getElementById('sol-edit-brand').value = kv.brand || item.brand || '';
     document.getElementById('sol-edit-name').value  = kv.name || item.name || '';
     document.getElementById('sol-edit-cat').value   = kv.cat || item.cat || '';
-    document.getElementById('sol-edit-gender').value = kv.gender || '';
+    document.getElementById('sol-edit-gender').value = kv.gender || item.gender || '';
     document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
 
     var currentImg = isKV ? kv.imageId : item.image;
     var prevHtml;
-    if (currentImg) {
+    if (currentImg && currentImg !== 'assets/images/_webp/default-bottle-400.webp') {
       var src = isKV ? '/api/catalog-image/' + currentImg : currentImg;
       prevHtml = '<img src="' + src + '" alt="Imagen actual" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:contain;">';
     } else {
