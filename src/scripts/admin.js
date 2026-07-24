@@ -1654,15 +1654,13 @@
     });
     actions.appendChild(availBtn);
 
-    // Edit (KV only)
-    if (isKV) {
-      var editBtn = document.createElement('button');
-      editBtn.className = 'sol-btn sol-btn--edit';
-      editBtn.type = 'button';
-      editBtn.textContent = 'Editar';
-      editBtn.addEventListener('click', function () { openEditModal(item); });
-      actions.appendChild(editBtn);
-    }
+    // Edit (all items)
+    var editBtn = document.createElement('button');
+    editBtn.className = 'sol-btn sol-btn--edit';
+    editBtn.type = 'button';
+    editBtn.textContent = 'Editar';
+    editBtn.addEventListener('click', function () { openEditModal(item); });
+    actions.appendChild(editBtn);
 
     // Archive / Restore
     if (!isArchived) {
@@ -1807,29 +1805,18 @@
         solHintEl.hidden = true;
         kvEntries = Array.isArray(kvEntries) ? kvEntries : [];
 
-        // Build unified list: all base items (non-KV) + non-duplicate KV entries
+        // KV entries override static entries by brand|name
         var seen = {};
-        function kvIsSeen(brand, name) {
+        function markSeen(brand, name) {
           var k = (brand || '').toLowerCase() + '|' + name.toLowerCase();
           if (seen[k]) return true;
           seen[k] = true;
           return false;
         }
-        var baseItems = catalog.filter(function (f) { return !f._isKV; }).map(function (f) {
-          kvIsSeen(f.brand || '', f.name);
-          return {
-            id:     f.id,
-            name:   f.name,
-            brand:  f.brand || '',
-            image:  f.image,
-            cat:    f.cat || (f._type === 'vency' ? 'vency' : 'disenador'),
-            _type:  f._type,
-            _isKV:  false,
-            isIcon: !!f.isIcon
-          };
-        });
+
+        // 1. Add all KV entries first (they take priority)
         var kvItems = kvEntries.filter(function (e) {
-          return !kvIsSeen(e.brand || '', e.name);
+          return !markSeen(e.brand || '', e.name);
         }).map(function (e) {
           return {
             id:       e.id,
@@ -1844,7 +1831,23 @@
           };
         });
 
-        solAllItems = baseItems.concat(kvItems);
+        // 2. Add static entries that don't have a KV override
+        var baseItems = catalog.filter(function (f) { return !f._isKV; }).filter(function (f) {
+          return !markSeen(f.brand || '', f.name);
+        }).map(function (f) {
+          return {
+            id:     f.id,
+            name:   f.name,
+            brand:  f.brand || '',
+            image:  f.image,
+            cat:    f.cat || (f._type === 'vency' ? 'vency' : 'disenador'),
+            _type:  f._type,
+            _isKV:  false,
+            isIcon: !!f.isIcon
+          };
+        });
+
+        solAllItems = kvItems.concat(baseItems);
         renderCatList(searchInput ? searchInput.value : '');
       })
       .catch(function () {
@@ -1983,7 +1986,8 @@
     var form      = document.getElementById('js-sol-edit-form');
     var statusEl  = document.getElementById('js-sol-edit-status');
 
-    var kv = item._kvEntry || {};
+    var isKV = !!item._isKV;
+    var kv   = item._kvEntry || {};
 
     document.getElementById('sol-edit-id').value    = item.id || '';
     document.getElementById('sol-edit-tok').value   = token || '';
@@ -2016,36 +2020,61 @@
       statusEl.hidden = true;
 
       var fd = new FormData(form);
-      fd.set('action', 'update');
       fd.set('tok', token);
 
-      // Remove empty placeholder selects (user chose "Sin cambios")
-      if (!fd.get('cat'))    fd.delete('cat');
-      if (!fd.get('gender')) fd.delete('gender');
-
-      fetch('/api/catalog-request', {
-        method: 'PATCH',
-        body: fd
-      }).then(function (r) { return r.json(); }).then(function (res) {
-        if (res.ok) {
-          statusEl.textContent = 'Cambios guardados.';
-          statusEl.style.color = 'oklch(73% .12 145)';
-          statusEl.hidden = false;
-          _refreshAfterKvAction();
-          setTimeout(close, 1200);
-        } else {
-          statusEl.textContent = 'Error al guardar.';
-          statusEl.style.color = '#e88080';
-          statusEl.hidden = false;
-        }
-      }).catch(function () {
-        statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
-        statusEl.style.color = '#e88080';
-        statusEl.hidden = false;
-      }).finally(function () {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Guardar cambios';
-      });
+      // If editing a KV entry → PATCH with action=update
+      // If editing a static entry → POST to create an override KV entry
+      if (isKV) {
+        fd.set('action', 'update');
+        if (!fd.get('cat'))    fd.delete('cat');
+        if (!fd.get('gender')) fd.delete('gender');
+        fetch('/api/catalog-request', { method: 'PATCH', body: fd })
+          .then(function (r) { return r.json(); }).then(function (res) {
+            if (res.ok) {
+              statusEl.textContent = 'Cambios guardados.';
+              statusEl.style.color = 'oklch(73% .12 145)';
+              statusEl.hidden = false;
+              _refreshAfterKvAction();
+              setTimeout(close, 1200);
+            } else {
+              statusEl.textContent = 'Error al guardar.';
+              statusEl.style.color = '#e88080';
+              statusEl.hidden = false;
+            }
+          }).catch(function () {
+            statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
+            statusEl.style.color = '#e88080';
+            statusEl.hidden = false;
+          }).finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Guardar cambios';
+          });
+      } else {
+        // POST to create a new KV entry (override)
+        if (!fd.get('cat'))    fd.set('cat', item.cat || 'disenador');
+        if (!fd.get('gender')) fd.set('gender', 'unisex');
+        fetch('/api/catalog-request', { method: 'POST', body: fd })
+          .then(function (r) { return r.json(); }).then(function (res) {
+            if (res.ok) {
+              statusEl.textContent = 'Guardado como edición.';
+              statusEl.style.color = 'oklch(73% .12 145)';
+              statusEl.hidden = false;
+              _refreshAfterKvAction();
+              setTimeout(close, 1200);
+            } else {
+              statusEl.textContent = 'Error al guardar.';
+              statusEl.style.color = '#e88080';
+              statusEl.hidden = false;
+            }
+          }).catch(function () {
+            statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
+            statusEl.style.color = '#e88080';
+            statusEl.hidden = false;
+          }).finally(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Guardar cambios';
+          });
+      }
     };
   }
 
