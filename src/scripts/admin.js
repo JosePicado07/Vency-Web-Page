@@ -2003,7 +2003,16 @@
     document.getElementById('sol-edit-cat').value   = kv.cat || item.cat || '';
     document.getElementById('sol-edit-gender').value = kv.gender || '';
     document.getElementById('sol-edit-notes').value = kv.notes || '';
-    document.getElementById('js-edit-upload-preview').innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para cambiar la imagen</span>';
+
+    var currentImg = isKV ? kv.imageId : item.image;
+    var prevHtml;
+    if (currentImg) {
+      var src = isKV ? '/api/catalog-image/' + currentImg : currentImg;
+      prevHtml = '<img src="' + src + '" alt="Imagen actual" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:contain;">';
+    } else {
+      prevHtml = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para cambiar la imagen</span>';
+    }
+    document.getElementById('js-edit-upload-preview').innerHTML = prevHtml;
     statusEl.hidden = true;
     modal.hidden = false;
 
