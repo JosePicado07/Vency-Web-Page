@@ -1654,6 +1654,16 @@
     });
     actions.appendChild(availBtn);
 
+    // Edit (KV only)
+    if (isKV) {
+      var editBtn = document.createElement('button');
+      editBtn.className = 'sol-btn sol-btn--edit';
+      editBtn.type = 'button';
+      editBtn.textContent = 'Editar';
+      editBtn.addEventListener('click', function () { openEditModal(item); });
+      actions.appendChild(editBtn);
+    }
+
     // Archive / Restore
     if (!isArchived) {
       var archBtn = document.createElement('button');
@@ -1963,6 +1973,81 @@
   }
 
   setupAddFragForm();
+
+  /* ── Edit modal ── */
+  function openEditModal(item) {
+    var modal     = document.getElementById('js-sol-modal');
+    var backdrop  = document.getElementById('js-sol-modal-backdrop');
+    var closeBtn  = document.getElementById('js-sol-modal-close');
+    var cancelBtn = document.getElementById('js-sol-edit-cancel');
+    var form      = document.getElementById('js-sol-edit-form');
+    var statusEl  = document.getElementById('js-sol-edit-status');
+
+    var kv = item._kvEntry || {};
+
+    document.getElementById('sol-edit-id').value    = item.id || '';
+    document.getElementById('sol-edit-tok').value   = token || '';
+    document.getElementById('sol-edit-brand').value = kv.brand || item.brand || '';
+    document.getElementById('sol-edit-name').value  = kv.name || item.name || '';
+    document.getElementById('sol-edit-cat').value   = kv.cat || item.cat || '';
+    document.getElementById('sol-edit-gender').value = kv.gender || '';
+    document.getElementById('sol-edit-notes').value = kv.notes || '';
+    document.getElementById('js-edit-upload-preview').innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para cambiar la imagen</span>';
+    statusEl.hidden = true;
+    modal.hidden = false;
+
+    function close() { modal.hidden = true; }
+    backdrop.onclick = close;
+    closeBtn.onclick = close;
+    cancelBtn.onclick = close;
+
+    document.getElementById('sol-edit-image').onchange = function () {
+      var file = this.files[0];
+      if (!file) return;
+      var url = URL.createObjectURL(file);
+      document.getElementById('js-edit-upload-preview').innerHTML = '<img src="' + url + '" alt="Vista previa" style="max-width:100%;max-height:160px;border-radius:6px;object-fit:contain;">';
+    };
+
+    form.onsubmit = function (e) {
+      e.preventDefault();
+      var submitBtn = document.getElementById('js-sol-edit-submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Guardando…';
+      statusEl.hidden = true;
+
+      var fd = new FormData(form);
+      fd.set('action', 'update');
+      fd.set('tok', token);
+
+      // Remove empty placeholder selects (user chose "Sin cambios")
+      if (!fd.get('cat'))    fd.delete('cat');
+      if (!fd.get('gender')) fd.delete('gender');
+
+      fetch('/api/catalog-request', {
+        method: 'PATCH',
+        body: fd
+      }).then(function (r) { return r.json(); }).then(function (res) {
+        if (res.ok) {
+          statusEl.textContent = 'Cambios guardados.';
+          statusEl.style.color = 'oklch(73% .12 145)';
+          statusEl.hidden = false;
+          _refreshAfterKvAction();
+          setTimeout(close, 1200);
+        } else {
+          statusEl.textContent = 'Error al guardar.';
+          statusEl.style.color = '#e88080';
+          statusEl.hidden = false;
+        }
+      }).catch(function () {
+        statusEl.textContent = 'Sin conexión. Intentá de nuevo.';
+        statusEl.style.color = '#e88080';
+        statusEl.hidden = false;
+      }).finally(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Guardar cambios';
+      });
+    };
+  }
 
   /* ── Init ── */
   var _kvCatalogEntries = [];

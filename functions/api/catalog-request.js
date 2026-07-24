@@ -103,16 +103,26 @@ export async function onRequest(context) {
     return json({ ok: true, id });
   }
 
-  /* ── PATCH — admin deletes an entry ── */
+  /* ── PATCH — admin updates / deletes / archives an entry ── */
   if (request.method === 'PATCH') {
-    let body;
-    try { body = await request.json(); } catch { return json({ error: 'invalid json' }, 400); }
+    const ct = request.headers.get('Content-Type') || '';
+    let body, id, action, form;
+
+    if (ct.includes('multipart/form-data')) {
+      form = await request.formData();
+      body = {};
+      for (const [k, v] of form.entries()) body[k] = v;
+    } else {
+      try { body = await request.json(); } catch { return json({ error: 'invalid json' }, 400); }
+    }
+
+    id     = body.id;
+    action = body.action;
 
     const validTok = env.ADMIN_TOKEN;
     if (validTok && body.tok !== validTok) return json({ error: 'unauthorized' }, 401);
     if (!validTok && !body.tok) return json({ error: 'unauthorized' }, 401);
 
-    const { id, action } = body;
     if (!id) return json({ error: 'missing id' }, 400);
 
     const entries = await loadEntries(kv);
@@ -129,6 +139,26 @@ export async function onRequest(context) {
       await saveEntries(kv, entries);
     } else if (action === 'restore') {
       entries[idx].status = 'approved';
+      await saveEntries(kv, entries);
+    } else if (action === 'update') {
+      if (body.brand) entries[idx].brand = body.brand;
+      if (body.name) entries[idx].name = body.name;
+      if (body.cat) entries[idx].cat = body.cat;
+      if (body.gender) entries[idx].gender = body.gender;
+      if (body.notes !== undefined) entries[idx].notes = body.notes;
+
+      if (form) {
+        const imageFile = form.get('image');
+        if (imageFile && imageFile.size > 0) {
+          const buf  = await imageFile.arrayBuffer();
+          const mime = imageFile.type || 'image/jpeg';
+          const oldId = entries[idx].imageId;
+          const newId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+          await kv.put('catalog_img_' + newId, buf, { metadata: { mime } });
+          entries[idx].imageId = newId;
+          if (oldId) await kv.delete('catalog_img_' + oldId).catch(() => {});
+        }
+      }
       await saveEntries(kv, entries);
     }
 

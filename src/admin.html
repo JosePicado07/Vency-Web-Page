@@ -149,30 +149,72 @@
     .sol-btn--restore:hover:not(:disabled)  { background: oklch(88% 0.06 145); }
     .sol-btn--delete   { background: transparent; color: var(--state-error); border-color: color-mix(in oklch, var(--state-error) 35%, transparent); }
     .sol-btn--delete:hover:not(:disabled)   { background: var(--state-error-bg); }
+    .sol-btn--edit     { background: transparent; color: oklch(52% 0.06 250); border-color: oklch(78% 0.05 250); }
+    .sol-btn--edit:hover:not(:disabled)     { background: oklch(95% 0.015 250); border-color: oklch(52% 0.06 250); }
+    .sol-btn--cancel  { background: transparent; color: var(--ink-muted); border-color: var(--border-subtle); }
+    .sol-btn--cancel:hover { background: oklch(95% 0.005 90); }
+
+    /* Edit modal */
+    .sol-modal {
+      position: fixed; inset: 0; z-index: 1000;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    @media (min-width: 600px) {
+      .sol-modal { align-items: center; }
+    }
+    .sol-modal[hidden] { display: none; }
+    .sol-modal__backdrop {
+      position: absolute; inset: 0;
+      background: oklch(18% 0.04 180 / 0.45);
+      backdrop-filter: blur(3px);
+    }
+    .sol-modal__sheet {
+      position: relative; width: 100%; max-width: 520px;
+      background: oklch(98% 0.005 90);
+      border-radius: 14px 14px 0 0;
+      padding: 1.5rem; max-height: 90vh; overflow-y: auto;
+    }
+    @media (min-width: 600px) {
+      .sol-modal__sheet { border-radius: 14px; }
+    }
+    .sol-modal__head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;
+    }
+    .sol-modal__title { font-size: 1rem; font-weight: 700; color: var(--volcanic-ink); }
+    .sol-modal__close {
+      background: none; border: none; cursor: pointer; color: var(--ink-muted);
+      padding: 4px; border-radius: 6px; display: flex;
+    }
+    .sol-modal__close:hover { color: var(--volcanic-ink); }
+    .sol-modal__close:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
+    .sol-modal__actions {
+      display: flex; gap: .6rem; margin-top: 1.25rem;
+    }
+    .sol-modal__actions .sol-add-submit { flex: 1; }
 
     /* Availability toggle for sol-cards */
     .sol-avail-btn {
-      display: flex; align-items: center; gap: .4rem;
-      padding: .38rem .7rem; border: 1.5px solid; border-radius: 20px;
-      font-size: .7rem; font-weight: 700; font-family: inherit; letter-spacing: .05em;
-      text-transform: uppercase; cursor: pointer; white-space: nowrap; min-height: 32px;
-      transition: background .2s, border-color .2s; -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; justify-content: center; gap: .35rem;
+      padding: .38rem .7rem; border: 1px solid; border-radius: 7px;
+      font-size: .68rem; font-weight: 600; font-family: inherit; letter-spacing: .08em;
+      text-transform: uppercase; cursor: pointer; white-space: nowrap; min-height: 30px;
+      transition: background .2s, border-color .2s, color .2s; -webkit-tap-highlight-color: transparent;
     }
     .sol-avail-btn:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
-    .sol-avail-btn::before {
-      content: ''; flex-shrink: 0; width: 6px; height: 6px;
-      border-radius: 50%; background: currentColor; opacity: .9;
-    }
     .sol-avail-btn[aria-pressed="true"]  {
-      background: var(--state-success-bg); color: var(--state-success);
-      border-color: oklch(80% 0.1 145);
+      background: transparent; color: oklch(55% 0.08 145);
+      border-color: oklch(75% 0.08 145);
     }
     .sol-avail-btn[aria-pressed="false"] {
-      background: var(--state-error-bg); color: var(--state-error);
-      border-color: color-mix(in oklch, var(--state-error) 40%, transparent);
+      background: transparent; color: oklch(68% 0.01 80);
+      border-color: oklch(80% 0.008 80);
     }
-    .sol-avail-btn[aria-pressed="true"]:hover  { background: oklch(88% 0.06 145); }
-    .sol-avail-btn[aria-pressed="false"]:hover { background: oklch(92% 0.03 25); }
+    .sol-avail-btn[aria-pressed="true"]:hover  {
+      background: oklch(96% 0.008 145); border-color: oklch(55% 0.08 145);
+    }
+    .sol-avail-btn[aria-pressed="false"]:hover {
+      background: oklch(96% 0.003 80); border-color: oklch(58% 0.015 80);
+    }
 
     /* Unavailable card: dim it */
     .sol-card--unavailable { opacity: .55; }
@@ -480,6 +522,79 @@
         </div>
         <div class="pos__toast" id="js-toast" role="status" aria-live="polite" hidden></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Edit fragrance modal -->
+  <div class="sol-modal" id="js-sol-modal" role="dialog" aria-modal="true" aria-label="Editar fragancia" hidden>
+    <div class="sol-modal__backdrop" id="js-sol-modal-backdrop"></div>
+    <div class="sol-modal__sheet">
+      <div class="sol-modal__head">
+        <span class="sol-modal__title">Editar fragancia</span>
+        <button class="sol-modal__close" id="js-sol-modal-close" type="button" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <form class="sol-modal__form" id="js-sol-edit-form" novalidate>
+        <input type="hidden" id="sol-edit-id" name="id">
+        <input type="hidden" id="sol-edit-tok" name="tok">
+        <div class="sol-add-row sol-add-row--2col">
+          <div class="sol-add-field">
+            <label class="sol-add-label" for="sol-edit-brand">Marca</label>
+            <input class="sol-add-input" id="sol-edit-brand" name="brand" type="text"
+                   placeholder="Ej: Tom Ford, Creed…" autocomplete="off">
+          </div>
+          <div class="sol-add-field">
+            <label class="sol-add-label" for="sol-edit-name">Nombre del perfume</label>
+            <input class="sol-add-input" id="sol-edit-name" name="name" type="text"
+                   placeholder="Ej: Black Orchid, Aventus…" autocomplete="off">
+          </div>
+        </div>
+        <div class="sol-add-row sol-add-row--2col">
+          <div class="sol-add-field">
+            <label class="sol-add-label" for="sol-edit-cat">Categoría</label>
+            <select class="sol-add-input" id="sol-edit-cat" name="cat">
+              <option value="">Sin cambios</option>
+              <option value="disenador">Diseñador</option>
+              <option value="nicho">Nicho</option>
+              <option value="ultra-nicho">Ultra Nicho</option>
+            </select>
+          </div>
+          <div class="sol-add-field">
+            <label class="sol-add-label" for="sol-edit-gender">Género</label>
+            <select class="sol-add-input" id="sol-edit-gender" name="gender">
+              <option value="">Sin cambios</option>
+              <option value="unisex">Unisex</option>
+              <option value="hombre">Hombre</option>
+              <option value="mujer">Mujer</option>
+            </select>
+          </div>
+        </div>
+        <div class="sol-add-row">
+          <label class="sol-add-label" for="sol-edit-notes">Descripción / notas olfativas</label>
+          <textarea class="sol-add-input sol-add-textarea" id="sol-edit-notes" name="notes" rows="3"
+                    placeholder="Ej: Bergamota, rosa, pachulí. Oriental floral con un toque ahumado."></textarea>
+        </div>
+        <div class="sol-add-row">
+          <label class="sol-add-label" for="sol-edit-image">Nueva imagen (opcional)</label>
+          <div class="sol-add-upload" id="js-edit-upload-zone">
+            <input class="sol-add-upload__input" id="sol-edit-image" name="image" type="file"
+                   accept="image/*" aria-label="Elegir imagen">
+            <div class="sol-add-upload__preview" id="js-edit-upload-preview">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span class="sol-add-upload__hint">Tocá para cambiar la imagen</span>
+            </div>
+          </div>
+        </div>
+        <div class="sol-modal__actions">
+          <button class="sol-btn sol-btn--cancel" id="js-sol-edit-cancel" type="button">Cancelar</button>
+          <button class="sol-add-submit" id="js-sol-edit-submit" type="submit">Guardar cambios</button>
+        </div>
+        <p class="sol-add-status" id="js-sol-edit-status" role="alert" hidden></p>
+      </form>
     </div>
   </div>
 
