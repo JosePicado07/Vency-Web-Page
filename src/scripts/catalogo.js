@@ -418,8 +418,9 @@
       var brands = {};
       catalog.forEach(function (item) {
         if (item.cat !== sec.cat) return;
-        if (!brands[item.brand]) brands[item.brand] = [];
-        brands[item.brand].push(item);
+        var bKey = (item.brand || '').toUpperCase();
+        if (!brands[bKey]) brands[bKey] = [];
+        brands[bKey].push(item);
       });
 
       /* Merge icon-series entries into their inspiration brand group */
@@ -431,7 +432,7 @@
         Object.keys(brands).forEach(function (b) {
           if (b.toUpperCase() === brandKey) existingKey = b;
         });
-        var key = existingKey || frag.inspiration.brand;
+        var key = existingKey || brandKey;
         if (!brands[key]) brands[key] = [];
         brands[key].push({ _isIcon: true, _frag: frag });
       });
@@ -444,7 +445,7 @@
         Object.keys(brands).forEach(function (b) {
           if (b.toUpperCase() === brandKey) existingKey = b;
         });
-        var key = existingKey || (entry.brand || '');
+        var key = existingKey || (entry.brand || '').toUpperCase();
         if (!brands[key]) brands[key] = [];
         var alreadyInGroup = brands[key].some(function (item) {
           if (item._isKV || item._isIcon) return false;
@@ -836,6 +837,18 @@
     _kvEntries    = Array.isArray(results[1]) ? results[1] : [];
     _archivedBase = new Set((results[2].archived) || []);
     initCatalog();
+
+    // Hash navigation from quiz or external links — MUST run after
+    // initCatalog() so the DOM is already populated with <li id="…">.
+    if (location.hash) {
+      (function () {
+        var el = document.getElementById(location.hash.slice(1));
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        var seeBtn = el.querySelector('.cat-entry__see');
+        if (seeBtn) seeBtn.click();
+      })();
+    }
   });
 
   // Gentle polling: refresh availability every 45s so items the admin
@@ -895,14 +908,6 @@
     }
   });
 
-  if (location.hash) {
-    setTimeout(function () {
-      var el = document.getElementById(location.hash.slice(1));
-      if (!el) return;
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      var seeBtn = el.querySelector('.cat-entry__see');
-      if (seeBtn) seeBtn.click();
-    }, 200);
-  }
+
 
 })();

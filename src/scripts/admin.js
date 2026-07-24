@@ -1274,7 +1274,7 @@
       el.innerHTML =
         '<div class="panel-item__head">' +
           '<span class="panel-item__name">' + escapeHtml_(s.name) + '</span>' +
-          (!isSet ? '<span class="admin-panel__line-price">' + colones(SINGLE_DECANT) + '</span>' : '') +
+          (!isSet ? '<span class="admin-panel__line-price">' + colones(priceForCat(s.cat || 'vency')) + '</span>' : '') +
         '</div>' +
         (hasInv ? concPickerHtml(s.pct, 'decant', idx) + oilCostHtml(s.pct, 10, 'decant', idx) : '');
       panelSummary.appendChild(el);
@@ -1531,6 +1531,15 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
+  var CAT_LABELS = {
+    'disenador': 'Diseñador',
+    'nicho': 'Nicho',
+    'ultra-nicho': 'Ultra Nicho',
+    'original-blend': 'Original Blend',
+    'icon-series': 'Icon Series',
+    'vency': 'Vency'
+  };
+
   function buildSolCard(item) {
     // item fields: id, name, brand, image, cat, _isKV, _kvEntry (raw KV obj),
     //              isIcon — set for vency icon-series items
@@ -1595,9 +1604,13 @@
     var meta = document.createElement('div');
     meta.className = 'sol-card__meta';
     var catSpan = document.createElement('span');
-    catSpan.textContent = item.cat || '';
+    catSpan.textContent = CAT_LABELS[item.cat] || item.cat || '';
     meta.appendChild(catSpan);
-    if (isKV && kvEntry && kvEntry.gender) {
+    if (item.gender) {
+      var genSpan = document.createElement('span');
+      genSpan.textContent = item.gender;
+      meta.appendChild(genSpan);
+    } else if (isKV && kvEntry && kvEntry.gender) {
       var genSpan = document.createElement('span');
       genSpan.textContent = kvEntry.gender;
       meta.appendChild(genSpan);
@@ -1609,7 +1622,12 @@
     }
     body.appendChild(meta);
 
-    if (isKV && kvEntry && kvEntry.notes) {
+    if (item.notes) {
+      var notesP = document.createElement('p');
+      notesP.className = 'sol-card__notes';
+      notesP.textContent = item.notes;
+      body.appendChild(notesP);
+    } else if (isKV && kvEntry && kvEntry.notes) {
       var notesP = document.createElement('p');
       notesP.className = 'sol-card__notes';
       notesP.textContent = kvEntry.notes;
@@ -1885,6 +1903,7 @@
       var brand  = form.brand.value.trim();
       var name   = form.name.value.trim();
       var cat    = form.cat.value;
+      var oilMl  = parseFloat(form.oil_ml ? form.oil_ml.value : '') || 0;
 
       if (!brand || !name || !cat) {
         statusEl.textContent = 'Completá los campos obligatorios.';
@@ -1904,6 +1923,10 @@
       submitBtn.textContent = 'Guardando…';
       statusEl.hidden = true;
 
+      var prevBrand = brand;
+      var prevCat   = cat;
+      var prevCatSelect = document.querySelector('#js-add-frag-form .vency-select[data-name="cat"]');
+
       toWebpFile(fileInput.files[0], function (webpFile) {
         var fd = new FormData(form);
         // Replace the original file with the webp version if converted
@@ -1921,16 +1944,29 @@
             statusEl.hidden = false;
           } else if (res.ok) {
             // Seed inventory in GAS
+            var gasPayload = {
+              token: token, action: 'addCatalogEntry',
+              brand: brand, name: name, cat: cat, gender: form.gender.value,
+            };
+            if (oilMl > 0) gasPayload.oil_ml = oilMl;
             fetch(EXEC_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain' },
-              body: JSON.stringify({
-                token: token, action: 'addCatalogEntry',
-                brand: brand, name: name, cat: cat, gender: form.gender.value,
-              }),
+              body: JSON.stringify(gasPayload),
             }).catch(function () {});
 
+            // Seed inventory in localStorage immediately
+            if (oilMl > 0 && res.id) {
+              var localInv;
+              try { localInv = JSON.parse(localStorage.getItem('vency_inventory')) || {}; } catch (e) { localInv = {}; }
+              localInv[res.id] = { oil_ml: oilMl };
+              localStorage.setItem('vency_inventory', JSON.stringify(localInv));
+            }
+
             form.reset();
+            // Restore brand and category to keep adding from the same brand
+            form.brand.value = prevBrand;
+            if (prevCatSelect && prevCatSelect._setValue) prevCatSelect._setValue(prevCat);
             preview.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para elegir una imagen</span>';
             statusEl.textContent = '\xa1Fragancia agregada! Ya aparece en el cat\xe1logo.';
             statusEl.style.color = 'oklch(73% .12 145)';

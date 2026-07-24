@@ -342,6 +342,7 @@ function addCatalogEntry(data) {
 
   var prefix = brand + '|' + name;
   var nombre = brand + ' — ' + name;
+  var oil    = Number(data.oil_ml) || 0;
 
   var rows = s.getDataRange().getValues();
   // Skip if first format already exists
@@ -351,9 +352,9 @@ function addCatalogEntry(data) {
     }
   }
 
-  s.appendRow([prefix + ':decant', nombre + ' · Decant',  0, 20]);
-  s.appendRow([prefix + ':30ml',   nombre + ' · 30ml',    0, 20]);
-  s.appendRow([prefix + ':100ml',  nombre + ' · 100ml',   0, 20]);
+  s.appendRow([prefix + ':decant', nombre + ' · Decant',  oil, 20]);
+  s.appendRow([prefix + ':30ml',   nombre + ' · 30ml',    oil, 20]);
+  s.appendRow([prefix + ':100ml',  nombre + ' · 100ml',   oil, 20]);
 
   return text('ok');
 }

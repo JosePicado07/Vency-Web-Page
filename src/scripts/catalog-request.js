@@ -16,7 +16,7 @@
           }
         }
         var merged = {
-          brand:  e.brand,
+          brand:  (e.brand || '').toUpperCase(),
           name:   e.name,
           cat:    e.cat,
           gender: e.gender || 'unisex',

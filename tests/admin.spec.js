@@ -52,10 +52,11 @@ test.describe('Admin selección de categoría y género', () => {
 
     // Verify options exist
     const options = catSelect.locator('.vency-select__option');
-    await expect(options).toHaveCount(3);
+    await expect(options).toHaveCount(4);
     await expect(options.nth(0)).toHaveAttribute('data-value', 'disenador');
     await expect(options.nth(1)).toHaveAttribute('data-value', 'nicho');
     await expect(options.nth(2)).toHaveAttribute('data-value', 'ultra-nicho');
+    await expect(options.nth(3)).toHaveAttribute('data-value', 'original-blend');
   });
 
 });
