@@ -1383,8 +1383,6 @@
   /* ── Inventory section ── */
 
   invListEl.addEventListener('click', function (e) {
-      return;
-    }
     var btn = e.target.closest('.js-inv-oil-adj');
     if (!btn) return;
     var id       = btn.dataset.id;
@@ -1953,6 +1951,7 @@
           submitBtn.textContent = 'Agregar al catálogo';
         });
     }); // end toWebpFile callback
+  }); // end form submit listener
   }
 
   if (showArchivedToggle) {
