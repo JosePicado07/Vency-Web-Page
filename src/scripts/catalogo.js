@@ -386,9 +386,10 @@
 
   /* ── Build DOM ───────────────────────────────────────── */
   var SECTIONS = [
-    { cat: 'disenador',   el: 'disenador',   title: 'Diseñador',   desc: 'Grandes casas de diseño · interpretaciones propias' },
-    { cat: 'nicho',       el: 'nicho',        title: 'Nicho',       desc: 'Perfumería de autor · sin compromiso' },
-    { cat: 'ultra-nicho', el: 'ultra-nicho',  title: 'Ultra Nicho', desc: 'Composiciones de coleccionista' },
+    { cat: 'disenador',      el: 'disenador',      title: 'Diseñador',      desc: 'Grandes casas de diseño · interpretaciones propias' },
+    { cat: 'nicho',          el: 'nicho',           title: 'Nicho',          desc: 'Perfumería de autor · sin compromiso' },
+    { cat: 'ultra-nicho',    el: 'ultra-nicho',     title: 'Ultra Nicho',    desc: 'Composiciones de coleccionista' },
+    { cat: 'creacion-propia', el: 'creacion-propia', title: 'Creación Propia', desc: 'Fórmulas exclusivas Vency' },
   ];
 
   function buildSections() {
@@ -439,7 +440,7 @@
 
       /* Merge KV entries — KV overrides replace matching static entries */
       _kvEntries.forEach(function (entry) {
-        var entryCat = (entry.cat === 'original-blend') ? 'disenador' : (entry.cat || 'disenador');
+        var entryCat = entry.cat === 'original-blend' ? 'disenador' : (entry.cat && entry.cat !== 'vency' ? entry.cat : 'disenador');
         if (entryCat !== sec.cat) return;
         var brandKey = (entry.brand || '').trim().toUpperCase();
         var existingKey = null;
@@ -523,13 +524,18 @@
             li.dataset.ocasion = '';
 
             var kvRail = buildRail(kvFullName, kvName, isInv, sec.cat);
+            var kvBadgeLabel = kv.badge === 'inspiracion-elevada' ? 'INSPIRACIÓN ELEVADA'
+              : kv.badge === 'creacion-propia' ? 'CREACIÓN PROPIA'
+              : kv.badge === 'inspirado-en' ? 'INSPIRADO EN'
+              : sec.cat === 'creacion-propia' ? 'CREACIÓN PROPIA'
+              : 'INSPIRADO EN';
             li.innerHTML =
               '<button class="cat-entry__card cat-entry__see" type="button"' +
                 ' aria-haspopup="dialog" aria-label="Ver ficha de ' + kvName + '">' +
                 '<span class="cat-entry__img-wrap">' +
                   '<img class="cat-entry__img" src="' + kvImg + '" alt="' + kvName + '" loading="lazy"' +
                     ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-                  (sec.cat !== 'vency' ? '<span class="cat-entry__img-badge">' + (kv.badge === 'inspiracion-elevada' ? 'INSPIRACIÓN ELEVADA' : kv.badge === 'creacion-propia' ? 'CREACIÓN PROPIA' : 'INSPIRADO EN') + '</span>' : '') +
+                  (sec.cat !== 'vency' ? '<span class="cat-entry__img-badge">' + kvBadgeLabel + '</span>' : '') +
                 '</span>' +
                 '<span class="cat-entry__info">' +
                   '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
