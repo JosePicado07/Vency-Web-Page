@@ -1592,7 +1592,8 @@
     'disenador': 'Diseñador',
     'nicho': 'Nicho',
     'ultra-nicho': 'Ultra Nicho',
-    'original-blend': 'Original Blend',
+    'original-blend': 'Creación propia',
+    'creacion-propia': 'Creación propia',
     'vency': 'Vency'
   };
 

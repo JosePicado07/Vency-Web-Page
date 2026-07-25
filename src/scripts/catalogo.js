@@ -440,7 +440,7 @@
 
       /* Merge KV entries — KV overrides replace matching static entries */
       _kvEntries.forEach(function (entry) {
-        var entryCat = entry.cat === 'original-blend' ? 'disenador' : (entry.cat && entry.cat !== 'vency' ? entry.cat : 'disenador');
+        var entryCat = entry.cat === 'original-blend' ? 'creacion-propia' : (entry.cat && entry.cat !== 'vency' ? entry.cat : 'disenador');
         if (entryCat !== sec.cat) return;
         var brandKey = (entry.brand || '').trim().toUpperCase();
         var existingKey = null;
@@ -512,11 +512,11 @@
 
             li.id = kv.id;
             li.className = 'cat-entry';
-            li.dataset.cat           = kv.cat && kv.cat !== 'original-blend' ? kv.cat : 'disenador';
+            li.dataset.cat           = kv.cat === 'original-blend' ? 'creacion-propia' : (kv.cat || 'disenador');
             li.dataset.gender        = kv.gender || 'unisex';
             li.dataset.fragranceId   = kv.id;
             li.dataset.fragranceName = kvBrand ? kv.brand + ' · ' + kv.name : kv.name;
-            li.dataset.fragranceCat  = kv.cat && kv.cat !== 'original-blend' ? kv.cat : 'disenador';
+            li.dataset.fragranceCat  = kv.cat === 'original-blend' ? 'creacion-propia' : (kv.cat || 'disenador');
             li.dataset.fragranceImg  = kv.imageId ? '/api/catalog-image/' + kv.imageId : 'assets/images/default-bottle.jpg';
             li.dataset.fragranceNotes = kvNotes;
             li.dataset.fragranceInspo = kvBrand ? kvBrand + ' · ' + kvName : kvName;
