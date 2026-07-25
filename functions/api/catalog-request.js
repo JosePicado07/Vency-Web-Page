@@ -96,7 +96,8 @@ export async function onRequest(context) {
       imageId = id;
     }
 
-    const entry = { id, brand, name, cat, gender, notes, imageId, status: 'approved', fecha: new Date().toISOString().slice(0, 10) };
+    const badge = form.get('badge') || '';
+    const entry = { id, brand, name, cat, gender, notes, badge, imageId, status: 'approved', fecha: new Date().toISOString().slice(0, 10) };
     entries.push(entry);
     await saveEntries(kv, entries);
 
@@ -146,6 +147,7 @@ export async function onRequest(context) {
       if (body.cat) entries[idx].cat = body.cat;
       if (body.gender) entries[idx].gender = body.gender;
       if (body.notes !== undefined) entries[idx].notes = body.notes;
+      if (body.badge !== undefined) entries[idx].badge = body.badge;
 
       if (form) {
         const imageFile = form.get('image');

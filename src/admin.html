@@ -715,7 +715,6 @@
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="nicho">Nicho</button>
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="ultra-nicho">Ultra Nicho</button>
                 <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="original-blend">Original Blend</button>
-
               </div>
               <input type="hidden" class="vency-select__input" name="cat">
             </div>
@@ -735,6 +734,22 @@
               </div>
               <input type="hidden" class="vency-select__input" name="gender">
             </div>
+          </div>
+        </div>
+        <div class="sol-add-row">
+          <label class="sol-add-label" id="lbl-edit-badge">Badge</label>
+          <div class="vency-select" data-name="badge">
+            <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-edit-badge">
+              <span class="vency-select__label vency-select__label--placeholder">Sin cambios</span>
+              <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="vency-select__list" role="listbox" aria-labelledby="lbl-edit-badge">
+              <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="">Sin cambios</button>
+              <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="inspirado-en">Inspirado en</button>
+              <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="inspiracion-elevada">Inspiración elevada</button>
+              <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="creacion-propia">Creación propia</button>
+            </div>
+            <input type="hidden" class="vency-select__input" name="badge">
           </div>
         </div>
         <div class="sol-add-row">
@@ -787,7 +802,7 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=17"></script>
+  <script src="scripts/admin.js?v=18"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');

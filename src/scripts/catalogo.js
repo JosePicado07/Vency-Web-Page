@@ -529,7 +529,7 @@
                 '<span class="cat-entry__img-wrap">' +
                   '<img class="cat-entry__img" src="' + kvImg + '" alt="' + kvName + '" loading="lazy"' +
                     ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-                  (sec.cat !== 'vency' ? '<span class="cat-entry__img-badge">INSPIRADO EN</span>' : '') +
+                  (sec.cat !== 'vency' ? '<span class="cat-entry__img-badge">' + (kv.badge === 'inspiracion-elevada' ? 'INSPIRACIÓN ELEVADA' : kv.badge === 'creacion-propia' ? 'CREACIÓN PROPIA' : 'INSPIRADO EN') + '</span>' : '') +
                 '</span>' +
                 '<span class="cat-entry__info">' +
                   '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +

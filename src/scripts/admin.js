@@ -2117,8 +2117,10 @@
     document.getElementById('sol-edit-name').value  = kv.name || item.name || '';
     var catSelect = document.querySelector('#js-sol-edit-form .vency-select[data-name="cat"]');
     var genderSelect = document.querySelector('#js-sol-edit-form .vency-select[data-name="gender"]');
+    var badgeSelect  = document.querySelector('#js-sol-edit-form .vency-select[data-name="badge"]');
     if (catSelect && catSelect._setValue) catSelect._setValue(kv.cat || item.cat || '');
     if (genderSelect && genderSelect._setValue) genderSelect._setValue(kv.gender || item.gender || '');
+    if (badgeSelect && badgeSelect._setValue) badgeSelect._setValue(kv.badge || '');
     document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
 
     var currentImg = isKV ? kv.imageId : item.image;
