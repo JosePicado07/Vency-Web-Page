@@ -437,7 +437,7 @@
         brands[key].push({ _isIcon: true, _frag: frag });
       });
 
-      /* Merge KV-added entries (admin-added via Catálogo tab) — skip if already in static catalog */
+      /* Merge KV entries — KV overrides replace matching static entries */
       _kvEntries.forEach(function (entry) {
         var entryCat = (entry.cat === 'original-blend') ? 'disenador' : (entry.cat || 'disenador');
         if (entryCat !== sec.cat) return;
@@ -449,14 +449,19 @@
         var key = existingKey || brandKey;
         if (!brands[key]) brands[key] = [];
         var eName = (entry.name || '').toLowerCase().trim();
-        var alreadyInGroup = brands[key].some(function (item) {
-          if (item._isIcon) return false;
+        var matchIdx = -1;
+        brands[key].forEach(function (item, i) {
+          if (item._isIcon) return;
           var n = item._isKV
             ? (item._entry.name || '').toLowerCase().trim()
             : (item.name || '').toLowerCase().trim();
-          return n === eName;
+          if (n === eName) matchIdx = i;
         });
-        if (!alreadyInGroup) brands[key].push({ _isKV: true, _entry: entry });
+        if (matchIdx !== -1) {
+          brands[key][matchIdx] = { _isKV: true, _entry: entry };
+        } else {
+          brands[key].push({ _isKV: true, _entry: entry });
+        }
       });
 
       var brandNames = Object.keys(brands);

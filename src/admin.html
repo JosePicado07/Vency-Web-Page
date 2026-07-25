@@ -354,6 +354,8 @@
       border-color: oklch(48% 0.09 55);
     }
     .admin-cat-filters .admin-cat-btn--active .admin-cat-count { opacity: 0.75; }
+    .admin-cat-btn--archived { color: var(--ink-muted); border-color: oklch(80% 0.01 75); }
+    .admin-cat-btn--archived.admin-cat-btn--active { background: oklch(55% 0.04 75); border-color: oklch(55% 0.04 75); color: var(--botanical-parchment); }
   </style>
 </head>
 <body>
@@ -501,6 +503,7 @@
       <button class="admin-cat-btn" data-filter="disenador" type="button" aria-pressed="false">Diseñador</button>
       <button class="admin-cat-btn" data-filter="nicho" type="button" aria-pressed="false">Nicho</button>
       <button class="admin-cat-btn" data-filter="ultra-nicho" type="button" aria-pressed="false">Ultra Nicho</button>
+      <button class="admin-cat-btn admin-cat-btn--archived" data-filter="archived" type="button" aria-pressed="false">Archivadas</button>
     </div>
 
     <!-- VENDER panel -->
@@ -784,7 +787,7 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=16"></script>
+  <script src="scripts/admin.js?v=17"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');

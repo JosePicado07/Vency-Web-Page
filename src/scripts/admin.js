@@ -1060,7 +1060,7 @@
   }
 
   function catMatch(f) {
-    if (activeFilter === 'todos') return true;
+    if (activeFilter === 'todos' || activeFilter === 'archived') return true;
     if (activeFilter === 'vency') return f._type === 'vency';
     return f._type === 'decant' && f.cat === activeFilter;
   }
@@ -1819,7 +1819,11 @@
       var isArchived = item._isKV
         ? (item._kvEntry && item._kvEntry.status === 'archived')
         : _archivedBase.has(item.id);
-      if (isArchived && !showArchivedSol) return false;
+      if (activeFilter === 'archived') {
+        if (!isArchived) return false;
+      } else {
+        if (isArchived && !showArchivedSol) return false;
+      }
       if (!catMatch(item)) return false;
       if (!q) return true;
       var t = item.name.toLowerCase() + (item.brand ? ' ' + item.brand.toLowerCase() : '');
