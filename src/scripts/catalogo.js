@@ -528,7 +528,7 @@
               : kv.badge === 'creacion-propia' ? 'CREACIÓN PROPIA'
               : kv.badge === 'inspirado-en' ? 'INSPIRADO EN'
               : sec.cat === 'creacion-propia' ? 'CREACIÓN PROPIA'
-              : 'INSPIRADO EN';
+              : 'INSPIRACIÓN ELEVADA';
             li.innerHTML =
               '<button class="cat-entry__card cat-entry__see" type="button"' +
                 ' aria-haspopup="dialog" aria-label="Ver ficha de ' + kvName + '">' +
@@ -636,7 +636,7 @@
               '<span class="cat-entry__img-wrap">' +
                 '<img class="cat-entry__img" src="' + extThumbSrc + '" ' + imgSrcset(extThumbSrc) + ' alt="' + escHtml(displayName) + '" ' + imgLoadAttrs() +
                   ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-                '<span class="cat-entry__img-badge">INSPIRADO EN</span>' +
+                '<span class="cat-entry__img-badge">INSPIRACIÓN ELEVADA</span>' +
               '</span>' +
               '<span class="cat-entry__info">' +
                 '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +

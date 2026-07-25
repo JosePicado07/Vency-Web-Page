@@ -2123,7 +2123,7 @@
     if (genderSelect && genderSelect._setValue) genderSelect._setValue(kv.gender || item.gender || '');
     if (badgeSelect && badgeSelect._setValue) {
       var resolvedCat = kv.cat || item.cat || '';
-      var defaultBadge = resolvedCat === 'creacion-propia' ? 'creacion-propia' : 'inspirado-en';
+      var defaultBadge = resolvedCat === 'creacion-propia' ? 'creacion-propia' : 'inspiracion-elevada';
       badgeSelect._setValue(kv.badge || defaultBadge);
     }
     document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
