@@ -69,6 +69,7 @@
   var showArchivedSol    = false;
   var _panelPrevFocus    = null;
   var _metricsInterval   = null;
+  var _prevSelectedCell  = null;
   var calDailyTotals     = {};
   var selectedCalDay     = null;
   var allSales           = [];
@@ -265,7 +266,9 @@
       if (!cell) return;
       var dk = cell.dataset.date;
       selectedCalDay = selectedCalDay === dk ? null : dk;
-      renderCalendar();
+      if (_prevSelectedCell) _prevSelectedCell.classList.remove('admin-cal__cell--selected');
+      if (selectedCalDay) { cell.classList.add('admin-cal__cell--selected'); _prevSelectedCell = cell; }
+      else { _prevSelectedCell = null; }
 
       /* Deselect: restore current period's list */
       if (!selectedCalDay) {
@@ -1214,6 +1217,33 @@
     });
   }
 
+  /* ── Shared modal helpers (focus trap + restore) ── */
+  function _trapModalTab(e) {
+    if (e.key !== 'Tab') return;
+    var focusable = Array.prototype.slice.call(
+      this.querySelectorAll('button:not(:disabled), input:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')
+    ).filter(function (el) { return !el.hidden && el.offsetParent !== null; });
+    if (!focusable.length) return;
+    var first = focusable[0], last = focusable[focusable.length - 1];
+    if (e.shiftKey) { if (document.activeElement === first) { e.preventDefault(); last.focus(); } }
+    else            { if (document.activeElement === last)  { e.preventDefault(); first.focus(); } }
+  }
+
+  function openModal(modalEl, firstFocusEl) {
+    modalEl._prevFocus = document.activeElement;
+    modalEl.hidden = false;
+    var sheet = modalEl.querySelector('.sol-modal__sheet');
+    if (sheet) sheet.addEventListener('keydown', _trapModalTab);
+    if (firstFocusEl) firstFocusEl.focus();
+  }
+
+  function closeModal(modalEl) {
+    var sheet = modalEl.querySelector('.sol-modal__sheet');
+    if (sheet) sheet.removeEventListener('keydown', _trapModalTab);
+    modalEl.hidden = true;
+    if (modalEl._prevFocus) { modalEl._prevFocus.focus(); modalEl._prevFocus = null; }
+  }
+
   /* ── Panel open / close ── */
   function openPanel() {
     _panelPrevFocus = document.activeElement;
@@ -1341,7 +1371,12 @@
 
   /* Close on Escape */
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !adminPanelEl.hidden) closePanel(false);
+    if (e.key !== 'Escape') return;
+    if (!adminPanelEl.hidden) { closePanel(false); return; }
+    var editModal = document.getElementById('js-sol-modal');
+    if (editModal && !editModal.hidden) { closeModal(editModal); return; }
+    var delModal  = document.getElementById('js-del-modal');
+    if (delModal  && !delModal.hidden)  { closeModal(delModal); }
   });
 
   /* ── Register sale ── */
@@ -2086,9 +2121,9 @@
     }
     document.getElementById('js-edit-upload-preview').innerHTML = prevHtml;
     statusEl.hidden = true;
-    modal.hidden = false;
+    openModal(modal, closeBtn);
 
-    function close() { modal.hidden = true; }
+    function close() { closeModal(modal); }
     backdrop.onclick = close;
     closeBtn.onclick = close;
     cancelBtn.onclick = close;
@@ -2182,9 +2217,9 @@
     var confirmBtn = document.getElementById('js-del-confirm');
 
     desc.innerHTML = 'Estás seguro de eliminar <strong>' + escapeHtml_(item.brand) + ' &mdash; ' + escapeHtml_(item.name) + '</strong>? Esta acción no se puede deshacer.';
-    modal.hidden = false;
+    openModal(modal, cancelBtn);
 
-    function close() { modal.hidden = true; }
+    function close() { closeModal(modal); }
     backdrop.onclick = close;
     cancelBtn.onclick = close;
 
@@ -2264,12 +2299,19 @@
         }
       });
     });
-    document.addEventListener('click', function (e) {
-      if (!root.contains(e.target)) close();
-    });
   }
 
   document.querySelectorAll('.vency-select').forEach(initSelect);
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('.vency-select')) return;
+    document.querySelectorAll('.vency-select').forEach(function (root) {
+      var list = root.querySelector('.vency-select__list');
+      if (list && list.classList.contains('is-open')) {
+        root.querySelector('.vency-select__btn').setAttribute('aria-expanded', 'false');
+        list.classList.remove('is-open');
+      }
+    });
+  });
 
   /* ── Init ── */
   var _kvCatalogEntries = [];
