@@ -2120,7 +2120,11 @@
     var badgeSelect  = document.querySelector('#js-sol-edit-form .vency-select[data-name="badge"]');
     if (catSelect && catSelect._setValue) catSelect._setValue(kv.cat || item.cat || '');
     if (genderSelect && genderSelect._setValue) genderSelect._setValue(kv.gender || item.gender || '');
-    if (badgeSelect && badgeSelect._setValue) badgeSelect._setValue(kv.badge || '');
+    if (badgeSelect && badgeSelect._setValue) {
+      var resolvedCat = kv.cat || item.cat || '';
+      var defaultBadge = resolvedCat === 'creacion-propia' ? 'creacion-propia' : 'inspirado-en';
+      badgeSelect._setValue(kv.badge || defaultBadge);
+    }
     document.getElementById('sol-edit-notes').value = kv.notes || item.notes || '';
 
     var currentImg = isKV ? kv.imageId : item.image;
