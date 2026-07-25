@@ -322,19 +322,11 @@
      onerror in buildFragRow falls back to the default bottle. */
   function buildCatalog() {
     var toWebp400 = window.toWebp400;
-    var seen = {};
     function keyFor(brand, name) { return (brand || '').toLowerCase() + '|' + name.toLowerCase(); }
-    function isSeen(brand, name) {
-      var k = keyFor(brand, name);
-      if (seen[k]) return true;
-      seen[k] = true;
-      return false;
-    }
     var vency = (window.VENCY_CATALOG || []).map(function (f) {
       var isIcon = f.category === 'icon-series' && f.inspiration;
       var n = isIcon ? f.inspiration.name : f.name;
       var b = isIcon ? f.inspiration.brand : '';
-      isSeen(b, n);
       return {
         _type: 'vency',
         id: f.id,
@@ -356,7 +348,6 @@
         : toWebp400(f.image);
       var slugify = window.slugify || function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
       var id = interpId || slugify((f.brand || '') + '-' + f.name);
-      isSeen(f.brand || '', f.name);
       return {
         _type: 'decant',
         id: id,
@@ -368,22 +359,31 @@
         gender: f.gender || ''
       };
     });
-    var kv = _kvCatalogEntries.filter(function (e) {
-      return !isSeen(e.brand || '', e.name);
-    }).map(function (e) {
-      return {
-        _type: 'decant',
-        _isKV: true,
-        id: e.id,
-        name: e.name,
-        brand: e.brand || '',
-        cat: e.cat || 'disenador',
-        notes: e.notes || '',
-        gender: e.gender || '',
-        image: e.imageId ? '/api/catalog-image/' + e.imageId : 'assets/images/_webp/default-bottle-400.webp'
-      };
+    // Build index of static entries so KV overrides can patch image instead of being dropped
+    var staticAll = vency.concat(ext);
+    var staticIdx = {};
+    staticAll.forEach(function (f, i) { staticIdx[keyFor(f.brand, f.name)] = i; });
+    var newKv = [];
+    _kvCatalogEntries.forEach(function (e) {
+      var k = keyFor(e.brand || '', e.name);
+      var idx = staticIdx[k];
+      if (idx !== undefined) {
+        if (e.imageId) staticAll[idx].image = '/api/catalog-image/' + e.imageId;
+      } else {
+        newKv.push({
+          _type: 'decant',
+          _isKV: true,
+          id: e.id,
+          name: e.name,
+          brand: e.brand || '',
+          cat: e.cat || 'disenador',
+          notes: e.notes || '',
+          gender: e.gender || '',
+          image: e.imageId ? '/api/catalog-image/' + e.imageId : 'assets/images/_webp/default-bottle-400.webp'
+        });
+      }
     });
-    catalog = vency.concat(ext).concat(kv);
+    catalog = staticAll.concat(newKv);
   }
 
   function invKey(frag, fmt) {
