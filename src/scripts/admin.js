@@ -544,7 +544,14 @@
   var pwaBackdrop = document.getElementById('js-pwa-backdrop');
 
   function showPwaSheet() { if (pwaSheet) pwaSheet.hidden = false; }
-  function hidePwaSheet() { if (pwaSheet) pwaSheet.hidden = true; }
+  function hidePwaSheet() {
+    if (!pwaSheet) return;
+    pwaSheet.hidden = true;
+    var actionsEl = document.getElementById('js-pwa-actions');
+    var stepsEl   = document.getElementById('js-pwa-steps');
+    if (actionsEl) actionsEl.hidden = false;
+    if (stepsEl)   stepsEl.hidden = true;
+  }
 
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
@@ -555,11 +562,34 @@
   installBtn.addEventListener('click', showPwaSheet);
 
   if (pwaConfirm) pwaConfirm.addEventListener('click', function () {
-    hidePwaSheet();
     if (_installPrompt) {
+      hidePwaSheet();
       _installPrompt.prompt();
       _installPrompt.userChoice.then(function () { _installPrompt = null; });
+      return;
     }
+    // No native prompt — show manual steps
+    var actionsEl = document.getElementById('js-pwa-actions');
+    var stepsEl   = document.getElementById('js-pwa-steps');
+    if (!stepsEl) return;
+    var ua = navigator.userAgent;
+    var isIOS = /iphone|ipad|ipod/i.test(ua);
+    var steps = isIOS
+      ? [
+          'Tocá el ícono de compartir <strong>⬆</strong> en la barra del navegador',
+          'Deslizá hacia abajo y elegí <strong>"Agregar a pantalla de inicio"</strong>',
+          'Tocá <strong>"Agregar"</strong> para confirmar'
+        ]
+      : [
+          'Tocá el menú <strong>⋮</strong> en la esquina superior derecha del navegador',
+          'Elegí <strong>"Agregar a pantalla de inicio"</strong> o <strong>"Instalar app"</strong>',
+          'Tocá <strong>"Instalar"</strong> para confirmar'
+        ];
+    stepsEl.innerHTML = steps.map(function (s, i) {
+      return '<li class="pwa-install__step"><span class="pwa-install__step-num">' + (i + 1) + '</span><span class="pwa-install__step-text">' + s + '</span></li>';
+    }).join('');
+    if (actionsEl) actionsEl.hidden = true;
+    stepsEl.hidden = false;
   });
 
   if (pwaDismiss)  pwaDismiss.addEventListener('click', hidePwaSheet);

@@ -416,6 +416,22 @@
       background: oklch(100% 0 0 / .07);
       color: oklch(75% 0.01 160);
     }
+    .pwa-install__steps {
+      width: 100%; margin: 0; padding: 0;
+      list-style: none; display: flex; flex-direction: column; gap: .6rem;
+    }
+    .pwa-install__steps[hidden] { display: none; }
+    .pwa-install__step {
+      display: flex; align-items: flex-start; gap: .75rem;
+      background: oklch(100% 0 0 / .06); border-radius: 10px; padding: .75rem 1rem;
+    }
+    .pwa-install__step-num {
+      flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+      background: var(--warm-ochre, oklch(68% 0.1 70));
+      color: oklch(15% 0.02 80); font-size: .7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pwa-install__step-text { font-size: .88rem; color: oklch(82% 0.01 160); line-height: 1.45; }
     @keyframes pwa-slide-up {
       from { transform: translateY(100%); }
       to   { transform: translateY(0); }
@@ -872,7 +888,7 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=24"></script>
+  <script src="scripts/admin.js?v=25"></script>
   <!-- PWA install bottom sheet -->
   <div class="pwa-install" id="js-pwa-install" hidden role="dialog" aria-modal="true" aria-label="Instalar aplicación">
     <div class="pwa-install__backdrop" id="js-pwa-backdrop"></div>
@@ -884,10 +900,11 @@
         <p class="pwa-install__sub">Panel de administración</p>
         <p class="pwa-install__desc">Agregá la app a tu pantalla de inicio para acceso rápido y experiencia nativa.</p>
       </div>
-      <div class="pwa-install__actions">
+      <div class="pwa-install__actions" id="js-pwa-actions">
         <button class="pwa-install__btn pwa-install__btn--primary" id="js-pwa-confirm" type="button">Instalar app</button>
         <button class="pwa-install__btn pwa-install__btn--secondary" id="js-pwa-dismiss" type="button">Ahora no</button>
       </div>
+      <ol class="pwa-install__steps" id="js-pwa-steps" hidden></ol>
     </div>
   </div>
 
