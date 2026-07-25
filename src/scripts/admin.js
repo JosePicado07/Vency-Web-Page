@@ -1241,7 +1241,8 @@
     var sheet = modalEl.querySelector('.sol-modal__sheet');
     if (sheet) sheet.removeEventListener('keydown', _trapModalTab);
     modalEl.hidden = true;
-    if (modalEl._prevFocus) { modalEl._prevFocus.focus(); modalEl._prevFocus = null; }
+    if (modalEl._prevFocus && document.contains(modalEl._prevFocus)) { modalEl._prevFocus.focus(); }
+    modalEl._prevFocus = null;
   }
 
   /* ── Panel open / close ── */
@@ -1374,7 +1375,12 @@
     if (e.key !== 'Escape') return;
     if (!adminPanelEl.hidden) { closePanel(false); return; }
     var editModal = document.getElementById('js-sol-modal');
-    if (editModal && !editModal.hidden) { closeModal(editModal); return; }
+    if (editModal && !editModal.hidden) {
+      var ae = document.activeElement, tag = ae ? ae.tagName : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (ae && ae.closest && ae.closest('.vency-select')) return;
+      closeModal(editModal); return;
+    }
     var delModal  = document.getElementById('js-del-modal');
     if (delModal  && !delModal.hidden)  { closeModal(delModal); }
   });
