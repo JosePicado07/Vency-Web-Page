@@ -392,10 +392,11 @@
   }
 
   function updateCatFilterCounts(el) {
-    var counts = { todos: catalog.length, vency: 0, disenador: 0, nicho: 0, 'ultra-nicho': 0 };
+    var counts = { todos: catalog.length, disenador: 0, nicho: 0, 'ultra-nicho': 0, 'creacion-propia': 0 };
     catalog.forEach(function (f) {
-      if (f._type === 'vency') counts.vency++;
-      else if (f.cat) counts[f.cat] = (counts[f.cat] || 0) + 1;
+      if (f._type !== 'decant') return;
+      var c = (f.cat === 'original-blend') ? 'creacion-propia' : f.cat;
+      if (c) counts[c] = (counts[c] || 0) + 1;
     });
     el.querySelectorAll('.admin-cat-btn').forEach(function (btn) {
       var n = counts[btn.dataset.filter];
@@ -1061,7 +1062,7 @@
 
   function catMatch(f) {
     if (activeFilter === 'todos' || activeFilter === 'archived') return true;
-    if (activeFilter === 'vency') return f._type === 'vency';
+    if (activeFilter === 'creacion-propia') return f._type === 'decant' && (f.cat === 'creacion-propia' || f.cat === 'original-blend');
     return f._type === 'decant' && f.cat === activeFilter;
   }
 
