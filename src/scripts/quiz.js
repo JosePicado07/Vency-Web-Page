@@ -187,9 +187,10 @@
     if (recs.length) {
       var items = recs.map(function (f) {
         var thumb = (f.image || '').replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp');
+        var displayName = (f.inspiration && f.inspiration.name) ? f.inspiration.name : f.name;
         return '<a href="catalogo.html#' + f.id + '" class="quiz-rec">'
-          + '<img src="' + thumb + '" alt="' + esc(f.name) + '" class="quiz-rec__img" loading="lazy">'
-          + '<span class="quiz-rec__name">' + esc(f.name) + '</span>'
+          + '<img src="' + thumb + '" alt="' + esc(displayName) + '" class="quiz-rec__img" loading="lazy">'
+          + '<span class="quiz-rec__name">' + esc(displayName) + '</span>'
         + '</a>';
       }).join('');
       recsHtml =
