@@ -68,6 +68,7 @@
   var solObserver        = null;
   var showArchivedSol    = false;
   var _panelPrevFocus    = null;
+  var _metricsInterval   = null;
   var calDailyTotals     = {};
   var selectedCalDay     = null;
   var allSales           = [];
@@ -439,7 +440,7 @@
     renderInvList('');
     loadMetrics();
     loadInventory();
-    setInterval(loadMetrics, 60000);
+    _metricsInterval = setInterval(loadMetrics, 60000);
     if (salesToggleBtn) salesToggleBtn.addEventListener('click', toggleSalesSection);
     if (salesShowmoreBtn) salesShowmoreBtn.addEventListener('click', showAllSales);
 
@@ -551,6 +552,7 @@
 
   logoutBtn.addEventListener('click', function () {
     clearToken();
+    if (_metricsInterval) { clearInterval(_metricsInterval); _metricsInterval = null; }
     selection = []; bottles = [];
     closePanel(true);
     adminTrayEl.hidden = true;
@@ -1444,8 +1446,8 @@
     var oil   = entry.oil_ml || 0;
 
     var nameHtml = frag.brand
-      ? '<span class="dblock__brand">' + frag.brand + '</span><h3 class="dblock__name">' + frag.name + '</h3>'
-      : '<h3 class="dblock__name">' + frag.name + '</h3>';
+      ? '<span class="dblock__brand">' + escapeHtml_(frag.brand) + '</span><h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>'
+      : '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>';
 
     var bestLabel = frag.name === topFragranceName
       ? '<span class="inv-best-badge"><svg width="8" height="8" viewBox="0 0 8 8" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 1L5 3L7 3.5L5.5 5.5L6 8L4 6.5L2 8L2.5 5.5L1 3.5L3 3Z"/></svg>M\xc1S VENDIDO</span>'
@@ -1601,6 +1603,7 @@
       var sep = document.createElement('span');
       sep.className = 'sol-card__sep';
       sep.textContent = '\xb7';
+      sep.setAttribute('aria-hidden', 'true');
       head.appendChild(sep);
     }
     var nameEl = document.createElement('span');
@@ -1890,6 +1893,9 @@
         addHead.setAttribute('aria-expanded', String(!collapsed));
         localStorage.setItem('vency_add_collapsed', collapsed ? '1' : '0');
       });
+      addHead.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); addHead.click(); }
+      });
     }
 
     // Image preview
@@ -1987,7 +1993,7 @@
             if (prevCatSelect && prevCatSelect._setValue) prevCatSelect._setValue(prevCat);
             preview.innerHTML = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="sol-add-upload__hint">Tocá para elegir una imagen</span>';
             statusEl.textContent = '\xa1Fragancia agregada! Ya aparece en el cat\xe1logo.';
-            statusEl.style.color = 'oklch(73% .12 145)';
+            statusEl.style.color = 'var(--state-success)';
             statusEl.hidden = false;
             // Refresh KV entries so Vender/Inventario tabs include the new fragrance
             fetch('/api/catalog-request')
@@ -2120,7 +2126,7 @@
             .then(function (r) { return r.json(); }).then(function (res) {
               if (res.ok) {
                 statusEl.textContent = 'Cambios guardados.';
-                statusEl.style.color = 'oklch(73% .12 145)';
+                statusEl.style.color = 'var(--state-success)';
                 statusEl.hidden = false;
                 _refreshAfterKvAction();
                 setTimeout(close, 1200);
@@ -2145,7 +2151,7 @@
             .then(function (r) { return r.json(); }).then(function (res) {
               if (res.ok) {
                 statusEl.textContent = 'Guardado como edición.';
-                statusEl.style.color = 'oklch(73% .12 145)';
+                statusEl.style.color = 'var(--state-success)';
                 statusEl.hidden = false;
                 _refreshAfterKvAction();
                 setTimeout(close, 1200);

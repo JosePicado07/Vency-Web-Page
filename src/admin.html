@@ -234,7 +234,7 @@
     .sol-btn {
       padding: .38rem .7rem; border: 1px solid transparent; border-radius: 20px;
       font-size: .7rem; font-weight: 700; font-family: inherit; letter-spacing: .04em;
-      text-transform: uppercase; cursor: pointer; min-height: 32px;
+      text-transform: uppercase; cursor: pointer; min-height: 40px;
       transition: background .15s, border-color .15s; white-space: nowrap;
       -webkit-tap-highlight-color: transparent;
     }
@@ -262,7 +262,7 @@
     .sol-modal[hidden] { display: none; }
     .sol-modal__backdrop {
       position: absolute; inset: 0;
-      background: oklch(18% 0.04 180 / 0.45);
+      background: color-mix(in oklch, var(--volcanic-ink) 45%, transparent);
       backdrop-filter: blur(3px);
     }
     .sol-modal__sheet {
@@ -305,7 +305,7 @@
       display: flex; align-items: center; justify-content: center; gap: .35rem;
       padding: .38rem .7rem; border: 1px solid; border-radius: 7px;
       font-size: .68rem; font-weight: 600; font-family: inherit; letter-spacing: .08em;
-      text-transform: uppercase; cursor: pointer; white-space: nowrap; min-height: 30px;
+      text-transform: uppercase; cursor: pointer; white-space: nowrap; min-height: 40px;
       transition: background .2s, border-color .2s, color .2s; -webkit-tap-highlight-color: transparent;
     }
     .sol-avail-btn:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
@@ -784,7 +784,7 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=13"></script>
+  <script src="scripts/admin.js?v=14"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');
