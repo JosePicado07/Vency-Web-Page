@@ -357,6 +357,73 @@
     .admin-cat-filters .admin-cat-btn--active .admin-cat-count { opacity: 0.75; }
     .admin-cat-btn--archived { color: var(--ink-muted); border-color: oklch(80% 0.01 75); }
     .admin-cat-btn--archived.admin-cat-btn--active { background: oklch(55% 0.04 75); border-color: oklch(55% 0.04 75); color: var(--botanical-parchment); }
+
+    /* ── PWA install bottom sheet ── */
+    .pwa-install { position: fixed; inset: 0; z-index: 900; display: flex; align-items: flex-end; }
+    .pwa-install[hidden] { display: none; }
+    .pwa-install__backdrop {
+      position: absolute; inset: 0;
+      background: oklch(10% 0.02 160 / .55);
+      backdrop-filter: blur(2px);
+      animation: pwa-fade-in .25s ease-out both;
+    }
+    .pwa-install__sheet {
+      position: relative; z-index: 1;
+      width: 100%; padding: 1.75rem 1.5rem 2.25rem;
+      background: var(--surface-card, oklch(18% 0.025 160));
+      border-radius: 20px 20px 0 0;
+      border-top: 1px solid oklch(100% 0 0 / .08);
+      display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+      animation: pwa-slide-up .32s cubic-bezier(.16,1,.3,1) both;
+    }
+    .pwa-install__handle {
+      width: 36px; height: 4px; border-radius: 2px;
+      background: oklch(100% 0 0 / .18);
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    }
+    .pwa-install__icon {
+      width: 72px; height: 72px; border-radius: 18px;
+      box-shadow: 0 4px 20px oklch(0% 0 0 / .35);
+      object-fit: cover;
+    }
+    .pwa-install__text { text-align: center; }
+    .pwa-install__name {
+      font-family: 'Bitter', serif; font-size: 1.25rem; font-weight: 700;
+      color: var(--botanical-parchment, oklch(96% 0.008 80));
+      margin: 0 0 .2rem;
+      letter-spacing: .03em;
+    }
+    .pwa-install__sub {
+      font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--warm-ochre, oklch(68% 0.1 70)); margin: 0 0 .75rem;
+    }
+    .pwa-install__desc {
+      font-size: .9rem; color: oklch(80% 0.01 160); line-height: 1.55; margin: 0;
+      max-width: 28ch;
+    }
+    .pwa-install__actions { width: 100%; display: flex; flex-direction: column; gap: .6rem; }
+    .pwa-install__btn {
+      width: 100%; padding: .85rem 1rem; border-radius: 12px;
+      font-family: inherit; font-size: .95rem; font-weight: 600;
+      border: none; cursor: pointer; transition: opacity .15s;
+    }
+    .pwa-install__btn:active { opacity: .8; }
+    .pwa-install__btn--primary {
+      background: var(--warm-ochre, oklch(68% 0.1 70));
+      color: oklch(15% 0.02 80);
+    }
+    .pwa-install__btn--secondary {
+      background: oklch(100% 0 0 / .07);
+      color: oklch(75% 0.01 160);
+    }
+    @keyframes pwa-slide-up {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    @keyframes pwa-fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -398,7 +465,7 @@
         <span class="app-header__dot" aria-hidden="true">·</span>
         <span class="app-header__mode">Vendedor</span>
       </div>
-      <button class="app-header__install" id="js-install" type="button" hidden>Instalar</button>
+      <button class="app-header__install" id="js-install" type="button" hidden aria-hidden="true">Instalar</button>
       <button class="app-header__logout" id="js-logout" type="button">Salir</button>
     </header>
 
@@ -805,7 +872,25 @@
 
   <script src="scripts/fragrance-data.js?v=56"></script>
   <script src="scripts/catalogo-data.js?v=53"></script>
-  <script src="scripts/admin.js?v=22"></script>
+  <script src="scripts/admin.js?v=23"></script>
+  <!-- PWA install bottom sheet -->
+  <div class="pwa-install" id="js-pwa-install" hidden role="dialog" aria-modal="true" aria-label="Instalar aplicación">
+    <div class="pwa-install__backdrop" id="js-pwa-backdrop"></div>
+    <div class="pwa-install__sheet">
+      <div class="pwa-install__handle" aria-hidden="true"></div>
+      <img class="pwa-install__icon" src="favicon.png" alt="Vency Atelier">
+      <div class="pwa-install__text">
+        <p class="pwa-install__name">Vency Atelier</p>
+        <p class="pwa-install__sub">Panel de administración</p>
+        <p class="pwa-install__desc">Agregá la app a tu pantalla de inicio para acceso rápido y experiencia nativa.</p>
+      </div>
+      <div class="pwa-install__actions">
+        <button class="pwa-install__btn pwa-install__btn--primary" id="js-pwa-confirm" type="button">Instalar app</button>
+        <button class="pwa-install__btn pwa-install__btn--secondary" id="js-pwa-dismiss" type="button">Ahora no</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js');

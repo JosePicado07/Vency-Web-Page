@@ -538,20 +538,32 @@
 
   /* PWA install */
   var _installPrompt = null;
+  var pwaSheet   = document.getElementById('js-pwa-install');
+  var pwaConfirm = document.getElementById('js-pwa-confirm');
+  var pwaDismiss = document.getElementById('js-pwa-dismiss');
+  var pwaBackdrop = document.getElementById('js-pwa-backdrop');
+
+  function showPwaSheet() { if (pwaSheet) pwaSheet.hidden = false; }
+  function hidePwaSheet() { if (pwaSheet) pwaSheet.hidden = true; }
+
   window.addEventListener('beforeinstallprompt', function (e) {
     e.preventDefault();
     _installPrompt = e;
-    installBtn.hidden = false;
+    // Small delay so it doesn't fire instantly on page load
+    setTimeout(showPwaSheet, 1800);
   });
-  installBtn.addEventListener('click', function () {
+
+  if (pwaConfirm) pwaConfirm.addEventListener('click', function () {
     if (!_installPrompt) return;
+    hidePwaSheet();
     _installPrompt.prompt();
-    _installPrompt.userChoice.then(function () {
-      _installPrompt = null;
-      installBtn.hidden = true;
-    });
+    _installPrompt.userChoice.then(function () { _installPrompt = null; });
   });
-  window.addEventListener('appinstalled', function () { installBtn.hidden = true; });
+
+  if (pwaDismiss) pwaDismiss.addEventListener('click', hidePwaSheet);
+  if (pwaBackdrop) pwaBackdrop.addEventListener('click', hidePwaSheet);
+
+  window.addEventListener('appinstalled', hidePwaSheet);
 
   logoutBtn.addEventListener('click', function () {
     clearToken();
