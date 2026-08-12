@@ -1,0 +1,55 @@
+/* ============================================================
+   VENCY ATELIER — Self-hosted fonts
+   Was Google Fonts CDN with display=swap and no preload — caused
+   a visible flash to the fallback serif/sans on first paint.
+   Latin subset only; woff2 files live in assets/fonts/.
+   ============================================================ */
+@font-face {
+  font-family: 'Bitter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/bitter-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Bitter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/bitter-700.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Bitter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/assets/fonts/bitter-900.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/assets/fonts/manrope-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/manrope-500.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/assets/fonts/manrope-600.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/assets/fonts/manrope-700.woff2') format('woff2');
+}

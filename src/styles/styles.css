@@ -2724,8 +2724,6 @@ a.coll-block:hover .coll-block__cta {
   right: -2px;
   border-radius: 4px 0 0 4px;
 }
-/* Same SVG reused for both buttons — flip the icon (not the button frame). */
-.cart-upsell-arrow--next svg { transform: scaleX(-1); }
 .cart-upsell-arrow:hover {
   background: var(--warm-ochre);
   color: var(--botanical-parchment);
