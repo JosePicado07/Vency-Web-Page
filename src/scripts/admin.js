@@ -1559,6 +1559,18 @@
     }
   }
 
+  var _invSyncTimer = null;
+  function pushInventoryToKV() {
+    clearTimeout(_invSyncTimer);
+    _invSyncTimer = setTimeout(function () {
+      fetch('/api/inventory', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tok: token, updates: inventory })
+      }).catch(function () {});
+    }, 800);
+  }
+
   function syncInvDisplay() {
     invListEl.querySelectorAll('.js-inv-total').forEach(function (el) {
       var oil = (inventory[el.dataset.id] || {}).oil_ml || 0;
@@ -1569,10 +1581,9 @@
     invListEl.querySelectorAll('.js-inv-oil').forEach(function (el) {
       el.value = (inventory[el.dataset.id] || {}).oil_ml || 0;
     });
-    // Sync inventory to localStorage so public catalog shows updated sold-out state
-    try {
-      localStorage.setItem('vency_inventory', JSON.stringify(inventory));
-    } catch (e) {}
+    // Push inventory to KV so the public catalog's sold-out state updates for
+    // every visitor, not just this browser (was localStorage-only before).
+    pushInventoryToKV();
   }
 
   // Keyboard shortcut: "/" to focus search
@@ -2026,12 +2037,10 @@
               body: JSON.stringify(gasPayload),
             }).catch(function () {});
 
-            // Seed inventory in localStorage immediately
+            // Seed inventory in KV so the public catalog sees it immediately
             if (oilMl > 0 && res.id) {
-              var localInv;
-              try { localInv = JSON.parse(localStorage.getItem('vency_inventory')) || {}; } catch (e) { localInv = {}; }
-              localInv[res.id] = { oil_ml: oilMl };
-              localStorage.setItem('vency_inventory', JSON.stringify(localInv));
+              inventory[res.id] = { oil_ml: oilMl };
+              pushInventoryToKV();
             }
 
             form.reset();

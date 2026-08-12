@@ -4,6 +4,7 @@
   var catalog   = window.VENCY_FULL_CATALOG || [];
   var _unavailable = new Set();
   var _kvEntries = [];
+  var _inventory = {};
   var filters   = { cat: 'todos', gender: 'todos', q: '', ocasion: 'todos', vencyCat: 'todos' };
 
   // Parse ?category=X from URL and apply initial filter
@@ -292,8 +293,7 @@
   function buildVencyEntries(container, fragrances) {
     if (!container || !fragrances.length) return;
 
-    var inventoryStr = localStorage.getItem('vency_inventory');
-    var inventory = inventoryStr ? JSON.parse(inventoryStr) : null;
+    var inventory = _inventory;
     var hasInventory = inventory && Object.keys(inventory).length > 0;
 
     var html = '<ul class="cat-brand__list">';
@@ -396,8 +396,7 @@
 
     // Same inventory bridge as Vency entries — compute sold-out at render time
     // so the state is right on first paint (no late "AGOTADO popping in on scroll").
-    var invStr = localStorage.getItem('vency_inventory');
-    var inv = invStr ? JSON.parse(invStr) : null;
+    var inv = _inventory;
     var hasInv = inv && Object.keys(inv).length > 0;
     function isItemSoldOut(id) {
       if (_unavailable.has(id) || _archivedBase.has(id)) return true;
@@ -841,11 +840,13 @@
   Promise.all([
     fetch('/api/availability').then(function (r) { return r.json(); }).catch(function () { return {}; }),
     fetch('/api/catalog-request').then(function (r) { return r.json(); }).catch(function () { return []; }),
-    fetch('/api/catalog-archive').then(function (r) { return r.json(); }).catch(function () { return {}; })
+    fetch('/api/catalog-archive').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+    fetch('/api/inventory').then(function (r) { return r.json(); }).catch(function () { return {}; })
   ]).then(function (results) {
     _unavailable  = new Set((results[0].unavailable) || []);
     _kvEntries    = Array.isArray(results[1]) ? results[1] : [];
     _archivedBase = new Set((results[2].archived) || []);
+    _inventory    = (results[3] && results[3].inventory) || {};
     initCatalog();
 
     // Hash navigation from quiz or external links — MUST run after
