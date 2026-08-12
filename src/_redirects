@@ -1,2 +1,6 @@
 # Cloudflare Pages handles pretty URLs automatically.
 # No manual .html redirects needed — they conflict with the built-in feature.
+
+# coleccion.html was removed — send any old links/bookmarks to the catalog.
+/coleccion       /catalogo  301
+/coleccion.html  /catalogo  301

@@ -153,6 +153,27 @@
   filter: brightness(0.88) contrast(1.05);
 }
 
+/* Icon-series (inspiration) bottle shots are portrait product photos (375×500),
+   not wide hero photography. Left as `cover` at 100%/100% they either crop
+   down to the cap or — since the grid row stretches to match the (often much
+   taller) text column — blow up to 900px+ tall, needing a full scroll to see
+   one bottle. Give them a fixed, centered frame sized to the photography
+   instead of the row height. */
+.catalog-entry--icon-series .catalog-entry__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  height: clamp(320px, 40svh, 480px);
+  background: var(--botanical-parchment);
+}
+.catalog-entry--icon-series .catalog-entry__image img {
+  width: auto;
+  height: 100%;
+  max-width: 90%;
+  object-fit: contain;
+}
+
 .catalog-entry__content {
   padding: var(--space-md);
   display: flex;

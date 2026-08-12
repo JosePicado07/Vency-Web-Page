@@ -31,8 +31,7 @@
       filters.vencyCat = 'todos';
   }
 
-  /* ── Format selector modal (mirror of Colección) ──────────────────
-     Same HTML/CSS as coleccion.html — driven by the same cart logic.
+  /* ── Format selector modal ─────────────────────────────────────────
      openFmtModal(frag) where frag = { id, name, image }. */
   var _fmtTrigger  = null;
   var FMT_IMAGES   = window.VENCY_FMT_IMAGES;
@@ -330,7 +329,6 @@
         ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
         : 'assets/images/_webp/default-bottle-400.webp';
 
-      var historiaHref = 'coleccion.html#' + frag.id;
       var inspoText = (isIcon && frag.inspiration)
         ? escHtml(frag.inspiration.brand)
         : '';
@@ -344,7 +342,6 @@
           ' data-fragrance-vency-cat="' + frag.category + '"' +
           ' data-fragrance-notes="' + escHtml(notes) + '"' +
           ' data-fragrance-img="' + escHtml(frag.image || 'assets/images/default-bottle.jpg') + '"' +
-          ' data-fragrance-href="' + escHtml(historiaHref) + '"' +
           (inspoText ? ' data-fragrance-inspo="' + inspoText + '"' : '') +
           ' data-search="' + escHtml(searchStr) + '"' +
           ' data-ocasion="' + ocasion + '"' +
@@ -557,7 +554,6 @@
             var thumbSrc = frag.image
               ? frag.image.replace(/^(.*\/)([^/]+)\.(?:png|jpe?g)$/i, '$1_webp/$2-400.webp')
               : 'assets/images/_webp/default-bottle-400.webp';
-            var historiaHref = 'coleccion.html#' + frag.id;
             var notes = frag.noteLabels.join(' · ');
 
             if (_unavailable.has(frag.id) || _archivedBase.has(frag.id)) return;
@@ -571,7 +567,6 @@
             li.dataset.fragranceCat  = 'vency';
             li.dataset.fragranceVencyCat = 'icon-series';
             li.dataset.fragranceImg  = frag.image || 'assets/images/default-bottle.jpg';
-            li.dataset.fragranceHref = historiaHref;
             li.dataset.fragranceInspo = escHtml(frag.inspiration.brand);
             li.dataset.fragranceNotes = notes;
             li.dataset.search = (frag.inspiration.name + ' ' + frag.name + ' ' + frag.inspiration.brand + ' ' + frag.notes.join(' ')).toLowerCase();
@@ -613,8 +608,6 @@
           li.dataset.fragranceId   = interp ? interp.id : slug(item.brand + '-' + item.name);
           li.dataset.fragranceName = interp ? interp.name : item.brand + ' · ' + item.name;
           li.dataset.fragranceCat  = sec.cat;
-          var historiaHref = interp ? 'coleccion.html#' + interp.id : null;
-          if (historiaHref) li.dataset.fragranceHref = historiaHref;
           li.dataset.fragranceInspo = escHtml(item.name) + ' · ' + escHtml(item.brand);
           var rawNotes = item.notes || '';
           var dotIdx   = rawNotes.indexOf('. ');

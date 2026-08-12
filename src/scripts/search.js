@@ -91,7 +91,7 @@
 
     hint.textContent = '';
     results.innerHTML = matched.map(function (f) {
-      return '<a href="coleccion.html#' + f.id + '" class="search-result" tabindex="0">' +
+      return '<a href="catalogo.html#' + f.id + '" class="search-result" tabindex="0">' +
         '<img src="' + f.image + '" alt="" class="search-result__img" loading="lazy">' +
         '<span class="search-result__info">' +
           '<span class="search-result__name">' + escHtml(f.name) + '</span>' +

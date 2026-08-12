@@ -1,6 +1,6 @@
 ﻿/**
  * Vency Atelier — Shared fragrance catalog data
- * Add new entries here to grow the catalog; both coleccion and decants consume this.
+ * Add new entries here to grow the catalog; both catalogo and decants consume this.
  */
 (function (root) {
   window.escHtml = window.escHtml || function (s) {

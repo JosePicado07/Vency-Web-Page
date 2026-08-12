@@ -32,9 +32,25 @@
       <span class="nav__toggle-bar"></span>
     </button>
     <ul class="nav__links" id="nav-links" role="list">
-      <li><a href="coleccion.html" class="nav__link">Colección</a></li>
-      <li><a href="catalogo.html" class="nav__link">Comprar</a></li>
-      <li><a href="index.html#perfumista" class="nav__link">El Perfumista</a></li>
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="personalizacion.html" class="nav__link">Personalizar</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
     </ul>
   </nav>
 
@@ -198,9 +214,10 @@
         <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
       </p>
       <nav class="footer__nav" aria-label="Navegación del pie de página">
-        <a href="coleccion.html" class="footer__link">Colección</a>
         <a href="catalogo.html" class="footer__link">Catálogo</a>
-        <a href="index.html#perfumista" class="footer__link">El Perfumista</a>
+        <a href="perfumista.html" class="footer__link">El Perfumista</a>
+        <a href="guia.html" class="footer__link">Guía</a>
+        <a href="personalizacion.html" class="footer__link">Personalizar</a>
       </nav>
       <nav class="footer__nav" aria-label="Políticas y contacto">
         <a href="legal.html" class="footer__link footer__link--active">Políticas</a>
@@ -226,17 +243,17 @@
       <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
       <div class="search-overlay__results js-search-results"></div>
       <div class="search-overlay__categories js-search-categories">
-        <a href="coleccion.html" class="search-cat">
-          <span class="search-cat__label">COLECCIÓN</span>
-          <span class="search-cat__name">Original Blend</span>
+        <a href="catalogo.html?category=original" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Vency</span>
         </a>
         <a href="catalogo.html" class="search-cat">
-          <span class="search-cat__label">INSPIRACIONES</span>
-          <span class="search-cat__name">Icon Series</span>
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Catálogo completo</span>
         </a>
-        <a href="coleccion.html" class="search-cat">
-          <span class="search-cat__label">FORMATOS</span>
-          <span class="search-cat__name">Decants & Botellas</span>
+        <a href="perfumista.html" class="search-cat">
+          <span class="search-cat__label">ATELIER</span>
+          <span class="search-cat__name">El Perfumista</span>
         </a>
       </div>
     </div>
