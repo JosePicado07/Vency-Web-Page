@@ -251,8 +251,24 @@
     if (e.target === overlay) closeQuiz();
   });
 
+  function getFocusable(el) {
+    return el.querySelectorAll('a[href], button, input, [tabindex]:not([tabindex="-1"])');
+  }
+
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeQuiz();
+    if (!overlay.classList.contains('is-open')) return;
+    if (e.key === 'Escape') { closeQuiz(); return; }
+    if (e.key === 'Tab') {
+      var focusable = getFocusable(modal);
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (!first || !last) return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    }
   });
 
   modal.addEventListener('click', function (e) {

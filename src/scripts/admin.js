@@ -1097,16 +1097,19 @@
     }
   }
 
-  searchInput.addEventListener('input', function () {
-    if (activeMode === 'vender') renderFragList(this.value);
-    else if (activeMode === 'solicitudes') renderCatList(this.value);
-    else renderInvList(this.value);
-  });
-  searchInput.addEventListener('search', function () {
-    if (activeMode === 'vender') renderFragList(this.value);
-    else if (activeMode === 'solicitudes') renderCatList(this.value);
-    else renderInvList(this.value);
-  });
+  function debounce(fn, ms) {
+    var t;
+    return function () { var args = arguments, ctx = this; clearTimeout(t); t = setTimeout(function () { fn.apply(ctx, args); }, ms); };
+  }
+
+  function runSearch() {
+    if (activeMode === 'vender') renderFragList(searchInput.value);
+    else if (activeMode === 'solicitudes') renderCatList(searchInput.value);
+    else renderInvList(searchInput.value);
+  }
+
+  searchInput.addEventListener('input', debounce(runSearch, 150));
+  searchInput.addEventListener('search', runSearch);
 
   /* ── Cart ── */
   function defaultPct(id) {
