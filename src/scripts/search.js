@@ -14,7 +14,25 @@
   var categories = overlay.querySelector('.js-search-categories');
   var allFrags = catalog;
   allFrags.forEach(function (f) {
-    f._search = (f.name + ' ' + (f.noteLabels||[]).join(' ') + ' ' + (f.narrative||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Icon-series entries display under their real inspiration name/brand in
+    // the catalog, not the internal Vency codename: search must match that.
+    var isIcon = f.category === 'icon-series' && f.inspiration;
+    f._displayName = isIcon ? f.inspiration.name : f.name;
+    f._displayBrand = isIcon ? f.inspiration.brand : '';
+    f._search = (f.name + ' ' + f._displayName + ' ' + f._displayBrand + ' ' + (f.noteLabels||[]).join(' ') + ' ' + (f.narrative||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  });
+
+  // Fragrances hidden from the catalog (archived, permanently deleted, or
+  // manually marked unavailable) must also be hidden from search: otherwise
+  // stale results show up and lead nowhere (their card no longer exists).
+  var _hidden = new Set();
+  Promise.all([
+    fetch('/api/catalog-archive').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+    fetch('/api/availability').then(function (r) { return r.json(); }).catch(function () { return {}; })
+  ]).then(function (results) {
+    (results[0].archived || []).forEach(function (id) { _hidden.add(id); });
+    (results[0].deleted || []).forEach(function (id) { _hidden.add(id); });
+    (results[1].unavailable || []).forEach(function (id) { _hidden.add(id); });
   });
 
   function getFocusable(el) {
@@ -80,7 +98,7 @@
     if (categories) categories.hidden = true;
 
     var matched = allFrags.filter(function (f) {
-      return f._search.indexOf(q) !== -1;
+      return f._search.indexOf(q) !== -1 && !_hidden.has(f.id);
     });
 
     if (matched.length === 0) {
@@ -91,11 +109,14 @@
 
     hint.textContent = '';
     results.innerHTML = matched.map(function (f) {
+      var meta = f._displayBrand
+        ? escHtml(f._displayBrand) + ' · ' + escHtml(f.noteLabels.slice(0, 2).join(' · '))
+        : escHtml(f.noteLabels.slice(0, 3).join(' · '));
       return '<a href="catalogo.html#' + f.id + '" class="search-result" tabindex="0">' +
         '<img src="' + f.image + '" alt="" class="search-result__img" loading="lazy">' +
         '<span class="search-result__info">' +
-          '<span class="search-result__name">' + escHtml(f.name) + '</span>' +
-          '<span class="search-result__meta">' + escHtml(f.noteLabels.slice(0, 3).join(' · ')) + '</span>' +
+          '<span class="search-result__name">' + escHtml(f._displayName) + '</span>' +
+          '<span class="search-result__meta">' + meta + '</span>' +
         '</span>' +
       '</a>';
     }).join('');
