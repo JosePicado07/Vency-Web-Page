@@ -13,7 +13,28 @@
   // Always read fresh — fragrance-data.js may load in a different position
   // on different pages. Caching once at IIFE init lost the rail on pages
   // where script order put cart-drawer first.
-  function getCatalog() { return window.VENCY_CATALOG || []; }
+  //
+  // window.VENCY_CATALOG only covers Vency's own line (icon-series +
+  // creación propia). Most of the catalog (designer/nicho/ultra-nicho)
+  // lives in window.VENCY_FULL_CATALOG with no id field of its own, so it
+  // must be merged in here too, or any cart item / upsell candidate from
+  // that list resolves to nothing (raw id as name, broken image).
+  var slugify_ = window.slugify || function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
+  function getCatalog() {
+    var vency = window.VENCY_CATALOG || [];
+    var full  = (window.VENCY_FULL_CATALOG || []).map(function (f) {
+      return {
+        id: slugify_((f.brand || '') + '-' + f.name),
+        name: (f.brand || '') + ' · ' + f.name,
+        image: f.image || 'assets/images/default-bottle.jpg',
+        notes: []
+      };
+    });
+    return vency.map(function (f) {
+      var isIcon = f.category === 'icon-series' && f.inspiration;
+      return isIcon ? Object.assign({}, f, { name: f.inspiration.name }) : f;
+    }).concat(full);
+  }
 
   var catalogMap = null;
   function getCatalogMap() {
@@ -127,7 +148,7 @@
 
     selection.forEach(function (s) {
       var frag = cmap[s.id];
-      var name = frag ? frag.name : s.id;
+      var name = s.name || (frag ? frag.name : s.id);
       var img  = frag ? frag.image : '';
       var itemPrice = _priceForType(s.type || 'vency');
       var dBlocked = _drawerUnavailSet.has(s.id);
@@ -148,7 +169,7 @@
 
     bottles.forEach(function (b) {
       var frag = cmap[b.id];
-      var name = frag ? frag.name : b.id;
+      var name = b.name || (frag ? frag.name : b.id);
       var img  = frag ? frag.image : '';
       var qty = b.qty || 1;
       var unitPrice = b.price || 0;
