@@ -846,6 +846,7 @@
     _unavailable  = new Set((results[0].unavailable) || []);
     _kvEntries    = Array.isArray(results[1]) ? results[1] : [];
     _archivedBase = new Set((results[2].archived) || []);
+    (results[2].deleted || []).forEach(function (id) { _archivedBase.add(id); });
     _inventory    = (results[3] && results[3].inventory) || {};
     initCatalog();
 

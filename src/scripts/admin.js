@@ -62,6 +62,7 @@
   var invPage            = 0;
   var invObserver        = null;
   var _archivedBase      = new Set();
+  var _deletedBase       = new Set();
   var solAllItems        = [];
   var solFilteredList    = [];
   var solPage            = 0;
@@ -360,7 +361,7 @@
       };
     });
     // Build index of static entries so KV overrides can patch image instead of being dropped
-    var staticAll = vency.concat(ext);
+    var staticAll = vency.concat(ext).filter(function (f) { return !_deletedBase.has(f.id); });
     var staticIdx = {};
     staticAll.forEach(function (f, i) { staticIdx[keyFor(f.brand, f.name)] = i; });
     var newKv = [];
@@ -1793,15 +1794,13 @@
       actions.appendChild(restBtn);
     }
 
-    // Delete (KV only)
-    if (isKV) {
-      var delBtn = document.createElement('button');
-      delBtn.className = 'sol-btn sol-btn--delete';
-      delBtn.type = 'button';
-      delBtn.textContent = 'Eliminar';
-      delBtn.addEventListener('click', function () { openDeleteModal(item); });
-      actions.appendChild(delBtn);
-    }
+    // Delete (KV entries: permanent removal; static entries: separate permanent tombstone)
+    var delBtn = document.createElement('button');
+    delBtn.className = 'sol-btn sol-btn--delete';
+    delBtn.type = 'button';
+    delBtn.textContent = 'Eliminar';
+    delBtn.addEventListener('click', function () { openDeleteModal(item); });
+    actions.appendChild(delBtn);
 
     card.appendChild(actions);
     return card;
@@ -2256,14 +2255,37 @@
     confirmBtn.onclick = function () {
       confirmBtn.disabled = true;
       confirmBtn.textContent = 'Eliminando…';
-      fetch('/api/catalog-request', {
-        method: 'PATCH',
+
+      if (item._isKV) {
+        fetch('/api/catalog-request', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: item.id, action: 'delete', tok: token })
+        }).then(function (r) { return r.json(); }).then(function (res) {
+          if (res.ok) { close(); _refreshAfterKvAction(); }
+          else throw new Error();
+        }).catch(function () {
+          confirmBtn.disabled = false;
+          confirmBtn.textContent = 'Eliminar';
+          showToast('Error. Intentá de nuevo.');
+        });
+        return;
+      }
+
+      _deletedBase.add(item.id);
+      fetch('/api/catalog-archive', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: item.id, action: 'delete', tok: token })
+        body: JSON.stringify({ id: item.id, deleted: true })
       }).then(function (r) { return r.json(); }).then(function (res) {
-        if (res.ok) { close(); _refreshAfterKvAction(); }
-        else throw new Error();
+        if (!res.ok) throw new Error();
+        close();
+        buildCatalog();
+        renderFragList(searchInput ? searchInput.value : '');
+        renderInvList(searchInput ? searchInput.value : '');
+        loadSolicitudes();
       }).catch(function () {
+        _deletedBase.delete(item.id);
         confirmBtn.disabled = false;
         confirmBtn.textContent = 'Eliminar';
         showToast('Error. Intentá de nuevo.');
@@ -2363,6 +2385,7 @@
     try { localStorage.setItem(AVAIL_KEY, JSON.stringify(localMap)); } catch (e) {}
 
     _archivedBase = new Set(results[2].archived || []);
+    _deletedBase = new Set(results[2].deleted || []);
 
     buildCatalog();
     var saved = getToken();
