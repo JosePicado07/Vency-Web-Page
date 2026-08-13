@@ -604,7 +604,8 @@
           var displayName  = interp ? interp.name : item.name;
           var fragranceName = interp ? escHtml(interp.name) : escHtml(item.brand) + ' · ' + escHtml(item.name);
 
-          li.dataset.fragranceId   = interp ? interp.id : slug(item.brand + '-' + item.name);
+          li.id = interp ? interp.id : slug(item.brand + '-' + item.name);
+          li.dataset.fragranceId   = li.id;
           li.dataset.fragranceName = interp ? interp.name : item.brand + ' · ' + item.name;
           li.dataset.fragranceCat  = sec.cat;
           li.dataset.fragranceInspo = escHtml(item.name) + ' · ' + escHtml(item.brand);

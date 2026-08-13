@@ -1,8 +1,9 @@
 (function () {
   'use strict';
 
-  var catalog = window.VENCY_CATALOG;
-  if (!catalog) return;
+  var vencyCatalog = window.VENCY_CATALOG || [];
+  var fullCatalog   = window.VENCY_FULL_CATALOG || [];
+  if (!vencyCatalog.length && !fullCatalog.length) return;
 
   var overlay = document.querySelector('.js-search-overlay');
   var input   = overlay && overlay.querySelector('.js-search-input');
@@ -11,16 +12,48 @@
   var close   = overlay && overlay.querySelector('.js-search-close');
   if (!overlay || !input || !results || !hint || !close) return;
 
+  var escHtml = window.escHtml;
+  var slugify = window.slugify || function (s) { return s.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''); };
+
+  function normalize(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
+  function firstNotes(raw, n) {
+    var head = String(raw || '').split(/\.\s/)[0];
+    return head.split(',').map(function (s) { return s.trim(); }).filter(Boolean).slice(0, n);
+  }
+
   var categories = overlay.querySelector('.js-search-categories');
-  var allFrags = catalog;
-  allFrags.forEach(function (f) {
-    // Icon-series entries display under their real inspiration name/brand in
-    // the catalog, not the internal Vency codename: search must match that.
+
+  // The whole catalog is searchable by name or brand: Vency's own line
+  // (icon-series shown under their real inspiration name, plus creación
+  // propia) and the full designer/nicho/ultra-nicho list. Missing either
+  // source meant most of the catalog (everything but Vency's own line)
+  // never showed up here even though it's all browsable in /catalogo.
+  var allFrags = vencyCatalog.map(function (f) {
     var isIcon = f.category === 'icon-series' && f.inspiration;
-    f._displayName = isIcon ? f.inspiration.name : f.name;
-    f._displayBrand = isIcon ? f.inspiration.brand : '';
-    f._search = (f.name + ' ' + f._displayName + ' ' + f._displayBrand + ' ' + (f.noteLabels||[]).join(' ') + ' ' + (f.narrative||'')).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  });
+    var displayName  = isIcon ? f.inspiration.name : f.name;
+    var displayBrand = isIcon ? f.inspiration.brand : '';
+    return {
+      id: f.id,
+      image: f.image,
+      displayName: displayName,
+      displayBrand: displayBrand,
+      noteLabels: f.noteLabels || [],
+      _search: normalize(f.name + ' ' + displayName + ' ' + displayBrand + ' ' + (f.noteLabels || []).join(' ') + ' ' + (f.narrative || ''))
+    };
+  }).concat(fullCatalog.map(function (f) {
+    var notes = firstNotes(f.notes, 3);
+    return {
+      id: slugify((f.brand || '') + '-' + f.name),
+      image: f.image || 'assets/images/default-bottle.jpg',
+      displayName: f.name,
+      displayBrand: f.brand || '',
+      noteLabels: notes,
+      _search: normalize(f.name + ' ' + (f.brand || '') + ' ' + (f.notes || ''))
+    };
+  }));
 
   // Fragrances hidden from the catalog (archived, permanently deleted, or
   // manually marked unavailable) must also be hidden from search: otherwise
@@ -89,7 +122,7 @@
   }
 
   input.addEventListener('input', debounce(function () {
-    var q = input.value.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var q = normalize(input.value.trim());
     if (q.length < 1) {
       overlay.classList.remove('has-results');
       if (categories) categories.hidden = false;
@@ -109,21 +142,19 @@
 
     hint.textContent = '';
     results.innerHTML = matched.map(function (f) {
-      var meta = f._displayBrand
-        ? escHtml(f._displayBrand) + ' · ' + escHtml(f.noteLabels.slice(0, 2).join(' · '))
+      var meta = f.displayBrand
+        ? escHtml(f.displayBrand) + ' · ' + escHtml(f.noteLabels.slice(0, 2).join(' · '))
         : escHtml(f.noteLabels.slice(0, 3).join(' · '));
       return '<a href="catalogo.html#' + f.id + '" class="search-result" tabindex="0">' +
         '<img src="' + f.image + '" alt="" class="search-result__img" loading="lazy">' +
         '<span class="search-result__info">' +
-          '<span class="search-result__name">' + escHtml(f._displayName) + '</span>' +
+          '<span class="search-result__name">' + escHtml(f.displayName) + '</span>' +
           '<span class="search-result__meta">' + meta + '</span>' +
         '</span>' +
       '</a>';
     }).join('');
     overlay.classList.add('has-results');
   }));
-
-  var escHtml = window.escHtml;
 
   var searchBtn = document.querySelector('.js-search-btn');
   if (searchBtn) searchBtn.addEventListener('click', openSearch);
