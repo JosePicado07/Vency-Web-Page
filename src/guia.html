@@ -27,6 +27,9 @@
       max-width: 760px;
       margin: 0 auto;
     }
+    @media (min-width: 1024px) {
+      .guide-header__inner { max-width: 1040px; margin: 0 auto; }
+    }
     .guide-header__title {
       font-family: 'Bitter', serif;
       font-weight: 900;
@@ -43,10 +46,45 @@
       margin-top: 1rem;
       max-width: 54ch;
     }
-    .guide-body {
+    .guide-layout {
       max-width: 760px;
       margin: 0 auto;
       padding: var(--space-lg) var(--space-md) var(--space-xl);
+    }
+    @media (min-width: 1024px) {
+      .guide-layout {
+        max-width: 1040px;
+        display: grid;
+        grid-template-columns: 200px minmax(0, 1fr);
+        gap: var(--space-lg);
+        align-items: start;
+      }
+    }
+    .guide-toc { display: none; }
+    @media (min-width: 1024px) {
+      .guide-toc {
+        display: block;
+        position: sticky;
+        top: calc(var(--nav-h) + var(--space-md));
+      }
+      .guide-toc__label {
+        font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 600;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--ink-muted); margin: 0 0 1rem;
+      }
+      .guide-toc__list { list-style: none; margin: 0; padding: 0; }
+      .guide-toc__list li { border-top: 1px solid var(--border-subtle); }
+      .guide-toc__list a {
+        display: block; padding: 0.65rem 0;
+        font-family: 'Manrope', sans-serif; font-size: 0.8rem; font-weight: 500;
+        color: var(--ink-subdued); text-decoration: none;
+        transition: color 0.18s var(--ease-expo);
+      }
+      .guide-toc__list a:hover { color: var(--volcanic-ink); }
+      .guide-toc__list a:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
+    }
+    .guide-body {
+      max-width: 760px;
     }
     .guide-section {
       padding: var(--space-lg) 0;
@@ -95,19 +133,28 @@
       list-style: disc;
     }
     .guide-glossary {
-      display: grid;
-      gap: 1rem;
       margin-top: 0.5rem;
+    }
+    .guide-glossary__item + .guide-glossary__item {
+      margin-top: 1rem;
+    }
+    @media (min-width: 1024px) {
+      .guide-glossary {
+        max-width: 1040px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-lg);
+        row-gap: 1.5rem;
+      }
+      .guide-glossary__item + .guide-glossary__item {
+        margin-top: 0;
+      }
     }
     .guide-glossary dt {
       font-family: 'Bitter', serif;
       font-weight: 700;
       font-size: 1.05rem;
       color: var(--volcanic-ink);
-      margin-top: 0.5rem;
-    }
-    .guide-glossary dt:first-child {
-      margin-top: 0;
     }
     .guide-glossary dd {
       font-family: 'Manrope', sans-serif;
@@ -344,10 +391,25 @@
       </div>
     </header>
 
+    <div class="guide-layout">
+
+      <aside class="guide-toc" aria-label="Contenidos de la guía">
+        <span class="guide-toc__label">En esta guía</span>
+        <ul class="guide-toc__list">
+          <li><a href="#empezando">Empezando</a></li>
+          <li><a href="#tipos">Tipos de perfumería</a></li>
+          <li><a href="#familias">Familias olfativas</a></li>
+          <li><a href="#rendimiento">Rendimiento y longevidad</a></li>
+          <li><a href="#cuidado">Cómo usar y conservar</a></li>
+          <li><a href="#perfil">Descubrí tu perfil</a></li>
+          <li><a href="#glosario">Glosario del atelier</a></li>
+        </ul>
+      </aside>
+
     <div class="guide-body" id="guia-sections">
 
       <!-- EMPEZANDO -->
-      <section class="guide-section">
+      <section class="guide-section" id="empezando">
         <h2 class="guide-section__title">Empezando</h2>
         <div class="guide-section__body">
           <p>
@@ -363,7 +425,7 @@
       </section>
 
       <!-- TIPOS DE PERFUMERÍA -->
-      <section class="guide-section">
+      <section class="guide-section" id="tipos">
         <h2 class="guide-section__title">Tipos de Perfumería</h2>
         <div class="guide-section__body">
           <p>
@@ -385,7 +447,7 @@
       </section>
 
       <!-- FAMILIAS OLFATIVAS -->
-      <section class="guide-section">
+      <section class="guide-section" id="familias">
         <h2 class="guide-section__title">Familias Olfativas</h2>
         <div class="guide-section__body">
           <p>
@@ -410,7 +472,7 @@
       </section>
 
       <!-- RENDIMIENTO Y LONGEVIDAD -->
-      <section class="guide-section">
+      <section class="guide-section" id="rendimiento">
         <h2 class="guide-section__title">Rendimiento y Longevidad</h2>
         <div class="guide-section__body">
           <p>
@@ -435,7 +497,7 @@
       </section>
 
       <!-- CÓMO USAR Y CONSERVAR -->
-      <section class="guide-section">
+      <section class="guide-section" id="cuidado">
         <h2 class="guide-section__title">Cómo Usar y Conservar</h2>
         <div class="guide-section__body">
           <p>
@@ -457,7 +519,7 @@
       </section>
 
       <!-- DESCUBRÍ TU PERFIL -->
-      <section class="guide-section">
+      <section class="guide-section" id="perfil">
         <h2 class="guide-section__title">Descubrí tu Perfil Olfativo</h2>
         <div class="guide-section__body">
           <p>
@@ -470,43 +532,65 @@
       </section>
 
       <!-- GLOSARIO DEL ATELIER -->
-      <section class="guide-section">
+      <section class="guide-section" id="glosario">
         <h2 class="guide-section__title">Glosario del Atelier</h2>
         <div class="guide-section__body">
           <p>Estos son los términos que usamos todos los días en el taller. Conocerlos te da el vocabulario para hablar de perfumería con propiedad.</p>
           <dl class="guide-glossary">
-            <dt>Decant</dt>
-            <dd>Mini-frasco de 10 ml con atomizador, llenado a partir de una fragancia original. Es la forma más práctica y económica de probar un perfume antes de comprar el frasco completo.</dd>
+            <div class="guide-glossary__item">
+              <dt>Decant</dt>
+              <dd>Mini-frasco de 10 ml con atomizador, llenado a partir de una fragancia original. Es la forma más práctica y económica de probar un perfume antes de comprar el frasco completo.</dd>
+            </div>
 
-            <dt>Nota de salida</dt>
-            <dd>Las primeras notas que percibís al aplicar una fragancia. Suelen ser frescas y volátiles: cítricos, hierbas, frutas. Duran entre 5 y 30 minutos. Son la puerta de entrada a la composición.</dd>
+            <div class="guide-glossary__item">
+              <dt>Nota de salida</dt>
+              <dd>Las primeras notas que percibís al aplicar una fragancia. Suelen ser frescas y volátiles: cítricos, hierbas, frutas. Duran entre 5 y 30 minutos. Son la puerta de entrada a la composición.</dd>
+            </div>
 
-            <dt>Nota de corazón</dt>
-            <dd>El alma de la fragancia. Aparece cuando las notas de salida se desvanecen y puede durar de 2 a 4 horas. Aquí dominan los florales, las especias y los acordes más complejos. Es lo que define el carácter del perfume.</dd>
+            <div class="guide-glossary__item">
+              <dt>Nota de corazón</dt>
+              <dd>El alma de la fragancia. Aparece cuando las notas de salida se desvanecen y puede durar de 2 a 4 horas. Aquí dominan los florales, las especias y los acordes más complejos. Es lo que define el carácter del perfume.</dd>
+            </div>
 
-            <dt>Nota de fondo</dt>
-            <dd>La base de la pirámide olfativa. Son las notas más pesadas y persistentes: maderas, resinas, almizcle, vainilla, ámbar. Pueden durar de 6 a 12 horas o más. Son las que dejan la estela y el recuerdo duradero.</dd>
+            <div class="guide-glossary__item">
+              <dt>Nota de fondo</dt>
+              <dd>La base de la pirámide olfativa. Son las notas más pesadas y persistentes: maderas, resinas, almizcle, vainilla, ámbar. Pueden durar de 6 a 12 horas o más. Son las que dejan la estela y el recuerdo duradero.</dd>
+            </div>
 
-            <dt>Maceración</dt>
-            <dd>Proceso de reposo controlado de la fragancia después de su elaboración. Durante la maceración los ingredientes se integran, se suavizan y la composición alcanza su punto óptimo. En Vency Atelier dejamos macerar cada tanda antes de ponerla a la venta.</dd>
+            <div class="guide-glossary__item">
+              <dt>Maceración</dt>
+              <dd>Proceso de reposo controlado de la fragancia después de su elaboración. Durante la maceración los ingredientes se integran, se suavizan y la composición alcanza su punto óptimo. En Vency Atelier dejamos macerar cada tanda antes de ponerla a la venta.</dd>
+            </div>
 
-            <dt>Estela (sillage)</dt>
-            <dd>El rastro que deja una fragancia en el aire cuando la persona se mueve. Un sillage pronunciado indica una buena concentración de notas de fondo y una composición bien balanceada.</dd>
+            <div class="guide-glossary__item">
+              <dt>Estela (sillage)</dt>
+              <dd>El rastro que deja una fragancia en el aire cuando la persona se mueve. Un sillage pronunciado indica una buena concentración de notas de fondo y una composición bien balanceada.</dd>
+            </div>
 
-            <dt>Proyección</dt>
-            <dd>La distancia a la que se percibe una fragancia desde quien la usa. Puede ser baja (íntima), moderada (se nota al saludar) o alta (se percibe desde varios metros).</dd>
+            <div class="guide-glossary__item">
+              <dt>Proyección</dt>
+              <dd>La distancia a la que se percibe una fragancia desde quien la usa. Puede ser baja (íntima), moderada (se nota al saludar) o alta (se percibe desde varios metros).</dd>
+            </div>
 
-            <dt>Fijador</dt>
-            <dd>Ingrediente que se añade a una composición para estabilizar las notas volátiles y prolongar la duración de la fragancia. Resinas, almizcles sintéticos y ciertos bálsamos naturales actúan como fijadores.</dd>
+            <div class="guide-glossary__item">
+              <dt>Fijador</dt>
+              <dd>Ingrediente que se añade a una composición para estabilizar las notas volátiles y prolongar la duración de la fragancia. Resinas, almizcles sintéticos y ciertos bálsamos naturales actúan como fijadores.</dd>
+            </div>
 
-            <dt>Absoluto</dt>
-            <dd>Extracto concentrado de una materia prima natural (flores, hojas, resinas) obtenido mediante solventes. Es más puro y potente que el aceite esencial. Los absolutos son la base de la alta perfumería.</dd>
+            <div class="guide-glossary__item">
+              <dt>Absoluto</dt>
+              <dd>Extracto concentrado de una materia prima natural (flores, hojas, resinas) obtenido mediante solventes. Es más puro y potente que el aceite esencial. Los absolutos son la base de la alta perfumería.</dd>
+            </div>
 
-            <dt>Esencial</dt>
-            <dd>Aceite esencial extraído por destilación al vapor de plantas, flores, cortezas o raíces. Es la forma más común de capturar el aroma natural de un ingrediente. Cada esencial tiene propiedades únicas que el perfumista aprende a combinar.</dd>
+            <div class="guide-glossary__item">
+              <dt>Esencial</dt>
+              <dd>Aceite esencial extraído por destilación al vapor de plantas, flores, cortezas o raíces. Es la forma más común de capturar el aroma natural de un ingrediente. Cada esencial tiene propiedades únicas que el perfumista aprende a combinar.</dd>
+            </div>
           </dl>
         </div>
       </section>
+
+    </div>
 
     </div>
 
