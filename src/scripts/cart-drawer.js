@@ -32,7 +32,7 @@
     });
     return vency.map(function (f) {
       var isIcon = f.category === 'icon-series' && f.inspiration;
-      return isIcon ? Object.assign({}, f, { name: f.inspiration.name }) : f;
+      return isIcon ? Object.assign({}, f, { name: f.inspiration.brand + ' · ' + f.inspiration.name }) : f;
     }).concat(full);
   }
 
