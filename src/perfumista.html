@@ -269,12 +269,24 @@
 
     /* -- Wide desktop label sidebar (= 1024px) ----------- */
     @media (min-width: 1024px) {
-      .perfumista-section {
-        max-width: 860px;
-        display: grid;
-        grid-template-columns: 110px 1fr;
-        column-gap: var(--space-lg);
+      /* --space-xl/--space-lg keep growing with viewport width, which on a
+         wide screen turns into hundreds of pixels of pure top/bottom
+         padding per section, stacked across a bio's worth of sections.
+         Fixed values here so vertical rhythm stops scaling with width. */
+      .perfumista-hero {
+        padding-top: calc(var(--nav-h) + 3rem);
+        padding-bottom: 3rem;
       }
+      .perfumista-section {
+        max-width: 1100px;
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        column-gap: var(--space-lg);
+        padding-top: 3.5rem;
+        padding-bottom: 3.5rem;
+      }
+      .perfumista-quote { padding-top: 3.5rem; padding-bottom: 3.5rem; }
+      .perfumista-cta { padding-top: 3.5rem; padding-bottom: 4.5rem; }
       /* label pins to column 1, spans all rows so it stays top-aligned */
       .perfumista-section__label {
         grid-column: 1;
@@ -283,21 +295,24 @@
         padding-top: 0.3rem;
         text-align: right;
       }
-      /* heading and body flow naturally in column 2 */
+      /* heading and body flow naturally in column 2. Body keeps a readable
+         measure even though its grid track is wider than 65ch. */
       .perfumista-section__heading,
       .perfumista-section__body {
         grid-column: 2;
         margin-top: 0;
       }
-      /* bleed section: same columns + process grid in col 2 */
+      .perfumista-section__body { max-width: 65ch; }
+      /* bleed section: same columns + process grid in col 2, free to use
+         the full track since it's a 4-column grid, not flowing paragraphs */
       .perfumista-section--bleed {
-        max-width: 1060px;
+        max-width: 1300px;
       }
       .perfumista-section--bleed .perfumista-process {
         grid-column: 2;
       }
       .perfumista-divider {
-        max-width: 860px;
+        max-width: 1100px;
       }
     }
   </style>

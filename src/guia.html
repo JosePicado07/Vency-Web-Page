@@ -29,6 +29,9 @@
     }
     @media (min-width: 1024px) {
       .guide-header__inner { max-width: 1040px; margin: 0 auto; }
+      /* --space-xl/--space-lg keep growing with viewport width; fixed
+         values here so vertical rhythm stops scaling on wide screens. */
+      .guide-header { padding-top: calc(var(--nav-h) + 3.5rem); padding-bottom: 2.5rem; }
     }
     .guide-header__title {
       font-family: 'Bitter', serif;
@@ -58,6 +61,8 @@
         grid-template-columns: 200px minmax(0, 1fr);
         gap: var(--space-lg);
         align-items: start;
+        padding-top: 3rem;
+        padding-bottom: 4rem;
       }
     }
     .guide-toc { display: none; }
@@ -89,6 +94,7 @@
     .guide-section {
       padding: var(--space-lg) 0;
       border-bottom: 1px solid var(--border);
+      scroll-margin-top: var(--nav-h);
     }
     .guide-section:last-of-type {
       border-bottom: none;
@@ -105,6 +111,10 @@
       font-size: 0.95rem;
       line-height: 1.75;
       color: var(--ink-subdued);
+    }
+    @media (min-width: 1024px) {
+      .guide-section { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+      .guide-section__body { line-height: 1.65; }
     }
     .guide-section__body p {
       margin: 0 0 1em;
@@ -123,6 +133,30 @@
     }
     .guide-section__body a:hover {
       color: var(--warm-ochre-dark);
+    }
+    /* Labeled points ("Term. description..."): on mobile the label flows
+       inline right before its paragraph, identical to the old <strong>
+       prefix. At desktop it moves into a running left-margin column,
+       matching the label-column pattern used on perfumista.html. */
+    .guide-point { margin: 0 0 1em; }
+    .guide-point__label {
+      font-weight: 600;
+      color: var(--volcanic-ink);
+    }
+    .guide-point__desc { display: inline; margin: 0; }
+    @media (min-width: 1024px) {
+      .guide-point {
+        display: grid;
+        grid-template-columns: 140px 1fr;
+        column-gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .guide-point__label {
+        font-family: 'Bitter', serif;
+        font-size: 0.95rem;
+        padding-top: 0.15rem;
+      }
+      .guide-point__desc { display: block; }
     }
     .guide-section__body ul {
       margin: 0.5em 0 1em;
@@ -431,18 +465,22 @@
           <p>
             No todas las fragancias nacen de la misma forma. En Vency Atelier trabajamos con varias categorías, cada una con su propia filosofía y proceso creativo. Entenderlas te ayuda a elegir con criterio.
           </p>
-          <p>
-            <strong>Original Blend.</strong> Son nuestras creaciones propias. Cada Original Blend nace de una idea, un recuerdo o una sensación que el perfumista traduce a una composición olfativa única. No replican ningún perfume existente. Usan materias primas seleccionadas y se producen en tandas pequeñas en nuestro taller de Heredia. Son la identidad misma de Vency Atelier.
-          </p>
-          <p>
-            <strong>Perfumería Inspirada.</strong> Analizamos la estructura de una fragancia icónica de diseñador o de nicho y la reinterpretamos con nuestro propio criterio. El resultado no es una copia exacta, sino una lectura personal que respeta el concepto original pero lo aborda desde otra perspectiva. Usamos materias primas de alta calidad para lograr un resultado que se sostiene por sí mismo.
-          </p>
-          <p>
-            <strong>Nicho.</strong> La perfumería de nicho se caracteriza por usar ingredientes poco convencionales y por no estar sujeta a las tendencias del mercado. Son fragancias más audaces, con personalidad marcada, que buscan contar una historia antes que gustarle a todo el mundo. En nuestro catálogo encontrás inspiraciones en casas de nicho reconocidas.
-          </p>
-          <p>
-            <strong>Ultra Nicho.</strong> Es el escalón más exclusivo. Las fragancias ultra nicho usan materias primas extremadamente raras o costosas, con composiciones complejas y rendimiento excepcional. Son creaciones pensadas para el conocedor que busca algo verdaderamente fuera de lo común.
-          </p>
+          <div class="guide-point">
+            <span class="guide-point__label">Original Blend.</span>
+            <p class="guide-point__desc">Son nuestras creaciones propias. Cada Original Blend nace de una idea, un recuerdo o una sensación que el perfumista traduce a una composición olfativa única. No replican ningún perfume existente. Usan materias primas seleccionadas y se producen en tandas pequeñas en nuestro taller de Heredia. Son la identidad misma de Vency Atelier.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Perfumería Inspirada.</span>
+            <p class="guide-point__desc">Analizamos la estructura de una fragancia icónica de diseñador o de nicho y la reinterpretamos con nuestro propio criterio. El resultado no es una copia exacta, sino una lectura personal que respeta el concepto original pero lo aborda desde otra perspectiva. Usamos materias primas de alta calidad para lograr un resultado que se sostiene por sí mismo.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Nicho.</span>
+            <p class="guide-point__desc">La perfumería de nicho se caracteriza por usar ingredientes poco convencionales y por no estar sujeta a las tendencias del mercado. Son fragancias más audaces, con personalidad marcada, que buscan contar una historia antes que gustarle a todo el mundo. En nuestro catálogo encontrás inspiraciones en casas de nicho reconocidas.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Ultra Nicho.</span>
+            <p class="guide-point__desc">Es el escalón más exclusivo. Las fragancias ultra nicho usan materias primas extremadamente raras o costosas, con composiciones complejas y rendimiento excepcional. Son creaciones pensadas para el conocedor que busca algo verdaderamente fuera de lo común.</p>
+          </div>
         </div>
       </section>
 
@@ -453,21 +491,26 @@
           <p>
             Las familias olfativas son una forma de clasificar las fragancias según sus características dominantes. Conocerlas te da un mapa mental para orientarte entre cientos de opciones.
           </p>
-          <p>
-            <strong>Cítrica.</strong> Fresca, vibrante, energética. Las notas de salida de limón, naranja, bergamota y pomelo dominan esta familia. Son ideales para climas cálidos y uso diurno. En nuestro catálogo podés explorar opciones cítricas como <a href="catalogo.html?category=original#citrus-enigma">Citrus Enigma</a>.
-          </p>
-          <p>
-            <strong>Floral.</strong> La familia más amplia y versátil. Rosa, jazmín, lavanda, lirio, violeta y muchas más. Los florales pueden ser delicados, exuberantes, atalcados o verdes. Perfectos para cualquier ocasión. Buscá nuestras inspiraciones florales en <a href="catalogo.html?category=disenador">Diseñador</a> y <a href="catalogo.html?category=niche">Nicho</a>.
-          </p>
-          <p>
-            <strong>Oriental.</strong> Cálida, sensual, envolvente. Vainilla, ámbar, resinas, especias y bálsamos crean composiciones profundas y duraderas. Son fragancias de noche y de clima fresco. Explorá nuestras opciones orientales en la <a href="catalogo.html">tienda</a>.
-          </p>
-          <p>
-            <strong>Amaderada.</strong> Sándalo, cedro, pachulí, vetiver y oud. Las maderas aportan estructura, profundidad y elegancia. Van desde lo seco y ahumado hasta lo cremoso y dulce. Una base amaderada es señal de una fragancia bien construida. Encontrás amaderados en todas nuestras <a href="catalogo.html">categorías</a>.
-          </p>
-          <p>
-            <strong>Fresca.</strong> Acuática, verde, ozónica, aromática. Esta familia agrupa fragancias limpias y livianas, perfectas para el calor y la vida activa. Incluye notas de pepino, melón, musgo, hierba recién cortada y brisa marina. Ideales para quienes buscan algo sutil pero presente.
-          </p>
+          <div class="guide-point">
+            <span class="guide-point__label">Cítrica.</span>
+            <p class="guide-point__desc">Fresca, vibrante, energética. Las notas de salida de limón, naranja, bergamota y pomelo dominan esta familia. Son ideales para climas cálidos y uso diurno. En nuestro catálogo podés explorar opciones cítricas como <a href="catalogo.html?category=original#citrus-enigma">Citrus Enigma</a>.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Floral.</span>
+            <p class="guide-point__desc">La familia más amplia y versátil. Rosa, jazmín, lavanda, lirio, violeta y muchas más. Los florales pueden ser delicados, exuberantes, atalcados o verdes. Perfectos para cualquier ocasión. Buscá nuestras inspiraciones florales en <a href="catalogo.html?category=disenador">Diseñador</a> y <a href="catalogo.html?category=niche">Nicho</a>.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Oriental.</span>
+            <p class="guide-point__desc">Cálida, sensual, envolvente. Vainilla, ámbar, resinas, especias y bálsamos crean composiciones profundas y duraderas. Son fragancias de noche y de clima fresco. Explorá nuestras opciones orientales en la <a href="catalogo.html">tienda</a>.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Amaderada.</span>
+            <p class="guide-point__desc">Sándalo, cedro, pachulí, vetiver y oud. Las maderas aportan estructura, profundidad y elegancia. Van desde lo seco y ahumado hasta lo cremoso y dulce. Una base amaderada es señal de una fragancia bien construida. Encontrás amaderados en todas nuestras <a href="catalogo.html">categorías</a>.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Fresca.</span>
+            <p class="guide-point__desc">Acuática, verde, ozónica, aromática. Esta familia agrupa fragancias limpias y livianas, perfectas para el calor y la vida activa. Incluye notas de pepino, melón, musgo, hierba recién cortada y brisa marina. Ideales para quienes buscan algo sutil pero presente.</p>
+          </div>
         </div>
       </section>
 
@@ -478,15 +521,18 @@
           <p>
             Una de las preguntas más frecuentes es: ¿cuánto dura esta fragancia en la piel? La respuesta depende de varios factores que vale la pena entender.
           </p>
-          <p>
-            <strong>Longevidad</strong> es el tiempo que una fragancia permanece perceptible en la piel. Va de 2 a 12 horas según la concentración y la composición. Los perfumes con mayor proporción de aceites esenciales (extrait, EDP) tienden a durar más que los de menor concentración (EDT, colonia).
-          </p>
-          <p>
-            <strong>Proyección</strong> es qué tanto se escucha la fragancia alrededor de quien la usa. Una proyección alta significa que quienes están cerca la perciben claramente. Una proyección baja o moderada la hace más íntima, personal.
-          </p>
-          <p>
-            <strong>Estela (sillage)</strong> es la huella que deja la fragancia en el aire cuando la persona se mueve. Un sillage pronunciado es característico de fragancias con buena dosis de notas de fondo potentes: ámbar, almizcle, maderas resinosas.
-          </p>
+          <div class="guide-point">
+            <span class="guide-point__label">Longevidad</span>
+            <p class="guide-point__desc">es el tiempo que una fragancia permanece perceptible en la piel. Va de 2 a 12 horas según la concentración y la composición. Los perfumes con mayor proporción de aceites esenciales (extrait, EDP) tienden a durar más que los de menor concentración (EDT, colonia).</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Proyección</span>
+            <p class="guide-point__desc">es qué tanto se escucha la fragancia alrededor de quien la usa. Una proyección alta significa que quienes están cerca la perciben claramente. Una proyección baja o moderada la hace más íntima, personal.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Estela (sillage)</span>
+            <p class="guide-point__desc">es la huella que deja la fragancia en el aire cuando la persona se mueve. Un sillage pronunciado es característico de fragancias con buena dosis de notas de fondo potentes: ámbar, almizcle, maderas resinosas.</p>
+          </div>
           <p>
             La <strong>química de la piel</strong> juega un papel enorme. Dos personas pueden aplicar la misma fragancia y obtener resultados completamente distintos en duración e intensidad. El pH de la piel, la alimentación, la hidratación y hasta el estado de ánimo influyen. Por eso recomendamos siempre probar en piel antes de decidir.
           </p>
@@ -503,23 +549,27 @@
           <p>
             Una buena fragancia merece un buen trato. Cómo la aplicás y cómo la guardás afecta directamente su rendimiento y su vida útil.
           </p>
-          <p>
-            <strong>Dónde aplicar.</strong> Los puntos de pulso son tus aliados: muñecas, detrás de las orejas, la nuca, la parte interna de los codos y detrás de las rodillas. Son zonas donde la sangre circula cerca de la piel y el calor ayuda a difundir la fragancia. No frotes las muñecas entre sí después de aplicar: eso rompe las moléculas del perfume y altera su desarrollo.
-          </p>
-          <p>
-            <strong>Cuándo aplicar.</strong> Justo después de la ducha, cuando la piel está limpia y ligeramente húmeda, es el momento ideal. Los poros están abiertos y la piel absorbe mejor la fragancia. Si tu piel es seca, aplicá una crema sin aroma antes del perfume: la hidratación ayuda a fijar las notas por más tiempo.
-          </p>
-          <p>
-            <strong>Cómo conservar.</strong> El calor, la luz y el aire son los tres enemigos del perfume. Guardá tus frascos en un lugar fresco y oscuro, lejos de ventanas, radiadores y baños con mucha humedad. El empaque original es la mejor protección. Nunca dejes el frasco expuesto al sol directo ni en el carro durante el día.
-          </p>
-          <p>
-            <strong>Cómo hacer que dure más.</strong> Hidratá la piel antes de aplicar. Aplicá sobre la ropa (con cuidado si la tela es delicada) para mayor duración. Llevá un decant de 10 ml en tu bolso para reaplicar si lo necesitás. Recordá que las notas de salida se desvanecen primero; lo que queda son las notas de fondo. Si querés que la experiencia completa dure, reaplicá a las 4 o 5 horas.
-          </p>
+          <div class="guide-point">
+            <span class="guide-point__label">Dónde aplicar.</span>
+            <p class="guide-point__desc">Los puntos de pulso son tus aliados: muñecas, detrás de las orejas, la nuca, la parte interna de los codos y detrás de las rodillas. Son zonas donde la sangre circula cerca de la piel y el calor ayuda a difundir la fragancia. No frotes las muñecas entre sí después de aplicar: eso rompe las moléculas del perfume y altera su desarrollo.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Cuándo aplicar.</span>
+            <p class="guide-point__desc">Justo después de la ducha, cuando la piel está limpia y ligeramente húmeda, es el momento ideal. Los poros están abiertos y la piel absorbe mejor la fragancia. Si tu piel es seca, aplicá una crema sin aroma antes del perfume: la hidratación ayuda a fijar las notas por más tiempo.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Cómo conservar.</span>
+            <p class="guide-point__desc">El calor, la luz y el aire son los tres enemigos del perfume. Guardá tus frascos en un lugar fresco y oscuro, lejos de ventanas, radiadores y baños con mucha humedad. El empaque original es la mejor protección. Nunca dejes el frasco expuesto al sol directo ni en el carro durante el día.</p>
+          </div>
+          <div class="guide-point">
+            <span class="guide-point__label">Cómo hacer que dure más.</span>
+            <p class="guide-point__desc">Hidratá la piel antes de aplicar. Aplicá sobre la ropa (con cuidado si la tela es delicada) para mayor duración. Llevá un decant de 10 ml en tu bolso para reaplicar si lo necesitás. Recordá que las notas de salida se desvanecen primero; lo que queda son las notas de fondo. Si querés que la experiencia completa dure, reaplicá a las 4 o 5 horas.</p>
+          </div>
         </div>
       </section>
 
       <!-- DESCUBRÍ TU PERFIL -->
-      <section class="guide-section" id="perfil">
+      <section class="guide-section guide-section--single" id="perfil">
         <h2 class="guide-section__title">Descubrí tu Perfil Olfativo</h2>
         <div class="guide-section__body">
           <p>

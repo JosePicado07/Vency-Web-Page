@@ -22,6 +22,12 @@
       --p-mid:    800px;
       --p-wide:   1080px;
     }
+    @media (min-width: 1024px) {
+      :root {
+        --p-mid:  1040px;
+        --p-wide: 1300px;
+      }
+    }
 
     /* -- Hero ------------------------------------------------ */
     .pers-hero {
@@ -29,6 +35,9 @@
       border-bottom: 1px solid var(--border);
     }
     .pers-hero__inner { max-width: var(--p-narrow); margin: 0 auto; }
+    @media (min-width: 1024px) {
+      .pers-hero__inner { max-width: 900px; }
+    }
 
     .pers-kicker {
       display: inline-flex; align-items: center; gap: .55rem;
@@ -76,7 +85,47 @@
       text-transform: uppercase; margin-bottom: .3rem;
     }
 
+    /* -- On-page nav (static, not sticky) --------------------- */
+    .pers-toc {
+      max-width: var(--p-narrow);
+      margin: 0 auto;
+      padding: 0 var(--space-md) 3rem;
+    }
+    @media (min-width: 1024px) { .pers-toc { max-width: 900px; } }
+    .pers-toc__label {
+      display: block;
+      font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-subdued); margin: 0 0 0.85rem;
+    }
+    .pers-toc__list {
+      list-style: none; margin: 0; padding: 0;
+      display: flex; flex-wrap: wrap; gap: 0.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .pers-toc__list li { border-bottom: 1px solid var(--border); width: 100%; }
+    .pers-toc__list a {
+      display: block; padding: 0.65rem 0;
+      font-family: 'Manrope', sans-serif; font-weight: 600; font-size: 0.9rem;
+      color: var(--volcanic-ink); text-decoration: none;
+    }
+    .pers-toc__list a:hover { color: var(--sage-mineral); }
+    .pers-toc__list a:focus-visible { outline: 2px solid var(--warm-ochre); outline-offset: 2px; }
+    @media (min-width: 700px) {
+      .pers-toc__list { border-top: none; }
+      .pers-toc__list li {
+        width: auto; border-bottom: none;
+        border-right: 1px solid var(--border);
+      }
+      .pers-toc__list li:last-child { border-right: none; }
+      .pers-toc__list a { padding: 0 1.25rem; }
+      .pers-toc__list li:first-child a { padding-left: 0; }
+    }
+
     /* -- Section shell --------------------------------------- */
+    .pers-sec, .pers-form-sec {
+      scroll-margin-top: var(--nav-h);
+    }
     .pers-sec {
       padding: 5rem var(--space-md);
       border-bottom: 1px solid var(--border);
@@ -210,6 +259,27 @@
       .family-row:nth-child(even) .family-body { order: 2; }
     }
 
+    /* Desktop: two columns of rows instead of one long single-column list.
+       The alternating zigzag (num flips side every other row) only reads
+       right in a single column, so it's cancelled here in favor of a
+       consistent num-left row repeated in both grid columns. */
+    @media (min-width: 1024px) {
+      .families-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-xl);
+        border-top: none;
+      }
+      .family-row,
+      .family-row:nth-child(even) {
+        grid-template-columns: 3.5rem 1fr;
+      }
+      .family-row:nth-child(even) .family-num,
+      .family-row .family-num { order: 1; text-align: left; }
+      .family-row:nth-child(even) .family-body,
+      .family-row .family-body { order: 2; }
+    }
+
     .family-num {
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -241,6 +311,17 @@
       border-bottom: 1px solid var(--border); align-items: start;
     }
     .exp-item:first-child { border-top: 1px solid var(--border); }
+    /* Desktop: two columns instead of one long single-column list. */
+    @media (min-width: 1024px) {
+      .exp-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-xl);
+      }
+      .exp-item:first-child { border-top: none; }
+      .exp-item:nth-child(1),
+      .exp-item:nth-child(2) { border-top: 1px solid var(--border); }
+    }
     @media (max-width: 480px) {
       .exp-item { grid-template-columns: 2rem 1fr; gap: 0 1rem; }
     }
@@ -270,6 +351,40 @@
     .pers-form-sec { padding: 5rem var(--space-md) 6rem; }
     .pers-form-sec__inner { max-width: 540px; margin: 0 auto; }
     @media (max-width: 600px) { .pers-form-sec { padding: 3rem var(--space-md) 4rem; } }
+    .pers-form-recap { display: none; }
+    @media (min-width: 1024px) {
+      .pers-form-sec { padding-top: 3rem; padding-bottom: 3.5rem; }
+      .pers-form-sec__inner {
+        max-width: 900px;
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        column-gap: var(--space-xl);
+        align-items: start;
+      }
+      #pers-form-wrap, .pers-success { grid-column: 2; }
+      .pers-form-recap {
+        display: block;
+        grid-column: 1;
+        position: sticky;
+        top: calc(var(--nav-h) + var(--space-md));
+      }
+      .pers-form-recap__label {
+        font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 700;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: var(--ink-subdued); margin: 0 0 1rem;
+      }
+      .pers-form-recap__list { list-style: none; margin: 0; padding: 0; }
+      .pers-form-recap__list li {
+        display: flex; align-items: baseline; gap: 0.6rem;
+        padding: 0.65rem 0; border-top: 1px solid var(--border);
+        font-family: 'Manrope', sans-serif; font-size: 0.85rem;
+        color: var(--ink-muted);
+      }
+      .pers-form-recap__num {
+        font-family: 'Bitter', serif; font-weight: 700; font-size: 0.78rem;
+        color: var(--sage-mineral);
+      }
+    }
 
     .pers-form-h2 {
       font-family: 'Bitter', serif; font-weight: 900;
@@ -282,8 +397,16 @@
       font-size: .92rem; color: var(--ink-muted);
       line-height: 1.65; margin: 0 0 2.5rem;
     }
+    @media (min-width: 1024px) {
+      .pers-form-h2 { font-size: clamp(1.6rem, 2.4vw, 2.1rem); margin-bottom: .4rem; }
+      .pers-form-sub { margin-bottom: 1.5rem; }
+    }
 
     .pers-form { display: flex; flex-direction: column; gap: 1.25rem; }
+    @media (min-width: 1024px) {
+      .pers-form { gap: .9rem; }
+      .pers-field textarea { min-height: 64px; }
+    }
     .pers-field { display: flex; flex-direction: column; gap: .3rem; }
     .pers-field label {
       font-family: 'Manrope', sans-serif;
@@ -317,6 +440,9 @@
     }
     .pers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     @media (max-width: 500px) { .pers-row { grid-template-columns: 1fr; } }
+    @media (min-width: 1024px) {
+      .pers-row--3col { grid-template-columns: 1fr 1fr 1fr; }
+    }
 
     .pers-divider { height: 1px; background: var(--border); margin: .25rem 0; }
 
@@ -329,6 +455,14 @@
     }
     @media (max-width: 500px) {
       .hyb-item { grid-template-columns: 1fr; gap: 1rem; }
+    }
+    @media (min-width: 1024px) {
+      .hyb-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: var(--space-xl);
+        border-top: none;
+      }
     }
     .hyb-item__index {
       font-family: 'Bitter', serif; font-weight: 900;
@@ -556,8 +690,19 @@
       </div>
     </header>
 
+    <nav class="pers-toc" aria-label="En esta página">
+      <span class="pers-toc__label">En esta página</span>
+      <ul class="pers-toc__list">
+        <li><a href="#ph-section">La ciencia detrás</a></li>
+        <li><a href="#familias-section">Familias olfativas</a></li>
+        <li><a href="#hibridos-section">Fragancias híbridas</a></li>
+        <li><a href="#experiencia-section">Tu experiencia</a></li>
+        <li><a href="#formulario-section">Empezá tu asesoría</a></li>
+      </ul>
+    </nav>
+
     <!-- -- pH ------------------------------------------------ -->
-    <section class="pers-sec" aria-labelledby="ph-title">
+    <section class="pers-sec" id="ph-section" aria-labelledby="ph-title">
       <div class="pers-sec__inner">
         <p class="pers-sec-kicker">La ciencia detrás</p>
         <h2 class="pers-sec-h2" id="ph-title">El pH de tu piel<br>lo cambia todo.</h2>
@@ -621,7 +766,7 @@
     </section>
 
     <!-- -- FAMILIAS OLFATIVAS -------------------------------- -->
-    <section class="pers-sec pers-sec--alt" aria-labelledby="fam-title">
+    <section class="pers-sec pers-sec--alt" id="familias-section" aria-labelledby="fam-title">
       <div class="pers-sec__inner--wide">
         <p class="pers-sec-kicker">El vocabulario del olfato</p>
         <h2 class="pers-sec-h2" id="fam-title">Las familias olfativas.</h2>
@@ -699,7 +844,7 @@
     </section>
 
     <!-- -- HÍBRIDOS --------------------------------------------- -->
-    <section class="pers-sec" aria-labelledby="hyb-title">
+    <section class="pers-sec" id="hibridos-section" aria-labelledby="hyb-title">
       <div class="pers-sec__inner--wide">
         <p class="pers-sec-kicker">Combinaciones para inspirarte</p>
         <h2 class="pers-sec-h2" id="hyb-title">Fragancias híbridas.</h2>
@@ -802,7 +947,7 @@
     </section>
 
     <!-- -- EXPERIENCIA --------------------------------------- -->
-    <section class="pers-sec" aria-labelledby="exp-title">
+    <section class="pers-sec" id="experiencia-section" aria-labelledby="exp-title">
       <div class="pers-sec__inner">
         <p class="pers-sec-kicker">Qué pasa cuando pedís</p>
         <h2 class="pers-sec-h2" id="exp-title">Tu experiencia<br>de personalización.</h2>
@@ -856,8 +1001,19 @@
     </section>
 
     <!-- -- FORMULARIO ---------------------------------------- -->
-    <section class="pers-form-sec" aria-labelledby="form-title">
+    <section class="pers-form-sec" id="formulario-section" aria-labelledby="form-title">
       <div class="pers-form-sec__inner">
+
+        <aside class="pers-form-recap" aria-label="Resumen del proceso">
+          <p class="pers-form-recap__label">Qué esperar</p>
+          <ol class="pers-form-recap__list">
+            <li><span class="pers-form-recap__num">01</span>Solicitud</li>
+            <li><span class="pers-form-recap__num">02</span>Asesoría</li>
+            <li><span class="pers-form-recap__num">03</span>Análisis</li>
+            <li><span class="pers-form-recap__num">04</span>Formulación</li>
+            <li><span class="pers-form-recap__num">05</span>Entrega</li>
+          </ol>
+        </aside>
 
         <div id="pers-form-wrap">
           <h2 class="pers-form-h2" id="form-title">Empezá tu asesoría.</h2>
@@ -878,16 +1034,17 @@
               </div>
             </div>
 
-            <div class="pers-field">
-              <label for="pers-telefono">Número de WhatsApp <span class="req" aria-hidden="true">*</span></label>
-              <input type="tel" id="pers-telefono" name="telefono" autocomplete="tel" placeholder="+506 8888 8888" required>
-              <span class="pers-field__hint">Vency te va a escribir aquí para coordinar la asesoría.</span>
-            </div>
-
-            <div class="pers-field">
-              <label for="pers-fragancia">Fragancia de referencia <span class="req" aria-hidden="true">*</span></label>
-              <input type="text" id="pers-fragancia" name="fragancia" placeholder="Ej: Givenchy Play, Dior Sauvage…" required>
-              <span class="pers-field__hint">Si no sabés el nombre exacto, describila como podás.</span>
+            <div class="pers-row">
+              <div class="pers-field">
+                <label for="pers-telefono">Número de WhatsApp <span class="req" aria-hidden="true">*</span></label>
+                <input type="tel" id="pers-telefono" name="telefono" autocomplete="tel" placeholder="+506 8888 8888" required>
+                <span class="pers-field__hint">Vency te va a escribir aquí para coordinar.</span>
+              </div>
+              <div class="pers-field">
+                <label for="pers-fragancia">Fragancia de referencia <span class="req" aria-hidden="true">*</span></label>
+                <input type="text" id="pers-fragancia" name="fragancia" placeholder="Ej: Givenchy Play, Dior Sauvage…" required>
+                <span class="pers-field__hint">Si no sabés el nombre exacto, describila.</span>
+              </div>
             </div>
 
             <div class="pers-field">
@@ -897,7 +1054,7 @@
 
             <div class="pers-divider" aria-hidden="true"></div>
 
-            <div class="pers-row">
+            <div class="pers-row pers-row--3col">
               <div class="pers-field">
                 <label id="lbl-intensidad">Intensidad de la nota</label>
                 <div class="vency-select" data-name="intensidad">
@@ -930,24 +1087,23 @@
                   <input type="hidden" class="vency-select__input" name="ocasion">
                 </div>
               </div>
-            </div>
-
-            <div class="pers-field">
-              <label id="lbl-ph">Tipo de piel</label>
-              <div class="vency-select" data-name="ph">
-                <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-ph">
-                  <span class="vency-select__label vency-select__label--placeholder">Si lo sabés</span>
-                  <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <div class="vency-select__list" role="listbox" aria-labelledby="lbl-ph">
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel seca">Piel seca</button>
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel normal">Piel normal</button>
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel grasa">Piel grasa</button>
-                  <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="No sé / no estoy seguro">No sé</button>
+              <div class="pers-field">
+                <label id="lbl-ph">Tipo de piel</label>
+                <div class="vency-select" data-name="ph">
+                  <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-ph">
+                    <span class="vency-select__label vency-select__label--placeholder">Si lo sabés</span>
+                    <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                  <div class="vency-select__list" role="listbox" aria-labelledby="lbl-ph">
+                    <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel seca">Piel seca</button>
+                    <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel normal">Piel normal</button>
+                    <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="Piel grasa">Piel grasa</button>
+                    <button type="button" class="vency-select__option" role="option" aria-selected="false" data-value="No sé / no estoy seguro">No sé</button>
+                  </div>
+                  <input type="hidden" class="vency-select__input" name="ph">
                 </div>
-                <input type="hidden" class="vency-select__input" name="ph">
+                <span class="pers-field__hint">Influye en cómo se desarrollan las notas. Lo evaluamos en la asesoría si no sabés.</span>
               </div>
-              <span class="pers-field__hint">Influye en cómo se desarrollan las notas. Lo evaluamos en la asesoría si no sabés.</span>
             </div>
 
             <div class="pers-field">
@@ -1002,6 +1158,12 @@
       <p class="footer__copy">© 2025 Vency Atelier. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
 
   <!-- Overlays / cart -->
   <div class="search-overlay js-search-overlay" aria-hidden="true">

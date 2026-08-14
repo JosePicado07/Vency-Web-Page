@@ -27,6 +27,12 @@
       max-width: 760px;
       margin: 0 auto;
     }
+    @media (min-width: 1024px) {
+      .faq-header__inner { max-width: 1040px; }
+      /* --space-xl/--space-lg keep growing with viewport width; fixed
+         values here so vertical rhythm stops scaling on wide screens. */
+      .faq-header { padding-top: calc(var(--nav-h) + 3.5rem); padding-bottom: 2.5rem; }
+    }
     .faq-header__title {
       font-family: 'Bitter', serif;
       font-weight: 900;
@@ -40,8 +46,13 @@
       margin: 0 auto;
       padding: var(--space-lg) var(--space-md) var(--space-xl);
     }
+    @media (min-width: 1024px) {
+      .faq-body { max-width: 1040px; padding-top: 2.5rem; padding-bottom: 3.5rem; }
+      .faq-list { column-count: 2; column-gap: var(--space-lg); }
+    }
     .faq-item {
       border-bottom: 1px solid var(--border);
+      break-inside: avoid;
     }
     .faq-item summary {
       list-style: none;
@@ -94,6 +105,9 @@
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
+    }
+    @media (min-width: 1024px) {
+      .faq-cta { margin-top: 2.5rem; padding-top: 2.5rem; }
     }
     .faq-cta__label {
       font-family: 'Manrope', sans-serif;
@@ -156,6 +170,8 @@
     </header>
 
     <div class="faq-body" id="faq-content">
+
+      <div class="faq-list">
 
       <details class="faq-item" id="que-es-un-decant" open>
         <summary>
@@ -226,6 +242,8 @@
           Sí. Encontrás todos los detalles en nuestras <a href="legal.html">Políticas</a>.
         </div>
       </details>
+
+      </div>
 
       <div class="faq-cta">
         <p class="faq-cta__label">¿No encontraste lo que buscabas?</p>
