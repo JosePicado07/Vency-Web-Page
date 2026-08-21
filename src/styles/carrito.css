@@ -12,7 +12,13 @@
 @media (min-width: 1024px) {
   .page-carrito main {
     max-width: 960px;
-    padding: calc(var(--nav-h) + var(--space-lg)) var(--space-lg) var(--space-xl);
+    padding: calc(var(--nav-h) + 3rem) 2.5rem 5rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .page-carrito main {
+    max-width: 1220px;
   }
 }
 
@@ -73,6 +79,17 @@
   margin: 0 0 var(--space-lg);
 }
 
+@media (min-width: 1024px) {
+  .carrito-empty {
+    max-width: 30rem;
+    margin: 0 auto;
+    padding: 4rem var(--space-md) 2rem;
+  }
+
+  .carrito-empty__line { font-size: 1.9rem; }
+  .carrito-empty__sub  { font-size: 1.02rem; }
+}
+
 /* ── Cart body ───────────────────────────────────────────── */
 
 /* display:flex overrides UA [hidden]{display:none} — restore it explicitly */
@@ -84,6 +101,48 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
+}
+
+.carrito__col-items,
+.carrito__col-summary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .carrito {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    align-items: start;
+    gap: 0 2.75rem;
+  }
+
+  .carrito__col-items {
+    padding-top: 0.25rem;
+  }
+
+  .carrito__col-summary {
+    position: sticky;
+    top: calc(var(--nav-h) + 2rem);
+    background: oklch(97.5% 0.006 85);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1.75rem 1.75rem 2rem;
+    gap: 0;
+  }
+
+  /* Internal dividers replace the flex gap now that the panel has its own padding */
+  .carrito__col-summary > * + * {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .carrito {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    gap: 0 3.25rem;
+  }
 }
 
 .carrito__items {
@@ -363,6 +422,23 @@
 
 .carrito-sent__actions .btn { align-self: stretch; text-align: center; }
 
+@media (min-width: 1024px) {
+  .carrito-sent {
+    max-width: 640px;
+  }
+
+  .carrito-sent__actions {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .carrito-sent__actions .btn {
+    align-self: auto;
+    flex: 0 0 auto;
+    padding-inline: 2.25rem;
+  }
+}
+
 /* ── Methods ─────────────────────────────────────────────── */
 
 .order-panel__methods.is-hidden { display: none; }
@@ -578,4 +654,22 @@
   opacity: 1;
   outline: 2px solid var(--volcanic-ink);
   outline-offset: 3px;
+}
+
+/* ── Desktop overrides of base rules (must come after their base
+   definitions above — equal specificity, source order decides) ────── */
+
+@media (min-width: 1024px) {
+  .carrito__item-thumb {
+    width: 68px;
+    height: 88px;
+  }
+
+  /* The summary panel's own border already separates it from the item
+     column — drop this block's redundant top rule so the card edge
+     doesn't stack with a second heavy line right beneath it. */
+  .carrito__totals {
+    border-top: none;
+    padding-top: 0;
+  }
 }
