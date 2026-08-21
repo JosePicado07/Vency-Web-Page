@@ -390,6 +390,43 @@
       }
     }
 
+    /* Mobile counterpart of .pers-form-recap above: same five steps, laid
+       out as a horizontal scroll strip (matches the .quiz-recs__strip
+       pattern on guia.html) instead of a sticky sidebar column, which has
+       nowhere to go once the form drops to a single narrow column. */
+    .pers-form-recap-mobile { margin: 0 0 2rem; }
+    .pers-form-recap-mobile__label {
+      font-family: 'Manrope', sans-serif; font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ink-subdued); margin: 0 0 0.75rem;
+    }
+    .pers-form-recap-mobile__list {
+      list-style: none; margin: 0; padding: 0 0 0.3rem;
+      display: flex; overflow-x: auto;
+      border-top: 1px solid var(--border);
+      scrollbar-width: none;
+    }
+    .pers-form-recap-mobile__list::-webkit-scrollbar { display: none; }
+    .pers-form-recap-mobile__list li {
+      flex: 0 0 auto; white-space: nowrap;
+      display: flex; align-items: baseline; gap: 0.4rem;
+      padding: 0.65rem 0.9rem 0.65rem 0;
+      margin-right: 0.9rem;
+      border-right: 1px solid var(--border);
+      font-family: 'Manrope', sans-serif; font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+    .pers-form-recap-mobile__list li:last-child {
+      border-right: none; margin-right: 0; padding-right: 0;
+    }
+    .pers-form-recap-mobile__num {
+      font-family: 'Bitter', serif; font-weight: 700; font-size: 0.72rem;
+      color: var(--sage-mineral);
+    }
+    @media (min-width: 1024px) {
+      .pers-form-recap-mobile { display: none; }
+    }
+
     .pers-form-h2 {
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
@@ -1024,6 +1061,17 @@
           <p class="pers-form-sub">
             Contanos tu idea y Vency te escribe por WhatsApp para coordinar todos los detalles. Sin compromiso.
           </p>
+
+          <div class="pers-form-recap-mobile" aria-label="Resumen del proceso">
+            <p class="pers-form-recap-mobile__label">Qué esperar</p>
+            <ol class="pers-form-recap-mobile__list">
+              <li><span class="pers-form-recap-mobile__num">01</span>Solicitud</li>
+              <li><span class="pers-form-recap-mobile__num">02</span>Asesoría</li>
+              <li><span class="pers-form-recap-mobile__num">03</span>Análisis</li>
+              <li><span class="pers-form-recap-mobile__num">04</span>Formulación</li>
+              <li><span class="pers-form-recap-mobile__num">05</span>Entrega</li>
+            </ol>
+          </div>
 
           <form class="pers-form" id="pers-form" novalidate>
 
