@@ -1002,7 +1002,7 @@
         '<div class="dblock__top">' +
           imgHtml +
           '<div class="dblock__content">' +
-            (frag.isIcon ? '<span class="dblock__brand">INSPIRACIÓN ELEVADA · ' + escapeHtml_(frag.brand) + '</span>' : '') +
+            (frag.isIcon ? '<span class="dblock__brand">INSPIRACIÓN · ' + escapeHtml_(frag.brand) + '</span>' : '') +
             '<h3 class="dblock__name">' + escapeHtml_(frag.name) + '</h3>' +
           '</div>' +
         '</div>' +

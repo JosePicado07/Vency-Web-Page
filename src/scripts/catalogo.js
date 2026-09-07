@@ -351,7 +351,7 @@
             '<span class="cat-entry__img-wrap">' +
               '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
                 ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-              '<span class="cat-entry__img-badge">' + (isIcon ? 'INSPIRACIÓN ELEVADA' : 'CREACIÓN PROPIA') + '</span>' +
+              '<span class="cat-entry__img-badge">' + (isIcon ? 'INSPIRACIÓN' : 'CREACIÓN PROPIA') + '</span>' +
             '</span>' +
             '<span class="cat-entry__info">' +
               '<span class="cat-entry__provenance">' + (isIcon ? 'ICON SERIES' : 'VENCY ATELIER') + '</span>' +
@@ -520,11 +520,11 @@
             li.dataset.ocasion = '';
 
             var kvRail = buildRail(kvFullName, kvName, isInv, sec.cat);
-            var kvBadgeLabel = kv.badge === 'inspiracion-elevada' ? 'INSPIRACIÓN ELEVADA'
+            var kvBadgeLabel = kv.badge === 'inspiracion-elevada' ? 'INSPIRACIÓN'
               : kv.badge === 'creacion-propia' ? 'CREACIÓN PROPIA'
               : kv.badge === 'inspirado-en' ? 'INSPIRADO EN'
               : sec.cat === 'creacion-propia' ? 'CREACIÓN PROPIA'
-              : 'INSPIRACIÓN ELEVADA';
+              : 'INSPIRACIÓN';
             li.innerHTML =
               '<button class="cat-entry__card cat-entry__see" type="button"' +
                 ' aria-haspopup="dialog" aria-label="Ver ficha de ' + kvName + '">' +
@@ -578,7 +578,7 @@
                 '<span class="cat-entry__img-wrap">' +
                   '<img class="cat-entry__img" src="' + thumbSrc + '" ' + imgSrcset(thumbSrc) + ' alt="' + fname + '" ' + imgLoadAttrs() +
                     ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-                  '<span class="cat-entry__img-badge">INSPIRACIÓN ELEVADA</span>' +
+                  '<span class="cat-entry__img-badge">INSPIRACIÓN</span>' +
                 '</span>' +
                 '<span class="cat-entry__info">' +
                   '<span class="cat-entry__provenance">ICON SERIES</span>' +
@@ -629,7 +629,7 @@
               '<span class="cat-entry__img-wrap">' +
                 '<img class="cat-entry__img" src="' + extThumbSrc + '" ' + imgSrcset(extThumbSrc) + ' alt="' + escHtml(displayName) + '" ' + imgLoadAttrs() +
                   ' onerror="this.onerror=null;this.src=\'assets/images/default-bottle.jpg\';">' +
-                '<span class="cat-entry__img-badge">INSPIRACIÓN ELEVADA</span>' +
+                '<span class="cat-entry__img-badge">INSPIRACIÓN</span>' +
               '</span>' +
               '<span class="cat-entry__info">' +
                 '<span class="cat-entry__provenance">' + escHtml(sec.title.toUpperCase()) + '</span>' +
