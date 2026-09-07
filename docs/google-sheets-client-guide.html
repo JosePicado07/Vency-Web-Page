@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vency Atelier · Guía de configuración de Google Sheets</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;700;900&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:       oklch(18% 0.04 180);
+      --parchment: oklch(95% 0.007 90);
+      --ochre:     oklch(55% 0.10 55);
+      --sage:      oklch(48% 0.10 145);
+      --stone:     oklch(75% 0.005 80);
+      --muted:     oklch(50% 0.008 90);
+      --border:    oklch(85% 0.005 90);
+      --danger:    oklch(55% 0.15 25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Manrope', sans-serif;
+      background: var(--parchment);
+      color: var(--ink);
+      font-size: 10.5pt;
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 3rem 2.5rem;
+    }
+
+    /* ── Cover ── */
+    .cover {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    .cover__top { display: flex; flex-direction: column; gap: 0.25rem; }
+
+    .cover__brand {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cover__divider {
+      width: 2.5rem;
+      height: 2px;
+      background: var(--ochre);
+      margin: 1.5rem 0;
+    }
+
+    .cover__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: 3rem;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .cover__sub {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 1.25rem;
+      max-width: 46ch;
+      line-height: 1.55;
+    }
+
+    .cover__meta { display: flex; flex-direction: column; gap: 0.4rem; }
+
+    .cover__meta-row { display: flex; gap: 1.5rem; font-size: 0.75rem; }
+
+    .cover__meta-label {
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      min-width: 7rem;
+    }
+
+    .cover__meta-value { color: var(--ink); }
+
+    /* ── Sections ── */
+    .section { margin-bottom: 3.5rem; page-break-inside: avoid; }
+
+    .section-num {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .section-intro {
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.92rem;
+      max-width: 65ch;
+    }
+
+    /* ── Why box ── */
+    .why-box {
+      background: oklch(93% 0.03 145);
+      border-left: 3px solid var(--sage);
+      padding: 0.9rem 1.1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .why-box__title {
+      font-weight: 700;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 0.35rem;
+    }
+
+    /* ── Steps ── */
+    .steps { display: flex; flex-direction: column; gap: 1.4rem; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .step__num {
+      width: 2rem;
+      height: 2rem;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .step__body { display: flex; flex-direction: column; gap: 0.45rem; }
+
+    .step__title {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .step__desc { font-size: 0.88rem; color: var(--muted); line-height: 1.55; }
+    .step__desc strong { color: var(--ink); font-weight: 600; }
+
+    .step__why {
+      font-size: 0.82rem;
+      color: var(--sage);
+      font-style: italic;
+    }
+
+    .step__why b { font-style: normal; font-weight: 700; }
+
+    /* ── Code block ── */
+    .code-block {
+      background: var(--ink);
+      color: oklch(90% 0.01 145);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      line-height: 1.6;
+      padding: 0.9rem 1rem;
+      border-radius: 3px;
+      overflow-x: auto;
+      white-space: pre;
+      margin-top: 0.4rem;
+    }
+
+    .code-inline {
+      font-family: 'JetBrains Mono', monospace;
+      background: oklch(90% 0.008 90);
+      padding: 0.1rem 0.35rem;
+      border-radius: 2px;
+      font-size: 0.85em;
+    }
+
+    /* ── Checklist ── */
+    .checklist { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.75rem; }
+
+    .check { display: flex; align-items: flex-start; gap: 0.65rem; font-size: 0.88rem; }
+
+    .check__box {
+      width: 14px;
+      height: 14px;
+      border: 1.5px solid var(--stone);
+      border-radius: 2px;
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+
+    .check__text { color: var(--ink); line-height: 1.45; }
+    .check__text span { color: var(--muted); font-size: 0.82rem; }
+
+    /* ── Info boxes ── */
+    .info-box {
+      background: oklch(92% 0.008 90);
+      border-top: 2px solid var(--ochre);
+      padding: 1rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.55;
+    }
+
+    .info-box__title {
+      font-weight: 700;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ochre);
+      margin-bottom: 0.4rem;
+    }
+
+    .info-box--warn { border-top-color: var(--danger); }
+    .info-box--warn .info-box__title { color: var(--danger); }
+
+    /* ── Table ── */
+    .handoff-table { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin-top: 1rem; }
+
+    .handoff-table th {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .handoff-table td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    .handoff-table td:first-child { font-weight: 600; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: white; }
+      .cover { min-height: auto; padding-bottom: 2rem; margin-bottom: 2rem; }
+      .section { page-break-inside: avoid; }
+      .no-print { display: none; }
+      a { color: inherit; text-decoration: none; }
+      .code-block { white-space: pre-wrap; word-break: break-all; }
+    }
+
+    /* ── Print button ── */
+    .print-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--ink);
+      color: var(--parchment);
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.05em;
+      padding: 0.85rem 1.75rem;
+      border: none;
+      cursor: pointer;
+      z-index: 100;
+    }
+
+    .print-btn:hover { background: oklch(25% 0.04 180); }
+  </style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Imprimir / Exportar PDF</button>
+
+<div class="page">
+
+  <!-- PORTADA -->
+  <div class="cover">
+    <div class="cover__top">
+      <span class="cover__brand">Vency Atelier · Guía de configuración</span>
+      <div class="cover__divider"></div>
+      <h1 class="cover__title">Configurá tu<br>propio registro<br>de pedidos.</h1>
+      <p class="cover__sub">Una guía paso a paso para pasar el Google Sheet de pedidos a tu propia cuenta — no necesitás saber de programación. Cada paso explica qué hace y por qué importa.</p>
+    </div>
+    <div class="cover__meta">
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Qué cubre</span>
+        <span class="cover__meta-value">Google Sheets + el script que registra los pedidos</span>
+      </div>
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Tiempo necesario</span>
+        <span class="cover__meta-value">Unos 15–20 minutos, desde una computadora (no un celular)</span>
+      </div>
+      <div class="cover__meta-row">
+        <span class="cover__meta-label">Necesitás</span>
+        <span class="cover__meta-value">Una cuenta de Gmail</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 1: POR QUÉ -->
+  <div class="section">
+    <span class="section-num">01 · El panorama general</span>
+    <h2 class="section-title">Por qué estás haciendo esto</h2>
+    <p class="section-intro">
+      Cada vez que alguien hace un pedido en tu sitio web, ese pedido necesita quedar registrado en algún lugar donde vos lo puedas ver: qué se compró, cuánto costó, cómo se pagó y si ya se entregó. Un Google Sheet es ese libro de registro. Es gratuito, se abre desde el celular o la computadora, y —lo más importante— <strong>una vez que vive en tu propia cuenta de Google, es tuyo.</strong> Podés revisarlo, respaldarlo o entregárselo a un nuevo desarrollador en cualquier momento, sin pedirle permiso a nadie.
+    </p>
+    <p class="section-intro">
+      Ahora mismo, mientras se construía el sitio, ese libro de registro estaba en la cuenta de Google del desarrollador para poder hacer pruebas sin molestarte. Esta guía explica cómo moverlo —junto con el pequeño "script" que lo alimenta— a <strong>tu</strong> cuenta. Pensá en el script como un cartero: es la pieza que recoge cada pedido del sitio web y lo deja en la fila correcta de tu Sheet. También necesita vivir en tu cuenta, porque de lo contrario el desarrollador sería técnicamente quien "tiene el buzón" de los datos de tus ventas.
+    </p>
+    <div class="why-box">
+      <div class="why-box__title">En una frase</div>
+      Estás copiando una hoja de cálculo ya armada a tu propio Google Drive, y activando el pequeño ayudante automático que permite que tu sitio web deposite cada pedido nuevo directamente ahí.
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: ANTES DE EMPEZAR -->
+  <div class="section">
+    <span class="section-num">02 · Antes de empezar</span>
+    <h2 class="section-title">Qué tener listo</h2>
+    <p class="section-intro">Nada técnico — solo unos minutos y la cuenta correcta iniciada.</p>
+
+    <div class="checklist">
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Una cuenta de Gmail</strong> <span>— personal o de negocio, la que quieras que sea "la" cuenta del negocio de aquí en adelante. Si no tenés una, creala primero en gmail.com — toma dos minutos.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Una computadora, no un celular</strong> <span>— la pantalla de configuración (llamada "Apps Script") es más fácil de usar desde una laptop o computadora de escritorio.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Una idea de contraseña</strong> <span>— vas a definir una palabra o frase secreta durante la configuración. Elegí algo que solo vos sepas; no hace falta que sea complicada.</span></div>
+      </div>
+      <div class="check">
+        <div class="check__box"></div>
+        <div class="check__text"><strong>Al desarrollador a mano (WhatsApp está bien)</strong> <span>— al final, le vas a mandar un enlace y una contraseña para que el sitio sepa dónde entregar los pedidos.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: PASO A PASO -->
+  <div class="section">
+    <span class="section-num">03 · Configuración</span>
+    <h2 class="section-title">Paso a paso</h2>
+    <p class="section-intro">Hacé estos pasos en orden. Ninguno es irreversible de forma peligrosa — si algo se ve raro, parate y escribile al desarrollador en lugar de adivinar.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step__num">1</div>
+        <div class="step__body">
+          <div class="step__title">Abrí la hoja de cálculo que te comparte el desarrollador</div>
+          <div class="step__desc">Vas a recibir un enlace de Google Sheets. Abrilo estando conectado a <strong>tu</strong> cuenta de Gmail, y luego andá a <strong>Archivo → Hacer una copia</strong>. Esto crea un duplicado que te pertenece por completo y lo guarda en tu propio Google Drive.</div>
+          <div class="step__why"><b>Por qué:</b> "Hacer una copia" es la diferencia entre pedir prestado el cuaderno de otra persona y tener el tuyo propio. La copia mantiene todo el formato y las fórmulas existentes, pero ahora vive en tu Drive, no en el de ellos.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">2</div>
+        <div class="step__body">
+          <div class="step__title">Renombrala</div>
+          <div class="step__desc">Renombrá la copia a algo como <strong>"Vency Atelier · Ventas"</strong> (clic en el título arriba a la izquierda, junto al logo de Sheets).</div>
+          <div class="step__why"><b>Por qué:</b> Solo para que la reconozcas fácil en tu Google Drive. No hace falta anotar ningún identificador ni dirección — el código de esta guía encuentra la hoja solo, automáticamente.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">3</div>
+        <div class="step__body">
+          <div class="step__title">Abrí el editor del script y pegá el código</div>
+          <div class="step__desc">Desde tu hoja copiada, andá a <strong>Extensiones → Apps Script</strong>. Se abre una nueva pestaña con un editor de código — no te preocupés, no vas a escribir código vos, solo copiar y pegar.</div>
+          <div class="step__desc">Si ya hay código ahí (porque venía incluido en la copia), seleccionalo todo (<strong>Ctrl+A</strong>) y borralo. Después andá al <strong>Apéndice</strong> al final de esta guía, copiá el bloque completo de código, pegalo en el editor vacío, y presioná <strong>Ctrl+S</strong> (o Cmd+S en Mac) para guardar.</div>
+          <div class="step__why"><b>Por qué:</b> Este código es el que lee y escribe en tu hoja — sin él, la hoja es solo una tabla vacía. No hay ninguna línea que tengas que editar a mano: el script encuentra tu hoja de cálculo solo, porque corre adentro de ella.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">4</div>
+        <div class="step__body">
+          <div class="step__title">Ejecutá el comando de configuración inicial</div>
+          <div class="step__desc">En la parte superior de la pantalla de Apps Script hay un menú desplegable con nombres de funciones y un botón <strong>Ejecutar</strong> (▶). Elegí <strong class="code-inline">setupSheets</strong> del menú, y luego hacé clic en <strong>Ejecutar</strong>.</div>
+          <div class="step__desc">La primera vez que hagas esto, Google va a mostrar una pantalla de permisos con una advertencia que se ve alarmante — algo como <em>"Google no verificó esta app."</em> Esto es normal: hacé clic en <strong>Avanzado</strong>, luego en <strong>Ir a [nombre del proyecto] (no seguro)</strong>, y luego en <strong>Permitir</strong>.</div>
+          <div class="step__why"><b>Por qué:</b> "Ejecutar" una función es simplemente hacer clic en un botón que le dice a la computadora "hacé esta tarea ahora." <span class="code-inline">setupSheets</span> crea automáticamente las dos pestañas que necesitás —Ventas e Inventario— con sus encabezados, para que no las tengas que armar a mano. La advertencia que da miedo aparece solo porque este script lo escribió tu desarrollador y no está publicado en una tienda de aplicaciones; como podés ver exactamente qué hace y confiás en quien lo escribió, es seguro permitirlo.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">5</div>
+        <div class="step__body">
+          <div class="step__title">Definí tu contraseña secreta</div>
+          <div class="step__desc">Todavía en la pantalla de Apps Script, hacé clic en el ícono de engranaje <strong>⚙ Configuración del proyecto</strong> a la izquierda, bajá hasta <strong>Propiedades del script</strong>, y hacé clic en <strong>Añadir propiedad de script</strong>. En el campo "Propiedad" escribí <span class="code-inline">TOKEN</span>, y en el campo "Valor" escribí tu propia contraseña secreta. Hacé clic en <strong>Guardar propiedades del script</strong>.</div>
+          <div class="step__why"><b>Por qué:</b> Esta contraseña es lo que le dice al sistema "esta solicitud realmente viene de mí, la dueña del negocio" en vez de "esto es solo el navegador de una clienta." Es lo que protege tus números de ventas e inventario de que cualquiera los pueda cambiar. Guardala en un lugar seguro — vas a necesitar darle esta misma palabra al desarrollador en el último paso.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">6</div>
+        <div class="step__body">
+          <div class="step__title">Publicalo como "aplicación web"</div>
+          <div class="step__desc">Hacé clic en el botón azul <strong>Implementar</strong> (arriba a la derecha) → <strong>Nueva implementación</strong>. Hacé clic en el ícono de engranaje junto a "Seleccionar tipo" y elegí <strong>Aplicación web</strong>. Completá:
+            <div class="code-block">Ejecutar como:            Yo
+Quién tiene acceso:       Cualquier usuario</div>
+            Hacé clic en <strong>Implementar</strong>, y luego en <strong>Autorizar acceso</strong> si te lo pide (la misma advertencia de "no seguro" de antes — hacé clic de la misma manera). Cuando termine, vas a ver una <strong>URL de la aplicación web</strong> — copiá ese enlace completo.
+          </div>
+          <div class="step__why"><b>Por qué:</b> Publicarlo "como aplicación web" convierte tu hoja de cálculo en algo que puede recibir mensajes de internet —específicamente, de tu sitio web, cada vez que una clienta hace un pedido. "Ejecutar como: Yo" significa que actúa con tus permisos para escribir en tu propia hoja. "Quién tiene acceso: Cualquier usuario" suena alarmante, pero no significa que cualquiera pueda leer tu hoja — solo significa que el sitio web tiene permiso de tocar esta puerta específica para dejar un pedido. Nadie puede abrir tu hoja de cálculo real sin estar conectado a tu cuenta de Google.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">7</div>
+        <div class="step__body">
+          <div class="step__title">Enviale dos cosas al desarrollador</div>
+          <div class="step__desc">Escribile al desarrollador (WhatsApp está bien) con:
+            <div class="code-block">1. La URL de la aplicación web que acabás de copiar
+2. La contraseña secreta (TOKEN) del Paso 5</div>
+          </div>
+          <div class="step__why"><b>Por qué:</b> El desarrollador necesita colocar ese enlace y esa contraseña en el código del sitio web para que los pedidos empiecen a llegar a <strong>tu</strong> hoja en vez de a la de ellos. Esta es la única información que necesitan de vos — nunca necesitan tu contraseña de Google ni acceso a tu cuenta.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step__num">8</div>
+        <div class="step__body">
+          <div class="step__title">Probalo juntos</div>
+          <div class="step__desc">Una vez que el desarrollador confirme que el sitio web quedó actualizado, hacé un pedido de prueba pequeño (o pedile que te guíe en uno). Abrí la pestaña <strong>Ventas</strong> de tu hoja y confirmá que apareció una fila nueva con los datos del pedido de prueba.</div>
+          <div class="step__why"><b>Por qué:</b> Esta es la prueba de que todo está conectado correctamente antes de que empiecen a llegar clientas reales. Si no aparece nada, no intentes resolverlo sola — escribile al desarrollador con una captura de pantalla de tu editor de Apps Script.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SECCIÓN 4: QUÉ VAS A TENER -->
+  <div class="section">
+    <span class="section-num">04 · Con qué vas a quedar</span>
+    <h2 class="section-title">Las dos pestañas dentro de tu hoja</h2>
+    <p class="section-intro">Ejecutar <span class="code-inline">setupSheets</span> en el Paso 4 construye las dos automáticamente, con sus encabezados — no las creás a mano.</p>
+
+    <table class="handoff-table">
+      <thead>
+        <tr>
+          <th>Pestaña</th>
+          <th>Para qué sirve</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Ventas</td>
+          <td>Una fila por pedido: referencia, fecha, hora, artículos, total, método de pago, entrega, canal (Web o Local), clienta y estado (pendiente, confirmado o cancelado). Se llena automáticamente conforme llegan los pedidos.</td>
+        </tr>
+        <tr>
+          <td>Inventario</td>
+          <td>Cuánto aceite de fragancia te queda de cada aroma, en mililitros, más el porcentaje de concentración de cada uno. Baja automáticamente cada vez que se vende un frasco o un decant. Las celdas resaltadas en rojo significan que ese aroma está agotado.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="info-box">
+      <div class="info-box__title">Podés mirar siempre, nunca se rompe con solo mirar</div>
+      Abrir la hoja y navegar por ella es completamente seguro. Las únicas cosas con las que hay que tener cuidado: no borrar la fila de encabezados (fila 1) de ninguna pestaña, y no editar manualmente la columna A de la pestaña Inventario — el sistema la genera automáticamente.
+    </div>
+
+    <div class="info-box info-box--warn">
+      <div class="info-box__title">Si alguna vez necesitás cambiar tu contraseña</div>
+      Volvé a Apps Script → el ícono de engranaje ⚙ Configuración del proyecto → Propiedades del script → editá el valor junto a <span class="code-inline">TOKEN</span>. Solo acordate de avisarle al desarrollador el nuevo valor, ya que también está escrito en el panel de vendedor del sitio web.
+    </div>
+  </div>
+
+  <!-- APÉNDICE: CÓDIGO -->
+  <div class="section">
+    <span class="section-num">05 · Apéndice</span>
+    <h2 class="section-title">El código completo para pegar</h2>
+    <p class="section-intro">
+      Este es el código que va en el Paso 3. No necesitás entenderlo — solo copiarlo completo y pegarlo en el editor de Apps Script, reemplazando lo que haya ahí.
+    </p>
+    <div class="info-box">
+      <div class="info-box__title">Recordá</div>
+      No hay ninguna línea que tengas que cambiar a mano en este código. Pegalo tal cual y seguí al Paso 4.
+    </div>
+    <div class="code-block" style="white-space: pre-wrap; word-break: break-word; margin-top: 1rem;">/**
+ * Vency Atelier — backend de Google Apps Script
+ *
+ * CONFIGURACIÓN:
+ *  1. Abrí tu Google Sheet → Extensiones → Apps Script → pegá este archivo.
+ *  2. Ejecutá setupSheets() una vez para crear las dos hojas con encabezados.
+ *  3. Andá a Configuración del proyecto → Propiedades del script → agregá:
+ *       TOKEN  =  <la misma contraseña que usa la vendedora en el panel>
+ *  4. Implementar → Nueva implementación → Aplicación web
+ *       Ejecutar como: Yo
+ *       Quién tiene acceso: Cualquier usuario
+ *  5. Copiá la URL /exec y pegásela al desarrollador.
+ *  6. Volvé a implementar (Gestionar implementaciones → Editar) si el desarrollador actualiza este código.
+ *
+ * ESTRUCTURA DE LA HOJA
+ * ─────────────────────────────────────────────────────────────
+ *  Ventas     A:ref  B:fecha  C:hora  D:items  E:total
+ *             F:pago  G:entrega  H:canal  I:cliente  J:estado
+ *
+ *  Inventario A:key  B:nombre  C:oil_ml  D:pct
+ * ─────────────────────────────────────────────────────────────
+ */
+
+var TZ            = 'America/Costa_Rica';
+var SHEET_VENTAS  = 'Ventas';
+var SHEET_INV     = 'Inventario';
+
+/* ── Enrutador de solicitudes ────────────────────────────── */
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+
+    // Verificación de contraseña
+    var token = PropertiesService.getScriptProperties().getProperty('TOKEN');
+    if (!token || data.token !== token) {
+      return text('unauthorized');
+    }
+
+    var action = data.action;
+
+    // Sin acción = registrar una venta nueva
+    if (!action) return registerSale(data);
+
+    switch (action) {
+      case 'summary':   return summary(data);
+      case 'inventory': return inventory();
+      case 'stock':     return updateStock(data);
+      case 'confirm':        return confirmSale(data);
+      case 'cancel':         return cancelSale(data);
+      case 'addCatalogEntry': return addCatalogEntry(data);
+      default:               return text('unknown action: ' + action);
+    }
+  } catch (err) {
+    return text('error: ' + err.message);
+  }
+}
+
+// Chequeo de salud / CORS
+function doGet() {
+  return text('ok');
+}
+
+/* ── Ayudantes ───────────────────────────────────────────── */
+
+function text(s) {
+  return ContentService.createTextOutput(String(s));
+}
+
+function json(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function sheet(name) {
+  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(name);
+}
+
+function today() {
+  return Utilities.formatDate(new Date(), TZ, 'yyyy-MM-dd');
+}
+
+function nowDate() {
+  return new Date();
+}
+
+function pad2(n) {
+  return n < 10 ? '0' + n : '' + n;
+}
+
+/* ── Registrar venta ─────────────────────────────────────── */
+
+function registerSale(data) {
+  var s   = sheet(SHEET_VENTAS);
+  var now = nowDate();
+  var fecha = Utilities.formatDate(now, TZ, 'yyyy-MM-dd');
+  var hora  = Utilities.formatDate(now, TZ, 'HH:mm');
+
+  // Los pedidos web arrancan "pendiente" hasta que se confirman a mano
+  var estado = (data.canal === 'Web') ? 'pendiente' : 'confirmado';
+
+  s.appendRow([
+    String(data.ref      || ''),
+    fecha,
+    hora,
+    String(data.items    || ''),
+    Number(data.total    || 0),
+    String(data.pago     || ''),
+    String(data.entrega  || 'En sitio'),
+    String(data.canal    || 'Local'),
+    String(data.cliente  || ''),
+    estado
+  ]);
+
+  return text('ok');
+}
+
+/* ── Resumen (métricas + lista de ventas + calendario diario) ── */
+
+function summary(data) {
+  var s     = sheet(SHEET_VENTAS);
+  var rows  = s.getDataRange().getValues();
+  var period = data.period || 'hoy';
+  var now   = nowDate();
+
+  // Resuelve el rango de fechas del período
+  var todayStr = today();
+  var rangeStart, rangeEnd;
+
+  if (period === 'hoy') {
+    rangeStart = rangeEnd = todayStr;
+
+  } else if (period === 'semana') {
+    var dow   = now.getDay(); // 0 = domingo
+    var start = new Date(now);
+    start.setDate(now.getDate() - dow);
+    rangeStart = Utilities.formatDate(start, TZ, 'yyyy-MM-dd');
+    rangeEnd   = todayStr;
+
+  } else { // mes
+    var mp  = data.month || Utilities.formatDate(now, TZ, 'yyyy-MM');
+    var parts = mp.split('-');
+    var y = parseInt(parts[0], 10);
+    var m = parseInt(parts[1], 10);
+    rangeStart = y + '-' + pad2(m) + '-01';
+    var lastDay = new Date(y, m, 0).getDate();
+    rangeEnd   = y + '-' + pad2(m) + '-' + pad2(lastDay);
+  }
+
+  // Mes de calendario para el mapa de calor diario (siempre el mes solicitado)
+  var calMonth = data.month || Utilities.formatDate(now, TZ, 'yyyy-MM');
+  var cp     = calMonth.split('-');
+  var cy = parseInt(cp[0], 10);
+  var cm = parseInt(cp[1], 10);
+  var calStart = cy + '-' + pad2(cm) + '-01';
+  var calLast  = new Date(cy, cm, 0).getDate();
+  var calEnd   = cy + '-' + pad2(cm) + '-' + pad2(calLast);
+
+  // Totales
+  var total = 0, web = 0, local = 0, efectivo = 0, sinpe = 0, webPendiente = 0;
+  var fragrances = {};
+  var sales      = [];
+  var daily      = {};
+
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    var ref     = String(row[0] || '').trim();
+    if (!ref) continue;
+
+    var fecha   = '';
+    try {
+      fecha = row[1] instanceof Date
+        ? Utilities.formatDate(row[1], TZ, 'yyyy-MM-dd')
+        : String(row[1]).substring(0, 10);
+    } catch (_) { continue; }
+
+    var hora    = String(row[2] || '');
+    var items   = String(row[3] || '');
+    var amt     = Number(row[4] || 0);
+    var pago    = String(row[5] || '');
+    var entrega = String(row[6] || '');
+    var canal   = String(row[7] || '');
+    var cliente = String(row[8] || '');
+    var estado  = String(row[9] || 'confirmado');
+
+    if (estado === 'cancelado') continue;
+
+    // Totales diarios de calendario (siempre para el mes que se muestra)
+    if (fecha >= calStart && fecha <= calEnd) {
+      daily[fecha] = (daily[fecha] || 0) + amt;
+    }
+
+    // Filtro de período
+    if (fecha < rangeStart || fecha > rangeEnd) continue;
+
+    // Acumulados
+    total += amt;
+    if (canal === 'Web') {
+      web += amt;
+      if (estado === 'pendiente') webPendiente += amt;
+    } else {
+      local += amt;
+    }
+    if (pago === 'Efectivo') efectivo += amt;
+    else if (pago === 'SINPE') sinpe += amt;
+
+    // Conteo de fragancias para el Top
+    items.split(' | ').forEach(function (part) {
+      // "Citrus Enigma · Decant 10 ml · EDT (10%)" → "Citrus Enigma"
+      var name = part.split('·')[0].trim();
+      // Quita el prefijo "Set de 3 Decants (10 ml): " si está presente
+      name = name.replace(/^Set de 3 Decants[^:]*:\s*/i, '').split(',')[0].trim();
+      if (name) fragrances[name] = (fragrances[name] || 0) + 1;
+    });
+
+    // Vista previa de items (solo la primera línea; raw tiene todo)
+    var itemParts   = items.split(' | ');
+    var itemPreview = itemParts[0] || '';
+
+    sales.push({
+      ref:    ref,
+      fecha:  fecha,
+      hora:   hora,
+      items:  itemPreview,
+      raw:    items,
+      total:  amt,
+      pago:   pago,
+      canal:  canal,
+      estado: estado
+    });
+  }
+
+  // Más recientes primero
+  sales.sort(function (a, b) {
+    var da = a.fecha + a.hora;
+    var db = b.fecha + b.hora;
+    return da < db ? 1 : da > db ? -1 : 0;
+  });
+
+  return json({
+    month:        total,   // "month" es el total del período, sin importar el nombre del período
+    web:          web,
+    local:        local,
+    efectivo:     efectivo,
+    sinpe:        sinpe,
+    webPendiente: webPendiente,
+    fragrances:   fragrances,
+    sales:        sales,
+    daily:        daily
+  });
+}
+
+/* ── Inventario ──────────────────────────────────────────── */
+
+function inventory() {
+  var s    = sheet(SHEET_INV);
+  var rows = s.getDataRange().getValues();
+  var inv  = {};
+
+  for (var i = 1; i < rows.length; i++) {
+    var key = String(rows[i][0] || '').trim();
+    if (!key) continue;
+    inv[key] = {
+      oil_ml: Number(rows[i][2] || 0),
+      pct:    Number(rows[i][3] || 0)
+    };
+  }
+
+  return json(inv);
+}
+
+/* ── Actualizar stock ────────────────────────────────────── */
+
+function updateStock(data) {
+  var s    = sheet(SHEET_INV);
+  var rows = s.getDataRange().getValues();
+
+  // Arma un mapa clave → índice de fila (base 1 para getRange)
+  var keyRow = {};
+  for (var i = 1; i < rows.length; i++) {
+    var k = String(rows[i][0] || '').trim();
+    if (k) keyRow[k] = i + 1;
+  }
+
+  var updates = data.updates || [];
+  updates.forEach(function (u) {
+    var rowIdx = keyRow[String(u.key || '')];
+    if (!rowIdx) return;
+    var cell    = s.getRange(rowIdx, 3); // C = oil_ml
+    var current = Number(cell.getValue() || 0);
+
+    if (u.set_oil_ml !== undefined) {
+      cell.setValue(Math.max(0, Number(u.set_oil_ml)));
+    } else if (u.delta_ml !== undefined) {
+      cell.setValue(Math.max(0, current + Number(u.delta_ml)));
+    }
+  });
+
+  return text('ok');
+}
+
+/* ── Confirmar venta ─────────────────────────────────────── */
+
+function confirmSale(data) {
+  return setSaleStatus(data.ref, 'confirmado');
+}
+
+/* ── Cancelar / eliminar venta ───────────────────────────── */
+
+function cancelSale(data) {
+  return setSaleStatus(data.ref, 'cancelado');
+}
+
+function setSaleStatus(ref, status) {
+  var s    = sheet(SHEET_VENTAS);
+  var rows = s.getDataRange().getValues();
+
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === String(ref).trim()) {
+      s.getRange(i + 1, 10).setValue(status); // J = estado
+      return text('ok');
+    }
+  }
+
+  return text('not found');
+}
+
+/* ── Agregar fragancia al catálogo (siembra filas de inventario) ── */
+
+/**
+ * La llama el panel de vendedor al aprobar una solicitud de catálogo de una clienta.
+ * data: { brand, name, cat, gender, notes }
+ * Agrega tres filas de inventario: decant, 30ml, 100ml.
+ */
+function addCatalogEntry(data) {
+  var s      = sheet(SHEET_INV);
+  var brand  = String(data.brand || '').trim();
+  var name   = String(data.name  || '').trim();
+
+  if (!brand || !name) return text('missing brand or name');
+
+  var prefix = brand + '|' + name;
+  var nombre = brand + ' — ' + name;
+  var oil    = Number(data.oil_ml) || 0;
+
+  var rows = s.getDataRange().getValues();
+  // Se salta si el primer formato ya existe
+  for (var i = 1; i < rows.length; i++) {
+    if (String(rows[i][0]).trim() === prefix + ':decant') {
+      return text('exists');
+    }
+  }
+
+  s.appendRow([prefix + ':decant', nombre + ' · Decant',  oil, 20]);
+  s.appendRow([prefix + ':30ml',   nombre + ' · 30ml',    oil, 20]);
+  s.appendRow([prefix + ':100ml',  nombre + ' · 100ml',   oil, 20]);
+
+  return text('ok');
+}
+
+/* ── Configuración inicial de la hoja ────────────────────── */
+
+/**
+ * Ejecutá esto una vez desde el editor de Apps Script (Ejecutar → setupSheets).
+ * Crea las dos hojas con fila de encabezados si no existen.
+ */
+function setupSheets() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  // Ventas
+  var ventas = ss.getSheetByName(SHEET_VENTAS);
+  if (!ventas) {
+    ventas = ss.insertSheet(SHEET_VENTAS);
+  }
+  if (ventas.getLastRow() === 0) {
+    ventas.appendRow(['ref', 'fecha', 'hora', 'items', 'total', 'pago', 'entrega', 'canal', 'cliente', 'estado']);
+    ventas.getRange(1, 1, 1, 10).setFontWeight('bold');
+    ventas.setFrozenRows(1);
+    ventas.setColumnWidth(4, 400); // columna de items más ancha
+  }
+
+  // Inventario
+  var inv = ss.getSheetByName(SHEET_INV);
+  if (!inv) {
+    inv = ss.insertSheet(SHEET_INV);
+  }
+  if (inv.getLastRow() === 0) {
+    inv.appendRow(['key', 'nombre', 'oil_ml', 'pct']);
+    inv.getRange(1, 1, 1, 4).setFontWeight('bold');
+    inv.setFrozenRows(1);
+    inv.setColumnWidth(1, 260);
+    inv.setColumnWidth(2, 220);
+  }
+
+  SpreadsheetApp.getUi().alert('Hojas creadas: ' + SHEET_VENTAS + ', ' + SHEET_INV);
+}</div>
+  </div>
+
+  <!-- CIERRE -->
+  <div style="margin-top: 4rem; padding-top: 1.5rem; border-top: 2px solid var(--ink); display: flex; justify-content: space-between; align-items: flex-end;">
+    <div>
+      <div style="font-family:'Manrope',sans-serif; font-size:0.6rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); margin-bottom:0.35rem;">¿Te trabaste en algún paso?</div>
+      <div style="font-size:0.88rem; color:var(--ink); max-width: 48ch;">Parate y mandale al desarrollador una captura de pantalla en lugar de adivinar — cualquier paso acá se puede rehacer sin riesgo, pero es más rápido resolverlo juntos que desenredarlo después.</div>
+    </div>
+    <div style="font-family:'Bitter',serif; font-weight:900; font-size:1.4rem; color:var(--ink); opacity:0.15; letter-spacing:-0.01em;">VENCY ATELIER</div>
+  </div>
+
+</div>
+</body>
+</html>
