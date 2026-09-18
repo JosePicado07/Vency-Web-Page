@@ -393,6 +393,10 @@
 .fmt-option:hover {
   background: color-mix(in oklch, var(--warm-ochre) 4%, transparent);
 }
+.fmt-option:focus-within {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 2px;
+}
 
 /* Visually-hidden native input (keyboard semantics retained). */
 .fmt-option input {

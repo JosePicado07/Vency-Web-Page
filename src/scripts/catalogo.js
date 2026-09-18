@@ -40,6 +40,22 @@
     var pre = new Image(); pre.src = FMT_IMAGES[k];
   });
 
+  /* Nicho Icon Series ships in a gendered bottle; disenador ships in the
+     Botella Normal bottle; every other tier (ultra-nicho, creación propia)
+     keeps the single generic 100ml shot. */
+  function get100mlImage(frag) {
+    if (frag && frag.vencyCat === 'nicho') {
+      if (frag.gender === 'mujer')  return FMT_IMAGES['100ml-nicho-mujer'];
+      if (frag.gender === 'hombre') return FMT_IMAGES['100ml-nicho-hombre'];
+      return FMT_IMAGES['100ml-nicho-unisex'];
+    }
+    if (frag && frag.vencyCat === 'disenador') {
+      if (frag.gender === 'hombre') return FMT_IMAGES['100ml-disenador-hombre'];
+      if (frag.gender === 'mujer')  return FMT_IMAGES['100ml-disenador-mujer'];
+    }
+    return FMT_IMAGES['100ml'];
+  }
+
   var fmtOverlay  = document.querySelector('.js-fmt-overlay');
   var fmtModal    = fmtOverlay && fmtOverlay.querySelector('.js-fmt-modal');
   var fmtClose    = fmtModal && fmtModal.querySelector('.js-fmt-close');
@@ -103,8 +119,12 @@
       if (_upgradeImg) { _upgradeImg.onload = _upgradeImg.onerror = null; _upgradeImg = null; }
       var checked = fmtOptions.querySelector('input:checked');
       var img = fmtModal && fmtModal.querySelector('.js-fmt-img');
-      if (checked && img && FMT_IMAGES[checked.value]) {
-        var newSrc = FMT_IMAGES[checked.value];
+      var isRealBottlePhoto = checked && checked.value === '100ml' && fmtFrag &&
+        (fmtFrag.vencyCat === 'nicho' || fmtFrag.vencyCat === 'disenador');
+      var fmtSrc = checked && (checked.value === '100ml' ? get100mlImage(fmtFrag) : FMT_IMAGES[checked.value]);
+      if (fmtImgBadge) fmtImgBadge.hidden = isRealBottlePhoto ? true : !(fmtFrag && fmtFrag.inspo);
+      if (checked && img && fmtSrc) {
+        var newSrc = fmtSrc;
         clearTimeout(_fmtImgTimer);
         img.style.opacity = '0';
         requestAnimationFrame(function () {
@@ -908,15 +928,23 @@
     if (!btn) return;
     var card = btn.closest('[data-fragrance-id]');
     if (card) {
+      /* Vency's own line (icon-series + creación propia) lives in VENCY_CATALOG
+         with its real gender + tier — external brand cards won't match, so
+         gender/vencyCat stay null and the generic 100ml shot is used. */
+      var vencyFrag = (window.VENCY_CATALOG || []).filter(function (f) {
+        return f.id === card.dataset.fragranceId;
+      })[0];
       openFmtModal({
-        id:     card.dataset.fragranceId,
-        name:   card.dataset.fragranceName,
-        cat:    card.dataset.fragranceCat || 'vency',
-        image:  card.dataset.fragranceImg,
-        href:   card.dataset.fragranceHref || null,
-        inspo:  card.dataset.fragranceInspo || null,
-        notes:  card.dataset.fragranceNotes || '',
-        phrase: card.dataset.fragrancePhrase || ''
+        id:       card.dataset.fragranceId,
+        name:     card.dataset.fragranceName,
+        cat:      card.dataset.fragranceCat || 'vency',
+        image:    card.dataset.fragranceImg,
+        href:     card.dataset.fragranceHref || null,
+        inspo:    card.dataset.fragranceInspo || null,
+        notes:    card.dataset.fragranceNotes || '',
+        phrase:   card.dataset.fragrancePhrase || '',
+        gender:   vencyFrag ? vencyFrag.gender : null,
+        vencyCat: vencyFrag ? vencyFrag.cat : null
       });
     }
   });
