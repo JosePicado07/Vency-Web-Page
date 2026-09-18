@@ -928,12 +928,12 @@
     if (!btn) return;
     var card = btn.closest('[data-fragrance-id]');
     if (card) {
-      /* Vency's own line (icon-series + creación propia) lives in VENCY_CATALOG
-         with its real gender + tier — external brand cards won't match, so
-         gender/vencyCat stay null and the generic 100ml shot is used. */
-      var vencyFrag = (window.VENCY_CATALOG || []).filter(function (f) {
-        return f.id === card.dataset.fragranceId;
-      })[0];
+      /* card.dataset.cat / .gender carry the real tier (nicho/disenador/
+         ultra-nicho/creación propia) and gender for EVERY catalog card —
+         icon-series and regular external-brand interpretations alike —
+         set by buildSections(). That's what picks the 100ml bottle photo,
+         so every nicho/disenador fragrance gets it, not just Vency's own
+         Icon Series originals. */
       openFmtModal({
         id:       card.dataset.fragranceId,
         name:     card.dataset.fragranceName,
@@ -943,8 +943,8 @@
         inspo:    card.dataset.fragranceInspo || null,
         notes:    card.dataset.fragranceNotes || '',
         phrase:   card.dataset.fragrancePhrase || '',
-        gender:   vencyFrag ? vencyFrag.gender : null,
-        vencyCat: vencyFrag ? vencyFrag.cat : null
+        gender:   card.dataset.gender || null,
+        vencyCat: card.dataset.cat || null
       });
     }
   });
