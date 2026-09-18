@@ -647,7 +647,7 @@
     '100ml-nicho-hombre':  'assets/images/formats/frasco-100ml-nicho-hombre.webp',
     '100ml-nicho-unisex':  'assets/images/formats/frasco-100ml-nicho-unisex.webp',
     '100ml-disenador-mujer':  'assets/images/formats/frasco-100ml-disenador-mujer.webp',
-    '100ml-disenador-hombre': 'assets/images/formats/frasco-100ml-disenador-hombre.webp'
+    '100ml-disenador-hombre': 'assets/images/formats/frasco-100ml-disenador-hombre.webp?v=2'
   };
 
   root.VencyCart = {
