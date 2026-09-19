@@ -644,8 +644,8 @@
     '100ml': 'assets/images/formats/frasco-100ml.webp',
     /* Nicho-only 100ml gender variants — see catalogo.js get100mlImage(). */
     '100ml-nicho-mujer':   'assets/images/formats/frasco-100ml-nicho-mujer.webp',
-    '100ml-nicho-hombre':  'assets/images/formats/frasco-100ml-nicho-hombre.webp',
-    '100ml-nicho-unisex':  'assets/images/formats/frasco-100ml-nicho-unisex.webp',
+    '100ml-nicho-hombre':  'assets/images/formats/frasco-100ml-nicho-hombre.webp?v=2',
+    '100ml-nicho-unisex':  'assets/images/formats/frasco-100ml-nicho-unisex.webp?v=2',
     '100ml-disenador-mujer':  'assets/images/formats/frasco-100ml-disenador-mujer.webp',
     '100ml-disenador-hombre': 'assets/images/formats/frasco-100ml-disenador-hombre.webp?v=2'
   };
