@@ -73,6 +73,7 @@
   }
 
   function openSearch() {
+    overlay.removeAttribute('inert');
     overlay.classList.add('is-open');
     input.value = '';
     results.innerHTML = '';
@@ -83,6 +84,7 @@
   }
 
   function closeSearch() {
+    overlay.setAttribute('inert', '');
     overlay.classList.remove('is-open');
     document.body.style.overflow = '';
     if (categories) categories.hidden = false;

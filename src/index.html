@@ -17,7 +17,7 @@
   <link rel="preload" href="/assets/fonts/bitter-900.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles/fonts.css">
-  <link rel="stylesheet" href="styles/styles.css?v=74">
+  <link rel="stylesheet" href="styles/styles.css?v=75">
   <style>
     .quiz-overlay {
       position: fixed; inset: 0; z-index: 500;
@@ -212,14 +212,14 @@
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: clamp(5rem, 12vw, 9rem);
       line-height: .85; letter-spacing: -.04em;
-      color: oklch(24% .03 145);
+      color: oklch(56% .03 145);
     }
     .dispensador__aside-label {
       display: block;
       font-family: 'Manrope', sans-serif;
       font-size: .68rem; font-weight: 700;
       letter-spacing: .1em; text-transform: uppercase;
-      color: oklch(42% .04 145); margin-top: .5rem;
+      color: oklch(62% .04 145); margin-top: .5rem;
       line-height: 1.5;
     }
     @media (max-width: 660px) {
@@ -230,15 +230,6 @@
   </style>
 
   <!-- Prefetch catalog page and its assets so navigation feels instant -->
-  <link rel="prefetch" href="catalogo.html">
-  <link rel="prefetch" href="styles/catalogo.css?v=60">
-  <link rel="prefetch" href="styles/catalog-entry.css?v=51">
-  <link rel="prefetch" href="styles/format-rail.css?v=51">
-  <link rel="prefetch" href="styles/decants.css?v=51">
-  <link rel="prefetch" href="styles/coleccion.css?v=61">
-  <link rel="prefetch" href="scripts/fragrance-data.js?v=61">
-  <link rel="prefetch" href="scripts/catalogo-data.js?v=53">
-  <link rel="prefetch" href="scripts/catalogo.js?v=81">
 </head>
 <body>
 
@@ -572,7 +563,7 @@
   <!-- -- SHARED OVERLAYS ---------------------------------------- -->
 
   <!-- Search -->
-  <div class="search-overlay js-search-overlay" role="dialog" aria-modal="true" aria-label="Buscar fragancias">
+  <div class="search-overlay js-search-overlay" inert role="dialog" aria-modal="true" aria-label="Buscar fragancias">
     <div class="search-overlay__header">
       <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado…" autocomplete="off" aria-label="Buscar fragancias">
       <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar búsqueda">
@@ -633,7 +624,7 @@
   </div>
 
   <script src="scripts/fragrance-data.js?v=61" defer></script>
-  <script src="scripts/search.js?v=53" defer></script>
+  <script src="scripts/search.js?v=54" defer></script>
   <script src="scripts/cart-drawer.js?v=12" defer></script>
   <script src="scripts/quiz.js?v=8" defer></script>
   <script src="scripts/wa-float.js" defer></script>

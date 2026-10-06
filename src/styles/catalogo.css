@@ -271,7 +271,7 @@
 }
 
 .cat-section--ultra-nicho .cat-section__title {
-  color: var(--ink-deep);
+  color: var(--ink-muted);
 }
 
 
@@ -298,7 +298,7 @@
 }
 
 .cat-section--ultra-nicho .cat-brand__name {
-  color: var(--ink-deep);
+  color: var(--ink-muted);
 }
 
 .cat-brand__list {

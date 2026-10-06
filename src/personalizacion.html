@@ -14,7 +14,7 @@
   <link rel="preload" href="/assets/fonts/bitter-900.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles/fonts.css">
-  <link rel="stylesheet" href="styles/styles.css?v=74">
+  <link rel="stylesheet" href="styles/styles.css?v=75">
   <style>
     /* -- Tokens ----------------------------------------------- */
     :root {
@@ -227,7 +227,7 @@
     .ph-fact { display: grid; grid-template-columns: 2.2ch 1fr; gap: 0 .6rem; }
     .ph-fact__num {
       font-family: 'Bitter', serif; font-weight: 900;
-      font-size: .82rem; color: oklch(72% .04 90);
+      font-size: .82rem; color: oklch(50% .04 90);
       padding-top: .1em; line-height: 1.6;
     }
     .ph-fact__text {
@@ -288,7 +288,7 @@
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: clamp(1.8rem, 4vw, 2.8rem);
       line-height: 1; letter-spacing: -.03em;
-      color: oklch(88% .008 90); padding-top: .1em;
+      color: oklch(60% .008 90); padding-top: .1em;
     }
     .family-name {
       font-family: 'Bitter', serif; font-weight: 700;
@@ -332,7 +332,7 @@
     .exp-item__index {
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: 2rem; line-height: 1; letter-spacing: -.03em;
-      color: oklch(90% .007 90); padding-top: .3rem;
+      color: oklch(60% .007 90); padding-top: .3rem;
     }
     .exp-item__phase {
       font-family: 'Manrope', sans-serif;
@@ -471,7 +471,7 @@
     .hyb-item__index {
       font-family: 'Bitter', serif; font-weight: 900;
       font-size: clamp(1.8rem, 4vw, 2.5rem);
-      color: oklch(88% .008 90); line-height: 1;
+      color: oklch(60% .008 90); line-height: 1;
       letter-spacing: -.03em; padding-top: .15rem;
     }
     .hyb-item__families {
@@ -1170,7 +1170,7 @@
   </button>
 
   <!-- Overlays / cart -->
-  <div class="search-overlay js-search-overlay" aria-hidden="true">
+  <div class="search-overlay js-search-overlay" inert>
     <div class="search-modal" role="dialog" aria-modal="true" aria-label="Buscar">
       <form class="search-form js-search-form" role="search">
         <input class="search-input js-search-input" type="search" placeholder="Buscar fragancia…" autocomplete="off" aria-label="Buscar fragancia">
@@ -1209,7 +1209,7 @@
   <script src="scripts/fragrance-data.js?v=61" defer></script>
   <script src="scripts/nav.js?v=57" defer></script>
   <script src="scripts/scroll.js?v=51" defer></script>
-  <script src="scripts/search.js?v=53" defer></script>
+  <script src="scripts/search.js?v=54" defer></script>
   <script src="scripts/cart-drawer.js?v=12" defer></script>
   <script defer>
     (function () {

@@ -8,7 +8,7 @@
   /* Material palette */
   --volcanic-ink:        oklch(18% 0.04 150);
   --botanical-parchment: oklch(95% 0.007 90);
-  --warm-ochre:          oklch(55% 0.10 55);
+  --warm-ochre:          oklch(52% 0.10 55);
   --sage-mineral:        oklch(48% 0.10 145);
   --atelier-stone:       oklch(75% 0.005 80);
 
@@ -1773,7 +1773,7 @@ a.coll-block:hover .coll-block__cta {
 /* Footer label override for dark bg */
 .footer .label--faint {
   color: var(--botanical-parchment);
-  opacity: 0.38;
+  opacity: 0.52;
 }
 
 /* ============================================================
