@@ -11,7 +11,7 @@
   <meta property="og:site_name" content="Vency Atelier">
   <meta property="og:title" content="Vency Atelier · Perfumería Artesanal · Heredia, Costa Rica">
   <meta property="og:description" content="Casa de fragancias artesanales en Heredia, Costa Rica. Pequeños lotes, materias primas selectas, creaciones propias e inspiraciones elevadas por Anthonny Villegas.">
-  <meta property="og:image" content="https://vencyatelier.com/assets/images/hero-botanica.png">
+  <meta property="og:image" content="https://vencyatelier.com/assets/images/hero-gift.png">
   <meta property="og:url" content="https://vencyatelier.com/">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preload" href="/assets/fonts/bitter-900.woff2" as="font" type="font/woff2" crossorigin>
@@ -206,13 +206,21 @@
       font-size: .84rem; color: oklch(68% .006 80);
       line-height: 1.55; margin: 0;
     }
-    .dispensador__aside { text-align: right; }
-    .dispensador__big-num {
+    .dispensador__aside { text-align: right; display: grid; gap: 1.2rem; justify-items: end; }
+    .dispensador__figure {
+      margin: 0;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid oklch(38% .03 145);
+      box-shadow: 0 24px 48px -24px oklch(5% .05 150 / .7);
+    }
+    .dispensador__figure video {
       display: block;
-      font-family: 'Bitter', serif; font-weight: 900;
-      font-size: clamp(5rem, 12vw, 9rem);
-      line-height: .85; letter-spacing: -.04em;
-      color: oklch(56% .03 145);
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
     }
     .dispensador__aside-label {
       display: block;
@@ -438,7 +446,17 @@
         </div>
       </div>
       <div class="dispensador__aside" aria-hidden="true">
-        <span class="dispensador__big-num">01</span>
+        <figure class="dispensador__figure">
+          <video
+            src="assets/images/hero-gift-disp.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-hidden="true"
+          ></video>
+        </figure>
         <span class="dispensador__aside-label">Primera<br>en Costa Rica</span>
       </div>
     </div>

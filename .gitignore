@@ -41,3 +41,6 @@ C*Users*.log
 test-stripe.mjs
 
 image.png
+
+# Loose media in repo root (source videos live under src/assets/)
+/WhatsApp*.mp4
