@@ -41,12 +41,16 @@
   });
 
   /* Nicho Icon Series ships in a gendered bottle; disenador ships in the
-     Botella Normal bottle; every other tier (ultra-nicho, creación propia)
-     keeps the single generic 100ml shot. */
+     Botella Normal bottle; ultra-nicho reuses the nicho unisex bottle
+     (every ultra-nicho fragrance is unisex); creación propia keeps the
+     single generic 100ml shot. */
   function get100mlImage(frag) {
     if (frag && frag.vencyCat === 'nicho') {
       if (frag.gender === 'mujer')  return FMT_IMAGES['100ml-nicho-mujer'];
       if (frag.gender === 'hombre') return FMT_IMAGES['100ml-nicho-hombre'];
+      return FMT_IMAGES['100ml-nicho-unisex'];
+    }
+    if (frag && frag.vencyCat === 'ultra-nicho') {
       return FMT_IMAGES['100ml-nicho-unisex'];
     }
     if (frag && frag.vencyCat === 'disenador') {
@@ -120,7 +124,7 @@
       var checked = fmtOptions.querySelector('input:checked');
       var img = fmtModal && fmtModal.querySelector('.js-fmt-img');
       var isRealBottlePhoto = checked && checked.value === '100ml' && fmtFrag &&
-        (fmtFrag.vencyCat === 'nicho' || fmtFrag.vencyCat === 'disenador');
+        (fmtFrag.vencyCat === 'nicho' || fmtFrag.vencyCat === 'ultra-nicho' || fmtFrag.vencyCat === 'disenador');
       var fmtSrc = checked && (checked.value === '100ml' ? get100mlImage(fmtFrag) : FMT_IMAGES[checked.value]);
       if (fmtImgBadge) fmtImgBadge.hidden = isRealBottlePhoto ? true : !(fmtFrag && fmtFrag.inspo);
       if (checked && img && fmtSrc) {
