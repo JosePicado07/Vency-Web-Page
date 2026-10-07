@@ -311,26 +311,18 @@
         <picture>
           <source
             type="image/webp"
-            srcset="assets/images/_webp/hero-botanica-400.webp 400w,
-                    assets/images/_webp/hero-botanica-800.webp 800w,
-                    assets/images/_webp/hero-botanica-1200.webp 1200w"
+            srcset="assets/images/_webp/hero-gift-poster.webp"
             sizes="(min-width: 1024px) 44vw, 100vw"
           >
-          <video
+          <img decoding="async"
+            src="assets/images/hero-gift-poster.webp"
+            alt="Estuche de regalo de Vency Atelier"
             class="hero__image"
-            poster="assets/images/hero-gift-poster.webp"
-            autoplay
-            muted
-            loop
-            playsinline
-            preload="metadata"
-            role="img"
-            aria-label="Estuche de regalo de Vency Atelier"
+            loading="eager"
+            fetchpriority="high"
             width="640"
             height="360"
           >
-            <source src="assets/images/hero-clip-1to3.mp4" type="video/mp4">
-          </video>
         </picture>
       </div>
     </div>
