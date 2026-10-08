@@ -166,8 +166,8 @@
       padding: var(--space-xl) var(--space-md);
     }
     .dispensador__inner {
-      max-width: 900px; margin: 0 auto;
-      display: grid; grid-template-columns: 1fr 220px;
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr minmax(0, 420px);
       gap: 3rem; align-items: center;
     }
     .dispensador__kicker {
@@ -230,9 +230,13 @@
       color: oklch(62% .04 145); margin-top: .5rem;
       line-height: 1.5;
     }
+    @media (max-width: 900px) {
+      .dispensador__inner { grid-template-columns: 1fr 280px; gap: 2rem; }
+    }
     @media (max-width: 660px) {
       .dispensador__inner { grid-template-columns: 1fr; }
-      .dispensador__aside { display: none; }
+      .dispensador__aside { text-align: left; justify-items: stretch; gap: .75rem; margin-top: 1rem; }
+      .dispensador__aside-label { display: none; }
       .dispensador__facts { grid-template-columns: 1fr; gap: 1.2rem; }
     }
   </style>
@@ -308,22 +312,20 @@
       </div>
 
       <div class="hero__media">
-        <picture>
-          <source
-            type="image/webp"
-            srcset="assets/images/hero-gift-poster.webp"
-            sizes="(min-width: 1024px) 44vw, 100vw"
-          >
-          <img decoding="async"
-            src="assets/images/hero-gift-poster.webp"
-            alt="Estuche de regalo de Vency Atelier"
-            class="hero__image"
-            loading="eager"
-            fetchpriority="high"
-            width="640"
-            height="360"
-          >
-        </picture>
+        <video
+          class="hero__image"
+          src="assets/images/hero-clip-full.mp4"
+          poster="assets/images/hero-gift-poster.webp"
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+          role="img"
+          aria-label="Estuche de regalo de Vency Atelier"
+          width="1280"
+          height="720"
+        ></video>
       </div>
     </div>
   </section>
@@ -644,6 +646,19 @@
   <script src="scripts/cart-drawer.js?v=12" defer></script>
   <script src="scripts/quiz.js?v=8" defer></script>
   <script src="scripts/wa-float.js" defer></script>
+  <script>
+    (function () {
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+      function sync() {
+        document.querySelectorAll('video[autoplay]').forEach(function (v) {
+          if (reduce.matches) { v.pause(); v.currentTime = 0; }
+          else { v.play().catch(function () {}); }
+        });
+      }
+      sync();
+      reduce.addEventListener('change', sync);
+    })();
+  </script>
 </body>
 </html>
 
