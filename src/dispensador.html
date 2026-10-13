@@ -202,24 +202,28 @@
     }
     .dsp-frags__list { list-style: none; margin: var(--space-md) 0 0; padding: 0; }
     .dsp-frag {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.4rem 1.5rem;
-      padding: 1.05rem 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-areas: "name link" "family link";
+      align-items: center;
+      column-gap: 1.5rem;
+      row-gap: 0.35rem;
+      padding: 1.1rem 0;
       border-bottom: 1px solid var(--border-dark);
-      min-height: 56px;
     }
     .dsp-frag__name {
+      grid-area: name;
       font-family: 'Bitter', serif;
       font-weight: 700;
       font-size: clamp(1.25rem, 2.5vw, 1.75rem);
       line-height: 1.2;
       color: var(--botanical-parchment);
     }
-    .dsp-frag__family { margin: 0; color: var(--warm-ochre-light); }
+    .dsp-frag__family { grid-area: family; margin: 0; color: var(--warm-ochre-light); }
     .dsp-frag__link {
-      margin-left: auto;
+      grid-area: link;
+      justify-self: end;
+      margin-left: 0;
       display: inline-flex;
       align-items: center;
       min-height: 44px;
@@ -243,8 +247,12 @@
     }
     .dsp-frags__foot a { color: var(--warm-ochre-light); text-decoration: underline; text-underline-offset: 0.18em; }
     @media (max-width: 639px) {
-      .dsp-frag { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
-      .dsp-frag__link { align-self: flex-start; margin-left: 0; min-height: 44px; }
+      .dsp-frag {
+        grid-template-columns: 1fr;
+        grid-template-areas: "name" "family" "link";
+        row-gap: 0.3rem;
+      }
+      .dsp-frag__link { justify-self: start; }
     }
     @media (min-width: 640px) {
       .dsp-frags__list {
@@ -254,6 +262,7 @@
       }
       .dsp-frag:first-child { grid-column: 1 / -1; }
       .dsp-frag:first-child .dsp-frag__name { font-size: clamp(2rem, 4vw, 3rem); }
+      .dsp-frag:last-child:nth-child(even) { grid-column: 1 / -1; }
     }
 
     /* Section 4 — Dónde encontrarla (parchment) */
@@ -350,6 +359,23 @@
     }
     .dsp-qa details p a { color: var(--volcanic-ink); }
     .dsp-qa details p .label { color: var(--ink-muted); }
+    @media (min-width: 960px) {
+      .dsp-qa__inner {
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+        column-gap: clamp(3rem, 6vw, 6rem);
+        align-items: start;
+      }
+      .dsp-qa .dsp-h2 {
+        text-align: left;
+        margin: 0;
+        position: sticky;
+        top: calc(var(--nav-h) + var(--space-md));
+      }
+      .dsp-qa summary { padding: 1.25rem 0; }
+      .dsp-qa details p { padding-bottom: 1.5rem; }
+    }
 
     /* Section 6 — Cierre (dark) */
     .dsp-cta {
@@ -574,23 +600,25 @@
     <section class="dsp-qa" aria-labelledby="dsp-qa-title">
       <div class="dsp-qa__inner">
         <h2 class="dsp-h2 animate-in" id="dsp-qa-title">Preguntas frecuentes.</h2>
-        <details class="dsp-qa animate-in">
-          <summary>¿Me llevo un frasco?</summary>
-          <p>No: la máquina perfuma al momento. No sale un frasco ni un vial. Si querés llevarte la fragancia completa, está en el <a href="catalogo.html">catálogo</a>.</p>
-        </details>
-        <!-- TODO(Anthonny): sprays per payment -->
-        <details class="dsp-qa animate-in" style="--delay:60ms">
-          <summary>¿Cuántos rocíos recibo por pago?</summary>
-          <p><span class="label">[Por confirmar]</span></p>
-        </details>
-        <details class="dsp-qa animate-in" style="--delay:120ms">
-          <summary>¿Puedo probar antes de pagar?</summary>
-          <p>Sí, los testers están junto a la pantalla. Probá todo lo que quieras antes de decidir; el rocío recién sale al pagar.</p>
-        </details>
-        <details class="dsp-qa animate-in" style="--delay:180ms">
-          <summary>¿Y si algo falla?</summary>
-          <p>Escribinos por <a href="https://wa.me/50672773156" target="_blank" rel="noopener">WhatsApp</a> y lo resolvemos.</p>
-        </details>
+        <div class="dsp-qa__list">
+          <details class="dsp-qa__item animate-in">
+            <summary>¿Me llevo un frasco?</summary>
+            <p>No: la máquina perfuma al momento. No sale un frasco ni un vial. Si querés llevarte la fragancia completa, está en el <a href="catalogo.html">catálogo</a>.</p>
+          </details>
+          <!-- TODO(Anthonny): sprays per payment -->
+          <details class="dsp-qa__item animate-in" style="--delay:60ms">
+            <summary>¿Cuántos rocíos recibo por pago?</summary>
+            <p><span class="label">[Por confirmar]</span></p>
+          </details>
+          <details class="dsp-qa__item animate-in" style="--delay:120ms">
+            <summary>¿Puedo probar antes de pagar?</summary>
+            <p>Sí, los testers están junto a la pantalla. Probá todo lo que quieras antes de decidir; el rocío recién sale al pagar.</p>
+          </details>
+          <details class="dsp-qa__item animate-in" style="--delay:180ms">
+            <summary>¿Y si algo falla?</summary>
+            <p>Escribinos por <a href="https://wa.me/50672773156">WhatsApp</a> y lo resolvemos.</p>
+          </details>
+        </div>
       </div>
     </section>
 
