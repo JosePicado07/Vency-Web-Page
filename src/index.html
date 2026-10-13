@@ -206,6 +206,19 @@
       font-size: .84rem; color: oklch(68% .006 80);
       line-height: 1.55; margin: 0;
     }
+    .dispensador__more {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      margin-top: 1.5rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: .78rem; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      color: var(--warm-ochre-light);
+      text-decoration: none;
+    }
+    .dispensador__more:hover,
+    .dispensador__more:focus-visible { text-decoration: underline; }
     .dispensador__aside { text-align: right; display: grid; gap: 1.2rem; justify-items: end; }
     .dispensador__figure {
       margin: 0;
@@ -213,7 +226,6 @@
       border-radius: 14px;
       overflow: hidden;
       border: 1px solid oklch(38% .03 145);
-      box-shadow: 0 24px 48px -24px oklch(5% .05 150 / .7);
     }
     .dispensador__figure video {
       display: block;
@@ -273,6 +285,7 @@
       <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
       <li><a href="guia.html" class="nav__link">Guía</a></li>
       <li><a href="personalizacion.html" class="nav__link">Personalizar</a></li>
+      <li><a href="dispensador.html" class="nav__link">Dispensador</a></li>
       <li><a href="faq.html" class="nav__link">FAQ</a></li>
     </ul>
   </nav>
@@ -432,7 +445,7 @@
           La máquina<br>dispensadora<br>artesanal.
         </h2>
         <p class="dispensador__body animate-in" style="--delay:160ms">
-          Vency Atelier es el primer negocio en Costa Rica en operar una máquina dispensadora de fragancias cargada con sus propias creaciones e inspiraciones. Seleccionás, dispensás, llevás. Sin espera, sin mostrador, sin intermediario.
+          Vency Atelier es el primer negocio en Costa Rica en operar una máquina dispensadora de fragancias cargada con sus propias creaciones e inspiraciones. Elegís, probás y te perfumás al instante. Sin espera, sin mostrador, sin intermediario.
         </p>
         <div class="dispensador__facts animate-in" style="--delay:220ms">
           <div class="dispensador__fact">
@@ -444,6 +457,7 @@
             <p class="dispensador__fact-desc">Las referencias que buscás, reformuladas con materias primas selectas y dispensadas de inmediato.</p>
           </div>
         </div>
+        <a href="dispensador.html" class="dispensador__more animate-in" style="--delay:280ms">Conocé la máquina →</a>
       </div>
       <div class="dispensador__aside" aria-hidden="true">
         <figure class="dispensador__figure">
@@ -563,6 +577,7 @@
         <a href="perfumista.html" class="footer__link">El Perfumista</a>
         <a href="guia.html" class="footer__link">Guía</a>
         <a href="personalizacion.html" class="footer__link">Personalizar</a>
+        <a href="dispensador.html" class="footer__link">Dispensador</a>
       </nav>
       <nav class="footer__nav" aria-label="Políticas y contacto">
         <a href="legal.html" class="footer__link">Políticas</a>

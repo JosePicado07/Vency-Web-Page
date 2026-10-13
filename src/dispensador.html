@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La máquina dispensadora · Vency Atelier · Heredia, Costa Rica</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="favicon.png">
+  <meta name="description" content="Primera máquina dispensadora de perfumes en Costa Rica. Elegí una fragancia Vency, probala y perfumate al instante en nuestro atelier de Heredia.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Vency Atelier">
+  <meta property="og:title" content="La máquina dispensadora · Vency Atelier · Heredia, Costa Rica">
+  <meta property="og:description" content="Primera máquina dispensadora de perfumes en Costa Rica. Elegí una fragancia Vency, probala y perfumate al instante en nuestro atelier de Heredia.">
+  <meta property="og:image" content="https://vencyatelier.com/assets/images/dispensador-og.jpg">
+  <meta property="og:url" content="https://vencyatelier.com/dispensador">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="/assets/fonts/bitter-900.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles/fonts.css">
+  <link rel="stylesheet" href="styles/styles.css?v=75">
+  <style>
+    /* -- /dispensador page -------------------------------- */
+    #como-funciona, #ubicacion { scroll-margin-top: calc(var(--nav-h) + 0.5rem); }
+
+    /* Section 1 — Hero (dark) */
+    .dsp-hero {
+      background: var(--volcanic-ink);
+      padding: var(--space-xl) var(--space-md);
+    }
+    .dsp-hero__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(2rem, 4vw, 3rem);
+      align-items: center;
+    }
+    .dsp-hero__media { margin: 0; }
+    .dsp-hero__media video {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: 49% 50%;
+      border: 1px solid var(--border-dark);
+      background: var(--ink-surface);
+    }
+    .dsp-kicker { color: var(--warm-ochre-light); display: block; }
+    .dsp-hero__title {
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: clamp(3rem, 9vw, 7rem);
+      line-height: 0.9;
+      letter-spacing: -0.025em;
+      color: var(--botanical-parchment);
+      margin: 1rem 0 1.5rem;
+    }
+    .dsp-hero__lead {
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      line-height: 1.7;
+      color: oklch(80% 0.006 80);
+      max-width: 52ch;
+      margin: 0 0 2.25rem;
+    }
+    .dsp-hero__actions { display: grid; gap: 0.75rem; justify-items: stretch; }
+    .dsp-hero__actions .btn,
+    .dsp-hero__actions .dsp-btn-ghost {
+      width: 100%;
+      text-align: center;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dsp-btn-ghost {
+      font-family: 'Bitter', serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 1rem 2.25rem;
+      border: 1px solid var(--botanical-parchment);
+      border-radius: 0;
+      background: transparent;
+      color: var(--botanical-parchment);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 0.3s var(--ease-expo), color 0.3s var(--ease-expo);
+    }
+    .dsp-btn-ghost:hover,
+    .dsp-btn-ghost:focus-visible {
+      background: var(--ink-surface);
+      color: var(--botanical-parchment);
+      outline: none;
+    }
+    .dsp-btn-ghost:focus-visible {
+      outline: 2px solid var(--warm-ochre);
+      outline-offset: 3px;
+    }
+    @media (max-width: 959px) {
+      .dsp-hero__media video {
+        width: auto;
+        max-width: 100%;
+        margin-inline: auto;
+        max-height: 62svh;
+      }
+    }
+    @media (min-width: 960px) {
+      .dsp-hero { padding-top: calc(var(--nav-h) + var(--space-lg)); }
+      .dsp-hero__inner {
+        grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+        gap: clamp(2rem, 5vw, 5rem);
+        min-height: min(88svh, 860px);
+      }
+      .dsp-hero__media { max-width: 460px; justify-self: end; order: 2; }
+    }
+    @media (max-height: 500px) {
+      .dsp-hero__media video { max-height: 80svh; }
+    }
+    @media (max-height: 500px) and (min-width: 700px) {
+      .dsp-hero__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 3rem; }
+    }
+
+    /* Section 2 — Cómo funciona (parchment ledger) */
+    .dsp-steps { padding: var(--space-xl) var(--space-md); }
+    .dsp-steps__inner { max-width: 1200px; margin: 0 auto; }
+    .dsp-h2 {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5vw, 3.75rem);
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--volcanic-ink);
+      margin: 1rem 0 0;
+    }
+    .dsp-h2--light { color: var(--botanical-parchment); }
+    .dsp-steps__list { list-style: none; margin: var(--space-lg) 0 0; padding: 0; }
+    .dsp-step__num {
+      display: block;
+      font-family: 'Bitter', serif;
+      font-weight: 900;
+      font-size: 2.75rem;
+      line-height: 0.85;
+      color: var(--atelier-stone);
+    }
+    .dsp-step__title {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+      line-height: 1.15;
+      color: var(--volcanic-ink);
+      margin: 0.75rem 0 0.5rem;
+    }
+    .dsp-step__text {
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      line-height: 1.7;
+      color: var(--ink-subdued);
+      max-width: 48ch;
+      margin: 0;
+    }
+    @media (max-width: 639px) {
+      .dsp-step {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 1rem;
+        align-items: start;
+        padding: var(--space-md) 0;
+        border-top: 1px solid var(--border);
+      }
+      .dsp-step__num { grid-row: 1 / span 2; }
+      .dsp-step__title { grid-column: 2; margin-top: 0.15rem; }
+      .dsp-step__text { grid-column: 2; }
+    }
+    @media (min-width: 640px) {
+      .dsp-steps__list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2rem, 5vw, 4rem) 0;
+      }
+      .dsp-step { padding: 0 var(--space-md); border-left: 1px solid var(--border); }
+      .dsp-step:first-child { border-left: none; padding-left: 0; }
+      .dsp-step__num { font-size: clamp(3rem, 7vw, 5.5rem); }
+      .dsp-step__title { margin-top: 1rem; }
+      .dsp-step__text { margin-top: 0.5rem; }
+    }
+    @media (min-width: 960px) {
+      .dsp-steps__list { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    /* Section 3 — En la máquina (dark tobacco) */
+    .dsp-frags { background: var(--tobacco-ink); padding: var(--space-xl) var(--space-md); }
+    .dsp-frags__inner { max-width: 1200px; margin: 0 auto; }
+    .dsp-frags__kicker { color: var(--warm-ochre-light); display: block; margin-bottom: 0.4rem; }
+    .dsp-frags__count {
+      color: var(--warm-ochre-light);
+      display: inline-block;
+      margin-top: 1.25rem;
+      padding: 0.35rem 0.6rem;
+      border: 1px solid var(--border-dark);
+    }
+    .dsp-frags__list { list-style: none; margin: var(--space-md) 0 0; padding: 0; }
+    .dsp-frag {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.4rem 1.5rem;
+      padding: 1.05rem 0;
+      border-bottom: 1px solid var(--border-dark);
+      min-height: 56px;
+    }
+    .dsp-frag__name {
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+      line-height: 1.2;
+      color: var(--botanical-parchment);
+    }
+    .dsp-frag__family { margin: 0; color: var(--warm-ochre-light); }
+    .dsp-frag__link {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.675rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--warm-ochre-light);
+      text-decoration: none;
+    }
+    .dsp-frag__link:hover,
+    .dsp-frag__link:focus-visible { text-decoration: underline; }
+    .dsp-frags__foot {
+      margin: var(--space-lg) 0 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      line-height: 1.7;
+      color: oklch(80% 0.006 80);
+      max-width: 65ch;
+    }
+    .dsp-frags__foot a { color: var(--warm-ochre-light); text-decoration: underline; text-underline-offset: 0.18em; }
+    @media (max-width: 639px) {
+      .dsp-frag { flex-direction: column; align-items: flex-start; gap: 0.3rem; }
+      .dsp-frag__link { align-self: flex-start; margin-left: 0; min-height: 44px; }
+    }
+    @media (min-width: 640px) {
+      .dsp-frags__list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: clamp(2rem, 5vw, 4rem);
+      }
+      .dsp-frag:first-child { grid-column: 1 / -1; }
+      .dsp-frag:first-child .dsp-frag__name { font-size: clamp(2rem, 4vw, 3rem); }
+    }
+
+    /* Section 4 — Dónde encontrarla (parchment) */
+    .dsp-ubicacion { padding: var(--space-xl) var(--space-md); }
+    .dsp-ubicacion__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .dsp-ubicacion .dsp-h2 { margin-top: 0.75rem; }
+    .dsp-info { margin: 1.75rem 0 2rem; border-top: 1px solid var(--border); }
+    .dsp-info__row {
+      display: grid;
+      grid-template-columns: 1fr;
+      row-gap: 0.4rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .dsp-info__row dt { margin: 0; color: var(--ink-muted); }
+    .dsp-info__row dd {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 600;
+      color: var(--volcanic-ink);
+    }
+    .dsp-ubicacion__media { margin: 1.75rem 0 0; }
+    .dsp-ubicacion__media img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    @media (min-width: 640px) {
+.dsp-ubicacion__inner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(2rem, 5vw, 4rem);
+        align-items: start;
+      }
+      .dsp-ubicacion__media { margin-top: 0.35rem; }
+      .dsp-ubicacion__media { order: 0; }
+    }
+    @media (max-width: 639px) {
+      .dsp-ubicacion__media { order: -1; margin-top: 0; }
+    }
+
+    /* Section 5 — Preguntas frecuentes (parchment, centered) */
+    .dsp-qa { padding: var(--space-xl) var(--space-md); }
+    .dsp-qa__inner { max-width: 760px; margin: 0 auto; }
+    .dsp-qa .dsp-h2 { text-align: center; margin-bottom: var(--space-md); }
+    .dsp-qa details { border-top: 1px solid var(--border); }
+    .dsp-qa details:last-of-type { border-bottom: 1px solid var(--border); }
+    .dsp-qa summary {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      min-height: 48px;
+      padding: 0.9rem 0;
+      font-family: 'Bitter', serif;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      line-height: 1.3;
+      color: var(--volcanic-ink);
+      cursor: pointer;
+      list-style: none;
+    }
+    .dsp-qa summary::-webkit-details-marker { display: none; }
+    .dsp-qa summary::after {
+      content: '+';
+      flex: none;
+      font-family: 'Manrope', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--warm-ochre);
+    }
+    .dsp-qa details[open] summary::after { content: '−'; }
+    .dsp-qa summary:hover { color: var(--ink-subdued); }
+    .dsp-qa summary:focus-visible {
+      outline: 2px solid var(--volcanic-ink);
+      outline-offset: 2px;
+    }
+    .dsp-qa details p {
+      margin: 0;
+      padding: 0 0 1.25rem;
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      line-height: 1.7;
+      color: var(--ink-subdued);
+      max-width: 65ch;
+    }
+    .dsp-qa details p a { color: var(--volcanic-ink); }
+    .dsp-qa details p .label { color: var(--ink-muted); }
+
+    /* Section 6 — Cierre (dark) */
+    .dsp-cta {
+      background: var(--volcanic-ink);
+      padding: var(--space-xl) var(--space-md);
+    }
+    .dsp-cta__inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+      text-align: center;
+    }
+    .dsp-cta .dsp-h2 { margin: 0; }
+    .dsp-cta__text {
+      font-family: 'Manrope', sans-serif;
+      font-size: var(--text-narrative);
+      line-height: 1.7;
+      color: oklch(80% 0.006 80);
+      max-width: 55ch;
+      margin: 0;
+    }
+    .dsp-cta__actions { display: grid; gap: 0.75rem; justify-items: center; width: 100%; margin-top: 0.75rem; }
+    .dsp-cta__actions .btn,
+    .dsp-cta__actions .dsp-btn-ghost {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body class="page-dispensador">
+
+  <a class="skip-nav" href="#dispensador-content">Ir al contenido principal</a>
+
+  <!-- NAV -->
+  <nav class="nav" aria-label="Navegación principal">
+    <a href="index.html" class="nav__logo" aria-label="Vency Atelier · inicio">VENCY ATELIER</a>
+    <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menú">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+    <ul class="nav__links" id="nav-links" role="list">
+      <li class="nav__item--shop">
+        <button class="nav__link nav__link--shop js-shop-toggle" aria-expanded="false" aria-controls="shop-submenu">
+          Tienda
+          <svg class="nav__shop-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
+            <path d="M2 4l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <ul class="nav__submenu" id="shop-submenu" role="list">
+          <li><a href="catalogo.html?category=original" class="nav__sublink">Vency</a></li>
+          <li><a href="catalogo.html?category=disenador" class="nav__sublink">Diseñador</a></li>
+          <li><a href="catalogo.html?category=niche" class="nav__sublink">Nicho</a></li>
+          <li><a href="catalogo.html?category=ultra" class="nav__sublink">Ultra Nicho</a></li>
+          <li><a href="catalogo.html" class="nav__sublink">Ver todo</a></li>
+        </ul>
+      </li>
+      <li><a href="perfumista.html" class="nav__link">El Perfumista</a></li>
+      <li><a href="guia.html" class="nav__link">Guía</a></li>
+      <li><a href="personalizacion.html" class="nav__link">Personalizar</a></li>
+      <li><a href="dispensador.html" class="nav__link nav__link--active" aria-current="page">Dispensador</a></li>
+      <li><a href="faq.html" class="nav__link">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <main id="dispensador-content" tabindex="-1">
+
+    <!-- SECTION 1: HERO -->
+    <section class="dsp-hero" aria-labelledby="dsp-title">
+      <div class="dsp-hero__inner">
+        <figure class="dsp-hero__media animate-in">
+          <video
+            src="assets/images/hero-clip-3to5.mp4"
+            poster="assets/images/dispensador-poster.webp"
+            width="576" height="720"
+            autoplay muted loop playsinline preload="metadata"
+            aria-label="La máquina dispensadora de Vency Atelier en el atelier de Heredia"
+          ></video>
+        </figure>
+        <div class="dsp-hero__content">
+          <span class="label dsp-kicker animate-in">Primera en Costa Rica · Heredia</span>
+          <h1 class="dsp-hero__title animate-in" id="dsp-title" style="--delay:80ms">Perfume,<br>al instante.</h1>
+          <p class="dsp-hero__lead animate-in" style="--delay:160ms">
+            Una máquina cargada con creaciones e inspiraciones de Vency Atelier. Elegís la fragancia en la pantalla, la probás y te perfumás en segundos. Sin mostrador, sin espera.
+          </p>
+          <div class="dsp-hero__actions animate-in" style="--delay:220ms">
+            <a href="#como-funciona" class="btn btn--inv">Cómo funciona</a>
+            <a href="#ubicacion" class="dsp-btn-ghost">Ver ubicación</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: CÓMO FUNCIONA -->
+    <section class="dsp-steps" id="como-funciona" aria-labelledby="dsp-steps-title">
+      <div class="dsp-steps__inner">
+        <span class="label sage-label animate-in">Cuatro pasos</span>
+        <h2 class="dsp-h2 animate-in" id="dsp-steps-title" style="--delay:80ms">Elegís. Probás.<br>Pagás. Te perfumás.</h2>
+        <ol class="dsp-steps__list" role="list">
+          <li class="dsp-step animate-in" style="--delay:0ms">
+            <span class="dsp-step__num" aria-hidden="true">01</span>
+            <h3 class="dsp-step__title">Elegí tu fragancia</h3>
+            <p class="dsp-step__text">Recorré las fragancias en la pantalla táctil: nombre, familia y notas de cada una.</p>
+          </li>
+          <li class="dsp-step animate-in" style="--delay:80ms">
+            <span class="dsp-step__num" aria-hidden="true">02</span>
+            <h3 class="dsp-step__title">Probala primero</h3>
+            <p class="dsp-step__text">Acercate a los testers y olé antes de decidir. Sin compromiso.</p>
+          </li>
+          <li class="dsp-step animate-in" style="--delay:160ms">
+            <span class="dsp-step__num" aria-hidden="true">03</span>
+            <h3 class="dsp-step__title">Pagá</h3>
+            <p class="dsp-step__text">Moneda, tarjeta o billete. <span class="label">[Por confirmar]</span></p>
+            <!-- TODO(Anthonny): payment methods + price per spray -->
+          </li>
+          <li class="dsp-step animate-in" style="--delay:240ms">
+            <span class="dsp-step__num" aria-hidden="true">04</span>
+            <h3 class="dsp-step__title">Perfumate</h3>
+            <p class="dsp-step__text">Acercá la muñeca o el cuello y presioná: el rocío sale al instante.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- SECTION 3: EN LA MÁQUINA -->
+    <section class="dsp-frags" aria-labelledby="dsp-frags-title">
+      <div class="dsp-frags__inner">
+        <span class="label dsp-frags__kicker animate-in">En la máquina ahora</span>
+        <h2 class="dsp-h2 dsp-h2--light animate-in" id="dsp-frags-title" style="--delay:80ms">Seis fragancias,<br>rotando por temporada.</h2>
+        <span class="label dsp-frags__count">[Por confirmar]</span>
+        <!-- TODO(Anthonny): number of fragancias in the machine -->
+        <ul class="dsp-frags__list" role="list">
+          <!-- TODO(Anthonny): fragancia 1 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in">
+            <span class="dsp-frag__name">[Fragancia 1]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <!-- TODO(Anthonny): fragancia 2 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in" style="--delay:60ms">
+            <span class="dsp-frag__name">[Fragancia 2]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <!-- TODO(Anthonny): fragancia 3 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in" style="--delay:120ms">
+            <span class="dsp-frag__name">[Fragancia 3]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <!-- TODO(Anthonny): fragancia 4 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in" style="--delay:180ms">
+            <span class="dsp-frag__name">[Fragancia 4]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <!-- TODO(Anthonny): fragancia 5 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in" style="--delay:240ms">
+            <span class="dsp-frag__name">[Fragancia 5]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <!-- TODO(Anthonny): fragancia 6 (name, family, link to catalog entry) -->
+          <li class="dsp-frag animate-in" style="--delay:300ms">
+            <span class="dsp-frag__name">[Fragancia 6]</span>
+            <span class="label dsp-frag__family">[Familia]</span>
+            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+        </ul>
+        <p class="dsp-frags__foot">¿Te gustó? El frasco completo está en el <a href="catalogo.html">catálogo</a>.</p>
+      </div>
+    </section>
+
+    <!-- SECTION 4: DÓNDE ENCONTRARLA -->
+    <section class="dsp-ubicacion" id="ubicacion" aria-labelledby="dsp-ubicacion-title">
+      <div class="dsp-ubicacion__inner">
+        <div class="dsp-ubicacion__info">
+          <span class="label ochre-label animate-in">La máquina · Heredia</span>
+          <h2 class="dsp-h2 animate-in" id="dsp-ubicacion-title" style="--delay:80ms">Dónde encontrarla.</h2>
+          <dl class="dsp-info animate-in" style="--delay:160ms">
+            <!-- TODO(Anthonny): address -->
+            <div class="dsp-info__row">
+              <dt class="label">Dirección</dt>
+              <dd>[Por confirmar]</dd>
+            </div>
+            <!-- TODO(Anthonny): hours -->
+            <div class="dsp-info__row">
+              <dt class="label">Horario</dt>
+              <dd>[Por confirmar]</dd>
+            </div>
+            <!-- TODO(Anthonny): price per spray -->
+            <div class="dsp-info__row">
+              <dt class="label">Precio por rocío</dt>
+              <dd>[Por confirmar]</dd>
+            </div>
+            <!-- TODO(Anthonny): payment methods -->
+            <div class="dsp-info__row">
+              <dt class="label">Formas de pago</dt>
+              <dd>[Por confirmar]</dd>
+            </div>
+          </dl>
+          <!-- TODO(Anthonny): Google Maps URL -->
+          <a class="btn btn--outline" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a>
+        </div>
+        <figure class="dsp-ubicacion__media animate-in" style="--delay:120ms">
+          <img src="assets/images/dispensador-tienda.webp"
+               width="1280" height="720"
+               loading="lazy" decoding="async"
+               alt="Fachada de Vency Atelier en Heredia, con la máquina dispensadora al fondo">
+        </figure>
+      </div>
+    </section>
+
+    <!-- SECTION 5: PREGUNTAS -->
+    <section class="dsp-qa" aria-labelledby="dsp-qa-title">
+      <div class="dsp-qa__inner">
+        <h2 class="dsp-h2 animate-in" id="dsp-qa-title">Preguntas frecuentes.</h2>
+        <details class="dsp-qa animate-in">
+          <summary>¿Me llevo un frasco?</summary>
+          <p>No: la máquina perfuma al momento. No sale un frasco ni un vial. Si querés llevarte la fragancia completa, está en el <a href="catalogo.html">catálogo</a>.</p>
+        </details>
+        <!-- TODO(Anthonny): sprays per payment -->
+        <details class="dsp-qa animate-in" style="--delay:60ms">
+          <summary>¿Cuántos rocíos recibo por pago?</summary>
+          <p><span class="label">[Por confirmar]</span></p>
+        </details>
+        <details class="dsp-qa animate-in" style="--delay:120ms">
+          <summary>¿Puedo probar antes de pagar?</summary>
+          <p>Sí, los testers están junto a la pantalla. Probá todo lo que quieras antes de decidir; el rocío recién sale al pagar.</p>
+        </details>
+        <details class="dsp-qa animate-in" style="--delay:180ms">
+          <summary>¿Y si algo falla?</summary>
+          <p>Escribinos por <a href="https://wa.me/50672773156" target="_blank" rel="noopener">WhatsApp</a> y lo resolvemos.</p>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION 6: CIERRE -->
+    <section class="dsp-cta" aria-labelledby="dsp-cta-title">
+      <div class="dsp-cta__inner">
+        <h2 class="dsp-h2 dsp-h2--light animate-in" id="dsp-cta-title">¿Preferís llevártelo a casa?</h2>
+        <p class="dsp-cta__text animate-in" style="--delay:80ms">
+          La máquina es para el instante. El frasco es para durar: lo componemos, lo maceramos y te lo enviamos con todo el proceso atrás.
+        </p>
+        <div class="dsp-cta__actions animate-in" style="--delay:160ms">
+          <a href="catalogo.html" class="btn btn--inv">Ver el catálogo</a>
+          <a href="https://wa.me/50672773156?text=Hola%20Vency%20Atelier%21%20Quiero%20saber%20m%C3%A1s%20sobre%20la%20m%C3%A1quina%20dispensadora." class="dsp-btn-ghost" target="_blank" rel="noopener">Escribinos por WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__wordmark">VENCY ATELIER</p>
+      <p class="footer__tagline">
+        <span class="label label--faint">Perfumería artesanal · Heredia, Costa Rica</span>
+      </p>
+      <nav class="footer__nav" aria-label="Navegación del pie de página">
+        <a href="catalogo.html" class="footer__link">Catálogo</a>
+        <a href="perfumista.html" class="footer__link">El Perfumista</a>
+        <a href="guia.html" class="footer__link">Guía</a>
+        <a href="personalizacion.html" class="footer__link">Personalizar</a>
+        <a href="dispensador.html" class="footer__link footer__link--active" aria-current="page">Dispensador</a>
+      </nav>
+      <nav class="footer__nav" aria-label="Políticas y contacto">
+        <a href="legal.html" class="footer__link">Políticas</a>
+        <a href="legal.html#contacto" class="footer__link">Contacto</a>
+        <a href="faq.html" class="footer__link">FAQ</a>
+      </nav>
+      <p class="footer__copy">
+        <span class="label label--faint">© 2026 Vency Atelier. Todos los derechos reservados.</span>
+      </p>
+    </div>
+  </footer>
+
+  <button class="to-top js-to-top" aria-label="Volver al inicio" title="Volver al inicio">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <path d="M12 5l-7 7m7-7l7 7m-7-7v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+
+  <script defer src="scripts/nav.js?v=57"></script>
+  <script defer src="scripts/scroll.js?v=51"></script>
+
+  <!-- -- SHARED OVERLAYS ---------------------------------------- -->
+
+  <!-- Search -->
+  <div class="search-overlay js-search-overlay" inert role="dialog" aria-modal="true" aria-label="Buscar fragancias">
+    <div class="search-overlay__header">
+      <input class="search-overlay__input js-search-input" type="search" placeholder="Buscar fragancia, nota, estado…" autocomplete="off" aria-label="Buscar fragancias">
+      <button class="search-overlay__close js-search-close" type="button" aria-label="Cerrar búsqueda">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="search-overlay__body">
+      <p class="search-overlay__hint js-search-hint">Escribí al menos un carácter para empezar a buscar</p>
+      <div class="search-overlay__results js-search-results"></div>
+      <div class="search-overlay__categories js-search-categories">
+        <a href="catalogo.html?category=original" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Vency</span>
+        </a>
+        <a href="catalogo.html" class="search-cat">
+          <span class="search-cat__label">TIENDA</span>
+          <span class="search-cat__name">Catálogo completo</span>
+        </a>
+        <a href="perfumista.html" class="search-cat">
+          <span class="search-cat__label">ATELIER</span>
+          <span class="search-cat__name">El Perfumista</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart overlay + drawer -->
+  <div class="cart-overlay js-cart-overlay" aria-hidden="true"></div>
+  <div class="cart-drawer js-cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+    <div class="cart-drawer__header">
+      <div>
+        <div class="cart-drawer__title">Tu carrito</div>
+        <div class="cart-drawer__count js-cart-count">0 artículos</div>
+      </div>
+      <button class="cart-drawer__close js-cart-close" type="button" aria-label="Cerrar carrito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cart-drawer__body js-cart-body"></div>
+    <div class="cart-drawer__upsell js-cart-upsell"></div>
+    <div class="cart-drawer__footer">
+      <div class="cart-drawer__total js-cart-total-wrap">
+        <span class="cart-drawer__total-label">Total</span>
+        <span class="cart-drawer__total-amount js-cart-total">¢0</span>
+      </div>
+      <a href="carrito.html" class="btn btn--primary cart-drawer__checkout">Revisar pedido</a>
+    </div>
+  </div>
+
+  <script src="scripts/fragrance-data.js?v=61" defer></script>
+  <script src="scripts/search.js?v=54" defer></script>
+  <script src="scripts/cart-drawer.js?v=12" defer></script>
+  <script src="scripts/wa-float.js" defer></script>
+  <script>
+    (function () {
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)');
+      function sync() {
+        document.querySelectorAll('video[autoplay]').forEach(function (v) {
+          if (reduce.matches) { v.pause(); v.currentTime = 0; }
+          else { v.play().catch(function () {}); }
+        });
+      }
+      sync();
+      reduce.addEventListener('change', sync);
+    })();
+  </script>
+</body>
+</html>
