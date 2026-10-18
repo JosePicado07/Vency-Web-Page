@@ -9,16 +9,18 @@
  *   catalog_img_{id}     → raw image binary (with metadata.mime)
  *
  * Env var: ADMIN_TOKEN  (Cloudflare Pages → Settings → Environment variables)
+ *
+ * Same-origin only (no CORS). Fields and images are validated on write: `cat`
+ * sets the price tier in functions/_lib/catalog.js, and an uploaded file is
+ * served from our domain, so only real JPEG/PNG/WebP/AVIF is accepted.
  */
 
 import { requireAdmin } from '../_lib/auth.js';
 
 const KV_KEY = 'catalog_requests_v1';
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PATCH, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+const CATS    = new Set(['vency', 'disenador', 'nicho', 'ultra-nicho', 'creacion-propia']);
+const GENDERS = new Set(['unisex', 'hombre', 'mujer']);
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 async function loadEntries(kv) {
   const raw = await kv.get(KV_KEY);
@@ -32,14 +34,64 @@ async function saveEntries(kv, arr) {
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS, 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' },
   });
+}
+
+/** MIME real según los primeros bytes; null si no es una imagen permitida. */
+export function sniffImage(buf) {
+  const b = new Uint8Array(buf.slice(0, 12));
+  const ascii = (from, to) => String.fromCharCode(...b.slice(from, to));
+  if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return 'image/jpeg';
+  if (b[0] === 0x89 && ascii(1, 4) === 'PNG') return 'image/png';
+  if (ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP') return 'image/webp';
+  if (ascii(4, 12) === 'ftypavif') return 'image/avif';
+  return null;
+}
+
+/** Guarda la imagen si es válida. Devuelve el id, null si no hay imagen, o 'invalid'. */
+async function storeImage(kv, imageFile) {
+  if (!imageFile || typeof imageFile === 'string' || imageFile.size === 0) return null;
+  if (imageFile.size > MAX_IMAGE_BYTES) return 'invalid';
+  const buf  = await imageFile.arrayBuffer();
+  const mime = sniffImage(buf);
+  if (!mime) return 'invalid';
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  await kv.put('catalog_img_' + id, buf, { metadata: { mime } });
+  return id;
+}
+
+/**
+ * Valida los campos de texto. `required` = alta (brand/name/cat obligatorios);
+ * en una edición los campos ausentes o vacíos quedan sin cambios.
+ * Devuelve { fields } o { error }.
+ */
+function cleanFields(src, required) {
+  const out = {};
+  const rules = {
+    brand:  (v) => v.length >= 1 && v.length <= 80,
+    name:   (v) => v.length >= 1 && v.length <= 80,
+    cat:    (v) => CATS.has(v),
+    gender: (v) => GENDERS.has(v),
+    notes:  (v) => v.length <= 500,
+    badge:  (v) => /^[a-z-]{0,30}$/.test(v),
+  };
+  for (const [k, ok] of Object.entries(rules)) {
+    const raw = src[k];
+    if (raw == null) continue;
+    if (typeof raw !== 'string') return { error: 'invalid ' + k };
+    const v = raw.trim();
+    // notes/badge vacíos sí se guardan (borran el valor); los demás vacíos = sin cambios.
+    if (v === '' && k !== 'notes' && k !== 'badge') continue;
+    if (!ok(v)) return { error: 'invalid ' + k };
+    out[k] = v;
+  }
+  if (required && (!out.brand || !out.name || !out.cat)) return { error: 'missing fields' };
+  return { fields: out };
 }
 
 export async function onRequest(context) {
   const { request, env } = context;
-
-  if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
 
   const kv = env.VENCY_CATALOG;
   if (!kv) return json({ error: 'KV not bound' }, 500);
@@ -67,13 +119,12 @@ export async function onRequest(context) {
     const denied = await requireAdmin(env, form.get('tok'));
     if (denied) return denied;
 
-    const brand  = (form.get('brand') || '').trim();
-    const name   = (form.get('name')  || '').trim();
-    const cat    = (form.get('cat')   || '').trim();
-    const gender = (form.get('gender') || 'unisex').trim();
-    const notes  = (form.get('notes') || '').trim();
-
-    if (!brand || !name || !cat) return json({ error: 'missing fields' }, 400);
+    const { fields, error } = cleanFields(Object.fromEntries(form.entries()), true);
+    if (error) return json({ error }, 400);
+    const { brand, name, cat } = fields;
+    const gender = fields.gender || 'unisex';
+    const notes  = fields.notes || '';
+    const badge  = fields.badge || '';
 
     const entries = await loadEntries(kv);
     const isDupe  = entries.some(
@@ -82,19 +133,10 @@ export async function onRequest(context) {
     );
     if (isDupe) return json({ ok: true, dupe: true });
 
+    const imageId = await storeImage(kv, form.get('image'));
+    if (imageId === 'invalid') return json({ error: 'invalid_image' }, 400);
+
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    let imageId = null;
-
-    // Store image in KV if provided
-    const imageFile = form.get('image');
-    if (imageFile && imageFile.size > 0) {
-      const buf  = await imageFile.arrayBuffer();
-      const mime = imageFile.type || 'image/jpeg';
-      await kv.put('catalog_img_' + id, buf, { metadata: { mime } });
-      imageId = id;
-    }
-
-    const badge = form.get('badge') || '';
     const entry = { id, brand, name, cat, gender, notes, badge, imageId, status: 'approved', fecha: new Date().toISOString().slice(0, 10) };
     entries.push(entry);
     await saveEntries(kv, entries);
@@ -114,6 +156,7 @@ export async function onRequest(context) {
     } else {
       try { body = await request.json(); } catch { return json({ error: 'invalid json' }, 400); }
     }
+    if (!body || typeof body !== 'object') return json({ error: 'invalid json' }, 400);
 
     id     = body.id;
     action = body.action;
@@ -121,7 +164,7 @@ export async function onRequest(context) {
     const denied = await requireAdmin(env, body.tok);
     if (denied) return denied;
 
-    if (!id) return json({ error: 'missing id' }, 400);
+    if (typeof id !== 'string' || !id || id.length > 40) return json({ error: 'missing id' }, 400);
 
     const entries = await loadEntries(kv);
     const idx     = entries.findIndex(e => e.id === id);
@@ -139,21 +182,15 @@ export async function onRequest(context) {
       entries[idx].status = 'approved';
       await saveEntries(kv, entries);
     } else if (action === 'update') {
-      if (body.brand) entries[idx].brand = body.brand;
-      if (body.name) entries[idx].name = body.name;
-      if (body.cat) entries[idx].cat = body.cat;
-      if (body.gender) entries[idx].gender = body.gender;
-      if (body.notes !== undefined) entries[idx].notes = body.notes;
-      if (body.badge !== undefined) entries[idx].badge = body.badge;
+      const { fields, error } = cleanFields(body, false);
+      if (error) return json({ error }, 400);
+      Object.assign(entries[idx], fields);
 
       if (form) {
-        const imageFile = form.get('image');
-        if (imageFile && imageFile.size > 0) {
-          const buf  = await imageFile.arrayBuffer();
-          const mime = imageFile.type || 'image/jpeg';
+        const newId = await storeImage(kv, form.get('image'));
+        if (newId === 'invalid') return json({ error: 'invalid_image' }, 400);
+        if (newId) {
           const oldId = entries[idx].imageId;
-          const newId = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-          await kv.put('catalog_img_' + newId, buf, { metadata: { mime } });
           entries[idx].imageId = newId;
           if (oldId) await kv.delete('catalog_img_' + oldId).catch(() => {});
         }
@@ -164,5 +201,5 @@ export async function onRequest(context) {
     return json({ ok: true });
   }
 
-  return new Response('Method Not Allowed', { status: 405, headers: CORS });
+  return new Response('Method Not Allowed', { status: 405 });
 }

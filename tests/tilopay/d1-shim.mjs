@@ -24,5 +24,11 @@ export function createD1() {
 
 export function createKV(initial = {}) {
   const m = new Map(Object.entries(initial));
-  return { async get(k) { return m.has(k) ? m.get(k) : null; }, async put(k, v) { m.set(k, v); } };
+  const meta = new Map();
+  return {
+    async get(k) { return m.has(k) ? m.get(k) : null; },
+    async put(k, v, opts) { m.set(k, v); meta.set(k, opts && opts.metadata || null); },
+    async delete(k) { m.delete(k); meta.delete(k); },
+    async getWithMetadata(k) { return { value: m.has(k) ? m.get(k) : null, metadata: meta.get(k) || null }; },
+  };
 }
