@@ -1,14 +1,14 @@
 # Cloudflare Pages headers (docs/SEGURIDAD-2026-10.md #8).
-# CSP is Report-Only: check the browser console for violations before switching
-# the header name to Content-Security-Policy. Everything (fonts included) is
-# self-hosted; the only cross-origin call is the Apps Script order log.
+# CSP enforced since 2026-10-18 (every page checked clean in Report-Only first).
+# Everything (fonts included) is self-hosted; cross-origin: the Apps Script
+# order log and Cloudflare Web Analytics (beacon injected by Cloudflare).
 /*
   Strict-Transport-Security: max-age=31536000
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
   X-Frame-Options: DENY
-  Content-Security-Policy-Report-Only: default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com; object-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'
 
 # /api/* responses come from Functions, which set their own headers (_headers
 # only applies to static assets).
