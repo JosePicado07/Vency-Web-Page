@@ -44,3 +44,10 @@ export function newOrderId() {
 }
 
 export const ORDER_ID_RE = /^VA[0-9A-F]{16}$/;
+
+export const EMAIL_RE = /^[^\s@<>()",;]{1,64}@[^\s@<>()",;]{1,180}\.[a-z]{2,}$/i;
+
+/** Escapa texto para insertarlo en HTML (correos). */
+export function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}

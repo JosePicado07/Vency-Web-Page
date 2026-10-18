@@ -16,9 +16,7 @@
 import { parseItems, priceOrder, CatalogError } from '../../_lib/catalog.js';
 import { tilopayConfig, createPayment, TilopayError } from '../../_lib/tilopay.js';
 import { insertOrder, transition } from '../../_lib/orders.js';
-import { json, logOrder, newOrderId } from '../../_lib/util.js';
-
-const EMAIL_RE = /^[^\s@<>()",;]{1,64}@[^\s@<>()",;]{1,180}\.[a-z]{2,}$/i;
+import { json, logOrder, newOrderId, EMAIL_RE } from '../../_lib/util.js';
 
 function parseCustomer(c) {
   if (!c || typeof c !== 'object') return null;
