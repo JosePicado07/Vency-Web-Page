@@ -97,7 +97,8 @@ export async function onRequestPost(context) {
 /**
  * Efectos del pedido pagado. Se ejecuta UNA vez por orden.
  * Opcional: ORDER_LOG_URL = Web App de Apps Script (mismo formato que el
- * registro de pedidos del carrito, ver docs/ORDER-LOG-SHEET.md).
+ * registro de pedidos del carrito, ver docs/ORDER-LOG-SHEET.md) y
+ * ORDER_LOG_TOKEN = la propiedad TOKEN del script (vency-sheets.gs la exige).
  */
 async function onOrderPaid(context, order) {
   const url = context.env.ORDER_LOG_URL;
@@ -108,6 +109,7 @@ async function onOrderPaid(context, order) {
   const send = fetch(url, {
     method: 'POST',
     body: JSON.stringify({
+      token: context.env.ORDER_LOG_TOKEN,
       ref: order.id, items, total: order.amount, pago: 'Tarjeta (Tilopay)',
       entrega: order.delivery, canal: 'Web', cliente: order.customer_name,
     }),

@@ -33,6 +33,7 @@ beforeEach(() => {
     TILOPAY_API_KEY: 'key',
     TILOPAY_WEBHOOK_TOKEN: TOKEN,
     ORDER_LOG_URL: 'https://sheets.test/exec',
+    ORDER_LOG_TOKEN: 'token-del-sheet',
   };
   calls = [];
   logCalls = 0;
@@ -131,6 +132,7 @@ test('pago aprobado: el webhook verificado marca la orden como pagada', async ()
   assert.equal(dbStatus(data.orderId), 'paid');
   assert.equal(await statusOf(data.orderId), 'approved');
   assert.equal(logCalls, 1);
+  assert.equal(calls.find((c) => c.url === env.ORDER_LOG_URL).body.token, 'token-del-sheet');
 });
 
 test('idempotencia: el mismo webhook dos veces (o una notificación distinta) no duplica el pedido', async () => {

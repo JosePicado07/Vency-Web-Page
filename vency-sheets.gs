@@ -49,10 +49,11 @@ function doPost(e) {
       case 'confirm':        return confirmSale(data);
       case 'cancel':         return cancelSale(data);
       case 'addCatalogEntry': return addCatalogEntry(data);
-      default:               return text('unknown action: ' + action);
+      default:               return text('unknown action');
     }
   } catch (err) {
-    return text('error: ' + err.message);
+    console.error(err); // visible in the Apps Script executions log only
+    return text('error');
   }
 }
 
@@ -85,6 +86,14 @@ function nowDate() {
   return new Date();
 }
 
+/* Text that reaches a cell from a request. A leading = + - @ (or tab/CR)
+   would be evaluated as a formula; the ' prefix keeps it literal and
+   Sheets doesn't show it. */
+function cell(v) {
+  v = v == null ? '' : String(v);
+  return /^[=+\-@\t\r]/.test(v) ? "'" + v : v;
+}
+
 function pad2(n) {
   return n < 10 ? '0' + n : '' + n;
 }
@@ -101,15 +110,15 @@ function registerSale(data) {
   var estado = (data.canal === 'Web') ? 'pendiente' : 'confirmado';
 
   s.appendRow([
-    String(data.ref      || ''),
+    cell(data.ref),
     fecha,
     hora,
-    String(data.items    || ''),
+    cell(data.items),
     Number(data.total    || 0),
-    String(data.pago     || ''),
-    String(data.entrega  || 'En sitio'),
-    String(data.canal    || 'Local'),
-    String(data.cliente  || ''),
+    cell(data.pago),
+    cell(data.entrega || 'En sitio'),
+    cell(data.canal   || 'Local'),
+    cell(data.cliente),
     estado
   ]);
 
@@ -352,9 +361,9 @@ function addCatalogEntry(data) {
     }
   }
 
-  s.appendRow([prefix + ':decant', nombre + ' · Decant',  oil, 20]);
-  s.appendRow([prefix + ':30ml',   nombre + ' · 30ml',    oil, 20]);
-  s.appendRow([prefix + ':100ml',  nombre + ' · 100ml',   oil, 20]);
+  s.appendRow([cell(prefix + ':decant'), cell(nombre + ' · Decant'), oil, 20]);
+  s.appendRow([cell(prefix + ':30ml'),   cell(nombre + ' · 30ml'),   oil, 20]);
+  s.appendRow([cell(prefix + ':100ml'),  cell(nombre + ' · 100ml'),  oil, 20]);
 
   return text('ok');
 }
