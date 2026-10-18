@@ -29,6 +29,7 @@
   }
 
   function closeMenu() {
+    closeShop(); // otherwise its inline height survives as an empty grey box
     nav.classList.remove('is-open');
     setLinksHeight(false);
     toggle.setAttribute('aria-expanded', 'false');
@@ -43,6 +44,15 @@
   /* ── Shop accordions + outside click ─────────────────── */
   var shopToggle = document.querySelector('.js-shop-toggle');
   var shopMenu   = document.getElementById('shop-submenu');
+
+  /* Class, height and aria together: dropping only the class leaves the
+     JS-set height behind. */
+  function closeShop() {
+    if (!shopMenu) return;
+    shopMenu.classList.remove('is-open');
+    shopMenu.style.height = '0';
+    if (shopToggle) shopToggle.setAttribute('aria-expanded', 'false');
+  }
 
   document.addEventListener('click', function (e) {
     /* toggle shop menus */
@@ -81,10 +91,7 @@
     /* close nav shop on outside click */
     if (shopMenu && shopMenu.classList.contains('is-open')) {
       var shopItem = document.querySelector('.nav__item--shop');
-      if (shopItem && !shopItem.contains(e.target)) {
-        shopMenu.classList.remove('is-open');
-        if (shopToggle) shopToggle.setAttribute('aria-expanded', 'false');
-      }
+      if (shopItem && !shopItem.contains(e.target)) closeShop();
     }
 
     /* close mobile nav on outside click */
@@ -112,8 +119,7 @@
     if (!isNavOpen && !isHeroOpen && !isShopOpen) return;
     if (e.key === 'Escape') {
       if (isNavOpen) closeMenu();
-      if (shopMenu) shopMenu.classList.remove('is-open');
-      if (shopToggle) shopToggle.setAttribute('aria-expanded', 'false');
+      closeShop();
       var heroShop = document.querySelector('.hero__shop-menu');
       if (heroShop) heroShop.classList.remove('is-open');
       var heroBtn = document.querySelector('.js-hero-shop-toggle');
