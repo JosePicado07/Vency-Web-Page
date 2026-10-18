@@ -233,3 +233,4 @@ No se incluyen aquí porque no se pudieron verificar.
   navegador**: cualquiera puede llamarlo con `price: 1`. Hoy ningún botón lo
   usa, pero si `STRIPE_SECRET_KEY` está configurada en Cloudflare, el endpoint
   sigue activo. Conviene eliminarlo o quitar esa variable.
+- [ ] Set TILOPAY_ENABLED = true in src/scripts/carrito.js.

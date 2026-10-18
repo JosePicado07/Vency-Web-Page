@@ -185,6 +185,8 @@
   var sentRetry  = document.getElementById('js-sent-retry');
   var sentAckEl  = sentEl && sentEl.querySelector('.carrito-sent__ack');
   // Tilopay
+  // ponytail: off until we have Tilopay API credentials + verified adapter (docs/TILOPAY.md). Flip to true then.
+  var TILOPAY_ENABLED = false;
   var tpBox      = document.getElementById('js-tilopay');
   var tpBtn      = document.getElementById('js-tilopay-btn');
   var tpStatusEl = document.getElementById('js-tp-status');
@@ -298,7 +300,7 @@
       if (sentEl)  sentEl.hidden  = false;
       if (sentRefEl)  sentRefEl.textContent = state.pending.ref;
       if (sentRetry)  sentRetry.hidden = true;
-      if (state.pending.type === 'tilopay') { renderTilopayPending(); return; }
+      if (state.pending.type === 'tilopay' && TILOPAY_ENABLED) { renderTilopayPending(); return; }
       if (sentAckEl)  sentAckEl.textContent = 'Pedido enviado.';
       if (sentNewBtn) sentNewBtn.hidden = false;
       var _isStripe = state.pending.type === 'stripe';
@@ -430,7 +432,7 @@
       waBtn.setAttribute('aria-label', label);
     }
     // Tarjeta (Tilopay): solo con entrega a domicilio; en local se paga en sitio.
-    if (tpBox) tpBox.hidden = isLocal;
+    if (tpBox) tpBox.hidden = !TILOPAY_ENABLED || isLocal;
     if (tpBtn && !tpBusy) tpBtn.disabled = blocked;
     if (confirmTxt) {
       confirmTxt.textContent = isLocal
@@ -632,7 +634,7 @@
     return items; // sin precios: el servidor calcula el monto
   }
 
-  if (tpBtn) {
+  if (tpBtn && TILOPAY_ENABLED) {
     tpBtn.addEventListener('click', function () {
       if (tpBusy || isEmpty()) return;
       var customer = {
@@ -720,6 +722,7 @@
 
   // Regreso desde Tilopay: /carrito?vorder=VA…(&parámetros de Tilopay, ignorados)
   function handleTilopayReturn() {
+    if (!TILOPAY_ENABLED) return;
     var sp = new URLSearchParams(window.location.search);
     var id = sp.get('vorder');
     if (!id) {
