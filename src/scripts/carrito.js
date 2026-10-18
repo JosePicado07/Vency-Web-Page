@@ -9,7 +9,7 @@
 
   var CART_KEY  = 'vency_cart_v1';
   var WA_NUMBER = '50672773156';
-  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyNXDOIvj_E_y8wFdzEDBYnk81fi4YHR4j-q-AoV94Sdv9_ThIJoZ4gwcL8oTLDYcZy/exec';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwkQuCAd6wXmWlPWIl_rnog-jVAGbHhKkzvXfOrhHh1cEsErr_j2-qSNn2KUmaRaJ4/exec';
 
   var _P           = window.VENCY_PRICES;
   var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
