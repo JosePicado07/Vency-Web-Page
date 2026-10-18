@@ -31,16 +31,16 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
 
-    // Token gate
-    var token = PropertiesService.getScriptProperties().getProperty('TOKEN');
-    if (!token || data.token !== token) {
-      return text('unauthorized');
-    }
-
+    var token  = PropertiesService.getScriptProperties().getProperty('TOKEN');
+    var authed = !!token && data.token === token;
     var action = data.action;
 
-    // No action = register a new sale
-    if (!action) return registerSale(data);
+    // No action = register a new sale. The public cart can't hold the token,
+    // so tokenless sales are allowed but always land as Web / pendiente.
+    if (!action) return registerSale(data, authed);
+
+    // Token gate for everything else
+    if (!authed) return text('unauthorized');
 
     switch (action) {
       case 'summary':   return summary(data);
@@ -100,14 +100,15 @@ function pad2(n) {
 
 /* ── Register sale ───────────────────────────────────────── */
 
-function registerSale(data) {
+function registerSale(data, authed) {
   var s   = sheet(SHEET_VENTAS);
   var now = nowDate();
   var fecha = Utilities.formatDate(now, TZ, 'yyyy-MM-dd');
   var hora  = Utilities.formatDate(now, TZ, 'HH:mm');
 
   // Web orders start as "pendiente" until confirmed manually
-  var estado = (data.canal === 'Web') ? 'pendiente' : 'confirmado';
+  var canal  = authed ? (data.canal || 'Local') : 'Web';
+  var estado = (canal === 'Web') ? 'pendiente' : 'confirmado';
 
   s.appendRow([
     cell(data.ref),
@@ -117,7 +118,7 @@ function registerSale(data) {
     Number(data.total    || 0),
     cell(data.pago),
     cell(data.entrega || 'En sitio'),
-    cell(data.canal   || 'Local'),
+    cell(canal),
     cell(data.cliente),
     estado
   ]);
