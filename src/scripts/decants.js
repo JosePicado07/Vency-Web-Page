@@ -397,6 +397,7 @@
     };
     fetch(SHEET_LOG_URL, {
       method: 'POST',
+      keepalive: true, // the WhatsApp link can take the page away mid-request
       body:   JSON.stringify(payload)
     }).catch(function () { /* best-effort — WhatsApp es la fuente de verdad */ });
   }

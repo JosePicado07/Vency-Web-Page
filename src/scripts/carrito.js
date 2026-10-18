@@ -563,6 +563,7 @@
         if (SHEET_URL) {
           fetch(SHEET_URL, {
             method: 'POST',
+            keepalive: true, // phones background the page when WhatsApp opens
             body: JSON.stringify({
               ref:     state.ref || '',
               items:   items.join(' | '),
