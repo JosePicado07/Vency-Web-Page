@@ -1,6 +1,6 @@
 /**
  * GET  /api/catalog-request               → approved entries (public, shown on catalog)
- * GET  /api/catalog-request?all=1&tok=X  → all entries (admin)
+ * GET  /api/catalog-request?all=1        → all entries (admin, header X-Admin-Token)
  * POST /api/catalog-request (multipart)  → admin creates entry (requires tok field)
  * PATCH /api/catalog-request             → admin deletes entry (requires tok)
  *
@@ -10,6 +10,8 @@
  *
  * Env var: ADMIN_TOKEN  (Cloudflare Pages → Settings → Environment variables)
  */
+
+import { requireAdmin } from '../_lib/auth.js';
 
 const KV_KEY = 'catalog_requests_v1';
 const CORS = {
@@ -46,11 +48,10 @@ export async function onRequest(context) {
   if (request.method === 'GET') {
     const url      = new URL(request.url);
     const showAll  = url.searchParams.get('all') === '1';
-    const tok      = url.searchParams.get('tok');
-    const validTok = env.ADMIN_TOKEN;
 
     const entries = await loadEntries(kv);
-    if (showAll && validTok && tok === validTok) return json(entries);
+    // El token va en un encabezado, no en la URL (no queda en logs ni en caché).
+    if (showAll && !(await requireAdmin(env, request.headers.get('X-Admin-Token')))) return json(entries);
     return json(entries.filter(e => e.status === 'approved'));
   }
 
@@ -63,11 +64,8 @@ export async function onRequest(context) {
     }
 
     const form = await request.formData();
-    const tok      = form.get('tok') || '';
-    const validTok = env.ADMIN_TOKEN;
-    // If ADMIN_TOKEN is not set, any non-empty tok is accepted (admin gate protects the form)
-    if (validTok && tok !== validTok) return json({ error: 'unauthorized' }, 401);
-    if (!validTok && !tok) return json({ error: 'unauthorized' }, 401);
+    const denied = await requireAdmin(env, form.get('tok'));
+    if (denied) return denied;
 
     const brand  = (form.get('brand') || '').trim();
     const name   = (form.get('name')  || '').trim();
@@ -120,9 +118,8 @@ export async function onRequest(context) {
     id     = body.id;
     action = body.action;
 
-    const validTok = env.ADMIN_TOKEN;
-    if (validTok && body.tok !== validTok) return json({ error: 'unauthorized' }, 401);
-    if (!validTok && !body.tok) return json({ error: 'unauthorized' }, 401);
+    const denied = await requireAdmin(env, body.tok);
+    if (denied) return denied;
 
     if (!id) return json({ error: 'missing id' }, 400);
 

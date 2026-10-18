@@ -8,6 +8,8 @@
  * own browser storage, so stock updates are visible to every visitor instead
  * of only the browser that made the edit.
  */
+import { requireAdmin } from '../_lib/auth.js';
+
 const KV_KEY = 'inventory_v1';
 
 export async function onRequestGet(context) {
@@ -25,9 +27,8 @@ export async function onRequestPost(context) {
   }
 
   const { tok, updates } = body;
-  const validTok = context.env.ADMIN_TOKEN;
-  if (validTok && tok !== validTok) return Response.json({ error: 'unauthorized' }, { status: 401 });
-  if (!validTok && !tok) return Response.json({ error: 'unauthorized' }, { status: 401 });
+  const denied = await requireAdmin(context.env, tok);
+  if (denied) return denied;
 
   if (!updates || typeof updates !== 'object') {
     return Response.json({ error: 'Missing updates' }, { status: 400 });

@@ -8,6 +8,22 @@ qué versión del Apps Script está desplegada y qué cabeceras devuelve el siti
 
 Severidad: 🔴 crítica (explotable hoy, sin credenciales) · 🟠 alta · 🟡 media · ⚪ baja.
 
+## Estado de las correcciones
+
+Puntos **1, 2, 3 y 5 corregidos en el código**:
+
+- Todas las escrituras del admin (`availability`, `catalog-archive`, `inventory`, `catalog-request`) exigen `ADMIN_TOKEN`, comparado en tiempo constante (`functions/_lib/auth.js`). Si la variable falta o tiene menos de 12 caracteres, responden 503: ya no aceptan cualquier token.
+- `admin.js` envía el token y revierte el cambio en pantalla si el servidor lo rechaza.
+- La lista completa del catálogo se pide con el encabezado `X-Admin-Token`, no en la URL.
+- Se borraron `functions/api/checkout.js` y el código de Stripe del carrito.
+- Pruebas: `node --test tests/security/*.unit.mjs`.
+
+**Pendiente en el panel de Cloudflare:**
+
+- Confirmar que `ADMIN_TOKEN` existe en Production y Preview. Debe ser igual a la contraseña que se usa en `admin.html`.
+- Cambiar la contraseña, porque las rutas estuvieron abiertas.
+- Quitar `STRIPE_SECRET_KEY`.
+
 ## Resumen
 
 | # | Hallazgo | Severidad | Esfuerzo |
