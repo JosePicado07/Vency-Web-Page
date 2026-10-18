@@ -14,10 +14,11 @@
  *
  * SHEET LAYOUT
  * ─────────────────────────────────────────────────────────────
- *  Ventas     A:ref  B:fecha  C:hora  D:items  E:total
- *             F:pago  G:entrega  H:canal  I:cliente  J:estado
+ *  Ventas     A:Fecha (fecha+hora)  B:Ref  C:Canal  D:Artículos  E:Total
+ *             F:Pago  G:Entrega  H:Estado  I:Cliente / Nota
+ *             Estado: pendiente (web) → Pagado | cancelado
  *
- *  Inventario A:key  B:nombre  C:oil_ml  D:pct
+ *  Inventario A:Clave  B:Fragancia  C:Aceite  D:pct (optional)
  * ─────────────────────────────────────────────────────────────
  */
 
@@ -94,6 +95,14 @@ function cell(v) {
   return /^[=+\-@\t\r]/.test(v) ? "'" + v : v;
 }
 
+/* Fecha cell → Date. Sheets usually hands back a Date; a typed-in
+   "d/m/yyyy hh:mm:ss" string is parsed by hand. */
+function toDate(v) {
+  if (v instanceof Date) return v;
+  var m = String(v || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+  return m ? new Date(+m[3], m[2] - 1, +m[1], +(m[4] || 0), +(m[5] || 0)) : null;
+}
+
 function pad2(n) {
   return n < 10 ? '0' + n : '' + n;
 }
@@ -101,26 +110,22 @@ function pad2(n) {
 /* ── Register sale ───────────────────────────────────────── */
 
 function registerSale(data, authed) {
-  var s   = sheet(SHEET_VENTAS);
-  var now = nowDate();
-  var fecha = Utilities.formatDate(now, TZ, 'yyyy-MM-dd');
-  var hora  = Utilities.formatDate(now, TZ, 'HH:mm');
+  var s = sheet(SHEET_VENTAS);
 
   // Web orders start as "pendiente" until confirmed manually
   var canal  = authed ? (data.canal || 'Local') : 'Web';
-  var estado = (canal === 'Web') ? 'pendiente' : 'confirmado';
+  var estado = (canal === 'Web') ? 'pendiente' : 'Pagado';
 
   s.appendRow([
+    nowDate(),
     cell(data.ref),
-    fecha,
-    hora,
+    cell(canal),
     cell(data.items),
     Number(data.total    || 0),
     cell(data.pago),
     cell(data.entrega || 'En sitio'),
-    cell(canal),
-    cell(data.cliente),
-    estado
+    estado,
+    cell(data.cliente)
   ]);
 
   return text('ok');
@@ -175,26 +180,20 @@ function summary(data) {
 
   for (var i = 1; i < rows.length; i++) {
     var row = rows[i];
-    var ref     = String(row[0] || '').trim();
+    var ref     = String(row[1] || '').trim();
     if (!ref) continue;
 
-    var fecha   = '';
-    try {
-      fecha = row[1] instanceof Date
-        ? Utilities.formatDate(row[1], TZ, 'yyyy-MM-dd')
-        : String(row[1]).substring(0, 10);
-    } catch (_) { continue; }
-
-    var hora    = String(row[2] || '');
+    var when = toDate(row[0]);
+    if (!when) continue;
+    var fecha   = Utilities.formatDate(when, TZ, 'yyyy-MM-dd');
+    var hora    = Utilities.formatDate(when, TZ, 'HH:mm');
+    var canal   = String(row[2] || '');
     var items   = String(row[3] || '');
     var amt     = Number(row[4] || 0);
     var pago    = String(row[5] || '');
-    var entrega = String(row[6] || '');
-    var canal   = String(row[7] || '');
-    var cliente = String(row[8] || '');
-    var estado  = String(row[9] || 'confirmado');
+    var estado  = String(row[7] || 'Pagado');
 
-    if (estado === 'cancelado') continue;
+    if (estado.toLowerCase() === 'cancelado') continue;
 
     // Calendar daily totals (always for the display month)
     if (fecha >= calStart && fecha <= calEnd) {
@@ -313,7 +312,7 @@ function updateStock(data) {
 /* ── Confirm sale ────────────────────────────────────────── */
 
 function confirmSale(data) {
-  return setSaleStatus(data.ref, 'confirmado');
+  return setSaleStatus(data.ref, 'Pagado');
 }
 
 /* ── Cancel / delete sale ────────────────────────────────── */
@@ -327,8 +326,8 @@ function setSaleStatus(ref, status) {
   var rows = s.getDataRange().getValues();
 
   for (var i = 1; i < rows.length; i++) {
-    if (String(rows[i][0]).trim() === String(ref).trim()) {
-      s.getRange(i + 1, 10).setValue(status); // J = estado
+    if (String(rows[i][1]).trim() === String(ref).trim()) {
+      s.getRange(i + 1, 8).setValue(status); // H = Estado
       return text('ok');
     }
   }
@@ -384,8 +383,8 @@ function setupSheets() {
     ventas = ss.insertSheet(SHEET_VENTAS);
   }
   if (ventas.getLastRow() === 0) {
-    ventas.appendRow(['ref', 'fecha', 'hora', 'items', 'total', 'pago', 'entrega', 'canal', 'cliente', 'estado']);
-    ventas.getRange(1, 1, 1, 10).setFontWeight('bold');
+    ventas.appendRow(['Fecha', 'Ref', 'Canal', 'Artículos', 'Total (₡)', 'Pago', 'Entrega', 'Estado', 'Cliente / Nota']);
+    ventas.getRange(1, 1, 1, 9).setFontWeight('bold');
     ventas.setFrozenRows(1);
     ventas.setColumnWidth(4, 400); // items column wider
   }
