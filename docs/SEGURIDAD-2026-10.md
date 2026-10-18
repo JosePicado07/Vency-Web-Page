@@ -1,51 +1,54 @@
 # Auditoría de seguridad — octubre 2026
 
 Revisión del código del repositorio: funciones de Cloudflare, frontend,
-Apps Script, configuración e historial de git. **No se probó el sitio en vivo**:
-la red del entorno de auditoría bloquea `vencyatelier.com`. Lo que depende de la
-configuración real está marcado **Verificar**: si `ADMIN_TOKEN` está definida,
-qué versión del Apps Script está desplegada y qué cabeceras devuelve el sitio.
+Apps Script, configuración e historial de git. La auditoría original no pudo
+probar el sitio en vivo; los puntos marcados **Verificar** se comprobaron después
+en producción (ver "Estado de las correcciones").
 
 Severidad: 🔴 crítica (explotable hoy, sin credenciales) · 🟠 alta · 🟡 media · ⚪ baja.
 
-## Estado de las correcciones
+## Estado de las correcciones (actualizado el 18 de octubre de 2026)
 
-Puntos **1, 2, 3 y 5 corregidos en el código**:
+Todo lo crítico y lo alto está corregido y **verificado en el sitio en vivo**.
+Las secciones de "Detalle" más abajo describen el problema tal como se encontró;
+esta sección dice cómo quedó.
 
-- Todas las escrituras del admin (`availability`, `catalog-archive`, `inventory`, `catalog-request`) exigen `ADMIN_TOKEN`, comparado en tiempo constante (`functions/_lib/auth.js`). Si la variable falta o tiene menos de 12 caracteres, responden 503: ya no aceptan cualquier token.
-- `admin.js` envía el token y revierte el cambio en pantalla si el servidor lo rechaza.
-- La lista completa del catálogo se pide con el encabezado `X-Admin-Token`, no en la URL.
-- Se borraron `functions/api/checkout.js` y el código de Stripe del carrito.
-- Pruebas: `node --test tests/security/*.unit.mjs`.
+| # | Estado |
+|---|---|
+| 1, 2 | ✅ Todas las escrituras del admin (`availability`, `catalog-archive`, `inventory`, `catalog-request`) exigen la contraseña, comparada en tiempo constante (`functions/_lib/auth.js`). |
+| 3 | ✅ Se borraron `functions/api/checkout.js` y el código de Stripe. `STRIPE_SECRET_KEY` nunca estuvo configurada. |
+| 4 | ✅ El formulario de personalización valida tipo y largo de cada campo y el correo, escapa todo en el correo a Vency, y la copia al cliente es un texto fijo. Probado en vivo. Turnstile queda listo en el código: se activa al definir `TURNSTILE_SECRET`. |
+| 5 | ✅ La variable de Cloudflare se llama **`SELLER_TOKEN`** (también se acepta `ADMIN_TOKEN`). Si falta o tiene menos de 12 caracteres, las rutas responden 503. |
+| 6 | 🟡 La contraseña ya no viaja en la URL (la lista del catálogo usa el encabezado `X-Admin-Token`) y hay rate limiting. Sigue guardada en `localStorage` del dispositivo, a propósito, para no pedirla en cada venta. Cloudflare Access queda como opción. |
+| 7 | ✅ Solo se aceptan imágenes JPEG, PNG, WebP o AVIF reales (se revisan los primeros bytes), máximo 5 MB. `catalog-image` sirve cualquier otro tipo como descarga, con `nosniff` y `sandbox`. |
+| 8 | ✅ `src/_headers`: HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options` y **CSP en modo estricto**. Antes de activarla se revisaron 11 páginas en escritorio y móvil: la única advertencia era el script de Cloudflare Web Analytics, que se permitió. |
+| 9 | ✅ Regla de rate limiting y Bot Fight Mode activos en Cloudflare. |
+| 10 | ✅ Ver abajo. |
+| 11 | ✅ El service worker no guarda en caché ninguna respuesta de `/api/`, salvo las imágenes del catálogo. |
+| 12 | ✅ El Apps Script responde `error` genérico; el detalle queda en su registro de ejecuciones. |
+| 13 | ⚪ Pendiente: es una decisión legal, no de código (ver "Pendiente"). |
 
-Puntos **4, 7, 8, 11 y 12 corregidos en el código**; el **10, en parte** (18 de octubre):
+**Registro de pedidos (punto 10).** El sitio en vivo apuntaba a un despliegue del
+Apps Script que ya no existía, así que los pedidos web no llegaban a la hoja. Se
+corrigió así:
 
-- **4:** el formulario de personalización valida tipo y largo de cada campo y el formato del correo. Escapa todo lo que va en el correo a Vency. La copia al cliente es un texto fijo, sin nada de lo que escribió el visitante. Si existe `TURNSTILE_SECRET`, exige Turnstile (el widget en la página queda pendiente hasta tener las claves).
-- **7:** solo se aceptan imágenes JPEG, PNG, WebP o AVIF reales (se revisan los primeros bytes), de 5 MB como máximo. `catalog-image` sirve cualquier otro tipo como descarga, con `nosniff` y `Content-Security-Policy: default-src 'none'; sandbox`.
-- **8:** `src/_headers` con HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options` y la CSP en modo **Report-Only**. No hubo violaciones en `/`, `/catalogo`, `/personalizacion`, `/admin` ni `/carrito`. Falta pasarla a modo estricto.
-- **10 (parcial):** `vency-sheets.gs` antepone `'` a los valores que empiezan con `=`, `+`, `-` o `@`, y el webhook de Tilopay envía `ORDER_LOG_TOKEN`. **Sigue pendiente verificar** si `carrito.js` y `decants.js` registran pedidos sin token (ver punto 10).
-- **11:** el service worker ya no guarda en caché ninguna respuesta de `/api/`, salvo las imágenes del catálogo. La caché pasa a `v5`, así que se borra la vieja.
-- **12:** el Apps Script responde `error` genérico.
+- El script acepta pedidos **sin contraseña**, pero siempre los guarda como `Web` / `pendiente`. Todo lo demás (resumen, inventario, confirmar, cancelar, catálogo) exige la contraseña.
+- Cualquier texto que empiece con `=`, `+`, `-`, `@`, tabulador o salto de línea se guarda con `'` delante, para que la hoja no lo ejecute como fórmula.
+- Las columnas del script coinciden con la hoja real "Vency — Pedidos": Fecha · Ref · Canal · Artículos · Total · Pago · Entrega · Estado · Cliente / Nota.
+- El envío usa `keepalive`, para que el pedido llegue aunque WhatsApp tome la pantalla en el celular.
+- El script lee la propiedad `SELLER_TOKEN` (o `TOKEN`).
 
-**Hallazgos adicionales, corregidos:**
+**Otros hallazgos, corregidos:**
 
-- `catalog-request` ya no envía `Access-Control-Allow-Origin: *`.
-- `catalog-request` valida `brand`, `name`, `notes` y `badge`, y limita `cat` y `gender` a los valores del formulario del admin. `cat` define el nivel de precio.
+- `catalog-request` ya no envía `Access-Control-Allow-Origin: *`, valida `brand`, `name`, `notes` y `badge`, y limita `cat` y `gender` a los valores del formulario del admin (`cat` define el nivel de precio).
 - `inventory` valida claves y valores, y ya no falla con un cuerpo vacío.
-- El pago con Tilopay está oculto en el carrito (`TILOPAY_ENABLED = false`) hasta tener las credenciales de la API.
+- El pago con Tilopay está oculto (`TILOPAY_ENABLED = false`) hasta tener las credenciales de la API.
 
 Pruebas: `node --test tests/security/*.unit.mjs tests/tilopay/*.unit.mjs` (35).
 
-**Pendiente en el panel de Cloudflare:**
-
-- Confirmar que `ADMIN_TOKEN` existe en Production y Preview. Debe ser igual a la contraseña que se usa en `admin.html`.
-- Cambiar la contraseña, porque las rutas estuvieron abiertas.
-- Quitar `STRIPE_SECRET_KEY`.
-- Configurar `ORDER_LOG_TOKEN`, igual a la propiedad `TOKEN` del Apps Script, y volver a desplegar el Apps Script con el `vency-sheets.gs` actual.
-- Regla de rate limiting (punto 9) y Bot Fight Mode.
-- Claves de Turnstile → `TURNSTILE_SECRET`.
-- Cloudflare Access para `/admin*` (punto 6).
-- SPF, DKIM y DMARC en Resend.
+**Cómo se actualiza el Apps Script.** Cada cambio necesita una **nueva
+implementación**, que da un ID nuevo. Ese ID va en `src/scripts/admin.js`,
+`carrito.js` y `decants.js`, subiendo el `?v=` de cada script en su HTML.
 
 ## Resumen
 
@@ -198,21 +201,17 @@ Lo mismo aplica a `ORDER_LOG_URL` en el webhook de Tilopay: hoy no envía token.
   - Mencionarlo en `legal.html`.
   - Referencia: [Ley 8968 – PRODHAB](https://www.prodhab.go.cr/).
 
-## Orden sugerido
+## Pendiente (opcional)
 
-1. **Hoy (menos de 1 hora):**
-   - Puntos 1, 2, 3 y 5: autenticación en todas las escrituras, borrar `checkout.js` y verificar `ADMIN_TOKEN`.
-   - Cambiar la contraseña de admin, porque las rutas abiertas pudieron haberse usado.
-2. **Esta semana:**
-   - Punto 4: escapar el correo y agregar Turnstile.
-   - Punto 7: validar las imágenes.
-   - Punto 8: `_headers` en modo Report-Only.
-   - Punto 9: la regla de rate limiting.
-3. **Siguiente:**
-   - Punto 6: Cloudflare Access para el admin.
-   - Punto 10: registro de pedidos del lado del servidor.
-   - Pasar la CSP a modo estricto.
-   - Política de retención de datos.
+Ninguno es urgente.
+
+- **Contraseña guardada en el dispositivo (6):** pasarla a `sessionStorage` obliga a escribirla cada vez que se cierra el navegador. Recomendable solo en una computadora compartida.
+- **Una sola contraseña para el sitio y la hoja:** separarlas limita el daño si una se filtra.
+- **Pedidos falsos en la hoja:** cualquiera puede agregar filas `pendiente` llamando al script directamente. No puede confirmar ventas, leer datos ni tocar el inventario. Se acepta como costo de registrar pedidos sin contraseña.
+- **Turnstile (4):** el código ya lo soporta; falta crear las claves y agregar el widget al formulario.
+- **Cloudflare Access para `/admin*` (6).**
+- **Retención de datos (13):** definir cuánto tiempo se guardan pedidos y solicitudes de personalización, y mencionarlo en `legal.html` (Ley 8968).
+- **Correo:** confirmar SPF, DKIM y DMARC del dominio en Resend.
 
 ## Recursos
 
