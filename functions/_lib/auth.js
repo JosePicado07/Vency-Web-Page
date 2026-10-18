@@ -18,7 +18,7 @@ function deny(error, status) {
 
 /** Devuelve null si `tok` es válido; si no, la Response de error a devolver. */
 export async function requireAdmin(env, tok) {
-  const valid = env.ADMIN_TOKEN;
+  const valid = env.SELLER_TOKEN || env.ADMIN_TOKEN; // SELLER_TOKEN is the name in the Cloudflare dashboard
   if (typeof valid !== 'string' || valid.length < MIN_TOKEN_LENGTH) return deny('admin_not_configured', 503);
   if (typeof tok !== 'string' || !(await timingSafeEqual(tok, valid))) return deny('unauthorized', 401);
   return null;
