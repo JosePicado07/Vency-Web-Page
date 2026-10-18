@@ -18,11 +18,34 @@ Puntos **1, 2, 3 y 5 corregidos en el código**:
 - Se borraron `functions/api/checkout.js` y el código de Stripe del carrito.
 - Pruebas: `node --test tests/security/*.unit.mjs`.
 
+Puntos **4, 7, 8, 11 y 12 corregidos en el código**; el **10, en parte** (18 de octubre):
+
+- **4:** el formulario de personalización valida tipo y largo de cada campo y el formato del correo. Escapa todo lo que va en el correo a Vency. La copia al cliente es un texto fijo, sin nada de lo que escribió el visitante. Si existe `TURNSTILE_SECRET`, exige Turnstile (el widget en la página queda pendiente hasta tener las claves).
+- **7:** solo se aceptan imágenes JPEG, PNG, WebP o AVIF reales (se revisan los primeros bytes), de 5 MB como máximo. `catalog-image` sirve cualquier otro tipo como descarga, con `nosniff` y `Content-Security-Policy: default-src 'none'; sandbox`.
+- **8:** `src/_headers` con HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, `X-Frame-Options` y la CSP en modo **Report-Only**. No hubo violaciones en `/`, `/catalogo`, `/personalizacion`, `/admin` ni `/carrito`. Falta pasarla a modo estricto.
+- **10 (parcial):** `vency-sheets.gs` antepone `'` a los valores que empiezan con `=`, `+`, `-` o `@`, y el webhook de Tilopay envía `ORDER_LOG_TOKEN`. **Sigue pendiente verificar** si `carrito.js` y `decants.js` registran pedidos sin token (ver punto 10).
+- **11:** el service worker ya no guarda en caché ninguna respuesta de `/api/`, salvo las imágenes del catálogo. La caché pasa a `v5`, así que se borra la vieja.
+- **12:** el Apps Script responde `error` genérico.
+
+**Hallazgos adicionales, corregidos:**
+
+- `catalog-request` ya no envía `Access-Control-Allow-Origin: *`.
+- `catalog-request` valida `brand`, `name`, `notes` y `badge`, y limita `cat` y `gender` a los valores del formulario del admin. `cat` define el nivel de precio.
+- `inventory` valida claves y valores, y ya no falla con un cuerpo vacío.
+- El pago con Tilopay está oculto en el carrito (`TILOPAY_ENABLED = false`) hasta tener las credenciales de la API.
+
+Pruebas: `node --test tests/security/*.unit.mjs tests/tilopay/*.unit.mjs` (35).
+
 **Pendiente en el panel de Cloudflare:**
 
 - Confirmar que `ADMIN_TOKEN` existe en Production y Preview. Debe ser igual a la contraseña que se usa en `admin.html`.
 - Cambiar la contraseña, porque las rutas estuvieron abiertas.
 - Quitar `STRIPE_SECRET_KEY`.
+- Configurar `ORDER_LOG_TOKEN`, igual a la propiedad `TOKEN` del Apps Script, y volver a desplegar el Apps Script con el `vency-sheets.gs` actual.
+- Regla de rate limiting (punto 9) y Bot Fight Mode.
+- Claves de Turnstile → `TURNSTILE_SECRET`.
+- Cloudflare Access para `/admin*` (punto 6).
+- SPF, DKIM y DMARC en Resend.
 
 ## Resumen
 
