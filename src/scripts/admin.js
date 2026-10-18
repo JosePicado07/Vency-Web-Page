@@ -1,7 +1,7 @@
 ﻿(function () {
   'use strict';
 
-  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
+  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbyNXDOIvj_E_y8wFdzEDBYnk81fi4YHR4j-q-AoV94Sdv9_ThIJoZ4gwcL8oTLDYcZy/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var _P        = window.VENCY_PRICES;
   function priceForCat(cat) { return _P.decant[cat] || _P.decant.vency; }
