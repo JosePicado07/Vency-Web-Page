@@ -22,6 +22,8 @@ self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
   var url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
+  // Estado de pago: siempre de la red, nunca de caché.
+  if (url.pathname.indexOf('/api/tilopay/') === 0 || url.searchParams.has('vorder')) return;
   e.respondWith(
     fetch(e.request).then(function (res) {
       // Only cache successful, basic responses

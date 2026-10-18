@@ -5,3 +5,12 @@ compatibility_date = "2024-01-01"
 [[kv_namespaces]]
 binding = "VENCY_CATALOG"
 id = "0bd63abeb0724bcaa13945a578e65562"
+
+# Base de datos de órdenes de Tilopay (D1). Descomentá después de crearla con
+#   npx wrangler d1 create vency-orders
+# y pegá aquí el database_id que imprime. Ver docs/TILOPAY.md.
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "vency-orders"
+# database_id = "PEGAR-AQUI-EL-ID"
+# migrations_dir = "migrations"

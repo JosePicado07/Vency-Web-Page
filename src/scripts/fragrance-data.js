@@ -666,7 +666,11 @@
             if (cart.bottles[i].id === frag.id && cart.bottles[i].fmt === fmt) { found = cart.bottles[i]; break; }
           }
           if (found) { found.qty = (found.qty || 1) + 1; }
-          else { cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: this.PRICE[fmt], qty: 1 }); }
+          else {
+            /* Precio según el nivel de la fragancia (el mismo que muestra el selector y cobra el servidor). */
+            var tbl = root.VENCY_PRICES[fmt === '30ml' ? 'b30' : 'b100'];
+            cart.bottles.push({ id: frag.id, name: frag.name, fmt: fmt, price: tbl[frag.cat] || this.PRICE[fmt], qty: 1 });
+          }
         }
         localStorage.setItem(this.KEY, JSON.stringify(cart));
         window.dispatchEvent(new CustomEvent('vency-cart-update'));

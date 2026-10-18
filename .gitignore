@@ -27,8 +27,11 @@ verify-admin.js
 /Logo*.png
 /Logo*.jpeg
 
-# Local env — contains Stripe secret key, never commit
+# Local env — secretos (Stripe, Tilopay), never commit
 .dev.vars
+.env
+.env.*
+!.env.example
 
 # Wrangler build cache
 .wrangler/

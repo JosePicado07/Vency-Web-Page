@@ -446,6 +446,56 @@
   line-height: 1.3;
 }
 
+/* ── Pago con tarjeta (Tilopay) ── */
+.carrito__tilopay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.carrito__tilopay[hidden] { display: none; }
+
+.carrito__tp-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.carrito__tp-label {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-muted);
+}
+
+.carrito__tp-input {
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg);
+  font-family: 'Manrope', sans-serif;
+  font-size: 1rem; /* ≥16px evita el zoom automático en iOS */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+.carrito__tp-input:focus-visible {
+  outline: 2px solid var(--warm-ochre);
+  outline-offset: 1px;
+}
+
+.carrito__tp-status {
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.87rem;
+  line-height: 1.5;
+  margin: 0;
+  color: var(--ink-muted);
+}
+
+.carrito__tp-status--error { color: var(--state-error); }
+
 .carrito__pay-or {
   display: flex;
   align-items: center;
