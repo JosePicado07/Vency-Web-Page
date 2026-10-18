@@ -9,7 +9,7 @@
 
   var CART_KEY  = 'vency_cart_v1';
   var WA_NUMBER = '50672773156';
-  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbwkQuCAd6wXmWlPWIl_rnog-jVAGbHhKkzvXfOrhHh1cEsErr_j2-qSNn2KUmaRaJ4/exec';
 
   var _P           = window.VENCY_PRICES;
   var BOTTLE_PRICE = { '30ml': _P.b30.vency, '100ml': _P.b100.vency };
@@ -182,6 +182,17 @@
   var sentRefEl  = document.getElementById('js-sent-ref');
   var sentResend = document.getElementById('js-sent-resend');
   var sentNewBtn = document.getElementById('js-sent-new');
+  var sentRetry  = document.getElementById('js-sent-retry');
+  var sentAckEl  = sentEl && sentEl.querySelector('.carrito-sent__ack');
+  // Tilopay
+  // ponytail: off until we have Tilopay API credentials + verified adapter (docs/TILOPAY.md). Flip to true then.
+  var TILOPAY_ENABLED = false;
+  var tpBox      = document.getElementById('js-tilopay');
+  var tpBtn      = document.getElementById('js-tilopay-btn');
+  var tpStatusEl = document.getElementById('js-tp-status');
+  var tpName     = document.getElementById('js-tp-name');
+  var tpEmail    = document.getElementById('js-tp-email');
+  var tpPhone    = document.getElementById('js-tp-phone');
 
   // ─── Render ────────────────────────────────────────────────────────────
   function renderItems() {
@@ -288,6 +299,10 @@
       if (cartEl)  cartEl.hidden  = true;
       if (sentEl)  sentEl.hidden  = false;
       if (sentRefEl)  sentRefEl.textContent = state.pending.ref;
+      if (sentRetry)  sentRetry.hidden = true;
+      if (state.pending.type === 'tilopay' && TILOPAY_ENABLED) { renderTilopayPending(); return; }
+      if (sentAckEl)  sentAckEl.textContent = 'Pedido enviado.';
+      if (sentNewBtn) sentNewBtn.hidden = false;
       var _isStripe = state.pending.type === 'stripe';
       var _subEl = sentEl && sentEl.querySelector('.carrito-sent__sub');
       if (_subEl) {
@@ -416,6 +431,9 @@
       waBtn.textContent = label;
       waBtn.setAttribute('aria-label', label);
     }
+    // Tarjeta (Tilopay): solo con entrega a domicilio; en local se paga en sitio.
+    if (tpBox) tpBox.hidden = !TILOPAY_ENABLED || isLocal;
+    if (tpBtn && !tpBusy) tpBtn.disabled = blocked;
     if (confirmTxt) {
       confirmTxt.textContent = isLocal
         ? 'Enviá tu pedido por WhatsApp con tu nombre. El pago se realiza en el local.'
@@ -512,7 +530,7 @@
     });
   }
 
-  // Final availability gate before checkout (Stripe path).
+  // Final availability gate before checkout (Tilopay path).
   function checkAvailBeforeSubmit() {
     return fetchAvail().then(function () {
       if (!hasBlocked()) return true;
@@ -586,123 +604,159 @@
     }
   });
 
-  // ─── Stripe card payment ───────────────────────────────────────────────
-  function showStripeError(msg) {
-    var existing = document.querySelector('.vency-toast--stripe-err');
-    if (existing) existing.remove();
-    window.makeToast('<span>' + esc(msg) + '</span>', 'vency-toast--undo vency-toast--stripe-err', 6000);
+  // ─── Tilopay ───────────────────────────────────────────────────────────
+  // Al navegador solo le toca: mandar id/formato/cantidad, redirigir a la
+  // página de Tilopay y, al volver, preguntar el estado. La orden se marca
+  // pagada únicamente cuando el servidor recibe y verifica el webhook; los
+  // parámetros que Tilopay agrega a la URL de retorno se ignoran.
+  var tpBusy = false;
+  var TP_POLL_MS = 3000, TP_POLL_MAX = 40; // ~2 minutos
+  var TP_ERRORS = {
+    unavailable:      'Algún artículo ya no está disponible. Revisá tu carrito.',
+    unknown_product:  'Algún artículo ya no está en el catálogo. Quitalo e intentá de nuevo.',
+    invalid_customer: 'Revisá tu nombre y correo.',
+    payments_not_configured: 'El pago con tarjeta no está disponible en este momento.',
+    gateway_error:    'No pudimos conectar con Tilopay. Intentá de nuevo en unos minutos.'
+  };
+
+  function setTpStatus(kind, msg) {
+    if (!tpStatusEl) return;
+    tpStatusEl.hidden = !msg;
+    tpStatusEl.textContent = msg || '';
+    tpStatusEl.className = 'carrito__tp-status' + (kind ? ' carrito__tp-status--' + kind : '');
   }
 
-  var stripeBtn = document.getElementById('js-cart-stripe');
-  if (stripeBtn) {
-    stripeBtn.addEventListener('click', function () {
-      if (isEmpty()) return;
+  function tilopayItems() {
+    var items = [], decants = {};
+    state.selection.forEach(function (s) { decants[s.id] = (decants[s.id] || 0) + 1; });
+    Object.keys(decants).forEach(function (id) { items.push({ id: id, format: 'decant', quantity: decants[id] }); });
+    state.bottles.forEach(function (b) { items.push({ id: b.id, format: b.fmt, quantity: b.qty || 1 }); });
+    return items; // sin precios: el servidor calcula el monto
+  }
+
+  if (tpBtn && TILOPAY_ENABLED) {
+    tpBtn.addEventListener('click', function () {
+      if (tpBusy || isEmpty()) return;
+      var customer = {
+        name:  (tpName && tpName.value || '').trim(),
+        email: (tpEmail && tpEmail.value || '').trim(),
+        phone: (tpPhone && tpPhone.value || '').trim()
+      };
+      if (customer.name.length < 2) { setTpStatus('error', 'Escribí tu nombre completo.'); tpName.focus(); return; }
+      if (!tpEmail.checkValidity() || !customer.email) { setTpStatus('error', 'Escribí un correo válido.'); tpEmail.focus(); return; }
+
+      tpBusy = true;
+      tpBtn.disabled = true;
+      setTpStatus('processing', 'Procesando… te estamos llevando a Tilopay.');
 
       checkAvailBeforeSubmit().then(function (ok) {
-        if (!ok) { return; }
-
-        var lineItems = [];
-        var grouped = selectionGrouped();
-        var _dc = decantCount();
-
-        if (_dc > 0) {
-          var _stripeGroups = {};
-          state.selection.forEach(function (s) {
-            var t = s.type || 'vency';
-            if (!_stripeGroups[t]) _stripeGroups[t] = [];
-            _stripeGroups[t].push(s);
-          });
-          Object.keys(_stripeGroups).forEach(function (t) {
-            var items = _stripeGroups[t];
-            var sets  = Math.floor(items.length / 3);
-            var loose = items.length % 3;
-            if (sets > 0) lineItems.push({ name: 'Set de Decants 10 ml \u00d73', price: setForType(t), qty: sets });
-            items.slice(sets * 3).forEach(function (s) {
-              lineItems.push({ name: s.name + ' \u00b7 Decant 10 ml', price: priceForType(t), qty: 1 });
-            });
-            if (loose > 0 && items.slice(sets * 3).length === 0) {
-              lineItems.push({ name: 'Decant 10 ml', price: priceForType(t), qty: loose });
-            }
-          });
-        }
-
-        state.bottles.forEach(function (b) {
-          lineItems.push({
-            name: b.name + ' \u00b7 Frasco ' + (BOTTLE_LABEL[b.fmt] || b.fmt),
-            price: b.price,
-            qty:   b.qty || 1,
-          });
-        });
-
-        var _stripeShip = shippingFee();
-        if (_stripeShip > 0) lineItems.push({ name: 'Env\u00edo a domicilio', price: _stripeShip, qty: 1 });
-
-        stripeBtn.disabled = true;
-        stripeBtn.textContent = 'Redirigiendo\u2026';
-
-        fetch('/api/checkout', {
+        if (!ok) throw { code: 'unavailable' };
+        return fetch('/api/tilopay/create-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ items: lineItems, ref: state.ref || generateRef() }),
-        })
-          .then(function (r) { return r.json(); })
-          .then(function (data) {
-            if (data.url) {
-              window.location.href = data.url;
-            } else {
-              stripeBtn.disabled = false;
-              stripeBtn.textContent = 'Pagar con tarjeta';
-              showStripeError('No se pudo iniciar el pago: ' + (data.error || 'error desconocido'));
-            }
+          body: JSON.stringify({
+            items: tilopayItems(),
+            delivery: isDelivery() ? 'domicilio' : 'local',
+            customer: customer
           })
-          .catch(function () {
-            stripeBtn.disabled = false;
-            stripeBtn.textContent = 'Pagar con tarjeta';
-            showStripeError('Error de conexi\u00f3n. Intent\u00e1 de nuevo.');
-          });
+        });
+      }).then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (d) {
+          if (!r.ok || !d.url) throw { code: d.error };
+          return d;
+        });
+      }).then(function (d) {
+        if (!/^https:\/\//.test(d.url)) throw {};
+        state.pending = { ref: d.orderId, sentAt: Date.now(), waHref: '', type: 'tilopay', tp: 'redirecting' };
+        save();
+        window.location.href = d.url;
+      }).catch(function (err) {
+        tpBusy = false;
+        tpBtn.disabled = false;
+        setTpStatus('error', TP_ERRORS[err && err.code] || 'Ocurrió un error. Intentá de nuevo.');
       });
     });
   }
 
-  // ─── Stripe return ─────────────────────────────────────────────────────
-  // Fires when Stripe redirects back with ?paid=1&ref=VA-XXXX after a
-  // successful card payment. Logs the order to the Sheet (first and only time),
-  // then shows the confirmation card and clears the cart.
-  function handleStripeReturn() {
+  var TP_COPY = {
+    processing: { ack: 'Procesando pago…', sub: 'Estamos esperando la confirmación de Tilopay. No cierres esta página.' },
+    approved:   { ack: 'Pago aprobado.',   sub: 'Recibimos tu pago. Tony preparará tu pedido y te contactará para coordinar la entrega.' },
+    rejected:   { ack: 'Pago rechazado.',  sub: 'Tilopay no aprobó el pago. Podés intentar con otra tarjeta o pagar por SINPE.' },
+    error:      { ack: 'No pudimos confirmar el pago.', sub: 'Si ves el cobro en tu tarjeta, escribinos por WhatsApp con tu N.° de pedido y lo revisamos.' }
+  };
+
+  function renderTilopayPending() {
+    var st = state.pending.tp === 'redirecting' ? 'processing' : (state.pending.tp || 'processing');
+    var copy = TP_COPY[st] || TP_COPY.error;
+    if (sentAckEl) sentAckEl.textContent = copy.ack;
+    var subEl = sentEl && sentEl.querySelector('.carrito-sent__sub');
+    if (subEl) subEl.textContent = copy.sub;
+    if (sentResend) sentResend.style.display = 'none';
+    if (sentRetry)  sentRetry.hidden = st !== 'rejected';
+    if (sentNewBtn) sentNewBtn.hidden = st === 'processing';
+    if (st === 'processing') pollTilopay();
+  }
+
+  var tpPolling = false;
+  function pollTilopay() {
+    if (tpPolling) return;
+    tpPolling = true;
+    var id = state.pending.ref, tries = 0;
+    (function tick() {
+      fetch('/api/tilopay/order-status?id=' + encodeURIComponent(id), { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : { status: r.status === 404 ? 'error' : 'processing' }; })
+        .catch(function () { return { status: 'processing' }; })
+        .then(function (d) {
+          if (!state.pending || state.pending.ref !== id) { tpPolling = false; return; }
+          var st = d.status;
+          if (st === 'processing' && ++tries >= TP_POLL_MAX) st = 'error';
+          if (st === 'processing') { setTimeout(tick, TP_POLL_MS); return; }
+          tpPolling = false;
+          state.pending.tp = st;
+          if (st === 'approved') { state.selection.length = 0; state.bottles.length = 0; state.ref = null; }
+          save();
+          render();
+        });
+    })();
+  }
+
+  // Regreso desde Tilopay: /carrito?vorder=VA…(&parámetros de Tilopay, ignorados)
+  function handleTilopayReturn() {
+    if (!TILOPAY_ENABLED) return;
     var sp = new URLSearchParams(window.location.search);
-    if (sp.get('paid') !== '1') return;
-    var ref = sp.get('ref') || state.ref || generateRef();
-
-    if (SHEET_URL && !isEmpty()) {
-      var _dc = decantCount();
-      var items = [];
-      if (_dc > 0 && _dc % 3 === 0) items.push('Set de Decants (10 ml): ' + grouped_wa());
-      else selectionGrouped().forEach(function (g) {
-        items.push(g.name + ' · Decant 10 ml' + (g.qty > 1 ? ' ×' + g.qty : ''));
-      });
-      state.bottles.forEach(function (b) {
-        var qty = b.qty || 1;
-        items.push(b.name + ' · Frasco ' + (BOTTLE_LABEL[b.fmt] || b.fmt) + (qty > 1 ? ' ×' + qty : ''));
-      });
-      fetch(SHEET_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          ref: ref, items: items.join(' | '), total: total(),
-          pago: 'Tarjeta', entrega: 'Stripe', canal: 'Web', cliente: ''
-        })
-      }).catch(function () {});
+    var id = sp.get('vorder');
+    if (!id) {
+      // Volvió atrás desde Tilopay sin completar: mostrar el carrito otra vez.
+      if (state.pending && state.pending.tp === 'redirecting') { state.pending = null; save(); }
+      return;
     }
+    history.replaceState(null, '', window.location.pathname); // quita los parámetros de la barra
+    if (!/^VA[0-9A-F]{16}$/.test(id)) return;
+    if (!state.pending || state.pending.ref !== id || state.pending.tp !== 'approved') {
+      state.pending = { ref: id, sentAt: Date.now(), waHref: '', type: 'tilopay', tp: 'processing' };
+      save();
+    }
+  }
 
-    state.ref = ref;
-    state.pending = { ref: ref, sentAt: Date.now(), waHref: '', type: 'stripe' };
-    state.selection.length = 0;
-    state.bottles.length   = 0;
-    save();
-    history.replaceState(null, '', window.location.pathname);
+  // Botón "atrás" desde Tilopay con la página restaurada del bfcache.
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted || !tpBusy) return;
+    tpBusy = false;
+    if (state.pending && state.pending.tp === 'redirecting') { state.pending = null; save(); }
+    setTpStatus('', '');
+    render();
+  });
+
+  if (sentRetry) {
+    sentRetry.addEventListener('click', function () {
+      state.pending = null;   // conserva el carrito para reintentar
+      save();
+      render();
+    });
   }
 
   // ─── Init ──────────────────────────────────────────────────────────────
   load();
-  handleStripeReturn();
+  handleTilopayReturn();
   fetchAvail().then(render);
 })();

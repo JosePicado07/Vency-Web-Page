@@ -1,4 +1,4 @@
-var CACHE = 'vency-admin-v4';
+var CACHE = 'vency-admin-v5';
 
 self.addEventListener('install', function () {
   self.skipWaiting();
@@ -22,6 +22,10 @@ self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
   var url = new URL(e.request.url);
   if (url.origin !== self.location.origin) return;
+  // API (admin listings, payment status, stock): always network, never cached.
+  // Public catalog images are the exception (immutable, useful offline).
+  var isApi = url.pathname.indexOf('/api/') === 0 && url.pathname.indexOf('/api/catalog-image/') !== 0;
+  if (isApi || url.searchParams.has('vorder')) return;
   e.respondWith(
     fetch(e.request).then(function (res) {
       // Only cache successful, basic responses

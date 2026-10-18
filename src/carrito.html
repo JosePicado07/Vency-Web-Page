@@ -18,7 +18,7 @@
   <link rel="preload" href="/assets/fonts/manrope-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="styles/fonts.css">
   <link rel="stylesheet" href="styles/styles.css?v=75">
-  <link rel="stylesheet" href="styles/carrito.css?v=10">
+  <link rel="stylesheet" href="styles/carrito.css?v=11">
 </head>
 <body class="page-carrito">
 
@@ -76,11 +76,12 @@
         <span class="label">N.° DE PEDIDO</span>
         <strong id="js-sent-ref"></strong>
       </p>
-      <p class="carrito-sent__sub">
+      <p class="carrito-sent__sub" aria-live="polite">
         Tony recibió tu mensaje en WhatsApp. Si pagaste por SINPE, recordá enviar el comprobante a ese mismo chat.
       </p>
       <div class="carrito-sent__actions">
         <a class="btn btn--primary" id="js-sent-resend" href="#" target="_blank" rel="noopener noreferrer">Re-enviar por WhatsApp</a>
+        <button class="btn btn--primary" id="js-sent-retry" type="button" hidden>Volver al carrito</button>
         <button class="carrito__clear" id="js-sent-new" type="button">Empezar un pedido nuevo</button>
       </div>
     </section>
@@ -165,6 +166,28 @@
           >
             Enviar pedido por WhatsApp
           </a>
+
+          <!-- Pago con tarjeta vía Tilopay. El navegador solo envía id, formato y
+               cantidad; el monto lo calcula el servidor. Los datos de la tarjeta
+               se ingresan en la página de Tilopay, nunca aquí. -->
+          <div class="carrito__tilopay" id="js-tilopay" hidden>
+            <p class="carrito__pay-or">o pagá con tarjeta</p>
+            <label class="carrito__tp-field">
+              <span class="carrito__tp-label">Nombre completo</span>
+              <input class="carrito__tp-input" id="js-tp-name" type="text" autocomplete="name" maxlength="80" required>
+            </label>
+            <label class="carrito__tp-field">
+              <span class="carrito__tp-label">Correo electrónico</span>
+              <input class="carrito__tp-input" id="js-tp-email" type="email" autocomplete="email" maxlength="120" required>
+            </label>
+            <label class="carrito__tp-field">
+              <span class="carrito__tp-label">Teléfono (opcional)</span>
+              <input class="carrito__tp-input" id="js-tp-phone" type="tel" autocomplete="tel" maxlength="16">
+            </label>
+            <button class="btn btn--primary carrito__pay-btn" id="js-tilopay-btn" type="button">Pagar con Tilopay</button>
+            <p class="carrito__pay-note">Ingresás la tarjeta en la página segura de Tilopay. No guardamos datos de tarjeta.</p>
+            <p class="carrito__tp-status" id="js-tp-status" role="status" aria-live="polite" hidden></p>
+          </div>
         </div>
         <button class="carrito__clear" id="js-cart-clear" type="button">Vaciar carrito</button>
       </div>
@@ -244,10 +267,10 @@
 
   <script src="scripts/search.js?v=54" defer></script>
   <script src="scripts/cart-drawer.js?v=12" defer></script>
-  <script src="scripts/fragrance-data.js?v=61" defer></script>
+  <script src="scripts/fragrance-data.js?v=62" defer></script>
   <script src="scripts/catalogo-data.js?v=53" defer></script>
   <script src="scripts/nav.js?v=57" defer></script>
-  <script src="scripts/carrito.js?v=15" defer></script>
+  <script src="scripts/carrito.js?v=20" defer></script>
 
   <script src="scripts/wa-float.js" defer></script>
 </body>

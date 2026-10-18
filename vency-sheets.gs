@@ -31,16 +31,16 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
 
-    // Token gate
-    var token = PropertiesService.getScriptProperties().getProperty('TOKEN');
-    if (!token || data.token !== token) {
-      return text('unauthorized');
-    }
-
+    var token  = PropertiesService.getScriptProperties().getProperty('TOKEN');
+    var authed = !!token && data.token === token;
     var action = data.action;
 
-    // No action = register a new sale
-    if (!action) return registerSale(data);
+    // No action = register a new sale. The public cart can't hold the token,
+    // so tokenless sales are allowed but always land as Web / pendiente.
+    if (!action) return registerSale(data, authed);
+
+    // Token gate for everything else
+    if (!authed) return text('unauthorized');
 
     switch (action) {
       case 'summary':   return summary(data);
@@ -49,10 +49,11 @@ function doPost(e) {
       case 'confirm':        return confirmSale(data);
       case 'cancel':         return cancelSale(data);
       case 'addCatalogEntry': return addCatalogEntry(data);
-      default:               return text('unknown action: ' + action);
+      default:               return text('unknown action');
     }
   } catch (err) {
-    return text('error: ' + err.message);
+    console.error(err); // visible in the Apps Script executions log only
+    return text('error');
   }
 }
 
@@ -85,31 +86,40 @@ function nowDate() {
   return new Date();
 }
 
+/* Text that reaches a cell from a request. A leading = + - @ (or tab/CR)
+   would be evaluated as a formula; the ' prefix keeps it literal and
+   Sheets doesn't show it. */
+function cell(v) {
+  v = v == null ? '' : String(v);
+  return /^[=+\-@\t\r]/.test(v) ? "'" + v : v;
+}
+
 function pad2(n) {
   return n < 10 ? '0' + n : '' + n;
 }
 
 /* ── Register sale ───────────────────────────────────────── */
 
-function registerSale(data) {
+function registerSale(data, authed) {
   var s   = sheet(SHEET_VENTAS);
   var now = nowDate();
   var fecha = Utilities.formatDate(now, TZ, 'yyyy-MM-dd');
   var hora  = Utilities.formatDate(now, TZ, 'HH:mm');
 
   // Web orders start as "pendiente" until confirmed manually
-  var estado = (data.canal === 'Web') ? 'pendiente' : 'confirmado';
+  var canal  = authed ? (data.canal || 'Local') : 'Web';
+  var estado = (canal === 'Web') ? 'pendiente' : 'confirmado';
 
   s.appendRow([
-    String(data.ref      || ''),
+    cell(data.ref),
     fecha,
     hora,
-    String(data.items    || ''),
+    cell(data.items),
     Number(data.total    || 0),
-    String(data.pago     || ''),
-    String(data.entrega  || 'En sitio'),
-    String(data.canal    || 'Local'),
-    String(data.cliente  || ''),
+    cell(data.pago),
+    cell(data.entrega || 'En sitio'),
+    cell(canal),
+    cell(data.cliente),
     estado
   ]);
 
@@ -352,9 +362,9 @@ function addCatalogEntry(data) {
     }
   }
 
-  s.appendRow([prefix + ':decant', nombre + ' · Decant',  oil, 20]);
-  s.appendRow([prefix + ':30ml',   nombre + ' · 30ml',    oil, 20]);
-  s.appendRow([prefix + ':100ml',  nombre + ' · 100ml',   oil, 20]);
+  s.appendRow([cell(prefix + ':decant'), cell(nombre + ' · Decant'), oil, 20]);
+  s.appendRow([cell(prefix + ':30ml'),   cell(nombre + ' · 30ml'),   oil, 20]);
+  s.appendRow([cell(prefix + ':100ml'),  cell(nombre + ' · 100ml'),  oil, 20]);
 
   return text('ok');
 }

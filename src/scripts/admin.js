@@ -1,7 +1,7 @@
 ﻿(function () {
   'use strict';
 
-  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbxjcXCiK8xVVr9ZbB54Cfxpr9NZr8HQ1Kt7dbnW3QIP0kIFhb694RunK_3lUkScdKk/exec';
+  var EXEC_URL      = 'https://script.google.com/macros/s/AKfycbwkQuCAd6wXmWlPWIl_rnog-jVAGbHhKkzvXfOrhHh1cEsErr_j2-qSNn2KUmaRaJ4/exec';
   var TOKEN_KEY     = 'vency_seller_token';
   var _P        = window.VENCY_PRICES;
   function priceForCat(cat) { return _P.decant[cat] || _P.decant.vency; }
@@ -1728,8 +1728,14 @@
       fetch('/api/availability', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: item.id, available: newVal })
-      }).catch(function () {});
+        body: JSON.stringify({ id: item.id, available: newVal, tok: token })
+      }).then(function (r) { if (!r.ok) throw r; }).catch(function (r) {
+        setAvail(item.id, !newVal);
+        availBtn.setAttribute('aria-pressed', String(!newVal));
+        availBtn.textContent = !newVal ? 'Disponible' : 'No disponible';
+        card.classList.toggle('sol-card--unavailable', newVal);
+        showToast(adminErrorMsg(r), true);
+      });
     });
     actions.appendChild(availBtn);
 
@@ -1761,9 +1767,9 @@
           fetch('/api/catalog-archive', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: item.id, archived: true })
-          }).then(function () { renderCatList(searchInput ? searchInput.value : ''); })
-            .catch(function () { _archivedBase.delete(item.id); archBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+            body: JSON.stringify({ id: item.id, archived: true, tok: token })
+          }).then(function (r) { if (!r.ok) throw r; renderCatList(searchInput ? searchInput.value : ''); })
+            .catch(function (r) { _archivedBase.delete(item.id); archBtn.disabled = false; showToast(adminErrorMsg(r), true); });
         }
       });
       actions.appendChild(archBtn);
@@ -1786,9 +1792,9 @@
           fetch('/api/catalog-archive', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id: item.id, archived: false })
-          }).then(function () { renderCatList(searchInput ? searchInput.value : ''); })
-            .catch(function () { _archivedBase.add(item.id); restBtn.disabled = false; showToast('Error. Intentá de nuevo.'); });
+            body: JSON.stringify({ id: item.id, archived: false, tok: token })
+          }).then(function (r) { if (!r.ok) throw r; renderCatList(searchInput ? searchInput.value : ''); })
+            .catch(function (r) { _archivedBase.add(item.id); restBtn.disabled = false; showToast(adminErrorMsg(r), true); });
         }
       });
       actions.appendChild(restBtn);
@@ -1804,6 +1810,13 @@
 
     card.appendChild(actions);
     return card;
+  }
+
+  /* 401/503 del servidor → mensaje claro; cualquier otro error → genérico. */
+  function adminErrorMsg(r) {
+    if (r && r.status === 401) return 'Contraseña no válida para el servidor. Cerrá sesión y volvé a entrar.';
+    if (r && r.status === 503) return 'Falta configurar ADMIN_TOKEN en Cloudflare.';
+    return 'Error. Intentá de nuevo.';
   }
 
   function _refreshAfterKvAction() {
@@ -1871,7 +1884,7 @@
     solListEl.innerHTML = '';
     solEmptyEl.hidden = true;
 
-    fetch('/api/catalog-request?all=1&tok=' + encodeURIComponent(token))
+    fetch('/api/catalog-request?all=1', { headers: { 'X-Admin-Token': token }, cache: 'no-store' })
       .then(function (r) { return r.json(); })
       .then(function (kvEntries) {
         solHintEl.hidden = true;
@@ -2276,7 +2289,7 @@
       fetch('/api/catalog-archive', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: item.id, deleted: true })
+        body: JSON.stringify({ id: item.id, deleted: true, tok: token })
       }).then(function (r) { return r.json(); }).then(function (res) {
         if (!res.ok) throw new Error();
         close();
