@@ -32,7 +32,8 @@ function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
 
-    var token  = PropertiesService.getScriptProperties().getProperty('TOKEN');
+    var props  = PropertiesService.getScriptProperties();
+    var token  = props.getProperty('SELLER_TOKEN') || props.getProperty('TOKEN');
     var authed = !!token && data.token === token;
     var action = data.action;
 
