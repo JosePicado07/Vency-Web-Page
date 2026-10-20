@@ -1115,6 +1115,8 @@
               <textarea id="pers-mensaje" name="mensaje" placeholder="Qué sensación buscás, si hay algo a lo que sos sensible, o simplemente lo que se te ocurra…"></textarea>
             </div>
 
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFd5RBat_jjIIMej" data-language="es"></div>
+
             <div class="pers-error" id="pers-error" role="alert" aria-live="polite"></div>
 
             <button type="submit" class="pers-submit" id="pers-submit">
@@ -1206,6 +1208,7 @@
     </div>
   </div>
 
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="scripts/fragrance-data.js?v=62" defer></script>
   <script src="scripts/nav.js?v=58" defer></script>
   <script src="scripts/scroll.js?v=51" defer></script>
@@ -1301,6 +1304,10 @@
         if (!fragancia) { showError('Indicá la fragancia de referencia.'); form.elements.fragancia.focus(); return; }
         if (!notas)     { showError('Contanos qué nota querés agregar o potenciar.'); form.elements.notas.focus(); return; }
 
+        var tsEl    = form.elements['cf-turnstile-response'];
+        var tsToken = tsEl ? tsEl.value : '';
+        if (!tsToken) { showError('Esperá un momento a que termine la verificación.'); return; }
+
         submitEl.disabled    = true;
         submitEl.textContent = 'Enviando…';
 
@@ -1317,6 +1324,7 @@
             ocasion:    form.elements.ocasion.value,
             ph:         form.elements.ph.value,
             mensaje:    form.elements.mensaje.value.trim(),
+            turnstile:  tsToken,
           }),
         })
         .then(function (r) { return r.json(); })
@@ -1328,6 +1336,7 @@
             success.focus();
           } else {
             showError(d.error || 'Hubo un problema. Intentá de nuevo.');
+            if (window.turnstile) turnstile.reset();
             submitEl.disabled    = false;
             submitEl.textContent = 'Enviar solicitud';
           }
