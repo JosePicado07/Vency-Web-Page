@@ -603,6 +603,8 @@
     }
     .pers-error.is-visible { display: block; }
 
+    .cf-turnstile { width: 100%; min-height: 65px; }
+
     /* -- Success -------------------------------------------- */
     .pers-success {
       display: none; flex-direction: column;
@@ -1041,13 +1043,13 @@
             <div class="pers-row">
               <div class="pers-field">
                 <label for="pers-telefono">Número de WhatsApp <span class="req" aria-hidden="true">*</span></label>
-                <input type="tel" id="pers-telefono" name="telefono" autocomplete="tel" placeholder="+506 8888 8888" required>
-                <span class="pers-field__hint">Vency te va a escribir aquí para coordinar.</span>
+                <input type="tel" id="pers-telefono" name="telefono" autocomplete="tel" placeholder="+506 8888 8888" required aria-describedby="hint-telefono">
+                <span class="pers-field__hint" id="hint-telefono">Vency te va a escribir aquí para coordinar.</span>
               </div>
               <div class="pers-field">
                 <label for="pers-fragancia">Fragancia de referencia <span class="req" aria-hidden="true">*</span></label>
-                <input type="text" id="pers-fragancia" name="fragancia" placeholder="Ej: Givenchy Play, Dior Sauvage…" required>
-                <span class="pers-field__hint">Si no sabés el nombre exacto, describila.</span>
+                <input type="text" id="pers-fragancia" name="fragancia" placeholder="Ej: Givenchy Play, Dior Sauvage…" required aria-describedby="hint-fragancia">
+                <span class="pers-field__hint" id="hint-fragancia">Si no sabés el nombre exacto, describila.</span>
               </div>
             </div>
 
@@ -1094,7 +1096,7 @@
               <div class="pers-field">
                 <label id="lbl-ph">Tipo de piel</label>
                 <div class="vency-select" data-name="ph">
-                  <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-ph">
+                  <button type="button" class="vency-select__btn" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lbl-ph" aria-describedby="hint-ph">
                     <span class="vency-select__label vency-select__label--placeholder">Si lo sabés</span>
                     <svg class="vency-select__chevron" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 5.5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                   </button>
@@ -1106,7 +1108,7 @@
                   </div>
                   <input type="hidden" class="vency-select__input" name="ph">
                 </div>
-                <span class="pers-field__hint">Influye en cómo se desarrollan las notas. Lo evaluamos en la asesoría si no sabés.</span>
+                <span class="pers-field__hint" id="hint-ph">Influye en cómo se desarrollan las notas. Lo evaluamos en la asesoría si no sabés.</span>
               </div>
             </div>
 
@@ -1115,15 +1117,19 @@
               <textarea id="pers-mensaje" name="mensaje" placeholder="Qué sensación buscás, si hay algo a lo que sos sensible, o simplemente lo que se te ocurra…"></textarea>
             </div>
 
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFd5RBat_jjIIMej" data-language="es"></div>
+            <div class="cf-turnstile" data-sitekey="0x4AAAAAAFd5RBat_jjIIMej" data-language="es"
+                 data-size="flexible" data-theme="light"
+                 data-error-callback="persTsError"></div>
+            <script>if (window.innerWidth < 360) document.currentScript.previousElementSibling.setAttribute('data-size', 'compact');</script>
 
-            <div class="pers-error" id="pers-error" role="alert" aria-live="polite"></div>
+            <div class="pers-error" id="pers-error" role="alert"></div>
 
             <button type="submit" class="pers-submit" id="pers-submit">
               Enviar solicitud
             </button>
 
           </form>
+          <noscript><p class="pers-field__hint">¿No carga el formulario? <a href="https://wa.me/50672773156">Escribinos por WhatsApp</a>.</p></noscript>
         </div>
 
         <!-- Success -->
@@ -1287,8 +1293,47 @@
       var submitEl = document.getElementById('pers-submit');
       var waBtn    = document.getElementById('pers-wa-btn');
 
-      function showError(msg) { errorEl.textContent = msg; errorEl.classList.add('is-visible'); }
-      function clearError()   { errorEl.classList.remove('is-visible'); }
+      var invalidEl = null;
+
+      function showError(msg, field) {
+        clearError();
+        errorEl.classList.add('is-visible');
+        errorEl.textContent = msg;
+        if (field) {
+          invalidEl = field;
+          field.setAttribute('aria-invalid', 'true');
+          var d = field.getAttribute('aria-describedby') || '';
+          if (d.indexOf('pers-error') === -1) field.setAttribute('aria-describedby', (d + ' pers-error').trim());
+          field.focus();
+        }
+      }
+      function clearError() {
+        errorEl.classList.remove('is-visible');
+        errorEl.textContent = '';
+        if (invalidEl) {
+          invalidEl.removeAttribute('aria-invalid');
+          var d = (invalidEl.getAttribute('aria-describedby') || '').replace('pers-error', '').trim();
+          if (d) invalidEl.setAttribute('aria-describedby', d);
+          else invalidEl.removeAttribute('aria-describedby');
+          invalidEl = null;
+        }
+      }
+
+      var tsFailed = false;
+      window.persTsError = function () { tsFailed = true; };
+
+      function fallbackToWhatsApp(email, fragancia, notas) {
+        var waText = encodeURIComponent(
+          'Hola Vency Atelier! Quisiera una fragancia personalizada:\n\n'
+          + 'Fragancia base: ' + fragancia + '\n'
+          + 'Notas a potenciar: ' + notas + '\n'
+          + 'Correo: ' + email
+        );
+        waBtn.href = 'https://wa.me/50672773156?text=' + waText;
+        wrap.hidden = true;
+        success.classList.add('is-visible');
+        success.focus();
+      }
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
@@ -1299,14 +1344,18 @@
         var fragancia = form.elements.fragancia.value.trim();
         var notas     = form.elements.notas.value.trim();
 
-        if (!email)     { showError('El correo es requerido.'); form.elements.email.focus(); return; }
-        if (!telefono)  { showError('El número de WhatsApp es requerido.'); form.elements.telefono.focus(); return; }
-        if (!fragancia) { showError('Indicá la fragancia de referencia.'); form.elements.fragancia.focus(); return; }
-        if (!notas)     { showError('Contanos qué nota querés agregar o potenciar.'); form.elements.notas.focus(); return; }
+        if (!email)     { showError('El correo es requerido.', form.elements.email); return; }
+        if (!telefono)  { showError('El número de WhatsApp es requerido.', form.elements.telefono); return; }
+        if (!fragancia) { showError('Indicá la fragancia de referencia.', form.elements.fragancia); return; }
+        if (!notas)     { showError('Contanos qué nota querés agregar o potenciar.', form.elements.notas); return; }
 
         var tsEl    = form.elements['cf-turnstile-response'];
         var tsToken = tsEl ? tsEl.value : '';
-        if (!tsToken) { showError('Esperá un momento a que termine la verificación.'); return; }
+        if (!tsToken) {
+          if (!window.turnstile || tsFailed) { fallbackToWhatsApp(email, fragancia, notas); return; }
+          showError('Esperá un momento a que termine la verificación.');
+          return;
+        }
 
         submitEl.disabled    = true;
         submitEl.textContent = 'Enviando…';
@@ -1335,24 +1384,15 @@
             success.classList.add('is-visible');
             success.focus();
           } else {
-            showError(d.error || 'Hubo un problema. Intentá de nuevo.');
+            var isTs = /verificaci/i.test(d.error || '');
+            showError(isTs ? 'La verificación expiró. Esperá a que se complete de nuevo y enviá otra vez.'
+                           : (d.error || 'Hubo un problema. Intentá de nuevo.'));
             if (window.turnstile) turnstile.reset();
             submitEl.disabled    = false;
             submitEl.textContent = 'Enviar solicitud';
           }
         })
-        .catch(function () {
-          var waText = encodeURIComponent(
-            'Hola Vency Atelier! Quisiera una fragancia personalizada:\n\n'
-            + 'Fragancia base: ' + fragancia + '\n'
-            + 'Notas a potenciar: ' + notas + '\n'
-            + 'Correo: ' + email
-          );
-          waBtn.href = 'https://wa.me/50672773156?text=' + waText;
-          wrap.hidden = true;
-          success.classList.add('is-visible');
-          success.focus();
-        });
+        .catch(function () { fallbackToWhatsApp(email, fragancia, notas); });
       });
     })();
   </script>
