@@ -203,11 +203,11 @@
     .dsp-frags__list { list-style: none; margin: var(--space-md) 0 0; padding: 0; }
     .dsp-frag {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      grid-template-areas: "name link" "family link";
-      align-items: center;
-      column-gap: 1.5rem;
-      row-gap: 0.35rem;
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      grid-template-areas: "img name" "img family" "img notes" "img link";
+      align-items: start;
+      column-gap: 1rem;
+      row-gap: 0.25rem;
       padding: 1.1rem 0;
       border-bottom: 1px solid var(--border-dark);
     }
@@ -219,10 +219,19 @@
       line-height: 1.2;
       color: var(--botanical-parchment);
     }
+    .dsp-frag__img { grid-area: img; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
     .dsp-frag__family { grid-area: family; margin: 0; color: var(--warm-ochre-light); }
+    .dsp-frag__notes {
+      grid-area: notes;
+      margin: 0.2rem 0 0;
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: oklch(80% 0.006 80);
+    }
     .dsp-frag__link {
       grid-area: link;
-      justify-self: end;
+      justify-self: start;
       margin-left: 0;
       display: inline-flex;
       align-items: center;
@@ -246,21 +255,14 @@
       max-width: 65ch;
     }
     .dsp-frags__foot a { color: var(--warm-ochre-light); text-decoration: underline; text-underline-offset: 0.18em; }
-    @media (max-width: 639px) {
-      .dsp-frag {
-        grid-template-columns: 1fr;
-        grid-template-areas: "name" "family" "link";
-        row-gap: 0.3rem;
-      }
-      .dsp-frag__link { justify-self: start; }
-    }
     @media (min-width: 640px) {
       .dsp-frags__list {
         display: grid;
         grid-template-columns: 1fr 1fr;
         column-gap: clamp(2rem, 5vw, 4rem);
       }
-      .dsp-frag:first-child { grid-column: 1 / -1; }
+      .dsp-frag:first-child { grid-column: 1 / -1; row-gap: 0.6rem; }
+      .dsp-frag:first-child { grid-template-columns: 7rem minmax(0, 1fr); }
       .dsp-frag:first-child .dsp-frag__name { font-size: clamp(2rem, 4vw, 3rem); }
       .dsp-frag:last-child:nth-child(even) { grid-column: 1 / -1; }
     }
@@ -495,8 +497,7 @@
           <li class="dsp-step animate-in" style="--delay:160ms">
             <span class="dsp-step__num" aria-hidden="true">03</span>
             <h3 class="dsp-step__title">Pagá</h3>
-            <p class="dsp-step__text">Moneda, tarjeta o billete. <span class="label">[Por confirmar]</span></p>
-            <!-- TODO(Anthonny): payment methods + price per spray -->
+            <p class="dsp-step__text">Monedas, billetes, tarjeta o celular sin contacto, o SINPE Móvil. ₡800 a ₡1.500 por uso.</p>
           </li>
           <li class="dsp-step animate-in" style="--delay:240ms">
             <span class="dsp-step__num" aria-hidden="true">04</span>
@@ -511,45 +512,71 @@
     <section class="dsp-frags" aria-labelledby="dsp-frags-title">
       <div class="dsp-frags__inner">
         <span class="label dsp-frags__kicker animate-in">En la máquina ahora</span>
-        <h2 class="dsp-h2 dsp-h2--light animate-in" id="dsp-frags-title" style="--delay:80ms">Seis fragancias,<br>rotando por temporada.</h2>
-        <span class="label dsp-frags__count">[Por confirmar]</span>
-        <!-- TODO(Anthonny): number of fragancias in the machine -->
+        <h2 class="dsp-h2 dsp-h2--light animate-in" id="dsp-frags-title" style="--delay:80ms">Diez fragancias,<br>rotando por temporada.</h2>
         <ul class="dsp-frags__list" role="list">
-          <!-- TODO(Anthonny): fragancia 1 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in">
-            <span class="dsp-frag__name">[Fragancia 1]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <img class="dsp-frag__img" src="/assets/images/originals/infusion-carmesi.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Obsesión Carmesí</span>
+            <span class="label dsp-frag__family">Vency Autor · Alicorada / Frutal</span>
+            <p class="dsp-frag__notes">Cereza, hibisco, rosa, resina, vetiver.</p>
+            <a href="/catalogo#infusion-carmesi" class="dsp-frag__link">Ver en catálogo →</a>
           </li>
-          <!-- TODO(Anthonny): fragancia 2 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in" style="--delay:60ms">
-            <span class="dsp-frag__name">[Fragancia 2]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <span class="dsp-frag__name">Dior Sauvage Parfum</span>
+            <span class="label dsp-frag__family">Diseñador original · Fougère / Almizclada</span>
           </li>
-          <!-- TODO(Anthonny): fragancia 3 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in" style="--delay:120ms">
-            <span class="dsp-frag__name">[Fragancia 3]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <img class="dsp-frag__img" src="/assets/images/inspirations/santal-code.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Santal Code</span>
+            <span class="label dsp-frag__family">Vency Autor · Amaderada / Avainillada</span>
+            <p class="dsp-frag__notes">Sándalo, cedro, cardamomo, cuero.</p>
+            <a href="/catalogo#santal-code" class="dsp-frag__link">Ver en catálogo →</a>
           </li>
-          <!-- TODO(Anthonny): fragancia 4 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in" style="--delay:180ms">
-            <span class="dsp-frag__name">[Fragancia 4]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <img class="dsp-frag__img" src="/assets/images/inspirations/valaya.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Valaya</span>
+            <span class="label dsp-frag__family">Nicho original · Cítrica / Floral</span>
+            <p class="dsp-frag__notes">Durazno blanco, flor de azahar, almizcle.</p>
+            <a href="/catalogo#parfums-de-marly-valaya" class="dsp-frag__link">Ver en catálogo →</a>
           </li>
-          <!-- TODO(Anthonny): fragancia 5 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in" style="--delay:240ms">
-            <span class="dsp-frag__name">[Fragancia 5]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <img class="dsp-frag__img" src="/assets/images/inspirations/althair.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Althaïr</span>
+            <span class="label dsp-frag__family">Nicho original · Amaderada / Ambarada</span>
+            <p class="dsp-frag__notes">Vainilla bourbon, canela, flor de azahar, maderas.</p>
+            <a href="/catalogo#parfums-de-marly-althar" class="dsp-frag__link">Ver en catálogo →</a>
           </li>
-          <!-- TODO(Anthonny): fragancia 6 (name, family, link to catalog entry) -->
           <li class="dsp-frag animate-in" style="--delay:300ms">
-            <span class="dsp-frag__name">[Fragancia 6]</span>
-            <span class="label dsp-frag__family">[Familia]</span>
-            <a href="catalogo.html" class="dsp-frag__link">Ver en catálogo →</a>
+            <img class="dsp-frag__img" src="/assets/images/inspirations/erba-pura.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Erba Pura</span>
+            <span class="label dsp-frag__family">Nicho original · Frutal / Avainillada</span>
+            <p class="dsp-frag__notes">Naranja siciliana, limón, frutas exóticas, almizcle blanco.</p>
+            <a href="/catalogo#xerjoff-erba-pura" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <li class="dsp-frag animate-in" style="--delay:300ms">
+            <img class="dsp-frag__img" src="/assets/images/inspirations/divine.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Divine</span>
+            <span class="label dsp-frag__family">Inspiración Vency · Floral / Gourmand</span>
+            <p class="dsp-frag__notes">Lirio, merengue, notas marinas.</p>
+            <a href="/catalogo#jean-paul-gaultier-divine" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <li class="dsp-frag animate-in" style="--delay:300ms">
+            <img class="dsp-frag__img" src="/assets/images/inspirations/rouge-elixir.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Baccarat Rouge 540 Extrait</span>
+            <span class="label dsp-frag__family">Nicho original · Floral / Amaderada</span>
+            <p class="dsp-frag__notes">Azafrán, jazmín, ámbar gris, cedro.</p>
+            <a href="/catalogo#rouge-elixir" class="dsp-frag__link">Ver en catálogo →</a>
+          </li>
+          <li class="dsp-frag animate-in" style="--delay:300ms">
+            <span class="dsp-frag__name">Sospiro Vibrato</span>
+            <span class="label dsp-frag__family">Original · Cítrica</span>
+          </li>
+          <li class="dsp-frag animate-in" style="--delay:300ms">
+            <img class="dsp-frag__img" src="/assets/images/inspirations/fresh-signature.png" width="160" height="160" loading="lazy" decoding="async" alt="">
+            <span class="dsp-frag__name">Bleu de Chanel Parfum</span>
+            <span class="label dsp-frag__family">Diseñador original</span>
+            <p class="dsp-frag__notes">Pomelo, jengibre, incienso, sándalo.</p>
+            <a href="/catalogo#fresh-signature" class="dsp-frag__link">Ver en catálogo →</a>
           </li>
         </ul>
         <p class="dsp-frags__foot">¿Te gustó? El frasco completo está en el <a href="catalogo.html">catálogo</a>.</p>
@@ -563,29 +590,25 @@
           <span class="label ochre-label animate-in">La máquina · Heredia</span>
           <h2 class="dsp-h2 animate-in" id="dsp-ubicacion-title" style="--delay:80ms">Dónde encontrarla.</h2>
           <dl class="dsp-info animate-in" style="--delay:160ms">
-            <!-- TODO(Anthonny): address -->
             <div class="dsp-info__row">
               <dt class="label">Dirección</dt>
-              <dd>[Por confirmar]</dd>
+              <dd>25 metros este de los Tribunales de Justicia, Heredia centro</dd>
             </div>
-            <!-- TODO(Anthonny): hours -->
             <div class="dsp-info__row">
               <dt class="label">Horario</dt>
-              <dd>[Por confirmar]</dd>
+              <dd>10:00 a.m. a 7:00 p.m.</dd>
             </div>
-            <!-- TODO(Anthonny): price per spray -->
             <div class="dsp-info__row">
-              <dt class="label">Precio por rocío</dt>
-              <dd>[Por confirmar]</dd>
+              <dt class="label">Precio por uso</dt>
+              <dd>₡800 a ₡1.500 · 5 rocíos</dd>
             </div>
-            <!-- TODO(Anthonny): payment methods -->
             <div class="dsp-info__row">
               <dt class="label">Formas de pago</dt>
-              <dd>[Por confirmar]</dd>
+              <dd>Monedas, billetes, tarjeta o celular (sin contacto), SINPE Móvil</dd>
             </div>
           </dl>
-          <!-- TODO(Anthonny): Google Maps URL -->
-          <a class="btn btn--outline" href="#" target="_blank" rel="noopener">Abrir en Google Maps</a>
+          <!-- TODO(Anthonny): Google Maps URL, then restore:
+          <a class="btn btn--outline" href="MAPS_URL" target="_blank" rel="noopener">Abrir en Google Maps</a> -->
         </div>
         <figure class="dsp-ubicacion__media animate-in" style="--delay:120ms">
           <img src="assets/images/dispensador-tienda.webp"
@@ -605,10 +628,9 @@
             <summary>¿Me llevo un frasco?</summary>
             <p>No: la máquina perfuma al momento. No sale un frasco ni un vial. Si querés llevarte la fragancia completa, está en el <a href="catalogo.html">catálogo</a>.</p>
           </details>
-          <!-- TODO(Anthonny): sprays per payment -->
           <details class="dsp-qa__item animate-in" style="--delay:60ms">
             <summary>¿Cuántos rocíos recibo por pago?</summary>
-            <p><span class="label">[Por confirmar]</span></p>
+            <p>Cinco rocíos por pago.</p>
           </details>
           <details class="dsp-qa__item animate-in" style="--delay:120ms">
             <summary>¿Puedo probar antes de pagar?</summary>
