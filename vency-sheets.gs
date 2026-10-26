@@ -111,6 +111,18 @@ function pad2(n) {
 /* ── Register sale ───────────────────────────────────────── */
 
 function registerSale(data, authed) {
+  // The public cart has no token, so tokenless sales are validated strictly
+  // (their text is shown in the admin) and throttled (this URL isn't behind
+  // Cloudflare's rate limit).
+  if (!authed) {
+    if (!validWebSale(data)) return text('invalid');
+    // ponytail: unlocked counter, may undercount under bursts; fine at this traffic.
+    var cache = CacheService.getScriptCache();
+    var n = Number(cache.get('web_sales') || 0);
+    if (n >= 20) return text('busy');
+    cache.put('web_sales', String(n + 1), 600);
+  }
+
   var s = sheet(SHEET_VENTAS);
 
   // Web orders start as "pendiente" until confirmed manually
@@ -130,6 +142,17 @@ function registerSale(data, authed) {
   ]);
 
   return text('ok');
+}
+
+function validWebSale(d) {
+  var str = function (v, max) { return v == null || (typeof v === 'string' && v.length <= max); };
+  var total = Number(d.total);
+  return str(d.ref, 24) && /^[A-Za-z0-9-]*$/.test(d.ref || '') &&
+    (d.pago === 'SINPE' || d.pago === 'En sitio') &&
+    (d.entrega == null || d.entrega === 'SINPE' || d.entrega === 'Recoger') &&
+    typeof d.items === 'string' && d.items.length > 0 && d.items.length <= 2000 &&
+    Math.floor(total) === total && total > 0 && total <= 2000000 &&
+    str(d.cliente, 200);
 }
 
 /* ── Summary (metrics + sales list + calendar daily) ─────── */
@@ -195,25 +218,29 @@ function summary(data) {
     var estado  = String(row[7] || 'Pagado');
 
     if (estado.toLowerCase() === 'cancelado') continue;
+    var pendiente = estado === 'pendiente';
 
     // Calendar daily totals (always for the display month)
-    if (fecha >= calStart && fecha <= calEnd) {
+    if (!pendiente && fecha >= calStart && fecha <= calEnd) {
       daily[fecha] = (daily[fecha] || 0) + amt;
     }
 
     // Period filter
     if (fecha < rangeStart || fecha > rangeEnd) continue;
 
-    // Aggregates
-    total += amt;
-    if (canal === 'Web') {
+    // Aggregates. Unconfirmed web orders only count as "sin confirmar": anyone
+    // can post one, so they stay out of the totals until confirmed.
+    if (pendiente) {
+      webPendiente += amt;
+    } else if (canal === 'Web') {
+      total += amt;
       web += amt;
-      if (estado === 'pendiente') webPendiente += amt;
     } else {
+      total += amt;
       local += amt;
     }
-    if (pago === 'Efectivo') efectivo += amt;
-    else if (pago === 'SINPE') sinpe += amt;
+    if (!pendiente && pago === 'Efectivo') efectivo += amt;
+    else if (!pendiente && pago === 'SINPE') sinpe += amt;
 
     // Fragrance counts for Top display
     items.split(' | ').forEach(function (part) {
@@ -221,7 +248,7 @@ function summary(data) {
       var name = part.split('·')[0].trim();
       // Strip "Set de 3 Decants (10 ml): " prefix if present
       name = name.replace(/^Set de 3 Decants[^:]*:\s*/i, '').split(',')[0].trim();
-      if (name) fragrances[name] = (fragrances[name] || 0) + 1;
+      if (name && !pendiente) fragrances[name] = (fragrances[name] || 0) + 1;
     });
 
     // Items preview (first line only; raw has everything)

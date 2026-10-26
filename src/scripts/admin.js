@@ -746,7 +746,7 @@
       var rawParts = s.raw ? s.raw.split(' | ') : [];
       var hasMore  = rawParts.length > 1 || (s.raw && s.raw.length > s.items.length + 2);
       var fullHtml = hasMore
-        ? rawParts.map(function (p) { return '<span class="sale-row__item-line">' + p.trim() + '</span>'; }).join('')
+        ? rawParts.map(function (p) { return '<span class="sale-row__item-line">' + escapeHtml_(p.trim()) + '</span>'; }).join('')
         : '';
       row.innerHTML =
         '<span class="sale-row__ref">'  + escapeHtml_(s.ref)  + '</span>' +
@@ -760,11 +760,11 @@
         '</span>' +
         '<span class="sale-row__meta">' +
           '<span class="sale-row__total">'                           + colones(s.total) + '</span>' +
-          '<span class="sale-row__pago sale-row__pago--' + pc + '">' + s.pago           + '</span>' +
+          '<span class="sale-row__pago sale-row__pago--' + pc + '">' + escapeHtml_(s.pago) + '</span>' +
           '<div class="sale-row__actions">' +
-            '<button class="sale-row__cancel" type="button" aria-label="Eliminar pedido ' + s.ref + '">Eliminar</button>' +
+            '<button class="sale-row__cancel" type="button" aria-label="Eliminar pedido ' + escapeHtml_(s.ref) + '">Eliminar</button>' +
             '<button class="sale-row__cancel-abort" type="button" hidden aria-label="No, cancelar eliminaci\xf3n">No</button>' +
-            (isPending ? '<button class="sale-row__confirm" type="button" aria-label="Confirmar pedido ' + s.ref + '">Confirmar</button>' : '') +
+            (isPending ? '<button class="sale-row__confirm" type="button" aria-label="Confirmar pedido ' + escapeHtml_(s.ref) + '">Confirmar</button>' : '') +
           '</div>' +
         '</span>';
       salesListEl.appendChild(row);
@@ -1601,7 +1601,7 @@
   /* ── Catalog management (admin) ── */
 
   function escHtml(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return escapeHtml_(s);
   }
 
   var CAT_LABELS = {
